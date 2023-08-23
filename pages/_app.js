@@ -1,8 +1,31 @@
-import '../styles/global.css';
+import '../styles/global.css'
 
-import { Lexend_Deca } from 'next/font/google'
+import localFont from 'next/font/local'
 
-const font = Lexend_Deca({ subsets: ['latin'] })
+const font = localFont({
+  src: [
+    {
+      path: './e-Ukraine-Light.ttf',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: './e-Ukraine-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './e-Ukraine-Medium.ttf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: './e-Ukraine-Bold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+})
 
 export default function App({ Component, pageProps }) {
   return (

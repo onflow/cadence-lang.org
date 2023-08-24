@@ -1,7 +1,15 @@
 import Head from 'next/head';
+
 import { FaGithub, FaDiscord } from 'react-icons/fa';
 import { FcLock, FcIdea, FcChargeBattery, FcMindMap } from 'react-icons/fc';
 import { HiArrowRight } from 'react-icons/hi';
+
+import Lottie from "lottie-react";
+import securityAnimation from "./security.json";
+import debuggingAnimation from "./debugging.json";
+import composabilityAnimation from "./composability.json";
+import powerAnimation from "./power.json";
+import learnAnimation from "./learn.json";
 
 export default function Home() {
   return (
@@ -58,7 +66,7 @@ export default function Home() {
                 </p>
               </div>
               <div>
-
+                <Lottie animationData={securityAnimation} />
               </div>
             </div>
 
@@ -79,7 +87,7 @@ export default function Home() {
                 </p>
               </div>
               <div>
-
+                <Lottie animationData={composabilityAnimation} />
               </div>
             </div>
 
@@ -96,7 +104,7 @@ export default function Home() {
                 </p>
               </div>
               <div>
-
+              <Lottie animationData={learnAnimation} />
               </div>
             </div>
 
@@ -115,7 +123,7 @@ export default function Home() {
                 </p>
               </div>
               <div>
-
+               <Lottie animationData={powerAnimation} />
               </div>
             </div>
 
@@ -128,7 +136,7 @@ export default function Home() {
                 </p>
               </div>
               <div>
-
+                <Lottie animationData={debuggingAnimation} />
               </div>
             </div>
 

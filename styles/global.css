@@ -147,7 +147,6 @@ p {
 
 .content {
   margin: 2rem 0 0;
-  padding: 6rem 0;
 
   background-color: #f3f4f6;
 }
@@ -167,7 +166,6 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  margin-bottom: 8rem;
 }
 
 .cta {
@@ -223,6 +221,7 @@ footer {
   .feature {
     gap: 6rem;
     flex-direction: row;
+    align-items: center;
   }
 
   .feature.alternate {

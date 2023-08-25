@@ -36,6 +36,20 @@ ul {
   list-style: none;
 }
 
+code {
+  font-family: ui-monospace,
+    Menlo, Monaco,
+    "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono",
+    "Oxygen Mono",
+    "Ubuntu Monospace",
+    "Source Code Pro",
+    "Fira Mono",
+    "Droid Sans Mono",
+    "Courier New",
+    monospace !important;
+}
+
 .content-wrapper {
   max-width: 80rem;
   margin-left: auto;
@@ -129,6 +143,7 @@ h2 strong {
 .code {
   border-radius: 1rem;
   font-size: 0.9rem !important;
+  box-shadow: 1px 2px 4px rgba(45, 45, 45, 0.4);
 }
 
 h3 {

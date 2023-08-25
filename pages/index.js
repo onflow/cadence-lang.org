@@ -14,18 +14,17 @@ import powerAnimation from "./power.json";
 import learnAnimation from "./learn.json";
 
 const example = `pub resource NFT {
-
-    pub fun greet(): String {
-        return "I'm NFT #"
-            .concat(self.uuid.toString())
-    }
+  pub fun greet(): String {
+    return "I'm NFT #"
+      .concat(self.uuid.toString())
+  }
 }
 
 pub fun main(): String {
-    let nft <- create NFT()
-    let greeting = nft.greet()
-    destroy nft
-    return greeting
+  let nft <- create NFT()
+  let greeting = nft.greet()
+  destroy nft
+  return greeting
 }`
 
 
@@ -85,7 +84,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div style={{width: "30rem"}}>
+            <div style={{"max-width": "30rem"}}>
               <SyntaxHighlighter
                 className="code"
                 language="cadence"

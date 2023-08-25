@@ -97,9 +97,12 @@ nav a svg {
   font-size: 1.4rem;
 }
 
+main {
+  margin-top: 4rem;
+}
+
 h1 {
   display: inline-flex;
-  margin-top: 6rem;
   margin-left: -.2rem;
 
   font-size: var(--h1-size);
@@ -121,6 +124,11 @@ h2 {
 
 h2 strong {
   font-weight: 600;
+}
+
+.code {
+  border-radius: 1rem;
+  font-size: 0.9rem !important;
 }
 
 h3 {
@@ -146,7 +154,7 @@ p {
 }
 
 .content {
-  margin: 2rem 0 0;
+  margin: 4rem 0 0;
 
   background-color: #f3f4f6;
 }
@@ -229,6 +237,6 @@ footer {
   }
 
   .feature > div {
-    flex: 1 1 0%;
+    flex: 1 1 auto;
   }
 }

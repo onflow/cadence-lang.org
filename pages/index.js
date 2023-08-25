@@ -1,5 +1,7 @@
 import Head from 'next/head';
 
+import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { FaGithub, FaDiscord } from 'react-icons/fa';
 import { FcLock, FcIdea, FcChargeBattery, FcMindMap } from 'react-icons/fc';
 import { HiArrowRight } from 'react-icons/hi';
@@ -10,6 +12,40 @@ import debuggingAnimation from "./debugging.json";
 import composabilityAnimation from "./composability.json";
 import powerAnimation from "./power.json";
 import learnAnimation from "./learn.json";
+
+const example = `pub resource NFT {
+
+    pub fun greet(): String {
+        return "I'm NFT #"
+            .concat(self.uuid.toString())
+    }
+}
+
+pub fun main(): String {
+    let nft <- create NFT()
+    let greeting = nft.greet()
+    destroy nft
+    return greeting
+}`
+
+
+function cadence(Prism) {
+  Prism.languages.cadence = {
+    string: {
+      pattern: /"[^"]*"/,
+      greedy: true
+    },
+    keyword:
+      /\b(?:pub|fun|resource|create|let|destroy|return|self)\b/,
+    'class-name': /\b[A-Z][A-Za-z_\d]*\b/,
+    function: /\b[a-z_]\w*(?=\s*\()/i,
+  }
+}
+
+cadence.displayName = 'cadence'
+
+SyntaxHighlighter.registerLanguage('cadence', cadence)
+
 
 export default function Home() {
   return (
@@ -33,17 +69,31 @@ export default function Home() {
 
       <main>
         <div className="content-wrapper">
-          <h1>Cadence</h1>
-          <h2>
-            Forge the future of decentralized apps.
-            <br/>
-            Unleash <strong>utility</strong>, <strong>composability</strong>,
-            <br/>
-            and <strong>safety</strong> in smart contracts.
-          </h2>
+          <div className="feature">
+            <div>
+              <h1>Cadence</h1>
+              <h2>
+                Forge the future of decentralized apps.
+                <br/>
+                Unleash <strong>utility</strong>, <strong>composability</strong>,
+                <br/>
+                and <strong>safety</strong> in smart contracts.
+              </h2>
 
-          <a className="cta" href="https://developers.flow.com/cadence/tutorial/first-steps">
-            Get started <HiArrowRight/></a>
+              <a className="cta" href="https://developers.flow.com/cadence/tutorial/first-steps">
+                Get started <HiArrowRight/>
+              </a>
+            </div>
+
+            <div style={{width: "30rem"}}>
+              <SyntaxHighlighter
+                className="code"
+                language="cadence"
+                style={tomorrow}
+                showLineNumbers={true}
+              >{example}</SyntaxHighlighter>
+            </div>
+          </div>
         </div>
         <div className="content">
           <div className="content-wrapper">

@@ -13,6 +13,8 @@ import composabilityAnimation from "./composability.json";
 import powerAnimation from "./power.json";
 import learnAnimation from "./learn.json";
 
+import YouTube from 'react-youtube';
+
 const example = `pub resource NFT {
   pub fun greet(): String {
     return "I'm NFT #"
@@ -86,7 +88,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div style={{"max-width": "30rem"}}>
+            <div style={{maxWidth: "30rem"}}>
               <SyntaxHighlighter
                 className="code"
                 language="cadence"
@@ -96,7 +98,31 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="content">
+
+        <div className="videos">
+          <div className="content-wrapper">
+
+            <div className='videoSet'>
+              <YouTube
+                videoId="ilJIvoD_qNI"
+                opts={{
+
+                }}
+              />
+              <YouTube
+                videoId="iVevnipJbHo"
+                opts={{
+                  playerVars: {
+                    list: "PLvcQxi9WyGdF32YuZABVTx-t3-FsBNCN2",
+                    listType: 'playlist'
+                  }
+                }}
+            />
+            </div>
+          </div>
+        </div>
+
+        <div className="features">
           <div className="content-wrapper">
 
             <div className="feature">

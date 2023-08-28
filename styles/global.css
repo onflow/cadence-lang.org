@@ -104,6 +104,10 @@ nav a {
   padding: .75rem;
 
   font-size: 1rem;
+  font-weight: 300;
+}
+
+nav a.active {
   font-weight: 500;
 }
 
@@ -114,6 +118,8 @@ nav a svg {
 h1 {
   display: inline-flex;
   margin-left: -.2rem;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
 
   font-size: var(--h1-size);
   font-weight: 600;
@@ -125,7 +131,8 @@ h1 {
 }
 
 h2 {
-  margin-top: 2rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
 
   font-size: calc(var(--h1-size) * 0.56);
   font-weight: 300;
@@ -158,23 +165,29 @@ h3 svg {
 
 p {
   margin: 1rem 0;
+}
 
+
+main {
   font-weight: 200;
   font-size: 1rem;
   line-height: 1.75rem;
-
-  color: rgba(38, 40, 39, 0.84);
 }
 
-p a {
+main ul {
+  list-style: disc inside;
+}
+
+main a {
   color: #00c271;
 }
 
-.feature a {
-  font-weight: 500;
+.icon {
+  font-size: 2rem;
 }
 
 .videos {
+  margin: 2rem 0;
   padding: 2rem;
   background-color: hsl(154.8, 99.2%, 47.1%);
 }
@@ -191,6 +204,7 @@ p a {
     height: auto;
     width: 80%;
 }
+
 .features {
   background-color: #F7F7F5;
 }
@@ -199,6 +213,12 @@ p a {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+
+  color: rgba(38, 40, 39, 0.84);
+}
+
+.feature a {
+  font-weight: 500;
 }
 
 .cta {
@@ -237,14 +257,14 @@ footer {
 
   font-weight: 100;
 
-  color: rgb(130, 133, 138);
+  color: rgba(130, 133, 138, 0.6);
 
   background-color: #F7F7F5;
   border-top: 1px solid #e5e7eb;
 }
 
 .license {
-  max-width: 50rem;
+  max-width: 52rem;
 }
 
 @media screen and (min-width: 64em) {

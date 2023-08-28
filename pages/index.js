@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
@@ -11,8 +12,6 @@ import debuggingAnimation from "./debugging.json";
 import composabilityAnimation from "./composability.json";
 import powerAnimation from "./power.json";
 import learnAnimation from "./learn.json";
-
-import YouTube from 'react-youtube';
 
 const example = `pub resource NFT {
   pub fun greet(): String {
@@ -67,9 +66,9 @@ export default function Home() {
                 and <strong>safety</strong> in smart contracts.
               </h2>
 
-              <a className="cta" href="https://developers.flow.com/cadence/tutorial/first-steps">
+              <Link className="cta" href="/learn">
                 Get started <HiArrowRight/>
-              </a>
+              </Link>
             </div>
 
             <div style={{maxWidth: "30rem"}}>
@@ -79,29 +78,6 @@ export default function Home() {
                 style={tomorrow}
                 showLineNumbers={true}
               >{example}</SyntaxHighlighter>
-            </div>
-          </div>
-        </div>
-
-        <div className="videos">
-          <div className="content-wrapper">
-
-            <div className='videoSet'>
-              <YouTube
-                videoId="ilJIvoD_qNI"
-                opts={{
-
-                }}
-              />
-              <YouTube
-                videoId="iVevnipJbHo"
-                opts={{
-                  playerVars: {
-                    list: "PLvcQxi9WyGdF32YuZABVTx-t3-FsBNCN2",
-                    listType: 'playlist'
-                  }
-                }}
-            />
             </div>
           </div>
         </div>

@@ -111,10 +111,6 @@ nav a svg {
   font-size: 1.4rem;
 }
 
-main {
-  margin-top: 4rem;
-}
-
 h1 {
   display: inline-flex;
   margin-left: -.2rem;
@@ -266,6 +262,7 @@ footer {
     gap: 6rem;
     flex-direction: row;
     align-items: center;
+    padding: 3rem 0;
   }
 
   .feature.alternate {

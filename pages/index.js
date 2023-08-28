@@ -137,9 +137,15 @@ export default function Home() {
                 <p>
                   As smart contracts often deal with valuable assets, Cadence provides the resource-oriented programming paradigm,
                   which guarantees that assets can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted.
+                  With <a href="https://developers.flow.com/cadence/language/resources">resources</a>,
+                  digital assets are first-class citizens, making their accidental loss or malicious duplication impossible.
                 </p>
                 <p>
                   Cadence includes several language features which prevent entire classes of bugs.
+                  For example, it accomplishes this via a strong static type system, <a href="https://developers.flow.com/cadence/language/functions#function-preconditions-and-postconditions">design by contract</a>,
+                  and <a href="https://developers.flow.com/cadence/language/capability-based-access-control">capability-based access control</a>.
+                </p>
+                <p>
                   These security and safety features allow smart contract developers to focus on the business logic of their contract,
                   instead of preventing accidents and attacks.
                 </p>
@@ -156,12 +162,20 @@ export default function Home() {
                   Cadence enables composability.
                 </p>
                 <p>
-                  Resources are stored directly in users' accounts, and can flow freely between contracts:
+                  <a href="https://developers.flow.com/cadence/language/resources">Resources</a> are stored directly in users' accounts,
+                  and can flow freely between contracts:
                   They can be passed as arguments to functions, returned from functions, or even combined in arbitrary data structures.
                   This makes implementing business logic easier, more natural and promotes reuse of existing logic.
                 </p>
                 <p>
-                  In addition, the attachments feature of Cadence allows developers to extend existing types with new functionality and data,
+                  <a href="https://developers.flow.com/cadence/language/interfaces">Interfaces</a> allow contracts and resources to expose functionality
+                  to other programs, and allows them to use other programs, enabling an organic ecosystem of programs that interoperate with each other.
+                  By using interfaces, developers can easily integrate their applications into existing ecosystems,
+                  and invite and support future applications into it.
+                </p>
+                <p>
+                  In addition, the <a href="https://developers.flow.com/cadence/language/attachments">attachments</a> feature
+                  of Cadence allows developers to extend existing types with new functionality and data,
                   without requiring the original author of the type to plan or account for the intended behavior.
                 </p>
               </div>
@@ -172,14 +186,12 @@ export default function Home() {
 
             <div className="feature">
               <div>
-                <h3><FcIdea/> Simplicity</h3>
+                <h3><FcIdea/> Easy to Learn, Build and Ship</h3>
                 <p>
                   Cadence's syntax is inspired by popular modern general-purpose programming languages like Swift, Kotlin, and Rust,
                   so developers will find the syntax and the semantics familiar.
-                  Practical tooling, documentation, and examples enable developers to start creating programs quickly and effectively.
-                </p>
-                <p>
-                  Hundreds of developers were able to learn Cadence quickly and develop production-quality smart contracts with it shortly.
+                  Practical tooling, <a href="https://developers.flow.com/cadence/language">documentation</a>,
+                  and examples enable developers to start creating programs quickly and effectively.
                 </p>
               </div>
               <div>
@@ -210,8 +222,9 @@ export default function Home() {
               <div>
                 <h3>🧰 Best-In-Class Tooling</h3>
                 <p>
-                  Cadence comes with great IDE support. Use your favorite editor, like VS Code, Vim or Emacs,
-                  to get diagnostics, code completion, refactoring support, and more.
+                  Cadence comes with great IDE support. Use your favorite editor,
+                  like <a href="https://marketplace.visualstudio.com/items?itemName=onflow.cadence">Visual Studio Code</a>,
+                  Vim or Emacs, to get diagnostics, code completion, refactoring support, and more.
                 </p>
               </div>
               <div>

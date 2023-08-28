@@ -175,7 +175,11 @@ main {
 }
 
 main ul {
-  list-style: disc inside;
+  list-style: disc outside;
+}
+
+main li {
+  margin-left: 1.8rem;
 }
 
 main a {
@@ -183,7 +187,12 @@ main a {
 }
 
 .icon {
-  font-size: 2rem;
+  display: inline-block;
+  margin-top: 0.8rem;
+
+  font-size: 1.8rem;
+
+  user-select: none;
 }
 
 .videos {
@@ -206,6 +215,8 @@ main a {
 }
 
 .features {
+  margin-top: 3rem;
+  padding-top: 1rem;
   background-color: #F7F7F5;
 }
 
@@ -213,6 +224,8 @@ main a {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+
+  padding: 2rem 0;
 
   color: rgba(38, 40, 39, 0.84);
 }
@@ -267,6 +280,14 @@ footer {
   max-width: 52rem;
 }
 
+.arrow {
+  margin-bottom: -4.4rem;
+
+  text-align: center;
+  font-size: 2.8rem;
+  color: #c5c5c5;
+}
+
 @media screen and (min-width: 64em) {
   nav {
     position: sticky;
@@ -286,7 +307,6 @@ footer {
     gap: 6rem;
     flex-direction: row;
     align-items: center;
-    padding: 3rem 0;
   }
 
   .feature.alternate {

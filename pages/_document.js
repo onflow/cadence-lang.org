@@ -4,7 +4,6 @@ export default function Document() {
   return (
     <Html lang="en">
         <Head>
-            <title>Cadence</title>
             <meta name="description" content="The resource-oriented smart contract programming language" />
             <link rel="icon" href="/favicon.ico" />
             <meta name="robots" content="index, follow" />

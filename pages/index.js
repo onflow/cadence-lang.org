@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { FcLock, FcIdea, FcChargeBattery, FcMindMap } from 'react-icons/fc';
-import { HiArrowRight } from 'react-icons/hi';
+import { HiArrowRight, HiArrowSmDown } from 'react-icons/hi';
 
 import Lottie from "lottie-react";
 import securityAnimation from "./security.json";
@@ -80,6 +80,24 @@ export default function Home() {
               >{example}</SyntaxHighlighter>
             </div>
           </div>
+
+          <div style={{maxWidth: "58rem", marginTop: "-1rem"}}>
+            <p>
+              Announced in 2020, the Cadence programming language introduced the new paradigm of resource-oriented programming.
+              By leveraging the power of resources, Cadence brings exciting new ideas to the world of smart contracts.
+            </p>
+            <p>
+              Cadence makes it easy to write maximally on-chain smart contracts that are secure by design.<br/>
+              Our goals for Cadence are to enable ambitious developers to make daring and complex ideas possible,
+              while making them easy, fun and developer-friendly, as well as safe and secure.
+            </p>
+            <p>
+              Experience the smart contract revolution with Cadence – where innovation, security, and collaboration converge.
+              Join us in shaping the future of blockchain, one line of code at a time. Get started today!
+            </p>
+          </div>
+
+          <div className='arrow'><HiArrowSmDown/></div>
         </div>
 
         <div className="features">

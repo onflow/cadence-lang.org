@@ -17,6 +17,10 @@ export default function Navigation() {
                 href="/learn"
             >Learn</Link>
             <a href="https://play.flow.com/">Playground</a>
+            <Link
+                className={pathname === '/community' ? 'active' : ''}
+                href="/community"
+            >Community</Link>
             <a href="https://developers.flow.com/cadence/language">Documentation</a>
             <a href="https://flow.com/flow-responsible-disclosure">Security</a>
             <a href="https://github.com/onflow/cadence" title="GitHub"><FaGithub/></a>

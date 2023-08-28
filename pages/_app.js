@@ -2,6 +2,8 @@ import '../styles/global.css'
 
 import localFont from 'next/font/local'
 
+import Layout from '../components/layout'
+
 const font = localFont({
   src: [
     {
@@ -35,7 +37,9 @@ export default function App({ Component, pageProps }) {
           font-family: ${font.style.fontFamily};
         }
       `}</style>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </>
   )
 }

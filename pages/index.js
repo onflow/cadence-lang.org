@@ -2,7 +2,6 @@ import Head from 'next/head';
 
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { FaGithub, FaDiscord } from 'react-icons/fa';
 import { FcLock, FcIdea, FcChargeBattery, FcMindMap } from 'react-icons/fc';
 import { HiArrowRight } from 'react-icons/hi';
 
@@ -53,25 +52,7 @@ export default function Home() {
     <>
       <Head>
         <title>Cadence</title>
-        <meta name="description" content="The resource-oriented smart contract programming language" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Cadence" />
-        <meta property="og:description" content="The resource-oriented smart contract programming language" />
-        <meta property="og:url" content="https://cadence-lang.org" />
       </Head>
-
-      <nav>
-        <div className="content-wrapper">
-          <span className="logo">Cadence</span>
-          <a href="https://developers.flow.com/cadence/">Learn</a>
-          <a href="https://play.flow.com/">Playground</a>
-          <a href="https://developers.flow.com/cadence/language">Documentation</a>
-          <a href="https://flow.com/flow-responsible-disclosure">Security</a>
-          <a href="https://github.com/onflow/cadence" title="GitHub"><FaGithub/></a>
-          <a href="https://discord.com/invite/J6fFnh2xx6" title="Discord"><FaDiscord/></a>
-        </div>
-      </nav>
 
       <main>
         <div className="content-wrapper">
@@ -235,15 +216,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      <footer>
-        <div className="content-wrapper">
-          <div className="license">
-            Except as otherwise noted, this site is licensed under a Creative Commons Attribution 4.0 International License,
-            and code samples are licensed under the 3-Clause BSD License.
-          </div>
-        </div>
-      </footer>
     </>
   )
  }

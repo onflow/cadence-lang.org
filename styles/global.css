@@ -218,6 +218,7 @@ main a {
   margin-top: 3rem;
   padding-top: 1rem;
   background-color: #F7F7F5;
+  color: rgba(38, 40, 39, 0.84);
 }
 
 .feature {
@@ -226,8 +227,6 @@ main a {
   gap: 2.5rem;
 
   padding: 2rem 0;
-
-  color: rgba(38, 40, 39, 0.84);
 }
 
 .feature a {

@@ -216,7 +216,7 @@ main a {
 
 .features {
   margin-top: 3rem;
-  padding-top: 1rem;
+  padding: 2rem 0;
   background-color: #F7F7F5;
   color: rgba(38, 40, 39, 0.84);
 }
@@ -227,6 +227,17 @@ main a {
   gap: 2.5rem;
 
   padding: 2rem 0;
+}
+
+.feature + .feature {
+  margin-top: 2rem;
+}
+
+.features .feature {
+  box-shadow: 0 1px 2px rgba(0,0,0,.2),0 3px 8px rgba(0,0,0,.1);
+  border-radius: 8px;
+  background-color: white;
+  padding: 1.6rem 2.6rem;
 }
 
 .feature a {

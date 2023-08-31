@@ -201,6 +201,12 @@ export default function Home() {
                   like <a href="https://marketplace.visualstudio.com/items?itemName=onflow.cadence">Visual Studio Code</a>,
                   Vim or Emacs, to get diagnostics, code completion, refactoring support, and more.
                 </p>
+                <p>
+                  To further enhance the developer experience, there is also a
+                  native testing framework, which allows developers to write
+                  unit & integration tests using Cadence. The framework can
+                  also generate code coverage insights.
+                </p>
               </div>
               <div>
                 <Lottie animationData={debuggingAnimation} />

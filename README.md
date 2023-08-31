@@ -3,14 +3,14 @@
 
 ## Technical
 
-cadence-lang.org uses <a href="https://nextjs.org/">Next.js</>.
+cadence-lang.org uses [Next.js](https://nextjs.org/).
 
 ### Running locally
 
 Requirements:
 
-- <a href="https://git-scm.com/">Git</a>
-- <a href="https://nodejs.org/en">Node.js</a>
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/en)
 
 To run the site locally, enter the following commands into a terminal window:
 

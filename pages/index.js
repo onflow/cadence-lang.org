@@ -92,7 +92,6 @@ export default function Home() {
               while making them easy, fun and developer-friendly, as well as safe and secure.
             </p>
             <p>
-              Experience the smart contract revolution with Cadence – where innovation, security, and collaboration converge.
               Join us in shaping the future of blockchain, one line of code at a time. Get started today!
             </p>
           </div>
@@ -110,19 +109,16 @@ export default function Home() {
                   Cadence provides security and safety guarantees that greatly simplify the development of secure smart contracts.
                 </p>
                 <p>
-                  As smart contracts often deal with valuable assets, Cadence provides the resource-oriented programming paradigm,
+                  As smart contracts often deal with valuable assets, Cadence provides the <a href="https://developers.flow.com/cadence/language/resources">resource-oriented programming paradigm</a>,
                   which guarantees that assets can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted.
-                  With <a href="https://developers.flow.com/cadence/language/resources">resources</a>,
-                  digital assets are first-class citizens, making their accidental loss or malicious duplication impossible.
                 </p>
                 <p>
-                  Cadence includes several language features which prevent entire classes of bugs.
-                  For example, it accomplishes this via a strong static type system, <a href="https://developers.flow.com/cadence/language/functions#function-preconditions-and-postconditions">design by contract</a>,
+                  Cadence includes several language features that prevent entire classes of bugs via a strong static type system, <a href="https://developers.flow.com/cadence/language/functions#function-preconditions-and-postconditions">design by contract</a>,
                   and <a href="https://developers.flow.com/cadence/language/capability-based-access-control">capability-based access control</a>.
                 </p>
                 <p>
                   These security and safety features allow smart contract developers to focus on the business logic of their contract,
-                  instead of preventing accidents and attacks.
+                  instead of preventing security footguns and attacks.
                 </p>
               </div>
               <div>
@@ -132,21 +128,15 @@ export default function Home() {
 
             <div className="feature alternate">
               <div>
-                <h3><FcMindMap/> Permissionless Composability</h3>
-                <p>
-                  Cadence enables composability.
-                </p>
+                <h3><FcMindMap/>Built for permissionless composability</h3>
                 <p>
                   <a href="https://developers.flow.com/cadence/language/resources">Resources</a> are stored directly in users' accounts,
-                  and can flow freely between contracts:
-                  They can be passed as arguments to functions, returned from functions, or even combined in arbitrary data structures.
-                  This makes implementing business logic easier, more natural and promotes reuse of existing logic.
+                  and can flow freely between contracts. They can be passed as arguments to functions, returned from functions, or even combined in arbitrary data structures.
+                  This makes implementing business logic easier and promotes the reuse of existing logic.
                 </p>
                 <p>
-                  <a href="https://developers.flow.com/cadence/language/interfaces">Interfaces</a> allow contracts and resources to expose functionality
-                  to other programs, and allows them to use other programs, enabling an organic ecosystem of programs that interoperate with each other.
-                  By using interfaces, developers can easily integrate their applications into existing ecosystems,
-                  and invite and support future applications into it.
+                  <a href="https://developers.flow.com/cadence/language/interfaces">Interfaces</a> enable interoperability of contracts and resources allowing 
+               developers to integrate their applications into existing experiences easily.
                 </p>
                 <p>
                   In addition, the <a href="https://developers.flow.com/cadence/language/attachments">attachments</a> feature
@@ -161,7 +151,7 @@ export default function Home() {
 
             <div className="feature">
               <div>
-                <h3><FcIdea/> Easy to Learn, Build and Ship</h3>
+                <h3><FcIdea/> Easy to learn, build and ship</h3>
                 <p>
                   Cadence's syntax is inspired by popular modern general-purpose programming languages like Swift, Kotlin, and Rust,
                   so developers will find the syntax and the semantics familiar.
@@ -176,7 +166,7 @@ export default function Home() {
 
             <div className="feature alternate">
               <div>
-                <h3><FcChargeBattery/> Powerful Transactions</h3>
+                <h3><FcChargeBattery/>Powerful transactions for mainstream experiences</h3>
                 <p>
                   In Cadence, a transaction has a lot more flexibility and the power to perform multiple operations with a single transaction,
                   as opposed to multiple, separate smart contract calls like in other languages.
@@ -195,7 +185,7 @@ export default function Home() {
 
             <div className="feature">
               <div>
-                <h3>🧰 Best-In-Class Tooling</h3>
+                <h3>🧰 Best-in-class tooling</h3>
                 <p>
                   Cadence comes with great IDE support. Use your favorite editor,
                   like <a href="https://marketplace.visualstudio.com/items?itemName=onflow.cadence">Visual Studio Code</a>,
@@ -204,8 +194,7 @@ export default function Home() {
                 <p>
                   To further enhance the developer experience, there is also a
                   native testing framework, which allows developers to write
-                  unit & integration tests using Cadence. The framework can
-                  also generate code coverage insights.
+                  unit & integration tests using Cadence. 
                 </p>
               </div>
               <div>

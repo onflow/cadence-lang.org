@@ -44,8 +44,8 @@ export default function Community() {
                     <li>
                         <strong>
                             <span className='icon'>💭</span> Joining
-                            the <a href="https://docs.google.com/document/d/1KMGdiZ7qX9aoyH2WEVGHjsvBTNPTN6my8LcNmSVivLQ/edit">Cadence Language Design Meetings</a>
-                            to discuss the design and implementation of Cadence.
+                            the <a href="https://docs.google.com/document/d/1KMGdiZ7qX9aoyH2WEVGHjsvBTNPTN6my8LcNmSVivLQ/edit">Cadence Language Design Meetings</a> to
+                            discuss the design and implementation of Cadence.
                         </strong>
                         <p>
                             In the meetings, the core contributors and the community investigate, design, and ultimately decide on language features.

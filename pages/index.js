@@ -83,13 +83,14 @@ export default function Home() {
 
           <div style={{maxWidth: "58rem", marginTop: "-1rem"}}>
             <p>
-              Announced in 2020, the Cadence programming language introduced the new paradigm of resource-oriented programming.
-              By leveraging the power of resources, Cadence brings exciting new ideas to the world of smart contracts.
+              Together, we are working to build a programming language to empower everyone to push the boundaries of smart contracts and on-chain logic.
             </p>
             <p>
-              Cadence makes it easy to write maximally on-chain smart contracts that are secure by design.<br/>
-              Our goals for Cadence are to enable ambitious developers to make daring and complex ideas possible,
-              while making them easy, fun and developer-friendly, as well as safe and secure.
+              Announced in 2020, the Cadence programming language introduced a new paradigm of resource-oriented programming.
+              By leveraging the power of resources, Cadence brings exciting new ideas to the world of smart contracts.
+              Cadence makes it easy to write maximally on-chain smart contracts that are secure by design.
+              Our goals for Cadence are to enable ambitious developers to make daring & complex ideas possible while making them easy,
+              fun & developer-friendly, as well as safe and secure.
             </p>
             <p>
               Join us in shaping the future of blockchain, one line of code at a time. Get started today!
@@ -135,7 +136,7 @@ export default function Home() {
                   This makes implementing business logic easier and promotes the reuse of existing logic.
                 </p>
                 <p>
-                  <a href="https://developers.flow.com/cadence/language/interfaces">Interfaces</a> enable interoperability of contracts and resources allowing 
+                  <a href="https://developers.flow.com/cadence/language/interfaces">Interfaces</a> enable interoperability of contracts and resources allowing
                developers to integrate their applications into existing experiences easily.
                 </p>
                 <p>
@@ -194,7 +195,7 @@ export default function Home() {
                 <p>
                   To further enhance the developer experience, there is also a
                   native testing framework, which allows developers to write
-                  unit & integration tests using Cadence. 
+                  unit & integration tests using Cadence.
                 </p>
               </div>
               <div>

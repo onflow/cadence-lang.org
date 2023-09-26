@@ -122,51 +122,21 @@ const config = {
         ],
       },
       footer: {
-        style: 'dark',
-        /*
+        style: 'light',
         links: [
           {
-            title: 'Docs',
+            title: 'Got suggestions for this site? ',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'It\'s open-source!',
+                href: 'https://github.com/onflow/cadence-lang.org',
               },
             ],
           },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
-              },
-            ],
-          },
+          
         ],
-        */
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `The source code of this site is licensed under the Apache License, Version 2.0.
+        Content is licensed under the Creative Commons Attribution 4.0 International License.`,
       },
       prism: {
         theme: lightCodeTheme,

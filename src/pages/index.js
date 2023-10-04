@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import Head from 'next/head';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
@@ -75,6 +76,9 @@ export default function Home() {
       <div className="content-wrapper">
           <div className="feature">
             <div>
+            <Head>
+              <title>Cadence</title>
+            </Head>
               <h1>Cadence</h1>
               <h2>
                 Forge the future of decentralized apps.

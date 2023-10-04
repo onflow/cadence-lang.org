@@ -27,7 +27,8 @@
     "react-youtube": "^10.1.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "2.4.3"
+    "@docusaurus/module-type-aliases": "2.4.3",
+    "typescript": "*"
   },
   "browserslist": {
     "production": [

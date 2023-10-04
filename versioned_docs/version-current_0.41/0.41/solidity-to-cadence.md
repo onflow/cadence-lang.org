@@ -1,5 +1,6 @@
 ---
-title: Guide for Solidity developers
+title: Guide for Solidity Developers
+sidebar_label: Guide for Solidity Developers
 sidebar_position: 8
 ---
 Cadence introduces a different way to approach smart contract development which may feel unfamiliar to
@@ -12,7 +13,7 @@ up while transitioning.
 
 # Conceptual foundations for Cadence
 
-A fundamental difference to get used to when adjusting to Cadence from Solidity is of mindset. Security and
+A fundamental difference to get used to when adjusting to Cadence from Solidity is mindset. Security and
 interoperability on Ethereum are designed around addresses (or more specifically the account associated with an
 address), resulting in all contracts having to carefully track and evaluate access and authorizations.
 
@@ -36,7 +37,7 @@ Newcomers to Cadence should ensure they understand the following major concepts 
 
 ## Flow account model
 
-The [Flow account model](../build/key-concepts/accounts.md) in Cadence combines storage for the keys and code
+The [Flow account model](https://developers.flow.com/build/basics/accounts.md) in Cadence combines storage for the keys and code
 (”smart contracts”) associated with an account with storage for the assets owned by that account. That’s right:
 In Cadence, your tokens are stored in your account, and not in a smart contract. Of course, smart contracts still
 define these assets and how they behave, but those assets can be securely stored in a user’s account through the
@@ -50,14 +51,17 @@ There is only one account type in Cadence also with an account address, similar 
 Accounts realize ownership on Flow in being the container where keys, Resources, and contracts are stored on-chain.
 
 
-### PublicAccount and AuthAccount
+## Account
 
-`PublicAccount` is the publicly available part of an account through which public functions or objects can be
-accessed by any account using the `getAccount` function.
+`Account` is the type that provides access to an account.
 
-`AuthAccount` is available only to the signer of the transaction. An `AuthAccount` reference provides full access
-to that account's storage, keys configuration, and contract code. Capabilities ensure that resources held in an account can be
-safely shared/accessed; access to `AuthAccount` should never be given to other accounts.
+The `getAccount` function allows getting access to the publicly available functions and fields of an account.
+For example, this allows querying an accounts balance.
+
+An authorized `Account` reference provides access and allows the management of,
+for instance, the account's storage, keys configuration, and contract code.
+An authorized `Account` reference can only be acquired by signing a transaction.
+Capabilities ensure that resources held in an account can be safely shared/accessed.
 
 ## Resources
 
@@ -75,7 +79,7 @@ without any explicit handling needed.
 
 ## Capability-based access
 
-Remote access to stored objects can be managed via [Capabilities](./language#capability-based-access-control). This
+Remote access to stored objects can be managed via [Capabilities](./language/capabilities.md). This
 means that if an account wants to be able to access another account's stored objects, it must have been provided
 with a valid Capability to that object. Capabilities can be either public or private. An account can share a public
 Capability if it wants to give all other accounts access. (For example, it’s common for an account to accept fungible
@@ -86,21 +90,21 @@ controls minting through an “administrator Capability” that grants specific 
 ## Contract standards
 
 There are numerous widely-used contract standards established to benefit the ecosystem, for example
-[Fungible Token](../build/flow.md#flow-token)(FT) and [Non-Fungible Token](../build/flow.md#flow-nft#overview)(NFT)
+[Fungible Token](https://developers.flow.com/build/flow.md#flow-token)(FT) and [Non-Fungible Token](https://developers.flow.com/build/flow.md#flow-nft#overview)(NFT)
 standards which are conceptually equivalent to Ethereum's ERC-20 and ERC-721 standards. Cadence's object-oriented
 design means standards apply through contract sub-types such as Resources, Resource interfaces, or other types
 declared in the contract standard. Standards can define and limit behaviour and/or set conditions which
 implementations of the standard cannot violate.
 
-Detailed information about available standards and other core contracts can be found in [Introduction to Flow](../build/flow.md).
+Detailed information about available standards and other core contracts can be found in [Introduction to Flow](https://developers.flow.com/build/flow.md).
 
 ### NFT standard and metadata
 
 Solidity must manage NFT metadata off-chain and NFTs typically link to IPFS JSON from on-chain.
 
-The Cadence NFT standard provides in-built support for metadata with specific types called [views](../build/flow.md#flow-nft#overview#nft-metadata).
+The Cadence NFT standard provides in-built support for metadata with specific types called [views](https://developers.flow.com/build/flow.md#flow-nft#overview#nft-metadata).
 Views can be added to NFTs when minted and will always be available as part of the NFT. While metadata is stored
-on-chain, graphics and video content are stored off-chain. Cadence provides [utility views](../build/flow.md#flow-nft#overview#list-of-common-views)
+on-chain, graphics and video content are stored off-chain. Cadence provides [utility views](https://developers.flow.com/build/flow.md#flow-nft#overview#list-of-common-views)
 for both HTTP and IPFS based media storage which remain linked to your NFT.
 
 Using NFT metadata views is a requirement to get listed in the [Flow NFT Catalog](https://www.flow-nft-catalog.com/).
@@ -150,13 +154,12 @@ the opposite direction than the [access-based security](https://en.wikipedia.org
 
 ## Access control using Capabilities
 
-Solidity lacks specific types or other primitives to aid with permission management. Developers have to inline
-guards to `require` at every function entry-point, thus validating the `msg.sender` of the transaction.
+Solidity lacks specific types or other primitives to aid with permission management.
+Developers have to inline guards to `require` at every function entry-point,
+thus validating the `msg.sender` of the transaction.
 
 [Capabilities](./language/capabilities.md) are defined by linking storage paths (namespaces for contract
-storage) to protected objects and then making that linked capability available to other accounts. Public and private
-scopes defined for storage paths and Capabilities themselves align precisely with
-[PublicAccount](./language/accounts.mdx#publicaccount)/[AuthAccount](./language/accounts.mdx#authaccount) account scopes.
+storage) to protected objects and then making that linked capability available to other accounts.
 
 Any account can get access to an account's public Capabilities. Public capabilities are created using public paths,
 i.e. they have the domain `public`. For example, all accounts have a default public capability linked to the
@@ -164,13 +167,12 @@ i.e. they have the domain `public`. For example, all accounts have a default pub
 interface, to allow any account to `borrow()` a reference to the Vault to make a `deposit()`. Since only the functions
 defined under the `[FungibleToken.Receiver](https://github.com/onflow/flow-ft/blob/master/contracts/FungibleToken.cdc#L105)`
 interface are exposed, the borrower of the vault reference cannot call `withdraw()` since it is scoped in the `provider`
-interface. Public capabilities can be obtained from both authorized accounts (`AuthAccount`) and public accounts
-(`PublicAccount`).
+interface.
 
 Private capabilities are specifically granted to accounts. They are created using private paths, i.e. they have the
 domain `private`. After creation, they can be obtained from authorised account objects (`AuthAccount`) but not public
 accounts (`PublicAccount`). To share a private Capability with another account, the owning account must `publish` it
-to another account which places in the [account inbox](./language/accounts.mdx#account-inbox). The recipient can later
+to another account which places in the [account inbox](./language/accounts/inbox.mdx). The recipient can later
 claim the Capability from the account inbox using then `claim` function.
 
 Capabilities can be `unpublished` and can also be [revoked](./design-patterns.md#capability-revocation) by the creating
@@ -258,8 +260,7 @@ Cadence provides an `assert` operator which mirrors `assert` in Solidity.
 Modifiers are extensively used in Solidity when enforcing pre-checks within a function. This is a powerful language
 feature. However, modifiers can also mutate state which introduces risks to program control flow.
 
-Cadence uses `pre` and `post` blocks to validate input values or the function execution outputs. Notably, `pre` and
-`post` block prohibit changing of state and may only enforce conditions.
+Cadence uses `pre` and `post` blocks to validate input values or the function execution outputs. Notably, `pre` and `post` block prohibit changing of state and may only enforce conditions.
 
 Another difference is that modifiers in Solidity can be re-used within the contract multiple times. Cadence
 `pre` & `post` blocks are associated to individual functions only, reducing the likelihood of errors but which
@@ -289,10 +290,10 @@ Scripts are read-only in nature, requiring only a `main` function declaration an
 import FungibleToken from "../../contracts/FungibleToken.cdc"
 import ExampleToken from "../../contracts/ExampleToken.cdc"
 
-pub fun main(account: Address): UFix64 {
+access(all) fun main(account: Address): UFix64 {
     let acct = getAccount(account)
-    let vaultRef = acct.getCapability(ExampleToken.VaultPublicPath)
-        .borrow<&ExampleToken.Vault{FungibleToken.Balance}>()
+    let vaultRef = acct.capabilities
+        .borrow<&ExampleToken.Vault>(ExampleToken.VaultPublicPath)
         ?? panic("Could not borrow Balance reference to the Vault")
 
     return vaultRef.balance
@@ -318,7 +319,7 @@ transaction(addressAmountMap: {Address: UFix64}) {
     prepare(signer: AuthAccount) {
 
         // Get a reference to the signer's stored vault
-        self.vaultRef = signer.borrow<&ExampleToken.Vault>(from: ExampleToken.VaultStoragePath)
+        self.vaultRef = signer.storage.borrow<&ExampleToken.Vault>(from: ExampleToken.VaultStoragePath)
 			?? panic("Could not borrow reference to the owner's Vault!")
     }
 
@@ -333,8 +334,8 @@ transaction(addressAmountMap: {Address: UFix64}) {
             let recipient = getAccount(address)
 
             // Get a reference to the recipient's Receiver
-            let receiverRef = recipient.getCapability(ExampleToken.ReceiverPublicPath)
-                .borrow<&{FungibleToken.Receiver}>()
+            let receiverRef = recipient.capabilities
+                .borrow<&{FungibleToken.Receiver}>(ExampleToken.ReceiverPublicPath)
                 ?? panic("Could not borrow receiver reference to the recipient's Vault")
 
             // Deposit the withdrawn tokens in the recipient's receiver
@@ -374,7 +375,7 @@ Cadence offers a wide range of options to implement various multi-signature sche
 
 - Inherent support for multi-sign transactions.
 - Resource transfer scheme.
-- Inherent support of BLS signature scheme.
+- Inherent support of the BLS signature scheme.
 
 Flow account keys have assigned weights, where a 1000 unit weight is the cumulative weight needed from signing
 keys to execute a transaction successfully. One can divide weights across multiple keys and distribute those partial
@@ -461,7 +462,7 @@ program flow similar to `if nil; else; end;`.
 ## Iterable Dictionaries
 
 Solidity offers the mapping type, however, it is not iterable. Because of that dApp developers have to maintain
-off-chain tracking to be have access to keys. This also pushes builders to create custom datatypes like `EnumerableMap`
+off-chain tracking to have access to keys. This also pushes builders to create custom datatypes like `EnumerableMap`
 which adds to gas costs.
 
 Cadence offers the [Dictionary](./language/control-flow.md) type, an unordered collection of key-value associations
@@ -481,7 +482,7 @@ provides:
 
 ## Argument labelling
 
-Argument labels in Cadence help to disambiguate input values. They makes code more readable and explicit. They
+Argument labels in Cadence help to disambiguate input values. They make code more readable and explicit. They
 also eliminate confusion around the order of arguments when working with the same type. They must be included in the function call. This restriction can be skipped if the label is preceded by `_ ` on its declaration.
 
 Eg:
@@ -494,3 +495,8 @@ can be called as
 `self.foo(balance: 30.0)`
 or as
 `self.foo(30.0)`
+
+## Additional resources
+
+* Cadence or Solidity: [On-Chain Token Transfer Deep Dive](https://flow.com/engineering-blogs/flow-blockchain-programming-language-smart-contract-cadence-solidity-comparison-ethereum)
+* Implementing the [Bored Ape Yacht Club](https://flow.com/post/implementing-the-bored-ape-yacht-club-smart-contract-in-cadence) smart contract in Cadence

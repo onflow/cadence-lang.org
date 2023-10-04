@@ -53,8 +53,8 @@ Resources are one of Cadence's defining features.
 In Cadence, resources are a composite type like a struct or a class, but with some special rules.
 Here is an example definition of a resource:
 ```cadence
-pub resource Money {
-  pub let balance: Int
+access(all) resource Money {
+  access(all) let balance: Int
 
   init() {
     self.balance = 0
@@ -84,7 +84,7 @@ To interact with resources, you'll learn a few important concepts:
 
 - Using the create keyword
 - The move operator `<-`
-- The [Account Storage API](../language/accounts#account-storage-api)
+- The [Account Storage API](../language/accounts/storage.mdx)
 
 Let's start by looking at how to create a resource with the `create` keyword and the move operator `<-`.
 
@@ -103,21 +103,21 @@ Open the Account `0x01` tab with file named `HelloWorldResource.cdc`. <br />
 </Callout>
 
 ```cadence HelloWorldResource.cdc
-pub contract HelloWorld {
+access(all) contract HelloWorld {
 
     // Declare a resource that only includes one function.
-    pub resource HelloAsset {
+    access(all) resource HelloAsset {
 
         // A transaction can call this function to get the "Hello, World!"
         // message from the resource.
-        pub fun hello(): String {
+        access(all) fun hello(): String {
             return "Hello, World!"
         }
     }
 
     // We're going to use the built-in create function to create a new instance
     // of the HelloAsset resource
-    pub fun createHelloAsset(): @HelloAsset {
+    access(all) fun createHelloAsset(): @HelloAsset {
         return <-create HelloAsset()
     }
 
@@ -135,8 +135,8 @@ Deploy this code to account `0x01` using the `Deploy` button.
 
 We start by declaring a new `HelloWorld` contract in account `0x01`, inside this new `HelloWorld` contract we:
 
-1. Declare the resource `HelloAsset` with public scope `pub`
-2. Declare the resource function `hello()` inside `HelloAsset` with public scope `pub`
+1. Declare the resource `HelloAsset` with public scope `access(all)`
+2. Declare the resource function `hello()` inside `HelloAsset` with public scope `access(all)`
 3. Declare the contract function `createHelloAsset()` which `create`s a `HelloAsset` resource
 4. The `createHelloAsset()` function uses the move operator (`<-`) to return the resource
 
@@ -154,8 +154,8 @@ Let's walk through this contract in more detail, starting with the resource.
 Resources are one of the most important things that Cadence introduces to the smart contract design experience:
 
 ```cadence
-pub resource HelloAsset {
-    pub fun hello(): String {
+access(all) resource HelloAsset {
+    access(all) fun hello(): String {
         return "Hello, World!"
     }
 }
@@ -179,18 +179,18 @@ init() {
 ```
 
 All composite types like contracts, resources,
-and structs can have an optional `init()` function that only runs when the object is initially created.
+and structs can have an optional initializer that only runs when the object is initially created.
 Cadence requires that all fields must be explicitly initialized,
 so if the object has any fields,
 this function has to be used to initialize them.
 
-Contracts also have read and write access to the storage of the account that they are deployed to by using the built-in
-[`self.account`](../language/contracts) object.
-This is an [`AuthAccount` object](../language/accounts#authaccount)
-that gives them access to many different functions to interact with the private storage of the account.
+Contracts also have read and write access to the storage of the account that they are deployed to
+by using the built-in [`self.account`](../language/contracts.mdx) field.
+This is an [account reference](../language/accounts/index.mdx) (`&Account`),
+authorized to access and manage all aspects of the account,
+such as account storage, keys, and contracts.
 
-This contract's `init` function is simple, it logs the phrase `"Hello Asset"` to the console.
-
+This contract's initializer is simple, it logs the phrase `"Hello Asset"` to the console.
 
 **A resource can only be created in the scope that it is defined in.**
 
@@ -200,7 +200,7 @@ This prevents anyone from being able to create arbitrary amounts of resource obj
 
 In this example, we declared a function that can create `HelloAsset` resources:
 ```cadence
-pub fun createHelloAsset(): @HelloAsset {
+access(all) fun createHelloAsset(): @HelloAsset {
     return <-create HelloAsset()
 }
 ```
@@ -260,12 +260,12 @@ import HelloWorld from 0x01
 
 transaction {
 
-	prepare(acct: AuthAccount) {
+	prepare(acct: auth(SaveValue) &Account) {
         // Here we create a resource and move it to the variable newHello,
         // then we save it in the account storage
         let newHello <- HelloWorld.createHelloAsset()
 
-        acct.save(<-newHello, to: /storage/HelloAssetTutorial)
+        acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
     }
 
     // In execute, we log a string to confirm that the transaction executed successfully.
@@ -283,13 +283,11 @@ Here's what this transaction does:
 4. `log` the text `HelloAsset created and stored` to the console.
 
 This is our first transaction using the `prepare` phase!
-The `prepare` phase is the only place that has access to the signing accounts'
-[private `AuthAccount` object](../language/accounts#authaccount).
-`AuthAccount` objects have many different methods that are used to interact with account storage.
-You can see the documentation for all of these in the [account section of the language reference](../language/accounts#authaccount).
-In this tutorial, we'll be using `AuthAccount` methods to save and load from `/storage/`.
-The `prepare` phase can also create `/private/` and `/public/` links to the objects in `/storage/`,
-called [capabilities](../language/capabilities) (more on these later).
+The `prepare` phase is the only place that has access to the signing accounts,
+via [account references (`&Account`)](../language/accounts/index.mdx).
+Account references have access to many different methods that are used to interact with account, e.g., the account's storage.
+You can see the documentation for all of these in the [account section of the language reference](../language/accounts/index.mdx).
+In this tutorial, we'll be using account functions to save to and load from account storage (`/storage/`).
 
 By not allowing the execute phase to access account storage,
 we can statically verify which assets and areas of the signers' storage a given transaction can modify.
@@ -306,13 +304,13 @@ let newHello <- HelloWorld.createHelloAsset()
 ```
 
 Next, we save the resource to the account storage.
-We use the [account storage API](../language/accounts#account-storage-api) to interact with the account storage in Flow.
+We use the [account storage API](../language/accounts/storage.mdx) to interact with the account storage in Flow.
 To save the resource, we'll be using the
-[`save()`](../language/accounts#account-storage-api)
+[`save()`](../language/accounts/storage.mdx)
 method from the account storage API to store the resource in the account at the path `/storage/HelloAssetTutorial`.
 
 ```cadence
-acct.save(<-newHello, to: /storage/HelloAssetTutorial)
+acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
 ```
 The first parameter to `save` is the object that is being stored,
 and the `to` parameter is the path that the object is being stored at.
@@ -373,14 +371,14 @@ This should open a view of the different contracts and objects in the account.
 You should see this entry for the `HelloWorld` contract and the `HelloAsset` resource:
 
 ```
-Deployed Contracts: 
+Deployed Contracts:
 [
   {
     "contract": "HelloWorld",
     "height": 6
   }
-] 
-Account Storage: 
+]
+Account Storage:
 {
     "Private": null,
     "Public": {},
@@ -433,11 +431,11 @@ import HelloWorld from 0x01
 
 transaction {
 
-    prepare(acct: AuthAccount) {
+    prepare(acct: auth(LoadValue, SaveValue) &Account) {
 
         // Load the resource from storage, specifying the type to load it as
         // and the path where it is stored
-        let helloResource <- acct.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
+        let helloResource <- acct.storage.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
 
         // We use optional chaining (?) because the value in storage
         // may or may not exist, and thus is considered optional.
@@ -446,7 +444,7 @@ transaction {
         // Put the resource back in storage at the same spot
         // We use the force-unwrap operator `!` to get the value
         // out of the optional. It aborts if the optional is nil
-        acct.save(<-helloResource!, to: /storage/HelloAssetTutorial)
+        acct.storage.save(<-helloResource!, to: /storage/HelloAssetTutorial)
     }
 }
 ```
@@ -455,18 +453,18 @@ Here's what this transaction does:
 
 1. Import the `HelloWorld` definitions from account `0x01`
 2. Moves the `HelloAsset` object from storage to `helloResource` with the move operator
-  and the `load` function from the [account storage API](../language/accounts#account-storage-api)
+  and the `load` function from the [account storage API](../language/accounts/storage.mdx)
 3. Calls the `hello()` function of the `HelloAsset` resource stored in `helloResource` and logs the result
 4. Saves the resource in the account that we originally moved it from at the path `/storage/HelloAssetTutorial`
 
-We're going to be using the `prepare` phase again to load the resource because it
-has access to the signing accounts' [private `AuthAccount` object](../language/accounts#authaccount).
+We're going to be using the `prepare` phase again to load the resource
+using the [reference to the account](../language/accounts/index.mdx) that is passed in.
 
 Let's go over the transaction in more detail.
-To remove an object from storage, we use the `load` method from the [account storage API](../language/accounts#account-storage-api)
+To remove an object from storage, we use the `load` method from the [account storage API](../language/accounts/storage.mdx)
 
 ```cadence
-let helloResource <- acct.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
+let helloResource <- acct.storage.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
 ```
 
 If no object of the specified type is stored under the given path, the function returns nothing, or `nil`.
@@ -515,7 +513,7 @@ However, if the stored value was `nil`, the function call would not occur and th
 Next, we use `save` again to put the object back in storage in the same spot:
 
 ```cadence
-acct.save(<-helloResource!, to: /storage/HelloAssetTutorial)
+acct.storage.save(<-helloResource!, to: /storage/HelloAssetTutorial)
 ```
 
 Remember, `helloResource` is still an optional, so we have to handle the possibility that it is `nil`.
@@ -562,12 +560,12 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 - Use the `prepare` phase of a transaction to load resources from account storage
 
 Feel free to modify the smart contract to create different resources,
-experiment with the available [account storage API](../language/accounts#account-storage-api),
+experiment with the available [account storage API](../language/accounts/storage.mdx),
 and write new transactions and scripts that execute different functions from your smart contract.
 Have a look at the [resource reference page](../language/resources)
 to find out more about what you can do with resources.
 
 You're on the right track to building more complex applications with Cadence,
-now is a great time to check out the [Cadence Best Practices document](../design-patterns)
-and [Anti-patterns document](../anti-patterns)
+now is a great time to check out the [Cadence Best Practices document](../design-patterns.md)
+and [Anti-patterns document](../anti-patterns.md)
 as your applications become more complex.

@@ -40,8 +40,8 @@ and when it is returned from a function.
 ```cadence
 // Declare a resource named `SomeResource`, with a variable integer field.
 //
-pub resource SomeResource {
-    pub var value: Int
+access(all) resource SomeResource {
+    access(all) var value: Int
 
     init(value: Int) {
         self.value = value
@@ -69,7 +69,7 @@ b.value // equals 0
 //
 // The parameter has a resource type, so the type annotation must be prefixed with `@`.
 //
-pub fun use(resource: @SomeResource) {
+access(all) fun use(resource: @SomeResource) {
     // ...
 }
 
@@ -128,7 +128,7 @@ let someResource: @SomeResource <- create SomeResource(value: 5)
 //
 // The parameter has a resource type, so the type annotation must be prefixed with `@`.
 //
-pub fun use(resource: @SomeResource) {
+access(all) fun use(resource: @SomeResource) {
     destroy resource
 }
 
@@ -137,7 +137,7 @@ pub fun use(resource: @SomeResource) {
 // The return type is a resource type, so the type annotation must be prefixed with `@`.
 // The return statement must also use the `<-` operator to make it explicit the resource is moved.
 //
-pub fun get(): @SomeResource {
+access(all) fun get(): @SomeResource {
     let newResource <- create SomeResource()
     return <-newResource
 }
@@ -149,7 +149,7 @@ Resources **must** be used exactly once.
 // Declare a function which consumes a resource but does not use it.
 // This function is invalid, because it would cause a loss of the resource.
 //
-pub fun forgetToUse(resource: @SomeResource) {
+access(all) fun forgetToUse(resource: @SomeResource) {
     // Invalid: The resource parameter `resource` is not used, but must be.
 }
 ```
@@ -177,7 +177,7 @@ res.value
 // This function is invalid, because it does not always use the resource parameter,
 // which would cause a loss of the resource.
 //
-pub fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool) {
+access(all) fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool) {
     if destroyResource {
         destroy resource
     }
@@ -192,7 +192,7 @@ pub fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool) {
 // This function is valid, as it always uses the resource parameter,
 // and does not cause a loss of the resource.
 //
-pub fun alwaysUse(resource: @SomeResource, destroyResource: Bool) {
+access(all) fun alwaysUse(resource: @SomeResource, destroyResource: Bool) {
     if destroyResource {
         destroy resource
     } else {
@@ -208,7 +208,7 @@ pub fun alwaysUse(resource: @SomeResource, destroyResource: Bool) {
 // This function is invalid, because it does not always use the resource parameter,
 // which would cause a loss of the resource.
 //
-pub fun returnBeforeDestroy(move: Bool) {
+access(all) fun returnBeforeDestroy(move: Bool) {
     let res <- create SomeResource(value: 1)
     if move {
         use(resource: <-res)
@@ -234,7 +234,7 @@ Instead, use a swap statement (`<->`) or shift statement (`<- target <-`)
 to replace the resource variable with another resource.
 
 ```cadence
-pub resource R {}
+access(all) resource R {}
 
 var x <- create R()
 var y <- create R()
@@ -268,7 +268,7 @@ A resource may have only one destructor.
 ```cadence
 var destructorCalled = false
 
-pub resource Resource {
+access(all) resource Resource {
 
     // Declare a destructor for the resource, which is executed
     // when the resource is destroyed.
@@ -292,7 +292,7 @@ it **must** declare a destructor,
 which **must** invalidate all resource fields, i.e. move or destroy them.
 
 ```cadence
-pub resource Child {
+access(all) resource Child {
     let name: String
 
     init(name: String)
@@ -304,7 +304,7 @@ pub resource Child {
 // The resource *must* declare a destructor
 // and the destructor *must* invalidate the resource field.
 //
-pub resource Parent {
+access(all) resource Parent {
     let name: String
     var child: @Child
 
@@ -355,7 +355,7 @@ resource R {}
 // the resource parameter `resource`. Each call to the returned function
 // would return the resource, which should not be possible.
 //
-fun makeCloner(resource: @R): ((): @R) {
+fun makeCloner(resource: @R): fun(): @R {
     return fun (): @R {
         return <-resource
     }
@@ -599,8 +599,8 @@ Do not rely on or assume any particular behaviour in Cadence programs.
 
 ## Resource Owner
 
-Resources have the implicit field `let owner: PublicAccount?`.
-If the resource is currently [stored in an account](./accounts.mdx#account-storage),
+Resources have the implicit field `let owner: &Account?`.
+If the resource is currently [stored in an account](./accounts/storage.mdx),
 then the field contains the publicly accessible portion of the account.
 Otherwise the field is `nil`.
 

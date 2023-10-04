@@ -14,11 +14,11 @@ Cadence introduces new features to smart contract programming that help develope
 - Type safety and a strong static type system
 - Resource-oriented programming, a new paradigm that pairs linear types with object capabilities to create a secure and declarative model for digital ownership
   by ensuring that resources (and their associated assets) can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted
-- Built-in pre-conditions and post-conditions for functions and [transactions](../language/transactions)
+- Built-in pre-conditions and post-conditions for functions and [transactions](../language/transactions.md)
 - The utilization of capability-based security, which enforces access control by requiring that access to objects
   is restricted to only the owner and those who have a valid reference to the object
 
-Please see the [Cadence introduction](../../cadence/intro.md) for more information about the high level design of the language.
+Please see the [Cadence introduction](../intro.md) for more information about the high level design of the language.
 
 ## What is the Flow Developer Playground?
 
@@ -62,7 +62,7 @@ to deploy that contract to the currently selected account.
 
 After a few seconds, the contract should deploy. In the accounts section, you should 
 now see the name of the contract next to the selected account that you deployed too
-and if you click on "Log" in the bottom section of the scrren, you should 
+and if you click on "Log" in the bottom section of the screen, you should 
 see a message in the console confirming that the contract was deployed and which account it was deployed to.
 
 You can also select transactions and scripts from the left selection menu

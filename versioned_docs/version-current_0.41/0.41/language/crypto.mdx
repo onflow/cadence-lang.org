@@ -3,24 +3,24 @@ title: Crypto
 sidebar_position: 30
 ---
 
-## Hashing
+## Hash algorithms
 
-The built-in enum `HashAlgorithm` provides the set of hashing algorithms that
-are supported by the language natively.
+The built-in [enumeration](./enumerations.md) `HashAlgorithm`
+provides the set of supported hashing algorithms.
 
 ```cadence
-pub enum HashAlgorithm: UInt8 {
+access(all) enum HashAlgorithm: UInt8 {
     /// SHA2_256 is SHA-2 with a 256-bit digest (also referred to as SHA256).
-    pub case SHA2_256 = 1
+    access(all) case SHA2_256 = 1
 
     /// SHA2_384 is SHA-2 with a 384-bit digest (also referred to as  SHA384).
-    pub case SHA2_384 = 2
+    access(all) case SHA2_384 = 2
 
     /// SHA3_256 is SHA-3 with a 256-bit digest.
-    pub case SHA3_256 = 3
+    access(all) case SHA3_256 = 3
 
     /// SHA3_384 is SHA-3 with a 384-bit digest.
-    pub case SHA3_384 = 4
+    access(all) case SHA3_384 = 4
 
     /// KMAC128_BLS_BLS12_381 is an instance of KECCAK Message Authentication Code (KMAC128) mac algorithm.
     /// Although this is a MAC algorithm, KMAC is included in this list as it can be used hash
@@ -29,17 +29,17 @@ pub enum HashAlgorithm: UInt8 {
     /// It is a customized version of KMAC128 that is compatible with the hashing to curve
     /// used in BLS signatures.
     /// It is the same hasher used by signatures in the internal Flow protocol.
-    pub case KMAC128_BLS_BLS12_381 = 5
+    access(all) case KMAC128_BLS_BLS12_381 = 5
 
     /// KECCAK_256 is the legacy Keccak algorithm with a 256-bits digest, as per the original submission to the NIST SHA3 competition.
     /// KECCAK_256 is different than SHA3 and is used by Ethereum.
-    pub case KECCAK_256 = 6
+    access(all) case KECCAK_256 = 6
 
     /// Returns the hash of the given data
-    pub fun hash(_ data: [UInt8]): [UInt8]
+    access(all) fun hash(_ data: [UInt8]): [UInt8]
 
     /// Returns the hash of the given data and tag
-    pub fun hashWithTag(_ data: [UInt8], tag: string): [UInt8]
+    access(all) fun hashWithTag(_ data: [UInt8], tag: string): [UInt8]
 }
 ```
 
@@ -89,38 +89,43 @@ To define the MAC instance, `KMAC128(customizer, key, data, length)` is instanci
   - `data` is the input data to hash.
   - `length` is 1024 bytes.
 
-## Signing Algorithms
+## Signature algorithms
 
-The built-in enum `SignatureAlgorithm` provides the set of signing algorithms that
-are supported by the language natively.
+The built-in [enumeration](./enumerations.md) `SignatureAlgorithm`
+provides the set of supported signature algorithms.
 
 ```cadence
-pub enum SignatureAlgorithm: UInt8 {
+access(all) enum SignatureAlgorithm: UInt8 {
     /// ECDSA_P256 is ECDSA on the NIST P-256 curve.
-    pub case ECDSA_P256 = 1
+    access(all) case ECDSA_P256 = 1
 
     /// ECDSA_secp256k1 is ECDSA on the secp256k1 curve.
-    pub case ECDSA_secp256k1 = 2
+    access(all) case ECDSA_secp256k1 = 2
 
     /// BLS_BLS12_381 is BLS signature scheme on the BLS12-381 curve.
     /// The scheme is set-up so that signatures are in G_1 (subgroup of the curve over the prime field)
     /// while public keys are in G_2 (subgroup of the curve over the prime field extension).
-    pub case BLS_BLS12_381 = 3
+    access(all) case BLS_BLS12_381 = 3
 }
 ```
 
-## PublicKey
+## Public keys
 
 `PublicKey` is a built-in structure that represents a cryptographic public key of a signature scheme.
 
 ```cadence
+access(all)
 struct PublicKey {
+    access(all)
     let publicKey: [UInt8]
+
+    access(all)
     let signatureAlgorithm: SignatureAlgorithm
 
     /// Verifies a signature under the given tag, data and public key.
     /// It uses the given hash algorithm to hash the tag and data.
-    pub fun verify(
+    access(all)
+    view fun verify(
         signature: [UInt8],
         signedData: [UInt8],
         domainSeparationTag: String,
@@ -131,7 +136,8 @@ struct PublicKey {
     /// This function is only implemented if the signature algorithm
     /// of the public key is BLS (BLS_BLS12_381).
     /// If called with any other signature algorithm, the program aborts
-    pub fun verifyPoP(_ proof: [UInt8]): Bool
+    access(all)
+    view fun verifyPoP(_ proof: [UInt8]): Bool
 }
 ```
 
@@ -271,7 +277,7 @@ available to protect BLS verification. Cadence provides the proof of possession 
 The proof of possession of private key is a BLS signature over the public key itself.
 The PoP signature follows the same requirements of a BLS signature (detailed in [Signature verification](#Signature-verification)),
 except it uses a special domain separation tag. The key expected to be used in KMAC128 is the UTF-8 encoding of `"BLS_POP_BLS12381G1_XOF:KMAC128_SSWU_RO_POP_"`.
-The expected message to be signed by the PoP is the serialization of the BLS public key corresponding to the signing private key ([serialization details](#PublicKey)).
+The expected message to be signed by the PoP is the serialization of the BLS public key corresponding to the signing private key ([serialization details](#public-keys)).
 The PoP can only be verified using the `PublicKey` method `verifyPoP`.
 
 ### BLS signature aggregation
@@ -328,7 +334,7 @@ For example, to verify two signatures with equal weights for some signed data:
 ```cadence
 import Crypto
 
-pub fun test main() {
+access(all) fun test main() {
     let keyList = Crypto.KeyList()
 
     let publicKeyA = PublicKey(
@@ -380,12 +386,12 @@ pub fun test main() {
 The API of the Crypto contract related to key lists is:
 
 ```cadence
-pub struct KeyListEntry {
-    pub let keyIndex: Int
-    pub let publicKey: PublicKey
-    pub let hashAlgorithm: HashAlgorithm
-    pub let weight: UFix64
-    pub let isRevoked: Bool
+access(all) struct KeyListEntry {
+    access(all) let keyIndex: Int
+    access(all) let publicKey: PublicKey
+    access(all) let hashAlgorithm: HashAlgorithm
+    access(all) let weight: UFix64
+    access(all) let isRevoked: Bool
 
     init(
         keyIndex: Int,
@@ -396,12 +402,12 @@ pub struct KeyListEntry {
     )
 }
 
-pub struct KeyList {
+access(all) struct KeyList {
 
     init()
 
     /// Adds a new key with the given weight
-    pub fun add(
+    access(all) fun add(
         _ publicKey: PublicKey,
         hashAlgorithm: HashAlgorithm,
         weight: UFix64
@@ -409,22 +415,22 @@ pub struct KeyList {
 
     /// Returns the key at the given index, if it exists.
     /// Revoked keys are always returned, but they have `isRevoked` field set to true
-    pub fun get(keyIndex: Int): KeyListEntry?
+    access(all) fun get(keyIndex: Int): KeyListEntry?
 
     /// Marks the key at the given index revoked, but does not delete it
-    pub fun revoke(keyIndex: Int)
+    access(all) fun revoke(keyIndex: Int)
 
     /// Returns true if the given signatures are valid for the given signed data
-    pub fun verify(
+    access(all) fun verify(
         signatureSet: [KeyListSignature],
         signedData: [UInt8]
     ): Bool
 }
 
-pub struct KeyListSignature {
-    pub let keyIndex: Int
-    pub let signature: [UInt8]
+access(all) struct KeyListSignature {
+    access(all) let keyIndex: Int
+    access(all) let signature: [UInt8]
 
-    pub init(keyIndex: Int, signature: [UInt8])
+    access(all) init(keyIndex: Int, signature: [UInt8])
 }
 ```

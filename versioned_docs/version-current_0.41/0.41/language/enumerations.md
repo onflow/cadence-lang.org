@@ -1,6 +1,6 @@
 ---
 title: Enumerations
-sidebar_position: 15
+sidebar_position: 16
 ---
 
 Enumerations are sets of symbolic names bound to unique, constant values,
@@ -34,10 +34,10 @@ Enum cases can be compared using the equality operators `==` and `!=`.
 // Declare an enum named `Color` which has the raw value type `UInt8`,
 // and declare three enum cases: `red`, `green`, and `blue`
 //
-pub enum Color: UInt8 {
-    pub case red
-    pub case green
-    pub case blue
+access(all) enum Color: UInt8 {
+    access(all) case red
+    access(all) case green
+    access(all) case blue
 }
 // Declare a variable which has the enum type `Color` and initialize
 // it to the enum case `blue` of the enum

@@ -403,7 +403,7 @@ Function values can only be exported, they cannot be imported.
   "value": {
     "functionType": {
       "kind": "Function",
-      "typeID": "(():Void)",
+      "typeID": "fun():Void",
       "parameters": [],
       "return": {
         "kind": "Void"
@@ -729,14 +729,13 @@ Initializer types are encoded a list of parameters to the initializer.
 
 ---
 
-## Restricted Types
+## Intersection Types
 
 ```json
 {
-  "kind": "Restriction",
+  "kind": "Intersection",
   "typeID": "<fully qualified type ID>",
-  "type": <type>,
-  "restrictions": [
+  "types": [
     <type at index 0>,
     <type at index 1>,
     //...

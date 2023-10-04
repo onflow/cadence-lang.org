@@ -13,8 +13,8 @@ for an example of a production ready marketplace that you can use right now on t
 ---
 
 <Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: 
-  <a 
+  Open the starter code for this tutorial in the Flow Playground:
+  <a
     href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
     target="_blank"
   >
@@ -61,7 +61,7 @@ transaction {
     log("Created Vault references")
 
     // store an empty NFT Collection in account storage
-    acct.save<@ExampleNFT.Collection>(<-ExampleNFT.createEmptyCollection(), to: /storage/nftTutorialCollection)
+    acct.storage.save(<-ExampleNFT.createEmptyCollection(), to: /storage/nftTutorialCollection)
 
     // publish a capability to the Collection in storage
     acct.link<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath, target: ExampleNFT.CollectionStoragePath)
@@ -93,7 +93,7 @@ transaction {
     let vaultA <- ExampleToken.createEmptyVault()
 
     // Store the vault in the account storage
-    acct.save<@ExampleToken.Vault>(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
+    acct.storage.save(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
 
     // Create a public Receiver capability to the Vault
     let ReceiverRef = acct.link<&ExampleToken.Vault{ExampleToken.Receiver, ExampleToken.Balance}>(/public/CadenceFungibleTokenTutorialReceiver, target: /storage/CadenceFungibleTokenTutorialVault)
@@ -177,7 +177,7 @@ import ExampleNFT from 0x02
 //
 // Account 0x01: Vault Balance = 40, NFT.id = 1
 // Account 0x02: Vault Balance = 20, No NFTs
-pub fun main() {
+access(all) fun main() {
     // Get the accounts' public account objects
     let acct1 = getAccount(0x01)
     let acct2 = getAccount(0x02)

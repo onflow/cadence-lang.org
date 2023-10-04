@@ -623,6 +623,7 @@ They're often used in low-level programming.
 
 For unsigned integers, the bitwise shifting operators perform [logical shifting](https://en.wikipedia.org/wiki/Logical_shift),
 for signed integers, they perform [arithmetic shifting](https://en.wikipedia.org/wiki/Arithmetic_shift).
+Also note that for `a << b` or `a >> b`, `b` must fit into a 64-bit integer.
 
 ## Ternary Conditional Operator
 

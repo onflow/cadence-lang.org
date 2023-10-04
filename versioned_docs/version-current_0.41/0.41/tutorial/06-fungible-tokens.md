@@ -236,7 +236,7 @@ init(balance: UFix64) {
 }
 ```
 
-If you remove the `init` function from your `ExampleToken` contract, it will cause an error because
+If you remove the initializer from your `ExampleToken` contract, it will cause an error because
 the balance field is no longer initialized.
 
 ### Deposit
@@ -294,7 +294,7 @@ If an address doesn’t have the correct resource type imported, the transaction
 
 **Important note: This protection is not in place for the Flow network currency,**
 **because every Flow account is initialized with a default Flow Token Vault**
-**in order to pay for [storage fees and transaction fees](https://developers.flow.com/build/basics/fees.md#fees).**
+**in order to pay for [storage fees and transaction fees](../../build/key-concepts/fees.md#fees).**
 
 ### Function Parameters
 
@@ -396,9 +396,9 @@ access(all) contract BasicToken {
         return <-create Vault(balance: 30.0)
     }
 
-    // The init function for the contract. All fields in the contract must
-    // be initialized at deployment. This is just an example of what
-    // an implementation could do in the init function. The numbers are arbitrary.
+    // The initializer for the contract.
+    // All fields in the contract must be initialized at deployment.
+    // This is just an example of what an implementation could do in the init initializer.
     init() {
         // create the Vault with the initial balance and put it in storage
         // account.save saves an object to the specified `to` path
@@ -406,7 +406,7 @@ access(all) contract BasicToken {
         // The domain must be `storage`, `private`, or `public`
         // the identifier can be any name
         let vault <- self.createVault()
-        self.account.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
+        self.account.storage.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
     }
 }
 ```
@@ -422,7 +422,7 @@ Click the `Deploy` button at the top right of the editor to deploy the code.
 This deployment stores the contract for the basic fungible token
 in the selected account (account `0x01`) so that it can be imported into transactions.
 
-A contract's `init` function runs at contract creation, and never again afterwards.
+A contract's initializer runs at contract creation, and never again afterwards.
 In our example, this function stores an instance of the `Vault` object with an initial balance of 30.
 
 ```cadence
@@ -432,7 +432,7 @@ In our example, this function stores an instance of the `Vault` object with an i
 // The domain must be `storage`, `private`, or `public`
 // the identifier can be any name
 let vault <- self.createVault()
-self.account.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
+self.account.storage.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
 ```
 
 This line saves the new `@Vault` object to storage.
@@ -475,10 +475,10 @@ import BasicToken from 0x01
 
 transaction {
 
-  prepare(acct: AuthAccount) {
+  prepare(acct: auth(BorrowValue) &Account) {
     // withdraw tokens from your vault by borrowing a reference to it
     // and calling the withdraw function with that reference
-    let vaultRef = acct.borrow<&BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
+    let vaultRef = acct.storage.borrow<auth(FungibleToken.Withdrawable) &BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
         ?? panic("Could not borrow a reference to the owner's vault")
 
     let temporaryVault <- vaultRef.withdraw(amount: 10.0)
@@ -507,7 +507,7 @@ you can borrow a reference directly from an object in storage.
 
 ```cadence
 // Borrow a reference to the stored, private Vault resource
-let vaultRef = acct.borrow<&BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
+let vaultRef = acct.storage.borrow<&BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
     ?? panic("Could not borrow a reference to the owner's vault")
 ```
 
@@ -521,7 +521,7 @@ Capabilities allow us to accomplish this safely.
 
 ---
 
-Another important feature in Cadence is its utilization of [**Capability-Based Security.**](../language/capabilities.md)
+Another important feature in Cadence is its utilization of [**Capability-Based Security.**](../language/capabilities)
 This feature ensures that while the withdraw function is declared public on the resource,
 no one except the intended user and those they approve of can withdraw tokens from their vault.
 
@@ -604,7 +604,7 @@ fields private unless it is explicitly needed to be public.
   This is one of THE MOST COMMON security mistakes that Cadence developers make,
   so it is vitally important to be aware of this.
 
-  See the [Cadence Best Practices document](../anti-patterns.md#array-or-dictionary-fields-should-be-private) for more details.
+  See the [Cadence Best Practices document](../anti-patterns#array-or-dictionary-fields-should-be-private) for more details.
 </Callout>
 
 ## Adding Interfaces to Our Fungible Token
@@ -630,10 +630,10 @@ This method for authorization can be used in many different ways
 and further decentralizes the control of the contract.
 
 We also store the `VaultMinter` object to `/storage/`
-in the `init()` function in the same way as the vault, but in a different storage path:
+in the initializer in the same way as the vault, but in a different storage path:
 
 ```cadence
-self.account.save(<-create VaultMinter(), to: /storage/CadenceFungibleTokenTutorialMinter)
+self.account.storage<-create VaultMinter(), to: /storage/CadenceFungibleTokenTutorialMinter)
 ```
 
 Now is an important time to remind you that account storage not namespaced by contract,
@@ -834,7 +834,7 @@ transaction {
 		let vaultA <- ExampleToken.createEmptyVault()
 
 		// Store the vault in the account storage
-		acct.save<@ExampleToken.Vault>(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
+		acct.storage.save(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
 
         log("Empty Vault stored")
 
@@ -1126,5 +1126,5 @@ From here, you could try to extend the functionality of fungible tokens by makin
 ## Create a Flow Marketplace
 
 ---
-Now that you have an understanding of how fungible tokens work on Flow and have a working NFT, you can learn how to create
+Now that you have an understanding of how fungible tokens work on Flow and have a working NFT, you can learn how to create 
 a marketplace that uses both fungible tokens and NFTs. Move on to the next tutorial to learn about Marketplaces in Cadence!

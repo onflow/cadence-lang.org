@@ -7,7 +7,7 @@ The Cadence testing framework provides a convenient way to write tests for Caden
 This functionality is provided by the built-in `Test` contract.
 
 <Callout type="info">
-The testing framework can only be used off-chain, e.g. by using the [Flow CLI](https://developers.flow.com/tools/flow-cli).
+The testing framework can only be used off-chain, e.g. by using the [Flow CLI](../tools/flow-cli).
 </Callout>
 
 Tests must be written in the form of a Cadence script.
@@ -759,7 +759,7 @@ access(all) struct interface BlockchainBackend {
 ### Creating a blockchain
 
 A new blockchain instance can be created using the `Test.newEmulatorBlockchain` method.
-It returns a `Blockchain` which is backed by a new [Flow Emulator](https://developers.flow.com/tools/emulator) instance.
+It returns a `Blockchain` which is backed by a new [Flow Emulator](../tools/emulator) instance.
 
 ```cadence
 import Test
@@ -878,7 +878,7 @@ access(all) struct Transaction {
 }
 ```
 
-The number of authorizers must match the number of `&Account` parameters in the `prepare` block of the transaction.
+The number of authorizers must match the number of `AuthAccount` arguments in the `prepare` block of the transaction.
 
 ```cadence
 import Test
@@ -890,7 +890,7 @@ access(all) let account = blockchain.createAccount()
 
 access(all) fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -906,7 +906,7 @@ access(all) fun testExample() {
 
 access(all) fun testExampleTwo() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -950,7 +950,7 @@ access(all) let account = blockchain.createAccount()
 
 access(all) fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -1009,7 +1009,7 @@ An `Error` is returned if the contract deployment fails. Otherwise, a `nil` is r
 ### Configuring import addresses
 
 A common pattern in Cadence projects is to define the imports as file locations and specify the addresses
-corresponding to each network in the [Flow CLI configuration file](https://developers.flow.com/tools/flow-cli/flow.json/configuration.md#contracts).
+corresponding to each network in the [Flow CLI configuration file](../tools/flow-cli/flow.json/configuration.md#contracts).
 When writing tests for such a project, it may also require to specify the addresses to be used during the tests as well.
 However, during tests, since accounts are created dynamically and the addresses are also generated dynamically,
 specifying the addresses statically in a configuration file is not an option.
@@ -1034,7 +1034,7 @@ access(all) struct Configuration {
 
 <Callout type="info">
 The `Blockchain.useConfiguration` is a run-time alternative for
-[statically defining contract addresses in the flow.json config file](https://developers.flow.com/tools/flow-cli/flow.json/configuration.md#advanced-format).
+[statically defining contract addresses in the flow.json config file](../tools/flow-cli/flow.json/configuration.md#advanced-format).
 </Callout>
 
 The configurations can be specified during the test setup as a best-practice.
@@ -1124,7 +1124,7 @@ access(all) fun testExample() {
     Test.expect(scriptResult, Test.beSucceeded())
 
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -1272,7 +1272,7 @@ access(all) let account = blockchain.createAccount()
 
 access(all) fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{ log(\"in a transaction\") } }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{ log(\"in a transaction\") } }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],

@@ -1,0 +1,84 @@
+---
+title: 1. First Steps
+---
+
+In this tutorial, we will learn how to use smart contracts, switch accounts, and view account state.
+
+## What is Cadence?
+
+---
+
+Cadence is a new smart contract programming language for use on the Flow Blockchain.
+Cadence introduces new features to smart contract programming that help developers ensure that their code is safe, secure, clear, and approachable. Some of these features are:
+
+- Type safety and a strong static type system
+- Resource-oriented programming, a new paradigm that pairs linear types with object capabilities to create a secure and declarative model for digital ownership
+  by ensuring that resources (and their associated assets) can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted
+- Built-in pre-conditions and post-conditions for functions and [transactions](../language/transactions.md)
+- The utilization of capability-based security, which enforces access control by requiring that access to objects
+  is restricted to only the owner and those who have a valid reference to the object
+
+Please see the [Cadence introduction](../intro.md) for more information about the high level design of the language.
+
+## What is the Flow Developer Playground?
+
+---
+
+The [Flow Playground](https://play.onflow.org) includes
+an in-browser editor and emulator to experiment with Flow.
+Using the Flow Playground, you can write Cadence smart contracts,
+deploy them to a local Flow emulated blockchain, and submit transactions.
+
+The Flow Playground should be compatible with any standard web browser,
+but we recommend that you use Google Chrome with it,
+because it has been tested and optimized for only the Chrome browser so far.
+
+## Getting to know the Playground
+
+The Playground contains everything you need to get familiar
+with deploying Cadence smart contracts and interacting with transaction and scripts.
+
+The Playground comes pre-loaded with contract and transaction templates
+that correspond to each of the tutorials in the docs site.
+To load the contracts from a specific tutorial, click the "Examples" link at the top of the Playground.
+This opens up a menu with each tutorial.
+
+When you click on one of these links, the tutorial will open in a new tab
+and the contracts, transactions, and scripts will be loaded into the templates in the Playground for you to use.
+
+## Accounts and Contracts
+
+The Accounts section on the bottom left part of the screen is where the active accounts are listed and selected.
+An account can have multiple smart contracts deployed to it, which will be covered later.
+You can click on an account tab to view the contracts that are associated with that account in the main editor.
+
+![Playground Intro](playground-intro.png)
+
+When you have Cadence code open in the account editor that contains a contract,
+you can click the deploy button in the bottom-right of the screen
+to deploy that contract to the currently selected account.
+
+![Deploy Contract](deploybox.png)
+
+After a few seconds, the contract should deploy. In the accounts section, you should 
+now see the name of the contract next to the selected account that you deployed too
+and if you click on "Log" in the bottom section of the screen, you should 
+see a message in the console confirming that the contract was deployed and which account it was deployed to.
+
+You can also select transactions and scripts from the left selection menu
+and submit them to interact with your deployed smart contracts,
+which will be covered in the Hello World tutorial.
+
+This is just a small set of the things you can do with the Playground.
+If you would like a more detailed explanation of the different Playground features, look at the Playground Manual.
+
+## Resources
+
+Each tutorial in this package uses several files containing transactions, contracts, and scripts.
+All the code you need will be provided in the text of the tutorials for you to copy and paste,
+or you can use the pre-generated tutorial setups in the Playground.
+
+## Say Hello, World!
+
+Now that you have the Flow Developer Playground running,
+you can [create a smart contract](./02-hello-world.md) for Flow!

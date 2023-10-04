@@ -11,7 +11,7 @@ I have an incompatible upgrade for a contract. How can I deploy this?
 Please don't perform incompatible upgrades between contract versions in the same account.
 There is too much that can go wrong.
 
-You can make [compatible upgrades](../cadence/language/contract-updatability.md) and then run a post-upgrade function on the new contract code if needed.
+You can make [compatible upgrades](./language/contract-updatability.md) and then run a post-upgrade function on the new contract code if needed.
 
 If you must replace your contract rather than update it,
 the simplest solution is to add or increase a suffix on any named paths in the contract code

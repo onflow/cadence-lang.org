@@ -36,7 +36,7 @@ Newcomers to Cadence should ensure they understand the following major concepts 
 
 ## Flow account model
 
-The [Flow account model](../build/key-concepts/accounts.md) in Cadence combines storage for the keys and code
+The [Flow account model](https://developers.flow.com/build/key-concepts/accounts.md) in Cadence combines storage for the keys and code
 (”smart contracts”) associated with an account with storage for the assets owned by that account. That’s right:
 In Cadence, your tokens are stored in your account, and not in a smart contract. Of course, smart contracts still
 define these assets and how they behave, but those assets can be securely stored in a user’s account through the
@@ -86,21 +86,21 @@ controls minting through an “administrator Capability” that grants specific 
 ## Contract standards
 
 There are numerous widely-used contract standards established to benefit the ecosystem, for example
-[Fungible Token](../build/flow.md#flow-token)(FT) and [Non-Fungible Token](../build/flow.md#flow-nft#overview)(NFT)
+[Fungible Token](https://developers.flow.com/build/flow.md#flow-token)(FT) and [Non-Fungible Token](https://developers.flow.com/build/flow.md#flow-nft#overview)(NFT)
 standards which are conceptually equivalent to Ethereum's ERC-20 and ERC-721 standards. Cadence's object-oriented
 design means standards apply through contract sub-types such as Resources, Resource interfaces, or other types
 declared in the contract standard. Standards can define and limit behaviour and/or set conditions which
 implementations of the standard cannot violate.
 
-Detailed information about available standards and other core contracts can be found in [Introduction to Flow](../build/flow.md).
+Detailed information about available standards and other core contracts can be found in [Introduction to Flow](https://developers.flow.com/build/flow.md).
 
 ### NFT standard and metadata
 
 Solidity must manage NFT metadata off-chain and NFTs typically link to IPFS JSON from on-chain.
 
-The Cadence NFT standard provides in-built support for metadata with specific types called [views](../build/flow.md#flow-nft#overview#nft-metadata).
+The Cadence NFT standard provides in-built support for metadata with specific types called [views](https://developers.flow.com/build/flow.md#flow-nft#overview#nft-metadata).
 Views can be added to NFTs when minted and will always be available as part of the NFT. While metadata is stored
-on-chain, graphics and video content are stored off-chain. Cadence provides [utility views](../build/flow.md#flow-nft#overview#list-of-common-views)
+on-chain, graphics and video content are stored off-chain. Cadence provides [utility views](https://developers.flow.com/build/flow.md#flow-nft#overview#list-of-common-views)
 for both HTTP and IPFS based media storage which remain linked to your NFT.
 
 Using NFT metadata views is a requirement to get listed in the [Flow NFT Catalog](https://www.flow-nft-catalog.com/).

@@ -52,7 +52,7 @@ Programs that run on blockchains are commonly referred to as smart contracts
 because they mediate important functionality (such as currency)
 without having to rely on a central authority (like a bank).
 
-[Cadence is the resource-oriented programming language](../../cadence/intro.md)
+[Cadence is the resource-oriented programming language](../intro.md)
 for developing smart contracts on the Flow Blockchain.
 
 This tutorial will walk you through an example of a smart contract that implements basic Cadence features,

@@ -294,7 +294,7 @@ If an address doesn’t have the correct resource type imported, the transaction
 
 **Important note: This protection is not in place for the Flow network currency,**
 **because every Flow account is initialized with a default Flow Token Vault**
-**in order to pay for [storage fees and transaction fees](../../build/key-concepts/fees.md#fees).**
+**in order to pay for [storage fees and transaction fees](https://developers.flow.com/build/key-concepts/fees.md#fees).**
 
 ### Function Parameters
 

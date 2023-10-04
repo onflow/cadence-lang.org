@@ -1,7 +1,5 @@
 ---
-title: Flow Smart Contract Project Development Standards
-sidebar_label: Development Standards
-sidebar_position: 7
+title: "Flow Smart Contract Project Development Standards"
 description: "Learn how to effectively organize and manage a Cadence project"
 ---
 
@@ -60,7 +58,7 @@ As with all best practices, teams will choose which applies to them and their wo
 however, we recommend that teams explicitly define a minimum acceptable set of standards
 for themselves along with the mechanisms to ensure they are being observed.
 
-Some teams may also have their own set of development standards that achieve a similar goal
+Some teams may also have their own set of development standards that acheive a similar goal
 to these. These recommendations are not meant to be the only paths to success,
 so if a team disagrees with some of these and wants to do things their own way,
 they are welcome to pursue that. This document just shows some generic suggestions
@@ -75,7 +73,7 @@ can set themselves up for success.
 
 Here are some recommendations for how projects can organize the foundations of their projects.
 
-### Projects should ensure that there is strong technical leadership for their smart contracts
+### Projects should ensure that there is strong technical leadership for ther smart contracts
 
 Developing a dapp requires a clear vision for the role of the smart contract and how it's integrated.
 Security vulnerabilities may arise from bugs directly in smart contract code (and elsewhere in the system).
@@ -85,7 +83,7 @@ DOS etc in a contract triggering explosive gas costs for the developer or other 
 We recommend that engineers leading a project and deploying to mainnet have an understanding
 of software and security engineering fundamentals and have been thorough
 in their Cadence skills development. More in-depth resources for learning Cadence
-are available [here](./intro.md).
+are available [here](../intro.md).
 
 The technical leader should be someone who understands Cadence well and has written Cadence smart contracts
 before. Production-level smart contracts are not the place for beginners to get their start.
@@ -172,7 +170,7 @@ Summarized below is a list of testing related recommendations
 which are noteworthy to mention for a typical smart contract project.
 
 Popular testing frameworks to use for cadence are listed here:
-Javascript: [Flow JS Testing](https://developers.flow.com/tools/flow-js-testing/index.md)
+Javascript: [Flow JS Testing](https://developers.flow.com/tools/flow-js-testing/)
 Go: [Overflow](https://github.com/bjartek/overflow)
 Cadence: [Cadence Testing Framework](https://github.com/onflow/cadence/blob/ac05b6a0d6005cde468573f0a7a2e3a67f49bd90/docs/testing-framework.mdx)
 Tests written in Cadence!
@@ -226,7 +224,7 @@ Here are a few suggestions for how to manage a deployment or upgrade.
     - Share the proposal with the community at least a week in advance (unless it is a critical bug fix)
         - Examples of places to share are your project's chat, forum, blog, email list, etc.
         - This will allow the community and other stakeholders to have plenty of time
-        to view the upcoming changes and provide feedback if necessary.
+        to view the upcoming changes and provide feedback if neccessary.
     - Share the time of the deployment and the deployment transaction with branch/commit hash information to ensure the transaction itself is correct.
     - Coordinate deployment with stakeholders to make sure it is done correctly and on time.
 
@@ -290,9 +288,9 @@ It also helps the owner to promote the project and themselves.
 
 Resources for Best Practices:
 
-- [cadence/design-pattern](./design-patterns.md)
-- [cadence/anti-patterns](./anti-patterns.md)
-- [cadence/security-best-practices](./security-best-practices.md)
+- [cadence/design-pattern](../../cadence/design-patterns.md)
+- [cadence/anti-patterns](../../cadence/anti-patterns.md)
+- [cadence/security-best-practices](../../cadence/security-best-practices.mdx)
 
 Composability and extensibility should also be priorities while designing, developing,
 and documenting their projects. (Documentation for these topics coming soon)

@@ -38,10 +38,13 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-
+          lastVersion: 'current_0.41',
           versions: {
             current: {
               label: 'Stable Cadence'
+            },
+            'current_0.41': {
+              label: 'Cadence 0.41',
             }
           },
           sidebarPath: require.resolve('./sidebars.js'),

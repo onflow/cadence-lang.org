@@ -5,7 +5,6 @@
  */
 
 /* You can override the default Infima variables here. */
-
 :root {
   --ifm-color-primary: #2e8555;
   --ifm-color-primary-dark: #29784c;
@@ -177,6 +176,16 @@ nav {
     rgba(0, 0, 0, 0) 0px 0px 0px 0px,
     rgba(0, 0, 0, 0.04) 0px 2px 4px 0px,
     rgba(0, 0, 0, 0.11) 0px 1px 1px 0px;
+}
+
+[data-theme='dark'] nav {
+  top: 0;
+  z-index: 1;
+  box-shadow:
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+    rgba(255, 255, 255, 0.04) 0px 2px 4px 0px, /* Slight white shadow for a subtle glow effect */
+    rgba(255, 255, 255, 0.08) 0px 1px 1px 0px; /* Slight white shadow for a subtle glow effect */
 }
 
 nav::before {

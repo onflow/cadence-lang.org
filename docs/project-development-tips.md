@@ -85,7 +85,7 @@ DOS etc in a contract triggering explosive gas costs for the developer or other 
 We recommend that engineers leading a project and deploying to mainnet have an understanding
 of software and security engineering fundamentals and have been thorough
 in their Cadence skills development. More in-depth resources for learning Cadence
-are available [here](./intro.md).
+are available [here](./index.md).
 
 The technical leader should be someone who understands Cadence well and has written Cadence smart contracts
 before. Production-level smart contracts are not the place for beginners to get their start.

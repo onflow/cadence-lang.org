@@ -41,7 +41,7 @@ const config = {
           lastVersion: 'current_0.41',
           versions: {
             current: {
-              label: 'Cadence 1.0.0'
+              label: 'Cadence 1.0.0',
             },
             'current_0.41': {
               label: 'Cadence 0.41',
@@ -115,6 +115,7 @@ const config = {
             type: 'docsVersionDropdown',
             position: 'right',
             dropdownActiveClassDisabled: true,
+            to: '/docs/next/intro'
           },
           {
             href: 'https://github.com/onflow/cadence',

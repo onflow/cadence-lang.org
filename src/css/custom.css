@@ -135,6 +135,7 @@ code {
   font-size: 1.8rem;
 }
 
+.navbar__brand:hover,
 .navbar__link:hover {
   color: var(--ifm-navbar-link-color);
   text-decoration: none;

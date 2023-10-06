@@ -131,6 +131,15 @@ code {
   padding-right: max(env(safe-area-inset-right), 1.5rem);
 }
 
+.navbar__title {
+  font-size: 1.8rem;
+}
+
+.navbar__brand:hover {
+  color: var(--ifm-navbar-link-color);
+  text-decoration: none;
+}
+
 nav {
   top: 0;
   z-index: 1;

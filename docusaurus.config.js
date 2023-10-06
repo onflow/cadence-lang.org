@@ -41,7 +41,7 @@ const config = {
           lastVersion: 'current_0.41',
           versions: {
             current: {
-              label: 'Stable Cadence'
+              label: 'Cadence 1.0.0'
             },
             'current_0.41': {
               label: 'Cadence 0.41',

@@ -47,6 +47,7 @@
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   --ifm-font-weight-semibold: 100;
+  --ifm-link-hover-color: white;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -59,6 +60,7 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-link-hover-color: inherit;
 }
 
 /*
@@ -118,6 +120,12 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+
+}
+
+/* Hover state of the anchor tag */
+a:hover {
+    text-decoration: none;
 }
 
 * {
@@ -392,7 +400,7 @@ main a {
 }
 
 .feature a {
-  font-weight: 500;
+  font-weight: 800;
 }
 
 .cta {

@@ -36,7 +36,7 @@ Newcomers to Cadence should ensure they understand the following major concepts 
 
 ## Flow account model
 
-The [Flow account model](https://developers.flow.com/build/key-concepts/accounts.md) in Cadence combines storage for the keys and code
+The [Flow account model](https://developers.flow.com/build/basics/accounts.md) in Cadence combines storage for the keys and code
 (”smart contracts”) associated with an account with storage for the assets owned by that account. That’s right:
 In Cadence, your tokens are stored in your account, and not in a smart contract. Of course, smart contracts still
 define these assets and how they behave, but those assets can be securely stored in a user’s account through the

@@ -221,7 +221,6 @@ nav {
 
 [data-theme='dark'] nav {
   top: 0;
-  z-index: 1;
   box-shadow:
     rgba(0, 0, 0, 0) 0px 0px 0px 0px,
     rgba(0, 0, 0, 0) 0px 0px 0px 0px,

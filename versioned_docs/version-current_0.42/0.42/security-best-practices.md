@@ -1,7 +1,7 @@
 ---
 title: Cadence Security Best Practices
 sidebar_label: Security Best Practices
-sidebar_position: 3
+sidebar_position: 7
 ---
 
 This is an opinionated list of best practices Cadence developers should follow to write more secure Cadence code.

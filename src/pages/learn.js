@@ -5,11 +5,7 @@ import YouTube from 'react-youtube'
 export default function Learn() {
   return (
     <Layout title="Cadence: Learn" description="Cadence: Learn">
-      <div
-        style={{
-          
-          
-        }}>
+        <main>
         <div className="content-wrapper">
                 <h1>Learn Cadence</h1>
                 <p>
@@ -67,7 +63,8 @@ export default function Learn() {
                 </div>
             </div>
             </div>
-      </div>
+
+        </main>
     </Layout>
   );
 }

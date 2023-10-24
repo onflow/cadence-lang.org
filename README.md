@@ -18,6 +18,6 @@ To run the site locally, enter the following commands into a terminal window:
 git clone https://github.com/onflow/cadence-lang.org.git
 cd cadence-lang.org
 npm i
-npm run
+npm run start
 open "http://localhost:3000"
 ```

@@ -7,7 +7,7 @@ Account storage stores objects under paths.
 Paths consist of a domain and an identifier.
 
 Paths start with the character `/`, followed by the domain, the path separator `/`,
-and finally the identifier.
+and finally the identifier. The identifier must start with a letter and can only be followed by letters, numbers, or the underscore `_`. 
 For example, the path `/storage/test` has the domain `storage` and the identifier `test`.
 
 There are two valid domains: `storage` and `public`.

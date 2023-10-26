@@ -1255,7 +1255,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun map(_ f: (T: U)): [U]
+    fun map(_ f: fun(T): U): [U]
     ```
 
     Returns a new array whose elements are produced by applying the mapper function on each element
@@ -1287,7 +1287,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
     ```cadence
     access(all)
-    fun map(_ f: (T: U)): [U; N]
+    fun map(_ f: fun(T): U): [U; N]
     ```
 
     Returns a new fixed-sized array whose elements are produced by applying the mapper function on
@@ -1313,6 +1313,69 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
             return 0
         }
     let invalidMapFunctionExample = fixedSizedExample.map(functionAcceptingBool)
+    ```
+
+-
+    ```cadence
+    access(all)
+    fun filter(_ f: fun(T): Bool): [T]
+    ```
+
+    Returns a new array whose elements are filtered by applying the filter function on each element 
+    of the original array.
+    Available if `T` is not resource-kinded.
+
+    ```cadence
+    let example = [1, 2, 3]
+    let trueForEven =
+        fun (_ x: Int): Bool {
+            return x % 2 == 0
+        }
+
+    let filteredExample: [Int] = example.filter(trueForEven)
+    // `filteredExample` is `[2]`
+    // `example` still remains as `[1, 2, 3]`
+
+    // Invalid: Filter using a function which accepts a different type.
+    // This results in a type error, as the array contains `Int` values while function accepts 
+    // `Int64`.
+    let functionAcceptingInt64 =
+        fun (_ x: Int64): Bool {
+            return x % 2 == 0
+        }
+    let invalidFilterFunctionExample = example.filter(functionAcceptingInt64)
+    ```
+
+    `filter` function is also available for fixed-sized arrays:
+
+    ```cadence
+    access(all)
+    fun filter(_ f: fun(T): Bool): [T]
+    ```
+
+    Returns a new **variable-sized** array whose elements are filtered by applying the filter function on each element 
+    of the original array.
+    Available if `T` is not resource-kinded.
+
+    ```cadence
+    let fixedSizedExample: [String; 3] = ["AB", "XYZYX", "PQR"]
+    let lengthOfStringGreaterThanTwo =
+        fun (_ x: String): Bool {
+            return x.length > 2
+        }
+
+    let fixedArrayFilteredExample = fixedSizedExample.filter(lengthOfStringGreaterThanTwo)
+    // `fixedArrayFilteredExample` is `["XYZYX", "PQR"]`
+    // `fixedSizedExample` still remains as ["AB", "XYZYX", "PQR"]
+
+    // Invalid: Filter using a function which accepts a different type.
+    // This results in a type error, as the array contains `String` values while function accepts 
+    // `Bool`.
+    let functionAcceptingBool =
+        fun (_ x: Bool): Bool {
+            return True
+        }
+    let invalidFilterFunctionExample = fixedSizedExample.filter(functionAcceptingBool)
     ```
 
 #### Variable-size Array Functions

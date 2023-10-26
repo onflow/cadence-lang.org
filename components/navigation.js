@@ -21,6 +21,12 @@ export default function Navigation() {
             <a
                 target="_blank"
                 rel="noopener noreferrer"
+                href="https://developers.flow.com/cadence/solidity-to-cadence"
+            >Solidity Guide</a>
+            
+            <a
+                target="_blank"
+                rel="noopener noreferrer"
                 href="https://play.flow.com/"
             >Playground</a>
 

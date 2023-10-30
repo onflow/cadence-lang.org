@@ -4,6 +4,9 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+const theme = require('shiki/themes/nord.json');
+const { remarkCodeHike } = require('@code-hike/mdx');
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Cadence',
@@ -47,6 +50,12 @@ const config = {
               label: 'Cadence 0.42',
             }
           },
+          beforeDefaultRemarkPlugins: [
+            [
+              remarkCodeHike,
+              { theme, lineNumbers: true, showCopyButton: true },
+            ],
+          ],
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -64,7 +73,10 @@ const config = {
         //},
         
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: [
+            require.resolve('@code-hike/mdx/styles.css'),
+            require.resolve('./src/css/custom.css'),
+          ]
         },
       }),
     ],

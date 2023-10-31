@@ -351,7 +351,7 @@ main a {
 }
 
 .videos {
-  margin: 2rem 0;
+  margin: 2rem -200px;
   padding: 2rem;
   background-color: hsl(154.8, 99.2%, 47.1%);
 }

@@ -44,10 +44,10 @@ const config = {
           lastVersion: 'current_0.42',
           versions: {
             current: {
-              label: 'Cadence 1.0',
+              label: '1.0',
             },
             'current_0.42': {
-              label: 'Cadence 0.42',
+              label: '0.42',
             }
           },
           beforeDefaultRemarkPlugins: [

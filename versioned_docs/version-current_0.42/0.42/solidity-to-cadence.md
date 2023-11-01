@@ -156,7 +156,7 @@ guards to `require` at every function entry-point, thus validating the `msg.send
 [Capabilities](./language/capabilities.md) are defined by linking storage paths (namespaces for contract
 storage) to protected objects and then making that linked capability available to other accounts. Public and private
 scopes defined for storage paths and Capabilities themselves align precisely with
-[PublicAccount](./language/accounts.mdx#publicaccount)/[AuthAccount](./language/accounts.mdx#authaccount) account scopes.
+[PublicAccount](./language/accounts.mdx#publicaccount) / [AuthAccount](./language/accounts.mdx#authaccount) account scopes.
 
 Any account can get access to an account's public Capabilities. Public capabilities are created using public paths,
 i.e. they have the domain `public`. For example, all accounts have a default public capability linked to the

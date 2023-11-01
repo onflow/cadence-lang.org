@@ -103,6 +103,11 @@ const config = {
             position: 'right',
           },
           {
+            label: 'Solidity Guide',
+            to: '/docs/next/solidity-to-cadence',
+            position: 'right',
+          },
+          {
             href: 'https://play.flow.com/',
             label: 'Playground',
             position: 'right',

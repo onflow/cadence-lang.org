@@ -173,7 +173,7 @@ code {
 
 .main-wrapper {
   max-width: 80rem;
-  min-width: 85%;
+  /* min-width: 85%; */
   margin-left: auto;
   margin-right: auto;
   padding-left: max(env(safe-area-inset-left), 1.5rem);

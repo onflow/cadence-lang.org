@@ -45,7 +45,7 @@ export default function Learn() {
                 </ul>
             </div>
             <div className="videos">
-            <div className="content-wrapper">
+            <div>
 
                 <div className='videoSet'>
                 <YouTube

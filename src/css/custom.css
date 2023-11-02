@@ -171,7 +171,7 @@ code {
 
 .main-wrapper {
   width: 100%;
-  max-width: 80rem;
+  max-width: 82rem;
   /* min-width: 85%; */
   margin-left: auto;
   margin-right: auto;
@@ -350,7 +350,7 @@ main a {
 }
 
 .videos {
-  margin: 2rem -200px;
+  margin: 2rem -300px;
   padding: 2rem;
   background-color: hsl(154.8, 99.2%, 47.1%);
 }
@@ -360,6 +360,8 @@ main a {
   flex-direction: column;
   gap: 2.5rem;
   text-align: center;
+  max-width: 80rem;
+  margin: auto;
 }
 
 .videos iframe {

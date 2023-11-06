@@ -104,7 +104,7 @@ const config = {
           },
           {
             label: 'Solidity Guide',
-            to: '/docs/next/solidity-to-cadence',
+            to: '/docs/0.42/solidity-to-cadence',
             position: 'right',
           },
           {

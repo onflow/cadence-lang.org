@@ -10,7 +10,7 @@ Some practices listed below might overlap with advice in the [Cadence Anti-Patte
 
 ## References
 
-[References](./language/references) are ephemeral values and cannot be stored. If persistence is required, store a capability and borrow it when needed.
+[References](./language/references.mdx) are ephemeral values and cannot be stored. If persistence is required, store a capability and borrow it when needed.
 
 When exposing functionality, provide the least access necessary. When creating an authorized reference,
 create it with only the minimal set of entitlements required to achieve the desired functionality.

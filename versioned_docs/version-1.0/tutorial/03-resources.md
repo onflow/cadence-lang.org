@@ -43,9 +43,9 @@ This tutorial builds on the previous `Hello World` tutorial.
 Before beginning this tutorial, you should understand :
 
 - [Accounts](../language/accounts)
-- [Transactions](../language/transactions)
+- [Transactions](../language/transactions.md)
 - Signers
-- [Field types](../language/composite-types)
+- [Field types](../language/composite-types.mdx)
 
 This tutorial will build on your understanding of accounts and how to interact with them by introducing resources.
 Resources are one of Cadence's defining features.
@@ -208,7 +208,7 @@ The `@` symbol specifies that it is a resource of the type `HelloAsset`, which w
 This function uses the move operator to create a resource of type `HelloAsset` and return it.
 To create a new resource object, we use the `create` keyword
 
-Here we use the `<-` symbol. [This is the move operator](../language/resources#the-move-operator--).
+Here we use the `<-` symbol. [This is the move operator](../language/resources.mdx#the-move-operator--).
 The move operator `<-` replaces the assignment operator `=` in assignments that involve resources.
 To make the assignment of resources explicit, the move operator `<-` must be used when:
 
@@ -468,7 +468,7 @@ let helloResource <- acct.storage.load<@HelloWorld.HelloAsset>(from: /storage/He
 ```
 
 If no object of the specified type is stored under the given path, the function returns nothing, or `nil`.
-(This is an [Optional](../language/values-and-types#optionals),
+(This is an [Optional](../language/values-and-types.mdx#optionals),
 a special type of data that we will cover later)
 
 If the object at the given path is not of the specified type, Cadence will throw an error and the transaction will fail.
@@ -489,7 +489,7 @@ Next, we call the `hello()` function and log the output.
 log(helloResource?.hello())
 ```
 
-We use `?` because the values in the storage are returned as [optionals](../language/values-and-types#optionals).
+We use `?` because the values in the storage are returned as [optionals](../language/values-and-types.mdx#optionals).
 Optionals are values that are able to represent either the presence or the absence of a value.
 Optionals have two cases: either there is a value of the specified type, or there is nothing (`nil`).
 An optional type is declared using the `?` suffix.
@@ -522,7 +522,7 @@ and aborts the entire transaction if the object is `nil`.
 It is a more risky way of dealing with optionals, but if your program is ever in a state where a value being `nil`
 would defeat the purpose of the whole transaction, then the force-unwrap operator might be a good choice to deal with that.
 
-Refer to [Optionals In Cadence](../language/values-and-types#optionals) to learn more about optionals and how they are used.
+Refer to [Optionals In Cadence](../language/values-and-types.mdx#optionals) to learn more about optionals and how they are used.
 
 <Callout type="info">
 
@@ -562,7 +562,7 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 Feel free to modify the smart contract to create different resources,
 experiment with the available [account storage API](../language/accounts/storage.mdx),
 and write new transactions and scripts that execute different functions from your smart contract.
-Have a look at the [resource reference page](../language/resources)
+Have a look at the [resource reference page](../language/resources.mdx)
 to find out more about what you can do with resources.
 
 You're on the right track to building more complex applications with Cadence,

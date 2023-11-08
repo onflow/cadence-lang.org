@@ -498,5 +498,6 @@ or as
 
 ## Additional resources
 
-* Cadence or Solidity: [On-Chain Token Transfer Deep Dive](https://flow.com/engineering-blogs/flow-blockchain-programming-language-smart-contract-cadence-solidity-comparison-ethereum)
-* Implementing the [Bored Ape Yacht Club](https://flow.com/post/implementing-the-bored-ape-yacht-club-smart-contract-in-cadence) smart contract in Cadence
+- Cadence or Solidity: [On-Chain Token Transfer Deep Dive](https://flow.com/engineering-blogs/flow-blockchain-programming-language-smart-contract-cadence-solidity-comparison-ethereum)
+- Implementing the [Bored Ape Yacht Club](https://flow.com/post/implementing-the-bored-ape-yacht-club-smart-contract-in-cadence) smart contract in Cadence
+- Quicknode's Account Abstraction on the Flow Blockchain: [Comparing AA on Ethereum vs Flow](https://www.quicknode.com/guides/other-chains/flow/account-abstraction-on-flow#account-abstraction-on-ethereum-vs-flow)

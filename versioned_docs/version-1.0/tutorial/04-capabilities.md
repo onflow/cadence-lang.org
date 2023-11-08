@@ -136,7 +136,7 @@ stored in their accounts. (Explained more below)
 
 In this transaction, you create a new capability,
 then use the `link` function to create a public link to your `HelloAsset` resource object.
-Next you use that link to borrow a [reference](../language/references)
+Next you use that link to borrow a [reference](../language/references.mdx)
 to the underlying object and call the `hello()` function.
 A detailed explanation of what is happening in this transaction
 is below the transaction code so, if you feel lost, keep reading!
@@ -279,7 +279,7 @@ let helloReference = capability.borrow()
 
 This method creates the reference as the type we specified in `<>` in the `link` function.
 While borrowing the reference, we use
-[optional chaining](../language/composite-types#accessing-fields-and-functions-of-composite-types-using-optional-chaining)
+[optional chaining](../language/composite-types.mdx#accessing-fields-and-functions-of-composite-types-using-optional-chaining)
 because the borrowing of the reference could fail.
 The reference could be `nil` if the targeted storage slot is empty, is already borrowed,
 or if the requested type exceeds what is allowed by the capability.

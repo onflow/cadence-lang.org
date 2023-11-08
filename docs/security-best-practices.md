@@ -10,49 +10,33 @@ Some practices listed below might overlap with advice in the [Cadence Anti-Patte
 
 ## References
 
-[References](./language/references) are ephemeral values and cannot be stored. If persistence is required, store a capability and borrow it when needed.
+[References](./language/references.md) are ephemeral values and cannot be stored. If persistence is required, store a capability and borrow it when needed.
 
-When exposing functionality, provide the least access necessary. When creating an authorized reference,
-create it with only the minimal set of entitlements required to achieve the desired functionality.
+Authorized references (references with the `auth` keyword) allow downcasting, e.g. a restricted type to its unrestricted type and should only be used in some specific cases.
+
+When exposing functionality, provide the least access necessary. Do not use authorized references, as they can be downcasted, potentially allowing a user to gain access to supposedly restricted functionality. For example, the fungible token standard provides an interface to get the balance of a vault, without exposing the withdrawal functionality.
+
+Be aware that the subtype or unrestricted type could expose functionality that was not intended to be exposed. Do not use authorized references when exposing functionality. For example, the fungible token standard provides an interface to get the balance of a vault, without exposing the withdrawal functionality.
 
 ## Account Storage
 
-Don't trust a users' [account storage](./language/accounts/storage.mdx).
-Users have full control over their data and may reorganize it as they see fit.
-Users may store values in any path, so paths may store values of "unexpected" types.
-These values may be instances of types in contracts that the user deployed.
+Don't trust a users’ [account storage](./language/accounts.mdx#account-storage). Users have full control over their data and may reorganize it as they see fit. Users may store values in any path, so paths may store values of “unexpected” types. These values may be instances of types in contracts that the user deployed.
 
-Always [borrow](./language/accounts/capabilities.mdx) with the specific type that is expected.
-Or, check if the value is an instance of the expected type.
+Always [borrow](./language/capabilities.md) with the specific type that is expected. Or, check if the value is an instance of the expected type.
 
-## Authorized account references
+## Auth Accounts
 
-Access to an authorized account reference (`auth(...) &Account`) gives access to entitled operations,
-for example the account's storage, keys, and contracts.
+Access to an `AuthAccount` gives full access to the account's storage, keys, and contracts. Therefore, [avoid using AuthAccount](./anti-patterns.md#avoid-using-authaccount-as-a-function-parameter) as a function parameter unless absolutely necessary.
 
-Therefore, avoid passing an entitled account reference to a function,
-and when defining a function,
-only specify an account reference parameter with the fine-grained entitlements required to perform the necessary operations.
-
-It is preferable to use capabilities over direct account storage access when exposing account data.
-Using capabilities allows the revocation of access and limits the access to a single value with a certain set of functionality.
+It is preferable to use capabilities over direct `AuthAccount` storage when exposing account data. Using capabilities allows the revocation of access by unlinking and limits the access to a single value with a certain set of functionality – access to an `AuthAccount` gives full access to the whole storage, as well as key and contract management.
 
 ## Capabilities
 
-Don't issue and publish capabilities unless really necessary.
-Anyone can access capabilities that are published.
-If public access is needed, follow the [principle of least privilege/authority](https://en.wikipedia.org/wiki/Principle_of_least_privilege):
-Make sure that the capability type only grants access to the fields and functions that should be exposed, and nothing else.
-Ideally, create a capability with a reference type that is unauthorized.
+Don’t store anything under the [public capability storage](./language/capabilities.md) unless strictly required. Anyone can access your public capability using `AuthAccount.getCapability`. If something needs to be stored under `/public/`, make sure only read functionality is provided by restricting its type using either a resource interface or struct interface.
 
-If an entitlement is necessary to access the field or function,
-ensure it is only used for the particular field or function,
-and not also by other fields and functions.
-If needed, introduce a new, fine-grained entitlement.
+When linking a capability, the link might already be present. In that case, Cadence will not panic with a runtime error but the link function will return `nil`.
 
-When publishing a capability, a capability might already be present.
-It is a good practice to check if a capability already exists with `get` before creating it.
-This function will return `nil` if the capability does not exist.
+It is a good practice to check if the link already exists with `getLinkTarget` before creating it. This function will return `nil` if the link does not exist.
 
 If it is necessary to handle the case where borrowing a capability might fail, the `account.check` function can be used to verify that the target exists and has a valid type.
 
@@ -62,28 +46,20 @@ Ensure capabilities cannot be accessed by unauthorized parties. For example, cap
 
 Audits of Cadence code should also include [transactions](./language/transactions.md), as they may contain arbitrary code, just, like in contracts. In addition, they are given full access to the accounts of the transaction’s signers, i.e. the transaction is allowed to manipulate the signers’ account storage, contracts, and keys.
 
-Signing a transaction gives access to the operations accessible by the entitlements specified in the parameter types of the `prepare` block.
+Signing a transaction gives access to the `AuthAccount`, i.e. full access to the account’s storage, keys, and contracts.
 
-For example, the account reference type `auth(Storage) &Auth` is authorized is perform any storage operation.
-
-When signing a transaction, audit which entitlements are requested.
-
-When authoring a transaction,
-follow the [principle of least privilege/authority](https://en.wikipedia.org/wiki/Principle_of_least_privilege),
-and only request the least and most fine-grained account entitlements necessary to perform the operations of the transactions.
+Do not blindly sign a transaction. The transaction could for example change deployed contracts by upgrading them with malicious statements, revoking or adding keys, transferring resources from storage, etc.
 
 ## Types
 
-Use [intersection types and interfaces](./language/intersection-types.md). Always use the most specific type possible, following the principle of least privilege. Types should always be as restrictive as possible, especially for resource types.
+Use [restricted types and interfaces](./language/restricted-types.md). Always use the most specific type possible, following the principle of least privilege. Types should always be as restrictive as possible, especially for resource types.
 
 If given a less-specific type, cast to the more specific type that is expected. For example, when implementing the fungible token standard, a user may deposit any fungible token, so the implementation should cast to the expected concrete fungible token type.
 
 ## Access Control
 
-Declaring a field as [`access(all)`](./language/access-control.md) only protects from replacing the field’s value, but the value itself can still be mutated if it is mutable. Remember that containers, like dictionaries, and arrays, are mutable.
+Declaring a field as [`pub/access(all)`](./language/access-control.md) only protects from replacing the field’s value, but the value itself can still be mutated if it is mutable. Remember that containers, like dictionaries, and arrays, are mutable.
 
 Prefer non-public access to a mutable state. That state may also be nested. For example, a child may still be mutated even if its parent exposes it through a field with non-settable access.
 
-Do not use the `access(all)` modifier on fields unless necessary.
-Prefer `access(self)`, or `access(contract)` and `access(account)` when other types in the contract or account need to have access,
-and entitlement-based access for other cases.
+Do not use the `pub/access(all)` modifier on fields and functions unless necessary. Prefer `priv/access(self)`, or `access(contract)` and `access(account)` when other types in the contract or account need to have access.

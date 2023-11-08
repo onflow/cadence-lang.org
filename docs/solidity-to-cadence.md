@@ -494,3 +494,7 @@ can be called as
 `self.foo(balance: 30.0)`
 or as
 `self.foo(30.0)`
+
+## Additional resources
+* Cadence or Solidity: [On-Chain Token Transfer Deep Dive](https://flow.com/engineering-blogs/flow-blockchain-programming-language-smart-contract-cadence-solidity-comparison-ethereum)
+* Implementing the [Bored Ape Yacht Club](https://flow.com/post/implementing-the-bored-ape-yacht-club-smart-contract-in-cadence) smart contract in Cadence

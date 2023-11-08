@@ -107,7 +107,7 @@ All state that persists permanently is stored in [accounts](../language/accounts
 and all accounts have the same core functionality. (users, smart contracts, data storage)
 
 The interfaces to this state (the ways to interact with it, otherwise known as methods or functions) are also stored in accounts.
-All code execution takes place within [transactions](../language/transactions),
+All code execution takes place within [transactions](../language/transactions.md),
 which are blocks of code that are authorized and submitted by external users
 to interact with the persistent state, which includes directly modifying account storage.
 
@@ -170,10 +170,10 @@ can be changed later on instead of remaining constant like with `let`.
 
 You can use `access(all)` and the `access(all)` keyword interchangeably.
 They are both examples of an access control specification that means an interface can be accessed in all scopes, but not written to in all scopes.
-For more information about the different levels of access control permitted in Cadence, refer to the [Access Control section of the language reference](../language/access-control).
+For more information about the different levels of access control permitted in Cadence, refer to the [Access Control section of the language reference](../language/access-control.md).
 
 The `init()` section is called the initializer. It is a special function that only runs when the contract is first created.
-Objects similar to contracts, such as other [composite types like structs or resources](../language/composite-types),
+Objects similar to contracts, such as other [composite types like structs or resources](../language/composite-types.mdx),
 require that the initializer initializes all fields that are declared in a composite type.
 In the above example, the initializer sets the `greeting` field to `"Hello, World!"` when the contract is initialized.
 
@@ -246,7 +246,7 @@ button next to the contracts section in the playground.
 
 ---
 
-A [Transaction](../language/transactions) in Flow is defined as an arbitrary-sized block of Cadence code that is authorized by one or more accounts.
+A [Transaction](../language/transactions.md) in Flow is defined as an arbitrary-sized block of Cadence code that is authorized by one or more accounts.
 When an account authorizes a transaction, the code in that transaction has access to the authorizers' private storage.
 An account authorizes a transaction by performing a cryptographic signature on the transaction with the account's private key,
 which should only be accessible to the account owner. Therefore, authorizers are also known as signers.
@@ -329,5 +329,5 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 - Sign the transaction with one or multiple signers
 
 Feel free to modify the smart contract to implement different functions,
-experiment with the available [Cadence types](../language/values-and-types),
+experiment with the available [Cadence types](../language/values-and-types.mdx),
 and write new transactions that execute multiple functions from your `HelloWorld` smart contract.

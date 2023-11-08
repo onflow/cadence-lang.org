@@ -39,8 +39,8 @@ and use them as building blocks for new applications.
 
 Flow is designed to enable composability because of the way that interfaces, resources and capabilities are designed.
 
-- [Interfaces](../language/interfaces) allow projects to support any generic type as long as it supports a standard set of functionality specified by an interface.
-- [Resources](../language/resources) can be passed around and owned by accounts, contracts or even other resources, unlocking different use cases depending on where the resource is stored.
+- [Interfaces](../language/interfaces.mdx) allow projects to support any generic type as long as it supports a standard set of functionality specified by an interface.
+- [Resources](../language/resources.mdx) can be passed around and owned by accounts, contracts or even other resources, unlocking different use cases depending on where the resource is stored.
 - [Capabilities](../language/capabilities.md) allow exposing user-defined sets of functionality through special objects that enforce strict security with Cadence's type system.
 
 The combination of these allows developers to do more with less, re-using known safe code and design patterns
@@ -390,7 +390,7 @@ This contract has a few new features and concepts that are important to cover:
 
 ### Events
 
-[Events](../language/events) are special values that can be emitted during the execution of a program.
+[Events](../language/events.md) are special values that can be emitted during the execution of a program.
 They usually contain information to indicate that some important action has happened in a smart contract,
 such as an NFT transfer, a permission change, or many other different things.
 Off-chain applications can monitor events using a Flow SDK to know what is happening on-chain without having to query a smart contract directly.
@@ -398,7 +398,7 @@ Off-chain applications can monitor events using a Flow SDK to know what is happe
 Many applications want to maintain an off-chain record of what is happening on-chain so they can have faster performance
 when getting information about their users' accounts or generating analytics.
 
-Events are declared by indicating [the access level](../language/access-control), `event`,
+Events are declared by indicating [the access level](../language/access-control.md), `event`,
 and the name and parameters of the event, like a function declaration:
 ```cadence
 access(all) event ForSale(id: UInt64, price: UFix64, owner: Address?)
@@ -434,7 +434,7 @@ acct.link<&ExampleToken.Vault{ExampleToken.Receiver, ExampleToken.Balance}>
     (/public/CadenceFungibleTokenTutorialReceiver, target: /storage/CadenceFungibleTokenTutorialVault)
 ```
 
-Then, users can get that capability if it was created [in a public path](../language/accounts/paths),
+Then, users can get that capability if it was created [in a public path](../language/accounts/paths.mdx),
 borrow it, and access the functionality that the owner specified.
 
 ```cadence

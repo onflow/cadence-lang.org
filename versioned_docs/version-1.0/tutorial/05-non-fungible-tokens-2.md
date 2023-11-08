@@ -77,7 +77,7 @@ account.storage.save(<-myNFTs, to: /storage/basicNFTDictionary)
 
 ## Dictionaries
 
-This example uses a [**Dictionary**: a mutable, unordered collection of key-value associations](../language/values-and-types#dictionaries).
+This example uses a [**Dictionary**: a mutable, unordered collection of key-value associations](../language/values-and-types.mdx#dictionaries).
 
 ```cadence
 // Keys are `Int`
@@ -324,7 +324,7 @@ access(all) fun getIDs(): [UInt64] {
 ```
 
 This can be used to iterate through the dictionary or just to see a list of what is stored.
-As you can see, [a variable length array type](../language/values-and-types#arrays)
+As you can see, [a variable length array type](../language/values-and-types.mdx#arrays)
 is declared by enclosing the member type within square brackets (`[UInt64]`).
 
 ## Resources Owning Resources

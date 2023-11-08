@@ -24,7 +24,7 @@ export default function Learn() {
                     </li>
                     <li>
                         <strong>
-                            <span className='icon'>📕</span> Read the <a href="https://developers.flow.com/cadence/language">documentation</a>
+                            <span className='icon'>📕</span> Read the <a href="https://cadence-lang.org/docs/">documentation</a>
                         </strong>
                     </li>
                     <li>

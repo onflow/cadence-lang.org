@@ -99,8 +99,6 @@ and can represent values in the following ranges:
 - **`Word16`**: 0 through 2^16 − 1 (65535)
 - **`Word32`**: 0 through 2^32 − 1 (4294967295)
 - **`Word64`**: 0 through 2^64 − 1 (18446744073709551615)
-- **`Word128`**: 0 through 2^128 − 1 (340282366920938463463374607431768211455)
-- **`Word256`**: 0 through 2^256 − 1 (115792089237316195423570985008687907853269984665640564039457584007913129639935)
 
 The types are independent types, i.e. not subtypes of each other.
 
@@ -950,21 +948,6 @@ let c = str[0] // is the Character "a"
     let uwu: String = String.fromCharacters(rawUwU) // "UwU"
     ```
 
--
-    ```cadence
-    let utf8: [UInt8]
-    ```
-
-    The byte array of the UTF-8 encoding
-
-    ```cadence
-    let a: Character = "a"
-    let a_bytes = a.utf8 // `a_bytes` is `[97]`
-
-    let bouquet: Character = "\u{1F490}"
-    let bouquet_bytes = bouquet.utf8 // `bouquet_bytes` is `[240, 159, 146, 144]`
-    ```
-
 ## Arrays
 
 Arrays are mutable, ordered collections of values.
@@ -1116,7 +1099,6 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
 -
     ```cadence
-    access(all)
     fun concat(_ array: T): T
     ```
 
@@ -1146,7 +1128,6 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
 -
     ```cadence
-    access(all)
     fun contains(_ element: T): Bool
     ```
 
@@ -1172,7 +1153,6 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
 -
     ```cadence
-    access(all)
     fun firstIndex(of: T): Int?
     ```
 
@@ -1194,7 +1174,6 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
 -
     ```cadence
-    access(all)
     fun slice(from: Int, upTo: Int): [T]
     ```
 
@@ -1220,164 +1199,6 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
     let invalidIndices = example.slice(from: 2, upTo: 1)
     ```
 
--
-    ```cadence
-    access(all)
-    fun reverse(): [T]
-    ```
-
-    Returns a new array with contents in the reversed order.
-    Available if `T` is not resource-kinded.
-
-    ```cadence
-    let example = [1, 2, 3, 4]
-
-    // Create a new array which is the reverse of the original array.
-    let reversedExample = example.reverse()
-    // `reversedExample` is now `[4, 3, 2, 1]`
-    ```
-
-    ```cadence
-    access(all)
-    fun reverse(): [T; N]
-    ```
-
-    Returns a new fixed-sized array of same size with contents in the reversed order.
-    
-    ```cadence
-    let fixedSizedExample: [String; 3] = ["ABC", "XYZ", "PQR"]
-
-    // Create a new array which is the reverse of the original array.
-    let fixedArrayReversedExample = fixedSizedExample.reverse()
-    // `fixedArrayReversedExample` is now `["PQR", "XYZ", "ABC"]`
-    ```
-
--
-    ```cadence
-    access(all)
-    fun map(_ f: fun(T): U): [U]
-    ```
-
-    Returns a new array whose elements are produced by applying the mapper function on each element
-    of the original array.
-    Available if `T` is not resource-kinded.
-
-    ```cadence
-    let example = [1, 2, 3]
-    let trueForEven =
-        fun (_ x: Int): Bool {
-            return x % 2 == 0
-        }
-
-    let mappedExample: [Bool] = example.map(trueForEven)
-    // `mappedExample` is `[False, True, False]`
-    // `example` still remains as `[1, 2, 3]`
-
-    // Invalid: Map using a function which accepts a different type.
-    // This results in a type error, as the array contains `Int` values while function accepts 
-    // `Int64`.
-    let functionAcceptingInt64 =
-        fun (_ x: Int64): Bool {
-            return x % 2 == 0
-        }
-    let invalidMapFunctionExample = example.map(functionAcceptingInt64)
-    ```
-
-    `map` function is also available for fixed-sized arrays:
-
-    ```cadence
-    access(all)
-    fun map(_ f: fun(T): U): [U; N]
-    ```
-
-    Returns a new fixed-sized array whose elements are produced by applying the mapper function on
-    each element of the original array.
-    Available if `T` is not resource-kinded.
-
-    ```cadence
-    let fixedSizedExample: [String; 3] = ["ABC", "XYZYX", "PQR"]
-    let lengthOfString =
-        fun (_ x: String): Int {
-            return x.length
-        }
-
-    let fixedArrayMappedExample = fixedSizedExample.map(lengthOfString)
-    // `fixedArrayMappedExample` is now `[3, 5, 3]`
-    // `fixedSizedExample` still remains as ["ABC", "XYZYX", "PQR"]
-
-    // Invalid: Map using a function which accepts a different type.
-    // This results in a type error, as the array contains `String` values while function accepts 
-    // `Bool`.
-    let functionAcceptingBool =
-        fun (_ x: Bool): Int {
-            return 0
-        }
-    let invalidMapFunctionExample = fixedSizedExample.map(functionAcceptingBool)
-    ```
-
--
-    ```cadence
-    access(all)
-    fun filter(_ f: fun(T): Bool): [T]
-    ```
-
-    Returns a new array whose elements are filtered by applying the filter function on each element 
-    of the original array.
-    Available if `T` is not resource-kinded.
-
-    ```cadence
-    let example = [1, 2, 3]
-    let trueForEven =
-        fun (_ x: Int): Bool {
-            return x % 2 == 0
-        }
-
-    let filteredExample: [Int] = example.filter(trueForEven)
-    // `filteredExample` is `[2]`
-    // `example` still remains as `[1, 2, 3]`
-
-    // Invalid: Filter using a function which accepts a different type.
-    // This results in a type error, as the array contains `Int` values while function accepts 
-    // `Int64`.
-    let functionAcceptingInt64 =
-        fun (_ x: Int64): Bool {
-            return x % 2 == 0
-        }
-    let invalidFilterFunctionExample = example.filter(functionAcceptingInt64)
-    ```
-
-    `filter` function is also available for fixed-sized arrays:
-
-    ```cadence
-    access(all)
-    fun filter(_ f: fun(T): Bool): [T]
-    ```
-
-    Returns a new **variable-sized** array whose elements are filtered by applying the filter function on each element 
-    of the original array.
-    Available if `T` is not resource-kinded.
-
-    ```cadence
-    let fixedSizedExample: [String; 3] = ["AB", "XYZYX", "PQR"]
-    let lengthOfStringGreaterThanTwo =
-        fun (_ x: String): Bool {
-            return x.length > 2
-        }
-
-    let fixedArrayFilteredExample = fixedSizedExample.filter(lengthOfStringGreaterThanTwo)
-    // `fixedArrayFilteredExample` is `["XYZYX", "PQR"]`
-    // `fixedSizedExample` still remains as ["AB", "XYZYX", "PQR"]
-
-    // Invalid: Filter using a function which accepts a different type.
-    // This results in a type error, as the array contains `String` values while function accepts 
-    // `Bool`.
-    let functionAcceptingBool =
-        fun (_ x: Bool): Bool {
-            return True
-        }
-    let invalidFilterFunctionExample = fixedSizedExample.filter(functionAcceptingBool)
-    ```
-
 #### Variable-size Array Functions
 
 The following functions can only be used on variable-sized arrays.
@@ -1385,7 +1206,6 @@ It is invalid to use one of these functions on a fixed-sized array.
 
 -
     ```cadence
-    access(Mutate | Insert)
     fun append(_ element: T): Void
     ```
 
@@ -1409,7 +1229,6 @@ It is invalid to use one of these functions on a fixed-sized array.
 
 -
     ```cadence
-    access(Mutate | Insert)
     fun appendAll(_ array: T): Void
     ```
 
@@ -1434,7 +1253,6 @@ It is invalid to use one of these functions on a fixed-sized array.
 
 -
     ```cadence
-    access(Mutate | Insert)
     fun insert(at: Int, _ element: T): Void
     ```
 
@@ -1466,7 +1284,6 @@ It is invalid to use one of these functions on a fixed-sized array.
     ```
 -
     ```cadence
-    access(Mutate | Remove)
     fun remove(at: Int): T
     ```
 
@@ -1492,7 +1309,6 @@ It is invalid to use one of these functions on a fixed-sized array.
 
 -
     ```cadence
-    access(Mutate | Remove)
     fun removeFirst(): T
     ```
 
@@ -1523,7 +1339,6 @@ It is invalid to use one of these functions on a fixed-sized array.
 
 -
     ```cadence
-    access(Mutate | Remove)
     fun removeLast(): T
     ```
 
@@ -1706,7 +1521,6 @@ booleans[0] = true
 
 -
     ```cadence
-    access(Mutate | Insert)
     fun insert(key: K, _ value: V): V?
     ```
 
@@ -1773,7 +1587,6 @@ booleans[0] = true
 
 -
     ```cadence
-    access(Mutate | Remove)
     let keys: [K]
     ```
 
@@ -1814,7 +1627,6 @@ booleans[0] = true
 
 -
     ```cadence
-    access(all)
     fun containsKey(key: K): Bool
     ```
 
@@ -1840,8 +1652,7 @@ booleans[0] = true
 
 -
     ```cadence
-    access(all)
-    fun forEachKey(_ function: fun(K): Bool): Void
+    fun forEachKey(_ function: ((K): Bool)): Void
     ```
 
     Iterate through all the keys in the dictionary, exiting early if the passed function returns false.

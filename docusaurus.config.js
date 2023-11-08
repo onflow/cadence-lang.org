@@ -41,13 +41,13 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          lastVersion: 'current_0.42',
+          lastVersion: 'current',
           versions: {
             current: {
-              label: '1.0',
-            },
-            'current_0.42': {
               label: '0.42',
+            },
+            '1.0': {
+              label: '1.0',
             }
           },
           beforeDefaultRemarkPlugins: [
@@ -104,7 +104,7 @@ const config = {
           },
           {
             label: 'Solidity Guide',
-            to: '/docs/0.42/solidity-to-cadence',
+            to: '/docs/solidity-to-cadence',
             position: 'right',
           },
           {

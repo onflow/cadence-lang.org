@@ -11,8 +11,8 @@ This contract is already deployed to testnet and mainnet and can be used by anyo
 ---
 
 <Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <a
+  Open the starter code for this tutorial in the Flow Playground: 
+  <a 
     href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
     target="_blank"
   >
@@ -41,7 +41,7 @@ Flow is designed to enable composability because of the way that interfaces, res
 
 - [Interfaces](../language/interfaces) allow projects to support any generic type as long as it supports a standard set of functionality specified by an interface.
 - [Resources](../language/resources) can be passed around and owned by accounts, contracts or even other resources, unlocking different use cases depending on where the resource is stored.
-- [Capabilities](../language/capabilities.md) allow exposing user-defined sets of functionality through special objects that enforce strict security with Cadence's type system.
+- [Capabilities](../language/capabilities) allow exposing user-defined sets of functionality through special objects that enforce strict security with Cadence's type system.
 
 The combination of these allows developers to do more with less, re-using known safe code and design patterns
 to create new, powerful, and unique interactions!
@@ -110,7 +110,7 @@ import ExampleNFT from 0x02
 //
 // Account 0x01: Vault Balance = 40, NFT.id = 1
 // Account 0x02: Vault Balance = 20, No NFTs
-access(all) fun main() {
+pub fun main() {
     // Get the accounts' public account objects
     let acct1 = getAccount(0x01)
     let acct2 = getAccount(0x02)
@@ -219,27 +219,27 @@ import ExampleNFT from 0x02
 //
 // https://github.com/onflow/nft-storefront
 
-access(all) contract ExampleMarketplace {
+pub contract ExampleMarketplace {
 
     // Event that is emitted when a new NFT is put up for sale
-    access(all) event ForSale(id: UInt64, price: UFix64, owner: Address?)
+    pub event ForSale(id: UInt64, price: UFix64, owner: Address?)
 
     // Event that is emitted when the price of an NFT changes
-    access(all) event PriceChanged(id: UInt64, newPrice: UFix64, owner: Address?)
+    pub event PriceChanged(id: UInt64, newPrice: UFix64, owner: Address?)
 
     // Event that is emitted when a token is purchased
-    access(all) event TokenPurchased(id: UInt64, price: UFix64, seller: Address?, buyer: Address?)
+    pub event TokenPurchased(id: UInt64, price: UFix64, seller: Address?, buyer: Address?)
 
     // Event that is emitted when a seller withdraws their NFT from the sale
-    access(all) event SaleCanceled(id: UInt64, seller: Address?)
+    pub event SaleCanceled(id: UInt64, seller: Address?)
 
     // Interface that users will publish for their Sale collection
     // that only exposes the methods that are supposed to be public
     //
-    access(all) resource interface SalePublic {
-        access(all) fun purchase(tokenID: UInt64, recipient: Capability<&AnyResource{ExampleNFT.NFTReceiver}>, buyTokens: @ExampleToken.Vault)
-        access(all) fun idPrice(tokenID: UInt64): UFix64?
-        access(all) fun getIDs(): [UInt64]
+    pub resource interface SalePublic {
+        pub fun purchase(tokenID: UInt64, recipient: Capability<&AnyResource{ExampleNFT.NFTReceiver}>, buyTokens: @ExampleToken.Vault)
+        pub fun idPrice(tokenID: UInt64): UFix64?
+        pub fun getIDs(): [UInt64]
     }
 
     // SaleCollection
@@ -247,7 +247,7 @@ access(all) contract ExampleMarketplace {
     // NFT Collection object that allows a user to put their NFT up for sale
     // where others can send fungible tokens to purchase it
     //
-    access(all) resource SaleCollection: SalePublic {
+    pub resource SaleCollection: SalePublic {
 
         /// A capability for the owner's collection
         access(self) var ownerCollection: Capability<&ExampleNFT.Collection>
@@ -278,7 +278,7 @@ access(all) contract ExampleMarketplace {
         }
 
         // cancelSale gives the owner the opportunity to cancel a sale in the collection
-        access(all) fun cancelSale(tokenID: UInt64) {
+        pub fun cancelSale(tokenID: UInt64) {
             // remove the price
             self.prices.remove(key: tokenID)
             self.prices[tokenID] = nil
@@ -287,7 +287,7 @@ access(all) contract ExampleMarketplace {
         }
 
         // listForSale lists an NFT for sale in this collection
-        access(all) fun listForSale(tokenID: UInt64, price: UFix64) {
+        pub fun listForSale(tokenID: UInt64, price: UFix64) {
             pre {
                 self.ownerCollection.borrow()!.idExists(id: tokenID):
                     "NFT to be listed does not exist in the owner's collection"
@@ -299,14 +299,14 @@ access(all) contract ExampleMarketplace {
         }
 
         // changePrice changes the price of a token that is currently for sale
-        access(all) fun changePrice(tokenID: UInt64, newPrice: UFix64) {
+        pub fun changePrice(tokenID: UInt64, newPrice: UFix64) {
             self.prices[tokenID] = newPrice
 
             emit PriceChanged(id: tokenID, newPrice: newPrice, owner: self.owner?.address)
         }
 
         // purchase lets a user send tokens to purchase an NFT that is for sale
-        access(all) fun purchase(tokenID: UInt64, recipient: Capability<&AnyResource{ExampleNFT.NFTReceiver}>, buyTokens: @ExampleToken.Vault) {
+        pub fun purchase(tokenID: UInt64, recipient: Capability<&AnyResource{ExampleNFT.NFTReceiver}>, buyTokens: @ExampleToken.Vault) {
             pre {
                 self.prices[tokenID] != nil:
                     "No token matching this ID for sale!"
@@ -338,18 +338,18 @@ access(all) contract ExampleMarketplace {
         }
 
         // idPrice returns the price of a specific token in the sale
-        access(all) fun idPrice(tokenID: UInt64): UFix64? {
+        pub fun idPrice(tokenID: UInt64): UFix64? {
             return self.prices[tokenID]
         }
 
         // getIDs returns an array of token IDs that are for sale
-        access(all) fun getIDs(): [UInt64] {
+        pub fun getIDs(): [UInt64] {
             return self.prices.keys
         }
     }
 
     // createCollection returns a new collection resource to the caller
-    access(all) fun createSaleCollection(ownerCollection: Capability<&ExampleNFT.Collection>,
+    pub fun createSaleCollection(ownerCollection: Capability<&ExampleNFT.Collection>,
                                  ownerVault: Capability<&AnyResource{ExampleToken.Receiver}>): @SaleCollection {
         return <- create SaleCollection(ownerCollection: ownerCollection, ownerVault: ownerVault)
     }
@@ -365,7 +365,7 @@ that was explained in [Non-Fungible Tokens](./05-non-fungible-tokens-1.md), with
   Then, another user can call the `purchase` method, sending their `ExampleToken.Vault` that contains the currency they are using to make the purchase.
   The buyer also includes a capability to their NFT `ExampleNFT.Collection` so that the purchased token
   can be immediately deposited into their collection when the purchase is made.
-- This marketplace contract stores a capability: `access(all) let ownerVault: Capability<&AnyResource{FungibleToken.Receiver}>`.
+- This marketplace contract stores a capability: `pub let ownerVault: Capability<&AnyResource{FungibleToken.Receiver}>`.
   The owner of the sale saves a capability to their Fungible Token `Receiver` within the sale.
   This allows the sale resource to be able to immediately deposit the currency that was used to buy the NFT
   into the owners `Vault` when a purchase is made.
@@ -374,16 +374,16 @@ that was explained in [Non-Fungible Tokens](./05-non-fungible-tokens-1.md), with
 
 ```cadence
     // Event that is emitted when a new NFT is put up for sale
-    access(all) event ForSale(id: UInt64, price: UFix64, owner: Address?)
+    pub event ForSale(id: UInt64, price: UFix64, owner: Address?)
 
     // Event that is emitted when the price of an NFT changes
-    access(all) event PriceChanged(id: UInt64, newPrice: UFix64, owner: Address?)
+    pub event PriceChanged(id: UInt64, newPrice: UFix64, owner: Address?)
 
     // Event that is emitted when a token is purchased
-    access(all) event TokenPurchased(id: UInt64, price: UFix64, seller: Address?, buyer: Address?)
+    pub event TokenPurchased(id: UInt64, price: UFix64, seller: Address?, buyer: Address?)
 
     // Event that is emitted when a seller withdraws their NFT from the sale
-    access(all) event SaleCanceled(id: UInt64, seller: Address?)
+    pub event SaleCanceled(id: UInt64, seller: Address?)
 ```
 
 This contract has a few new features and concepts that are important to cover:
@@ -401,7 +401,7 @@ when getting information about their users' accounts or generating analytics.
 Events are declared by indicating [the access level](../language/access-control), `event`,
 and the name and parameters of the event, like a function declaration:
 ```cadence
-access(all) event ForSale(id: UInt64, price: UFix64, owner: Address?)
+pub event ForSale(id: UInt64, price: UFix64, owner: Address?)
 ```
 
 Events cannot modify state at all; they indicate when important actions happen in the smart contract.
@@ -422,7 +422,7 @@ As you hopefully understand, [capabilites](../language/capabilities.md)
 are links to private objects in account storage that specify and expose a subset in the public or private namespace of public or private paths
 where the Capability is linked.
 
-To create a capability, a user typically uses [the `AuthAccount.link`](../language/accounts)
+To create a capability, a user typically uses [the `AuthAccount.link`](../language/accounts.mdx#authaccount)
 method to create a link to a resource in their private storage, specifying a type to link the capability as:
 
 ```cadence
@@ -434,7 +434,7 @@ acct.link<&ExampleToken.Vault{ExampleToken.Receiver, ExampleToken.Balance}>
     (/public/CadenceFungibleTokenTutorialReceiver, target: /storage/CadenceFungibleTokenTutorialVault)
 ```
 
-Then, users can get that capability if it was created [in a public path](../language/accounts/paths),
+Then, users can get that capability if it was created [in a public path](../language/accounts.mdx#paths),
 borrow it, and access the functionality that the owner specified.
 
 ```cadence
@@ -489,7 +489,7 @@ One last piece to consider about capabilities is the decision about when to use 
 This tutorial used to have the `SaleCollection` directly store the NFTs that were for sale, like so:
 
 ```cadence
-access(all) resource SaleCollection: SalePublic {
+pub resource SaleCollection: SalePublic {
 
     /// Dictionary of NFT objects for sale
     /// Maps ID to NFT resource object
@@ -506,7 +506,7 @@ then those NFTs are not available to be shown to any app or smart contract that 
 so it is as if the owner doesn't actually own the NFT!
 
 In cases like this, we usually recommend using a capability to the main collection so that the main collection can remain unchanged and fully usable by
-other smart contracts and apps. This also means that if a for-sale NFT gets transferred by some means other than a purchase, then you need a way to get
+other smart contracts and apps. This also means that if a for-sale NFT gets transferred by some means other than a purchase, then you need a way to get 
 rid of the stale listing. That is out of the scope of this tutorial though.
 
 Enough explaining! Lets execute some code!
@@ -554,7 +554,7 @@ transaction {
         sale.listForSale(tokenID: 1, price: 10.0)
 
         // Store the sale object in the account storage
-        acct.storage.save(<-sale, to: /storage/NFTSale)
+        acct.save(<-sale, to: /storage/NFTSale)
 
         // Create a public capability to the sale so that others can call its methods
         acct.link<&ExampleMarketplace.SaleCollection{ExampleMarketplace.SalePublic}>(/public/NFTSale, target: /storage/NFTSale)
@@ -585,7 +585,7 @@ import ExampleNFT from 0x02
 import ExampleMarketplace from 0x03
 
 // This script prints the NFTs that account 0x01 has for sale.
-access(all) fun main() {
+pub fun main() {
     // Get the public account object for account 0x01
     let account1 = getAccount(0x01)
 
@@ -713,7 +713,7 @@ import ExampleMarketplace from 0x03
 //
 // Account 1: Vault balance = 50, No NFTs
 // Account 2: Vault balance = 10, NFT ID=1
-access(all) fun main() {
+pub fun main() {
     // Get the accounts' public account objects
     let acct1 = getAccount(0x01)
     let acct2 = getAccount(0x02)
@@ -721,13 +721,13 @@ access(all) fun main() {
     // Get references to the account's receivers
     // by getting their public capability
     // and borrowing a reference from the capability
-    let acct1ReceiverRef = acct1.capabilities
-        .borrow<&ExampleToken.Vault{ExampleToken.Balance}>(/public/CadenceFungibleTokenTutorialReceiver)
-        ?? panic("Could not borrow acct1 vault reference")
+    let acct1ReceiverRef = acct1.getCapability(/public/CadenceFungibleTokenTutorialReceiver)
+                           .borrow<&ExampleToken.Vault{ExampleToken.Balance}>()
+                           ?? panic("Could not borrow acct1 vault reference")
 
-    let acct2ReceiverRef = acct2.capabilities
-        .borrow<&ExampleToken.Vault{ExampleToken.Balance}>(/public/CadenceFungibleTokenTutorialReceiver)
-        ?? panic("Could not borrow acct2 vault reference")
+    let acct2ReceiverRef = acct2.getCapability(/public/CadenceFungibleTokenTutorialReceiver)
+                            .borrow<&ExampleToken.Vault{ExampleToken.Balance}>()
+                            ?? panic("Could not borrow acct2 vault reference")
 
     // Log the Vault balance of both accounts and ensure they are
     // the correct numbers.
@@ -806,14 +806,14 @@ If we wanted to build a central marketplace on-chain, we could use a contract th
 ```cadence CentralMarketplace.cdc
 // Marketplace would be the central contract where people can post their sale
 // references so that anyone can access them
-access(all) contract Marketplace {
+pub contract Marketplace {
     // Data structure to store active sales
-    access(all) var tokensForSale: {Address: Capability<&SaleCollection>)}
+    pub var tokensForSale: {Address: Capability<&SaleCollection>)}
 
     // listSaleCollection lists a users sale reference in the array
     // and returns the index of the sale so that users can know
     // how to remove it from the marketplace
-    access(all) fun listSaleCollection(collection: Capability<&SaleCollection>) {
+    pub fun listSaleCollection(collection: Capability<&SaleCollection>) {
         let saleRef = collection.borrow()
             ?? panic("Invalid sale collection capability")
 
@@ -822,7 +822,7 @@ access(all) contract Marketplace {
 
     // removeSaleCollection removes a user's sale from the array
     // of sale references
-    access(all) fun removeSaleCollection(owner: Address) {
+    pub fun removeSaleCollection(owner: Address) {
         self.tokensForSale[owner] = nil
     }
 

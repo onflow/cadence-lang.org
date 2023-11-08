@@ -31,10 +31,10 @@ In this tutorial, we're going to deploy, store, and transfer **Non-Fungible Toke
 
 Open the starter code for this tutorial in the Flow Playground:
 
-<a href="https://play.onflow.org/a21087ad-b22c-4981-b49e-17297e916fa6"
+<a href="https://play.onflow.org/a21087ad-b22c-4981-b49e-17297e916fa6" 
   target="_blank">
   https://play.onflow.org/a21087ad-b22c-4981-b49e-17297e916fa6
-</a>
+</a> 
 <br/>
 The tutorial will ask you to take various actions to interact with this code.
 </Callout>
@@ -128,11 +128,13 @@ We'll start by looking at a basic NFT contract, that adds an NFT to an account.
 The contract will:
 
 1. Create a smart contract with the NFT resource type.
-2. Declare an ID field, a metadata field and an initializer in the NFT resource.
-3. Create an initializer for the contract that saves an NFT to an account.
+2. Declare an ID field, a metadata field and an `init()` function in the NFT resource
+3. Create an `init()` function for the contract that saves an NFT to an account
 
-This contract relies on the [account storage API](../language/accounts/storage.mdx)
-to save NFTs in the account.
+This contract relies on the [account storage API](../language/accounts#authaccount) to save NFTs in the
+`AuthAccount` object.
+
+---
 
 <Callout type="info">
 
@@ -153,17 +155,17 @@ Open Account `0x01` to see `BasicNFT.cdc`.
 </Callout>
 
 ```cadence BasicNFT.cdc
-access(all) contract BasicNFT {
+pub contract BasicNFT {
 
     // Declare the NFT resource type
-    access(all) resource NFT {
+    pub resource NFT {
         // The unique ID that differentiates each NFT
-        access(all) let id: UInt64
+        pub let id: UInt64
 
         // String mapping to hold metadata
-        access(all) var metadata: {String: String}
+        pub var metadata: {String: String}
 
-        // Initialize both fields in the initializer
+        // Initialize both fields in the init function
         init(initID: UInt64) {
             self.id = initID
             self.metadata = {}
@@ -171,13 +173,13 @@ access(all) contract BasicNFT {
     }
 
     // Function to create a new NFT
-    access(all) fun createNFT(id: UInt64): @NFT {
+    pub fun createNFT(id: UInt64): @NFT {
         return <-create NFT(initID: id)
     }
 
     // Create a single new NFT and save it to account storage
     init() {
-        self.account.storage.save(<-create NFT(initID: 1), to: /storage/BasicNFTPath)
+        self.account.save<@NFT>(<-create NFT(initID: 1), to: /storage/BasicNFTPath)
     }
 }
 ```
@@ -193,14 +195,15 @@ that can allow the storage of complex file formats and other such data.
 
 An NFT could even own other NFTs! This functionality is shown in the next tutorial.
 
-In the contract's initializer, we create a new NFT object and move it into the account storage.
+In the contract's `init` function, we create a new NFT object and move it into the account storage.
 
 ```cadence
 // put it in storage
-self.account.storage.save(<-create NFT(initID: 1), to: /storage/BasicNFTPath)
+self.account.save<@NFT>(<-create NFT(initID: 1), to: /storage/BasicNFTPath)
 ```
 
-Here we access the storage object of the account that the contract is deployed to and call its `save` method.
+Here we access the `AuthAccount` object on the account the contract is deployed to and call its `save` method,
+specifying `@NFT` as the type it is being saved as.
 We also create the NFT in the same line and pass it as the first argument to `save`.
 We save it to the `/storage` domain, where objects are meant to be stored.
 
@@ -225,8 +228,8 @@ import BasicNFT from 0x01
 // This transaction checks if an NFT exists in the storage of the given account
 // by trying to borrow from it. If the borrow succeeds (returns a non-nil value), the token exists!
 transaction {
-    prepare(acct: auth(BorrowValue) &Account) {
-        if acct.storage.borrow<&BasicNFT.NFT>(from: /storage/BasicNFTPath) != nil {
+    prepare(acct: AuthAccount) {
+        if acct.borrow<&BasicNFT.NFT>(from: /storage/BasicNFTPath) != nil {
             log("The token exists!")
         } else {
             log("No token found!")
@@ -265,10 +268,7 @@ import BasicNFT from 0x01
 /// to transfer an NFT
 
 transaction {
-    prepare(
-        signer1: auth(LoadValue) &Account,
-        signer2: auth(SaveValue) &Account
-    ) {
+    prepare(signer1: AuthAccount, signer2: AuthAccount) {
 
         // Fill in code here to load the NFT from signer1
         // and save it into signer2's storage
@@ -311,17 +311,14 @@ import BasicNFT from 0x01
 /// to transfer an NFT
 
 transaction {
-    prepare(
-        signer1: auth(LoadValue) &Account,
-        signer2: auth(SaveValue) &Account
-    ) {
+    prepare(signer1: AuthAccount, signer2: AuthAccount) {
 
         // Load the NFT from signer1's account
-        let nft <- signer1.storage.load<@BasicNFT.NFT>(from: /storage/BasicNFTPath)
+        let nft <- signer1.load<@BasicNFT.NFT>(from: /storage/BasicNFTPath)
             ?? panic("Could not load NFT")
 
         // Save the NFT to signer2's account
-        signer2.storage.save(<-nft, to: /storage/BasicNFTPath)
+        signer2.save<@BasicNFT.NFT>(<-nft, to: /storage/BasicNFTPath)
 
     }
 }

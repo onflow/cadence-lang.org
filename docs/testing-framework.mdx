@@ -878,7 +878,7 @@ access(all) struct Transaction {
 }
 ```
 
-The number of authorizers must match the number of `&Account` parameters in the `prepare` block of the transaction.
+The number of authorizers must match the number of `AuthAccount` arguments in the `prepare` block of the transaction.
 
 ```cadence
 import Test
@@ -890,7 +890,7 @@ access(all) let account = blockchain.createAccount()
 
 access(all) fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -906,7 +906,7 @@ access(all) fun testExample() {
 
 access(all) fun testExampleTwo() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -950,7 +950,7 @@ access(all) let account = blockchain.createAccount()
 
 access(all) fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -1124,7 +1124,7 @@ access(all) fun testExample() {
     Test.expect(scriptResult, Test.beSucceeded())
 
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{} }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -1272,7 +1272,7 @@ access(all) let account = blockchain.createAccount()
 
 access(all) fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: &Account) {} execute{ log(\"in a transaction\") } }",
+        code: "transaction { prepare(acct: AuthAccount) {} execute{ log(\"in a transaction\") } }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],

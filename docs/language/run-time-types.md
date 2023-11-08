@@ -91,25 +91,26 @@ Run-time types can also be constructed from type identifier strings using built-
 ```cadence
 fun CompositeType(_ identifier: String): Type?
 fun InterfaceType(_ identifier: String): Type?
-fun IntersectionType(types: [String]): Type?
+fun RestrictedType(identifier: String?, restrictions: [String]): Type?
 ```
 
-Given a type identifier (or a list of identifiers for interfaces
-in the case of `IntersectionType`), these functions will look up nominal types and
+Given a type identifier (as well as a list of identifiers for restricting interfaces
+in the case of `RestrictedType`), these functions will look up nominal types and
 produce their run-time equivalents. If the provided identifiers do not correspond
-to any types, or (in the case of `IntersectionType`) the provided combination of
+to any types, or (in the case of `RestrictedType`) the provided combination of
 identifiers would not type-check statically, these functions will produce `nil`.
 
 ```cadence
-struct Test: I {}
+struct Test {}
 struct interface I {}
 let type: Type = CompositeType("A.0000000000000001.Test")
 // `type` is `Type<Test>`
 
-let type2: Type = IntersectionType(
+let type2: Type = RestrictedType(
+    identifier: type.identifier,
     restrictions: ["A.0000000000000001.I"]
 )
-// `type2` is `Type<{I}>`
+// `type2` is `Type<Test{I}>`
 ```
 
 Other built-in functions will construct compound types from other run-types.
@@ -123,7 +124,7 @@ fun FunctionType(parameters: [Type], return: Type): Type
 fun DictionaryType(key: Type, value: Type): Type?
 // returns `nil` if `type` is not a reference type
 fun CapabilityType(_ type: Type): Type?
-fun ReferenceType(entitlements: [String], type: Type): Type?
+fun ReferenceType(authorized: bool, type: Type): Type
 ```
 
 ### Asserting the Type of a Value
@@ -180,21 +181,21 @@ something.isInstance(Type<String>())  // is `false`
 For example, this allows implementing a marketplace sale resource:
 
 ```cadence
-access(all) resource SimpleSale {
+pub resource SimpleSale {
 
     /// The resource for sale.
     /// Once the resource is sold, the field becomes `nil`.
     ///
-    access(all) var resourceForSale: @AnyResource?
+    pub var resourceForSale: @AnyResource?
 
     /// The price that is wanted for the purchase of the resource.
     ///
-    access(all) let priceForResource: UFix64
+    pub let priceForResource: UFix64
 
     /// The type of currency that is required for the purchase.
     ///
-    access(all) let requiredCurrency: Type
-    access(all) let paymentReceiver: Capability<&{FungibleToken.Receiver}>
+    pub let requiredCurrency: Type
+    pub let paymentReceiver: Capability<&{FungibleToken.Receiver}>
 
     /// `paymentReceiver` is the capability that will be borrowed
     /// once a valid purchase is made.
@@ -225,7 +226,7 @@ access(all) resource SimpleSale {
     /// If the purchase succeeds, the resource for sale is returned.
     /// If the purchase fails, the program aborts.
     ///
-    access(all) fun buyObject(with funds: @FungibleToken.Vault): @AnyResource {
+    pub fun buyObject(with funds: @FungibleToken.Vault): @AnyResource {
         pre {
             // Ensure the resource is still up for sale
             self.resourceForSale != nil: "The resource has already been sold"

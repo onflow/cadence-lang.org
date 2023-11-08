@@ -90,7 +90,7 @@ It also allows you to save and share your work with others so that you can test 
 
 When you work with accounts in the Flow Playground, you start with five default accounts that you can change and reconfigure.
 Each account in your environment has a unique address, and you can select an account in the left toolbar,
-which will open up the contracts that are saved for that account.
+which will open up the contracts that are saved for that account. 
 The `HelloWorld` contracts are loaded by default for each account
 unless you load an existing playground project with other saved contracts.
 
@@ -143,44 +143,44 @@ Open the Account `0x01` tab with the file called
 ```cadence HelloWorld.cdc
 // HelloWorld.cdc
 //
-access(all) contract HelloWorld {
+pub contract HelloWorld {
 
     // Declare a public field of type String.
     //
-    // All fields must be initialized in the initializer.
-    access(all) let greeting: String
+    // All fields must be initialized in the init() function.
+    pub let greeting: String
 
-    // The initializer is required if the contract contains any fields.
+    // The init() function is required if the contract contains any fields.
     init() {
         self.greeting = "Hello, World!"
     }
 
     // Public function that returns our friendly greeting!
-    access(all) fun hello(): String {
+    pub fun hello(): String {
         return self.greeting
     }
 }
 ```
 
-The line `access(all) contract HelloWorld ` declares a contract that is accessible in all scopes (public).
-It's followed by `access(all) let greeting: String` which declares a state constant (`let`) of type `String` that is accessible in all scopes(`access(all)`).
+The line `pub contract HelloWorld ` declares a contract that is accessible in all scopes (public).
+It's followed by `pub let greeting: String` which declares a state constant (`let`) of type `String` that is accessible in all scopes(`pub`).
 
 You would have used `var` to declare a variable, which means that the value
 can be changed later on instead of remaining constant like with `let`.
 
-You can use `access(all)` and the `access(all)` keyword interchangeably.
+You can use `access(all)` and the `pub` keyword interchangeably.
 They are both examples of an access control specification that means an interface can be accessed in all scopes, but not written to in all scopes.
 For more information about the different levels of access control permitted in Cadence, refer to the [Access Control section of the language reference](../language/access-control).
 
 The `init()` section is called the initializer. It is a special function that only runs when the contract is first created.
 Objects similar to contracts, such as other [composite types like structs or resources](../language/composite-types),
-require that the initializer initializes all fields that are declared in a composite type.
+require that the `init()` function initialize any fields that are declared in a composite type.
 In the above example, the initializer sets the `greeting` field to `"Hello, World!"` when the contract is initialized.
 
 The last part of our `HelloWorld` contract is a public function called `hello()`.
 This declaration returns a value of type `String`.
 Anyone who imports this contract in their transaction or script can read the public fields,
-use the public types, and call the public contract functions; i.e. the ones that have `access(all)` or `access(all)` specified.
+use the public types, and call the public contract functions; i.e. the ones that have `pub` or `access(all)` specified.
 
 Soon you'll deploy this contract to your account and run a transaction that calls its function, but first, let's look at what accounts and transactions are.
 
@@ -266,7 +266,7 @@ import HelloWorld from 0x01
 
 transaction {
 
-  prepare(acct: &Account) {}
+  prepare(acct: AuthAccount) {}
 
   execute {
     log(HelloWorld.hello())

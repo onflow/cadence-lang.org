@@ -475,3 +475,14 @@ footer {
     flex: 1 1 auto;
   }
 }
+
+@media screen and (min-width: 997px) and (max-width: 1200px) {
+  .DocSearch-Button-Placeholder, .DocSearch-Button-Keys {
+    display: none !important;
+  }
+  .navbar__item {
+    font-size: 14px;
+    padding-left: 8px;
+    padding-right: 8px
+  }
+}

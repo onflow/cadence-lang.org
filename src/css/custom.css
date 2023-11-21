@@ -191,8 +191,14 @@ code {
   font-size: 1.8rem;
 }
 
+.navbar-sidebar__brand {
+  width: 100%;
+  margin-bottom: 1rem;
+}
 .navbar__brand {
+  padding: 0.75rem;
   padding-left: 1.5rem;
+  flex-grow: 1;
 }
 
 .navbar__brand:hover,
@@ -225,14 +231,6 @@ nav::before {
   z-index: -1;
 }
 
-nav > div {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
 nav .logo {
   margin-right: auto;
   padding: .75rem;
@@ -245,8 +243,6 @@ nav .logo {
 
 nav a {
   display: inline-block;
-  padding: .75rem;
-
   font-weight: 300;
 }
 
@@ -440,7 +436,7 @@ footer {
   color: #c5c5c5;
 }
 
-@media screen and (min-width: 64em) {
+@media screen and (min-width: 997px) {
   nav {
     position: sticky;
   }
@@ -477,5 +473,21 @@ footer {
 
   .videoSet > div {
     flex: 1 1 auto;
+  }
+}
+
+.navbar__item {
+  font-size: 14px;
+  padding-left: 8px;
+  padding-right: 8px
+}
+
+.navbar__items--right>:last-child {
+  padding-right: 12px;
+}
+
+@media screen and (min-width: 997px) and (max-width: 1200px) {
+  .DocSearch-Button-Placeholder, .DocSearch-Button-Keys {
+    display: none !important;
   }
 }

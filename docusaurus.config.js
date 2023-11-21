@@ -1,11 +1,14 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
-
+require('dotenv').config();
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 const theme = require('shiki/themes/nord.json');
 const { remarkCodeHike } = require('@code-hike/mdx');
+
+const hasTypesense =
+  process.env.TYPESENSE_NODE && process.env.TYPESENSE_SEARCH_ONLY_API_KEY;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -81,6 +84,8 @@ const config = {
       }),
     ],
   ],
+
+  themes: [hasTypesense && 'docusaurus-theme-search-typesense'].filter(Boolean),
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -168,6 +173,28 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+      },
+      typesense: hasTypesense && {
+        // Replace this with the name of your index/collection.
+        // It should match the "index_name" entry in the scraper's "config.json" file.
+        typesenseCollectionName: 'cadence_lang',
+
+        typesenseServerConfig: {
+          nodes: [
+            {
+              host: process.env.TYPESENSE_NODE,
+              port: 443,
+              protocol: 'https',
+            },
+          ],
+          apiKey: process.env.TYPESENSE_SEARCH_ONLY_API_KEY,
+        },
+
+        // Optional: Typesense search parameters: https://typesense.org/docs/0.24.0/api/search.html#search-parameters
+        typesenseSearchParameters: {},
+
+        // Optional
+        contextualSearch: true,
       },
     }),
 };

@@ -745,8 +745,6 @@ transaction {
 In order to use a capability, we have to first create a link to that object in storage.
 A reference can then be created from a capability, and references cannot be stored.
 They need to be lost at the end of a transaction execution.
-This restriction is to prevent reentrancy attacks which are attacks where a malicious user calls into the same function over and over again
-before the original execution has finished. Only allowing one reference at a time for an object prevents these attacks for objects in storage.
 
 To create a capability, we use the `link` function.
 

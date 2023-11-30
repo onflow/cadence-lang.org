@@ -285,11 +285,6 @@ The reference could be `nil` if the targeted storage slot is empty, is already b
 or if the requested type exceeds what is allowed by the capability.
 We panic with a descriptive error message so the caller can know better what went wrong.
 
-We separate this process into capabilities and references to protect against reentrancy attacks.
-A reentrancy attack is where a malicious actor could call into an object multiple times.
-These attacks have plagued other smart contract languages.
-Only one reference to an object can exist at a time, so this type of vulnerability isn't possible for objects in storage when you use Cadence.
-
 Additionally, the owner of an object can effectively revoke capabilities they have created by moving the underlying object or destroying the link with the `unlink` method.
 If the referenced object is moved or the link is destroyed, capabilities that have been created from that link are invalidated.
 

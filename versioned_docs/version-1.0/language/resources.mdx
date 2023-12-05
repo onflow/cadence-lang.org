@@ -259,68 +259,9 @@ let oldX <- x <- create R()
 destroy oldX
 ```
 
-### Resource Destructors
-
-Resource may have a destructor, which is executed when the resource is destroyed.
-Destructors have no parameters and no return value and are declared using the `destroy` name.
-A resource may have only one destructor.
-
-```cadence
-var destructorCalled = false
-
-access(all) resource Resource {
-
-    // Declare a destructor for the resource, which is executed
-    // when the resource is destroyed.
-    //
-    destroy() {
-        destructorCalled = true
-    }
-}
-
-let res <- create Resource()
-destroy res
-// `destructorCalled` is `true`
-```
-
 ### Nested Resources
 
 Fields in composite types behave differently when they have a resource type.
-
-If a resource type has fields that have a resource type,
-it **must** declare a destructor,
-which **must** invalidate all resource fields, i.e. move or destroy them.
-
-```cadence
-access(all) resource Child {
-    let name: String
-
-    init(name: String)
-        self.name = name
-    }
-}
-
-// Declare a resource with a resource field named `child`.
-// The resource *must* declare a destructor
-// and the destructor *must* invalidate the resource field.
-//
-access(all) resource Parent {
-    let name: String
-    var child: @Child
-
-    init(name: String, child: @Child) {
-        self.name = name
-        self.child <- child
-    }
-
-    // Declare a destructor which invalidates the resource field
-    // `child` by destroying it.
-    //
-    destroy() {
-        destroy self.child
-    }
-}
-```
 
 Accessing a field or calling function on a resource field is valid,
 however moving a resource out of a variable resource field is **not** allowed.
@@ -343,6 +284,46 @@ parent.child <-> otherChild
 // `parent.child` is the second child, Child 2.
 // `otherChild` is the first child, Child 1.
 ```
+
+When a resource containing nested resources in fields is destroyed with a `destroy` statement,
+all the nested resources are also destroyed. 
+
+### Destroy Events
+
+While it is not possible to specify arbitrary code to execute upon the destruction of a resource, 
+it is possible to specify a special [event](./events.md) to be automatically emitted when a resource is destroyed. 
+The event has a reserved name: `ResourceDestroyed`, and uses special syntax:
+
+```cadence
+resource R {
+    event ResourceDestroyed(id: UInt64 = self.id) 
+
+    let id: UInt64
+
+    init(_ id: UInt64) {
+        self.id = id
+    }
+}
+```
+
+Whenever a value of type `R` defined this way is destroyed, a special `R.ResourceDestroyed` event will be emitted. 
+The special syntax used in the definition of the `ResourceDestroyed` specifies what the values associated with each event 
+parameter will be; in this case the `id` field of the `R.ResourceDestroyed` event will be the value that the `id` field held
+immediately before the resource was destroyed. In general, for some `ResourceDestroyed` event defined as:
+
+```cadence
+event ResourceDestroyed(field1: T1 = e1, field2: T2 = e2, ...)
+```
+
+The value of `field1` on the event will be the result of evaluating `e1` before destroying the resource, 
+the value of `field2` on the event will be the result of evaluating `e2` before destroying the resource, 
+and so on. As one might expect, `e1` and `e2` must also expressions of type `T1` and `T2` respectively.
+
+In order to guarantee that these events can be emitted with no chance of failure at runtime, there are restrictions 
+placed on which kinds of types and expressions can be used in their definitions. In general, an expression 
+defining the value of a field (the `e` in the general definition above) can only be a member or indexed access on `self` 
+(or `base` in the case of an [attachment](./attachments.mdx)) or a literal. The types of event fields are restricted to 
+number types, `String`s, `Boolean`s, `Address`es and `Path`s. 
 
 ### Resources in Closures
 
@@ -607,3 +588,4 @@ Otherwise the field is `nil`.
 The field's value changes when the resource is moved from outside account storage
 into account storage, when it is moved from the storage of one account
 to the storage of another account, and when it is moved out of account storage.
+

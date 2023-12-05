@@ -149,10 +149,6 @@ access(all) contract KittyVerse {
             var removed <- self.items.remove(key: key)
             return <- removed
         }
-
-        destroy() {
-            destroy self.items
-        }
     }
 
     access(all) fun createKitty(): @Kitty {

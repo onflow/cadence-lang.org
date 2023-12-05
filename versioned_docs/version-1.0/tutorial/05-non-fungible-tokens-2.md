@@ -110,7 +110,7 @@ This contract expands on the `BasicNFT` we looked at by adding:
 2. An `NFTReceiver` interface that exposes three public functions for the collection.
 3. Declares a resource called `Collection` that implements the `NFTReceiver` interface
 4. The `Collection` will declare fields and functions to interact with it,
-including `ownedNFTs`, `init()`, `withdraw()`, `destroy()`, and other important functions
+including `ownedNFTs`, `init()`, `withdraw()`, and other important functions
 5. Next, the contract declares functions that create a new NFT (`mintNFT()`) and an empty collection (`createEmptyCollection()`)
 7. Finally, the contract declares an initializer that initializes the path fields,
 creates an empty collection as well as a reference to it,
@@ -216,10 +216,6 @@ access(all) contract ExampleNFT {
         access(all) fun getIDs(): [UInt64] {
             return self.ownedNFTs.keys
         }
-
-        destroy() {
-            destroy self.ownedNFTs
-        }
     }
 
     // creates a new empty Collection resource and returns it
@@ -288,18 +284,8 @@ You wouldn't want it getting lost by accident!
 As we learned in the resource tutorial, you can destroy any resource
 by explicity invoking the `destroy` command.
 
-If the NFT `Collection` resource is destroyed with the `destroy` command,
-it needs to know what to do with the resources it stores in the dictionary.
-This is why resources that store other resources have to include
-a `destroy` function that runs when `destroy` is called on it.
-This destroy function has to either explicitly destroy the contained resources
-or move them somewhere else. In this example, we destroy them.
-
-```cadence
-destroy() {
-    destroy self.ownedNFTs
-}
-```
+When the NFT `Collection` resource is destroyed with the `destroy` command,
+all the resources stored in the dictionary are also `destroy`ed.
 
 When the `Collection` resource is created, the initializer is run
 and must explicitly initialize all member variables.

@@ -34,6 +34,10 @@ struct Capabilities {
     access(all)
     view fun borrow<T: &Any>(_ path: PublicPath): T?
 
+    /// Returns true if a capability exists at the given public path.
+    access(all)
+    view fun exists(_ path: PublicPath): Bool
+
     /// Publish the capability at the given public path.
     ///
     /// If there is already a capability published under the given path, the program aborts.
@@ -55,6 +59,19 @@ entitlement Capabilities
 entitlement PublishCapability
 entitlement UnpublishCapability
 ```
+
+## Checking the existence of public capabilities
+
+The function `capabilities.check` determines if a public capability
+was [published](#publishing-capabilities) at the given path before.
+
+```cadence
+access(all)
+view fun exists(_ path: PublicPath): Bool
+```
+
+If the account has a capability published under the given path,
+the function returns true, otherwise false.
 
 ## Getting public capabilities
 

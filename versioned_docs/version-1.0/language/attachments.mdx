@@ -31,6 +31,8 @@ attachment Baz for MyInterface: MyOtherInterface {
 }
 ```
 
+Like all other type declarations, attachments may only be declared with `all` access. 
+
 Specifying the kind (struct or resource) of an attachment is not necessary, as its kind will necessarily be the same as the type it is extending.
 Note that the base type may be either a concrete composite type or an interface.
 In the former case, the attachment is only usable on values specifically of that base type,
@@ -254,7 +256,7 @@ Contrarily, if `v` has type `auth(E) &R`, then the type of `a` will be authorize
 Finally, when `v` is not a reference (i.e. an owned value of type `R`), then `a` will be "fully entitled" to `A`; it will be granted 
 all the entitlements mentioned by `A`, i.e. in this case it will have type `auth(E, F) &A`. 
 
-This is roughly equivalent to the behavior of the `Identity` entitlement mapping; indeed, attachments can be thought of 
+This is roughly equivalent to the behavior of the `Identity` [entitlement mapping](./access-control.md#entitlement-mappings); indeed, attachments can be thought of 
 as being `Identity`-mapped fields on their base value.
 
 ## Removing Attachments

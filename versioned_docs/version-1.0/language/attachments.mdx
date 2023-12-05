@@ -36,15 +36,6 @@ Note that the base type may be either a concrete composite type or an interface.
 In the former case, the attachment is only usable on values specifically of that base type,
 while in the case of an interface the attachment is usable on any type that conforms to that interface.
 
-Unlike other type declarations, attachments may use either an `access(all)` access modifier, or an `access(M)` modifier,
-where `M` is the name of an entitlement mapping.
-When attachments are defined with an `access(all)` modifier,
-members on the attachment may not use any entitlements in their access modifiers,
-and any references to that attachment are always unauthorized.
-When attachments are defined with an an [entitlement mapping](./access-control.md),
-members on the attachments may use any entitlements in the range of that mapping,
-and any references to that attachments will have their authorization depend on the entitlements present on the base type on which they are accessed.
-
 The body of the attachment follows the same declaration rules as composites.
 In particular, they may have both field and function members,
 and any field members must be initialized in an initializer.
@@ -52,12 +43,11 @@ Only resource-kinded attachments may have resource members,
 and such members must be explicitly handled in the `destroy` function.
 The `self` keyword is available in attachment bodies, but unlike in a composite,
 `self` is a **reference** type, rather than a composite type:
-In an attachment declaration for `A`, the type of `self` would be `&A`, rather than `A` like in other composite declarations.
-If the attachment declaration uses an `access(all)` access modifier, the `self` reference is always unauthorized,
-whereas if it uses an `access(M)` access modifier, the `self` reference is fully-entitled to the range of `M`.
+In an attachment declaration for `A`, the type of `self` would be a reference to `A`, rather than `A` like in other composite declarations.
+The specific entitlements that this reference has depends on the access modifier associated with the member function in which the `self` reference
+appears, and is explained in more detail below. 
 
-If a resource with attachments on it is `destroy`ed, the `destroy` functions of all its attachments are all run in an unspecified order;
-`destroy` should not rely on the presence of other attachments on the base type in its implementation.
+If a resource with attachments on it is `destroy`ed, the `destroy` functions of all its attachments are all run in an unspecified order.
 The only guarantee about the order in which attachments are destroyed in this case is that the base resource will be the last thing destroyed.
 
 Within the body of an attachment, there is also a `base` keyword available,
@@ -120,32 +110,43 @@ access(all) attachment SomeAttachment for SomeContract.SomeStruct {
 }
 ```
 
-By default, the `base` reference is unauthorized, and thus entitled-access members on the base type are inaccessible in the attachment.
-If the author of the attachment wishes to have access to entitled-access members on the base type,
-they must declare that their attachment requires certain entitlements to the base, using `require entitlement E` syntax.
-Required entitlements must be valid entitlements for the base type,
-and requiring entitlements in the attachment declaration will impose additional requirements when the attachment is attached,
-as described below. So, for example:
+Within an attachment's member function, the `base` and `self` references are entitled to the same entitlements that the function's access modifier specifies.
+E.g., in an attachment declared as `access(all) attachment A for R`, within a definition of a function `access(E) fun foo()`, 
+the type of `base` would be `auth(E) &R`, and the type of `self` would be `auth(E) &A`. Thus the following definition would work:
 
 ```cadence
-entitlement mapping M {
-    E -> F
-}
-
 resource R {
     access(E) fun foo() {
         //...
     }
 }
 
-access(M) attachment A for R {
-    require entitlement E
-
-    access(all) fun bar() {
+access(all) attachment A for R {
+    access(E) fun bar() {
         base.foo() // available because `E` is required above, and thus `base` is type `auth(E) &R`.
     }
 }
 ```
+
+while this would not:
+
+```cadence
+resource R {
+    access(E) fun foo() {
+        //...
+    }
+}
+
+access(all) attachment A for R {
+    access(self) fun bar() {
+        base.foo() // unavailable because this function has `self` access, and thus `base` only is type `&R`.
+    }
+}
+```
+
+Note that as a result of how entitlements are propagated to the `self` and `base` values here, attachment definitions can only support
+the same entitlements that their base values support; i.e. some attachment `A` defined for `R` can only use an entitlement `E` in its definition
+if `R` also uses `E` in its definition (or the definition of any interfaces to which it conforms).
 
 ### Attachment Types
 
@@ -205,14 +206,6 @@ Cadence will raise a runtime error if a user attempts to add an attachment to a 
 The type returned by the `attach` expression is the same type as the expression on the right-hand side of the `to`;
 attaching an attachment to a value does not change its type.
 
-If an attachment has required entitlements to its base, those entitlements must be explicitly provided in the `attach` expression
-using an additional `with` syntax. So, for example, if an attachment `A` declared for `R` requires entitlements `E` and `F`, it can
-be attached to an `r` of type `@R` like so:
-
-```cadence
-let rWithA <- attach A() to <-r with (E, F)
-```
-
 ## Accessing Attachments
 
 Attachments are accessed on composites via type-indexing:
@@ -229,46 +222,40 @@ As mentioned above, attachments are not first-class values,
 so this indexing returns a reference to the attachment on `v`, rather than the attachment itself.
 If the attachment with the given type does not exist on `v`, this expression returns `nil`.
 
-Because the indexed value must be a subtype of the indexing attachment's base type,
-the owner of a resource can restrict which attachments can be accessed on references to their resource using interface types,
-much like they would do with any other field or function. E.g.
+The set of entitlements to which the result of an attachment access is authorized is the same as the set of entitlements to which the base 
+value is authorized. So, for example, given the following definition for `A`:
 
 ```cadence
-struct R: I {}
-struct interface I {}
-attachment A for R {}
-fun foo(r: &{I}) {
-    r[A] // fails to type check, because `{I}` is not a subtype of `R`
+entitlement E 
+entitlement F 
+
+resource R {
+    access(E) fun foo() {
+        // ... 
+    }
+    access(F) fun bar() { 
+        // ... 
+    }
 }
+
+attachment A for R {
+    access(E | F) fun qux() { 
+        // ... 
+    }
+}
+
+// ... 
+
+let a = v[A]!
 ```
 
-Hence, if the owner of a resource wishes to allow others to use a subset of its attachments,
-they can create a capability to that resource with a borrow type that only allows certain attachments to be accessed.
+When `v` has type `&R`, the resulting type of `a` will be an unauthorized `&A`. 
+Contrarily, if `v` has type `auth(E) &R`, then the type of `a` will be authorized to the same: `auth(E) &A`.
+Finally, when `v` is not a reference (i.e. an owned value of type `R`), then `a` will be "fully entitled" to `A`; it will be granted 
+all the entitlements mentioned by `A`, i.e. in this case it will have type `auth(E, F) &A`. 
 
-If an attachment is declared with an `access(all)` modifier,
-accessing one this way will always produce an unauthorized reference to the attachment.
-However, if the attachment is declared with an `access(M)` modifier, where `M` is some entitlement mapping,
-then the authorization of the resulting reference will depend on the authorization of the accessed value.
-
-So, for example, given a declaration
-
-```cadence
-entitlement E
-entitlement F
-entitlement G
-entitlement H
-entitlement mapping M {
-    E -> F
-    G -> H
-}
-resource R {}
-access(M) attachment A for R {}
-```
-
-when `A` is accessed on an owned value of type `@R`, it will be fully-authorized to the domain of `M`,
-having a type of `auth(F, H) &A`.
-However, if `A` is accessed on an `auth(E) &R` reference, then it will only have a `auth(F) &A` type.
-If `A` is accessed on an unauthorized `&R` reference, then it will yield an unauthorized `&A` type.
+This is roughly equivalent to the behavior of the `Identity` entitlement mapping; indeed, attachments can be thought of 
+as being `Identity`-mapped fields on their base value.
 
 ## Removing Attachments
 
@@ -278,7 +265,6 @@ the `from` keyword, and the value from which the attachment is meant to be remov
 
 The value on the right-hand side of `from` must be a composite value whose type is a subtype of the attachment type's declared base.
 
-Before the statement executes, the attachment's `destroy` function (if present) will be executed.
 After the statement executes, the composite value on the right-hand side of `from` will no longer contain the attachment.
 If the value does not contain `t`, this statement has no effect.
 

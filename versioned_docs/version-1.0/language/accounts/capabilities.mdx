@@ -15,11 +15,11 @@ access(all)
 struct Capabilities {
 
     /// The storage capabilities of the account.
-    access(CapabilitiesMapping)
+    access(mapping CapabilitiesMapping)
     let storage: Account.StorageCapabilities
 
     /// The account capabilities of the account.
-    access(CapabilitiesMapping)
+    access(mapping CapabilitiesMapping)
     let account: Account.AccountCapabilities
 
     /// Returns the capability at the given public path.

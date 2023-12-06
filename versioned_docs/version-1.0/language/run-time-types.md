@@ -213,13 +213,6 @@ access(all) resource SimpleSale {
         self.paymentReceiver = paymentReceiver
     }
 
-    destroy() {
-        // When this sale resource is destroyed,
-        // also destroy the resource for sale.
-        // Another option could be to transfer it back to the seller.
-        destroy self.resourceForSale
-    }
-
     /// buyObject allows purchasing the resource for sale by providing
     /// the required funds.
     /// If the purchase succeeds, the resource for sale is returned.

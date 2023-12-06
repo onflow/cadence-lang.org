@@ -436,7 +436,7 @@ resource OuterResource {
     // This is equivalent to the two accessor functions
     // that were necessary in the previous example.
     //
-    access(OuterToInnerMap)
+    access(mapping OuterToInnerMap)
     let childResource: @InnerResource
 
     init(childResource: @InnerResource) {
@@ -506,11 +506,11 @@ resource InnerResource {
 }
 
 resource OuterResource {
-    access(Identity)
+    access(mapping Identity)
     let childResource: @InnerResource
 
-    access(Identity)
-    getChildResource(): auth(Identity) &InnerResource {
+    access(mapping Identity)
+    getChildResource(): auth(mapping Identity) &InnerResource {
         return &self.childResource
     }
 

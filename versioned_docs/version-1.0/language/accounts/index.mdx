@@ -28,23 +28,23 @@ struct Account {
     let availableBalance: UFix64
 
     /// The storage of the account.
-    access(AccountMapping)
+    access(mapping AccountMapping)
     let storage: Account.Storage
 
     /// The contracts deployed to the account.
-    access(AccountMapping)
+    access(mapping AccountMapping)
     let contracts: Account.Contracts
 
     /// The keys assigned to the account.
-    access(AccountMapping)
+    access(mapping AccountMapping)
     let keys: Account.Keys
 
     /// The inbox allows bootstrapping (sending and receiving) capabilities.
-    access(AccountMapping)
+    access(mapping AccountMapping)
     let inbox: Account.Inbox
 
     /// The capabilities of the account.
-    access(AccountMapping)
+    access(mapping AccountMapping)
     let capabilities: Account.Capabilities
 }
 

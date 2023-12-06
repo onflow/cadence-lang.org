@@ -288,6 +288,25 @@ parent.child <-> otherChild
 When a resource containing nested resources in fields is destroyed with a `destroy` statement,
 all the nested resources are also destroyed. 
 
+// Declare a resource with resource fields
+//
+access(all) resource Parent {
+    var child1: @Child
+    var child2: @Child
+    init(child1: @Child, child2: @Child) {
+        self.child1 <- child1
+        self.child2 <- child2
+    }
+}
+```
+
+The order in which the nested resources are destroyed is deterministic but unspecified, 
+and cannot be influenced by the developer. E.g., in this example, when `Parent` is destroyed, 
+the `child1` and `child2` fields are both also destroyed in some unspecified order. 
+
+In previous versions of Cadence it was possible to define a special `destroy` function that 
+would execute arbitrary code when a resource was destroyed, but this is no longer the case. 
+
 ### Destroy Events
 
 While it is not possible to specify arbitrary code to execute upon the destruction of a resource, 

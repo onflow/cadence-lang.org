@@ -51,6 +51,7 @@ const config = {
             },
             '1.0': {
               label: '1.0',
+              banner: "none"
             }
           },
           beforeDefaultRemarkPlugins: [

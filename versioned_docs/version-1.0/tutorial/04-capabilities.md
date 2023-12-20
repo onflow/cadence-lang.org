@@ -408,7 +408,7 @@ so it is a logical feature for a blockchain programming language to have.
 A script can get the AuthAccount for an account address using the built-in getAuthAccount function:
 
 ```
-fun getAuthAccount(_ address: Address): AuthAccount
+view fun getAuthAccount(_ address: Address): AuthAccount
 ```
 
 See the [language reference](../language/accounts) for more information about accounts.

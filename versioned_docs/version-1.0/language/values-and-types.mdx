@@ -1318,11 +1318,11 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun filter(_ f: fun(T): Bool): [T]
+    view fun filter(_ f: view fun(T): Bool): [T]
     ```
 
     Returns a new array whose elements are filtered by applying the filter function on each element 
-    of the original array.
+    of the original array. 
     Available if `T` is not resource-kinded.
 
     ```cadence
@@ -1350,7 +1350,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
     ```cadence
     access(all)
-    fun filter(_ f: fun(T): Bool): [T]
+    view fun filter(_ f: view fun(T): Bool): [T]
     ```
 
     Returns a new **variable-sized** array whose elements are filtered by applying the filter function on each element 

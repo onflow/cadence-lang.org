@@ -7,7 +7,7 @@ sidebar_position: 28
 #
 
 ```cadence
-fun panic(_ message: String): Never
+view fun panic(_ message: String): Never
 ```
 
 Terminates the program unconditionally
@@ -20,7 +20,7 @@ panic("something went wrong: ...")
 ## `assert`
 
 ```cadence
-fun assert(_ condition: Bool, message: String)
+view fun assert(_ condition: Bool, message: String)
 ```
 
 Terminates the program if the given condition is false,
@@ -32,7 +32,7 @@ The message argument is optional.
 ## `revertibleRandom`
 
 ```cadence
-fun revertibleRandom(): UInt64
+view fun revertibleRandom(): UInt64
 ```
 
 Returns a pseudo-random number.
@@ -79,7 +79,7 @@ Cadence provides RLP decoding functions in the built-in `RLP` contract, which do
 ### `decodeString`
 
 ```cadence
-fun decodeString(_ input: [UInt8]): [UInt8]
+view fun decodeString(_ input: [UInt8]): [UInt8]
 ```
 
 Decodes an RLP-encoded byte array. RLP calls this a "string."
@@ -90,7 +90,7 @@ If the function encounters any error while decoding, the program aborts.
 ### `decodeList`
 
 ```cadence
-fun decodeList(_ input: [UInt8]): [[UInt8]]`
+view fun decodeList(_ input: [UInt8]): [[UInt8]]`
 ```
 
 Decodes an RLP-encoded list into an array of RLP-encoded items.

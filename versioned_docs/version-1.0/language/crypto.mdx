@@ -36,10 +36,10 @@ access(all) enum HashAlgorithm: UInt8 {
     access(all) case KECCAK_256 = 6
 
     /// Returns the hash of the given data
-    access(all) fun hash(_ data: [UInt8]): [UInt8]
+    access(all) view fun hash(_ data: [UInt8]): [UInt8]
 
     /// Returns the hash of the given data and tag
-    access(all) fun hashWithTag(_ data: [UInt8], tag: string): [UInt8]
+    access(all) view fun hashWithTag(_ data: [UInt8], tag: string): [UInt8]
 }
 ```
 
@@ -138,6 +138,10 @@ struct PublicKey {
     /// If called with any other signature algorithm, the program aborts
     access(all)
     view fun verifyPoP(_ proof: [UInt8]): Bool
+
+    // creating a PublicKey is a view operation
+    access(all)
+    view init()
 }
 ```
 
@@ -283,7 +287,7 @@ The PoP can only be verified using the `PublicKey` method `verifyPoP`.
 ### BLS signature aggregation
 
 ```cadence
-fun aggregateSignatures(_ signatures: [[UInt8]]): [UInt8]?
+view fun aggregateSignatures(_ signatures: [[UInt8]]): [UInt8]?
 ```
 
 Aggregates multiple BLS signatures into one.
@@ -300,7 +304,7 @@ verfiy multiple signatures of the same message.
 ### BLS public key aggregation
 
 ```cadence
-fun aggregatePublicKeys(_ publicKeys: [PublicKey]): PublicKey?
+view fun aggregatePublicKeys(_ publicKeys: [PublicKey]): PublicKey?
 ```
 
 Aggregates multiple BLS public keys into one.

@@ -337,7 +337,7 @@ event ResourceDestroyed(field1: T1 = e1, field2: T2 = e2, ...)
 
 The value of `field1` on the event will be the result of evaluating `e1` before destroying the resource, 
 the value of `field2` on the event will be the result of evaluating `e2` before destroying the resource, 
-and so on. As one might expect, `e1` and `e2` must also expressions of type `T1` and `T2` respectively.
+and so on. As one might expect, `e1` and `e2` must also be expressions of type `T1` and `T2` respectively.
 
 In order to guarantee that these events can be emitted with no chance of failure at runtime, there are restrictions 
 placed on which kinds of types and expressions can be used in their definitions. In general, an expression 

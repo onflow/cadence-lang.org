@@ -116,7 +116,7 @@ struct DeployedContract {
     /// ```
     /// then `.publicTypes()` will return an array equivalent to the expression `[Type<Bar>(), Type<Qux>()]`
     access(all)
-    fun publicTypes(): [Type]
+    view fun publicTypes(): [Type]
 }
 ```
 

@@ -85,7 +85,7 @@ Any code can get a "read-only" reference to an account (`&Account`)
 at a given address by using the built-in `getAccount` function:
 
 ```cadence
-fun getAccount(_ address: Address): &Account
+view fun getAccount(_ address: Address): &Account
 ```
 
 ### Performing write operations
@@ -131,7 +131,7 @@ but is not able to add another key to the account, for example.
 Script can get any kind of access to any account, using the built-in `getAuthAccount` function:
 
 ```cadence
-fun getAuthAccount<T: &Account>(_ address: Address): T
+view fun getAuthAccount<T: &Account>(_ address: Address): T
 ```
 
 This function is only available in scripts.

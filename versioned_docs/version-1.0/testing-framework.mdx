@@ -67,7 +67,7 @@ import Test
 ### Test.assert
 
 ```cadence
-fun assert(_ condition: Bool, message: String)
+view fun assert(_ condition: Bool, message: String)
 ```
 
 Fails a test-case if the given condition is false, and reports a message which explains why the condition is false.
@@ -86,7 +86,7 @@ access(all) fun testExample() {
 ### Test.fail
 
 ```cadence
-fun fail(message: String)
+view fun fail(message: String)
 ```
 
 Immediately fails a test-case, with a message explaining the reason to fail the test.
@@ -251,7 +251,7 @@ The `or` method returns a new matcher that succeeds if at-least this or the give
 A matcher that accepts a generic-typed test function can be constructed using the `newMatcher` function.
 
 ```cadence
-fun newMatcher<T: AnyStruct>(_ test: fun(T): Bool): Test.Matcher
+view fun newMatcher<T: AnyStruct>(_ test: fun(T): Bool): Test.Matcher
 ```
 
 The type parameter `T` is bound to `AnyStruct` type. It is also optional.
@@ -297,7 +297,7 @@ The `Test` contract provides some built-in matcher functions for convenience.
 ### Test.equal
 
 ```cadence
-fun equal(_ value: AnyStruct): Matcher
+view fun equal(_ value: AnyStruct): Matcher
 ```
 
 The `equal` function returns a matcher that succeeds if the tested value is equal to the given value.
@@ -316,7 +316,7 @@ access(all) fun testExample() {
 ### Test.beGreaterThan
 
 ```cadence
-fun beGreaterThan(_ value: Number): Matcher
+view fun beGreaterThan(_ value: Number): Matcher
 ```
 
 The `beGreaterThan` function returns a matcher that succeeds if the tested value is a number and
@@ -335,7 +335,7 @@ access(all) fun testExample() {
 ### Test.beLessThan
 
 ```cadence
-fun beLessThan(_ value: Number): Matcher
+view fun beLessThan(_ value: Number): Matcher
 ```
 
 The `beLessThan` function returns a matcher that succeeds if the tested value is a number and
@@ -354,7 +354,7 @@ access(all) fun testExample() {
 ### Test.beNil
 
 ```cadence
-fun beNil(): Matcher
+view fun beNil(): Matcher
 ```
 
 The `beNil` function returns a new matcher that checks if the given test value is nil.
@@ -372,7 +372,7 @@ access(all) fun testExample() {
 ### Test.beEmpty
 
 ```cadence
-fun beEmpty(): Matcher
+view fun beEmpty(): Matcher
 ```
 
 The `beEmpty` function returns a matcher that succeeds if the tested value is an array or dictionary,
@@ -395,7 +395,7 @@ access(all) fun testExample() {
 ### Test.haveElementCount
 
 ```cadence
-fun haveElementCount(_ count: Int): Matcher
+view fun haveElementCount(_ count: Int): Matcher
 ```
 
 The `haveElementCount` function returns a matcher that succeeds if the tested value is an array or dictionary,
@@ -418,7 +418,7 @@ access(all) fun testExample() {
 ### Test.contain
 
 ```cadence
-fun contain(_ element: AnyStruct): Matcher
+view fun contain(_ element: AnyStruct): Matcher
 ```
 
 The `contain` function returns a matcher that succeeds if the tested value is an array that contains

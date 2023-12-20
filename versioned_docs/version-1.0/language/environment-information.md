@@ -18,14 +18,14 @@ To get information about a block, the functions `getCurrentBlock` and `getBlock`
 
 -
     ```cadence
-    fun getCurrentBlock(): Block
+    view fun getCurrentBlock(): Block
     ```
 
   Returns the current block, i.e. the block which contains the currently executed transaction.
 
 -
     ```cadence
-    fun getBlock(at: UInt64): Block?
+    view fun getBlock(at: UInt64): Block?
     ```
 
   Returns the block at the given height.

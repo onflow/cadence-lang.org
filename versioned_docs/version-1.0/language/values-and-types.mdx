@@ -163,7 +163,7 @@ Integers have multiple built-in functions you can use.
 
 -
     ```cadence
-    fun toString(): String
+    view fun toString(): String
     ```
 
     Returns the string representation of the integer.
@@ -176,7 +176,7 @@ Integers have multiple built-in functions you can use.
 
 -
     ```cadence
-    fun toBigEndianBytes(): [UInt8]
+    view fun toBigEndianBytes(): [UInt8]
     ```
 
     Returns the byte array representation (`[UInt8]`) in big-endian order of the integer.
@@ -191,7 +191,7 @@ All integer types support the following functions:
 
 -
     ```cadence
-    fun T.fromString(_ input: String): T?
+    view fun T.fromString(_ input: String): T?
     ```
 
     Attempts to parse an integer value from a base-10 encoded string, returning `nil` if the string is invalid.
@@ -220,7 +220,7 @@ All integer types support the following functions:
 
 -
     ```cadence
-    fun T.fromBigEndianBytes(_ bytes: [UInt8]): T?
+    view fun T.fromBigEndianBytes(_ bytes: [UInt8]): T?
     ```
     Attempts to parse an integer value from a byte array representation (`[UInt8]`) in big-endian order, returning `nil` if the input bytes are invalid.
 
@@ -280,7 +280,7 @@ Fixed-Point numbers have multiple built-in functions you can use.
 
 -
     ```cadence
-    fun toString(): String
+    view fun toString(): String
     ```
 
     Returns the string representation of the fixed-point number.
@@ -292,7 +292,7 @@ Fixed-Point numbers have multiple built-in functions you can use.
     ```
 -
     ```cadence
-    fun toBigEndianBytes(): [UInt8]
+    view fun toBigEndianBytes(): [UInt8]
     ```
 
     Returns the byte array representation (`[UInt8]`) in big-endian order of the fixed-point number.
@@ -307,7 +307,7 @@ All fixed-point types support the following functions:
 
 -
     ```cadence
-    fun T.fromString(_ input: String): T?
+    view fun T.fromString(_ input: String): T?
     ```
 
     Attempts to parse a fixed-point value from a base-10 encoded string, returning `nil` if the string is invalid.
@@ -341,7 +341,7 @@ All fixed-point types support the following functions:
 
 -
     ```cadence
-    fun T.fromBigEndianBytes(_ bytes: [UInt8]): T?
+    view fun T.fromBigEndianBytes(_ bytes: [UInt8]): T?
     ```
     Attempts to parse an integer value from a byte array representation (`[UInt8]`) in big-endian order, returning `nil` if the input bytes are invalid.
 
@@ -486,7 +486,7 @@ Addresses have multiple built-in functions you can use.
 
 -
     ```cadence
-    fun toString(): String
+    view fun toString(): String
     ```
 
     Returns the string representation of the address.
@@ -502,7 +502,7 @@ Addresses have multiple built-in functions you can use.
 
 -
     ```cadence
-    fun toBytes(): [UInt8]
+    view fun toBytes(): [UInt8]
     ```
 
     Returns the byte array representation (`[UInt8]`) of the address.
@@ -817,7 +817,7 @@ Strings have multiple built-in functions you can use:
 
 -
     ```cadence
-    fun concat(_ other: String): String
+    view fun concat(_ other: String): String
     ```
 
     Concatenates the string `other` to the end of the original string,
@@ -836,7 +836,7 @@ Strings have multiple built-in functions you can use:
 
 -
     ```cadence
-    fun slice(from: Int, upTo: Int): String
+    view fun slice(from: Int, upTo: Int): String
     ```
 
     Returns a string slice of the characters
@@ -862,7 +862,7 @@ Strings have multiple built-in functions you can use:
     ```
 -
     ```cadence
-    fun decodeHex(): [UInt8]
+    view fun decodeHex(): [UInt8]
     ```
 
     Returns an array containing the bytes represented by the given hexadecimal string.
@@ -878,7 +878,7 @@ Strings have multiple built-in functions you can use:
 
 -
     ```cadence
-    fun toLower(): String
+    view fun toLower(): String
     ```
 
     Returns a string where all upper case letters are replaced with lowercase characters
@@ -893,7 +893,7 @@ The `String` type also provides the following functions:
 
 -
     ```cadence
-    fun String.encodeHex(_ data: [UInt8]): String
+    view fun String.encodeHex(_ data: [UInt8]): String
     ```
 
     Returns a hexadecimal string for the given byte array
@@ -913,7 +913,7 @@ let c = str[0] // is the Character "a"
 
 -
     ```cadence
-    fun String.fromUTF8(_ input: [UInt8]): String?
+    view fun String.fromUTF8(_ input: [UInt8]): String?
     ```
 
     Attempts to convert a UTF-8 encoded byte array into a `String`. This function returns `nil` if the byte array contains invalid UTF-8,
@@ -927,7 +927,7 @@ let c = str[0] // is the Character "a"
 
 -
     ```cadence
-    fun toString(): String`
+    view fun toString(): String`
     ```
 
     Returns the string representation of the character.
@@ -940,7 +940,7 @@ let c = str[0] // is the Character "a"
 
 -
     ```cadence
-    fun String.fromCharacters(_ characters: [Character]): String
+    view fun String.fromCharacters(_ characters: [Character]): String
     ```
 
     Builds a new `String` value from an array of `Character`s. Because `String`s are immutable, this operation makes a copy of the input array.
@@ -1117,7 +1117,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun concat(_ array: T): T
+    view fun concat(_ array: T): T
     ```
 
     Concatenates the parameter `array` to the end
@@ -1147,7 +1147,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun contains(_ element: T): Bool
+    view fun contains(_ element: T): Bool
     ```
 
     Returns true if the given element of type `T` is in the array.
@@ -1173,7 +1173,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun firstIndex(of: T): Int?
+    view fun firstIndex(of: T): Int?
     ```
 
     Returns the index of the first element matching the given object in the array, nil if no match.
@@ -1195,7 +1195,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun slice(from: Int, upTo: Int): [T]
+    view fun slice(from: Int, upTo: Int): [T]
     ```
 
     Returns an array slice of the elements
@@ -1223,7 +1223,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun reverse(): [T]
+    view fun reverse(): [T]
     ```
 
     Returns a new array with contents in the reversed order.
@@ -1239,7 +1239,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
     ```cadence
     access(all)
-    fun reverse(): [T; N]
+    view fun reverse(): [T; N]
     ```
 
     Returns a new fixed-sized array of same size with contents in the reversed order.
@@ -1318,11 +1318,11 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 -
     ```cadence
     access(all)
-    fun filter(_ f: fun(T): Bool): [T]
+    view fun filter(_ f: view fun(T): Bool): [T]
     ```
 
     Returns a new array whose elements are filtered by applying the filter function on each element 
-    of the original array.
+    of the original array. 
     Available if `T` is not resource-kinded.
 
     ```cadence
@@ -1350,7 +1350,7 @@ are available for both variable-sized and fixed-sized or variable-sized arrays.
 
     ```cadence
     access(all)
-    fun filter(_ f: fun(T): Bool): [T]
+    view fun filter(_ f: view fun(T): Bool): [T]
     ```
 
     Returns a new **variable-sized** array whose elements are filtered by applying the filter function on each element 
@@ -1738,6 +1738,7 @@ booleans[0] = true
 
 -
     ```cadence
+    access(Mutate | Remove)
     fun remove(key: K): V?
     ```
 
@@ -1773,7 +1774,6 @@ booleans[0] = true
 
 -
     ```cadence
-    access(Mutate | Remove)
     let keys: [K]
     ```
 
@@ -1815,7 +1815,7 @@ booleans[0] = true
 -
     ```cadence
     access(all)
-    fun containsKey(key: K): Bool
+    view fun containsKey(key: K): Bool
     ```
 
     Returns true if the given key of type `K` is in the dictionary.

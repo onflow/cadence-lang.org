@@ -33,7 +33,7 @@ Type<Int>() == Type<Int>()
 Type<Int>() != Type<String>()
 ```
 
-The method `fun isSubtype(of: Type): Bool` can be used to compare the run-time types of values.
+The method `view fun isSubtype(of: Type): Bool` can be used to compare the run-time types of values.
 
 ```cadence
 Type<Int>().isSubtype(of: Type<Int>()) // true
@@ -61,7 +61,7 @@ type.identifier  // is "A.0000000000000001.Test"
 
 ### Getting the Type from a Value
 
-The method `fun getType(): Type` can be used to get the runtime type of a value.
+The method `view fun getType(): Type` can be used to get the runtime type of a value.
 
 ```cadence
 let something = "hello"
@@ -89,9 +89,9 @@ let type: Type = something.getType()
 Run-time types can also be constructed from type identifier strings using built-in constructor functions.
 
 ```cadence
-fun CompositeType(_ identifier: String): Type?
-fun InterfaceType(_ identifier: String): Type?
-fun IntersectionType(types: [String]): Type?
+view fun CompositeType(_ identifier: String): Type?
+view fun InterfaceType(_ identifier: String): Type?
+view fun IntersectionType(types: [String]): Type?
 ```
 
 Given a type identifier (or a list of identifiers for interfaces
@@ -115,20 +115,20 @@ let type2: Type = IntersectionType(
 Other built-in functions will construct compound types from other run-types.
 
 ```cadence
-fun OptionalType(_ type: Type): Type
-fun VariableSizedArrayType(_ type: Type): Type
-fun ConstantSizedArrayType(type: Type, size: Int): Type
-fun FunctionType(parameters: [Type], return: Type): Type
+view fun OptionalType(_ type: Type): Type
+view fun VariableSizedArrayType(_ type: Type): Type
+view fun ConstantSizedArrayType(type: Type, size: Int): Type
+view fun FunctionType(parameters: [Type], return: Type): Type
 // returns `nil` if `key` is not valid dictionary key type
-fun DictionaryType(key: Type, value: Type): Type?
+view fun DictionaryType(key: Type, value: Type): Type?
 // returns `nil` if `type` is not a reference type
-fun CapabilityType(_ type: Type): Type?
-fun ReferenceType(entitlements: [String], type: Type): Type?
+view fun CapabilityType(_ type: Type): Type?
+view fun ReferenceType(entitlements: [String], type: Type): Type?
 ```
 
 ### Asserting the Type of a Value
 
-The method `fun isInstance(_ type: Type): Bool` can be used to check if a value has a certain type,
+The method `view fun isInstance(_ type: Type): Bool` can be used to check if a value has a certain type,
 using the concrete run-time type, and considering subtyping rules,
 
 ```cadence

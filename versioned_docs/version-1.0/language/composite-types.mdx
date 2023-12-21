@@ -57,11 +57,13 @@ and resources are declared using the `resource` keyword.
 The keyword is followed by the name.
 
 ```cadence
-access(all) struct SomeStruct {
+access(all)
+struct SomeStruct {
     // ...
 }
 
-access(all) resource SomeResource {
+access(all)
+resource SomeResource {
     // ...
 }
 ```
@@ -161,9 +163,12 @@ and the name of the field.
 // private so they cannot be accessed in outer scopes.
 // Access control will be explained in a later section.
 //
-access(all) struct Token {
-    access(all) let id: Int
-    access(all) var balance: Int
+access(all)
+struct Token {
+    access(all)
+    let id: Int
+    access(all)
+    var balance: Int
 
     init(id: Int, balance: Int) {
         self.id = id
@@ -175,19 +180,23 @@ access(all) struct Token {
 Note that it is invalid to provide the initial value for a field in the field declaration.
 
 ```cadence
-access(all) struct StructureWithConstantField {
+access(all)
+struct StructureWithConstantField {
     // Invalid: It is invalid to provide an initial value in the field declaration.
     // The field must be initialized by setting the initial value in the initializer.
     //
-    access(all) let id: Int = 1
+    access(all)
+    let id: Int = 1
 }
 ```
 
 The field access syntax must be used to access fields –  fields are not available as variables.
 
 ```cadence
-access(all) struct Token {
-    access(all) let id: Int
+access(all)
+struct Token {
+    access(all)
+    let id: Int
 
     init(initialID: Int) {
         // Invalid: There is no variable with the name `id` available.
@@ -201,8 +210,10 @@ access(all) struct Token {
 The initializer is **not** automatically derived from the fields, it must be explicitly declared.
 
 ```cadence
-access(all) struct Token {
-    access(all) let id: Int
+access(all)
+struct Token {
+    access(all)
+    let id: Int
 
     // Invalid: Missing initializer initializing field `id`.
 }
@@ -235,9 +246,12 @@ In an initializer, writes to `self` are considered `view` (unlike within other c
 as the value being constructed here is by definition local to the context calling the initializer.
 
 ```cadence
-access(all) struct Token {
-    access(all) let id: Int
-    access(all) var balance: Int
+access(all)
+struct Token {
+    access(all)
+    let id: Int
+    access(all)
+    var balance: Int
 
     view init(id: Int, balance: Int) {
         self.id = id
@@ -256,9 +270,12 @@ that the function is called on.
 // Declare a structure named "Rectangle", which represents a rectangle
 // and has variable fields for the width and height.
 //
-access(all) struct Rectangle {
-    access(all) var width: Int
-    access(all) var height: Int
+access(all)
+struct Rectangle {
+    access(all)
+    var width: Int
+    access(all)
+    var height: Int
 
     init(width: Int, height: Int) {
         self.width = width
@@ -268,7 +285,8 @@ access(all) struct Rectangle {
     // Declare a function named "scale", which scales
     // the rectangle by the given factor.
     //
-    access(all) fun scale(factor: Int) {
+    access(all)
+    fun scale(factor: Int) {
         self.width = self.width * factor
         self.height = self.height * factor
     }
@@ -336,8 +354,10 @@ Accessing a field or calling a function of a structure does not copy it.
 ```cadence
 // Declare a structure named `SomeStruct`, with a variable integer field.
 //
-access(all) struct SomeStruct {
-    access(all) var value: Int
+access(all)
+struct SomeStruct {
+    access(all)
+    var value: Int
 
     init(value: Int) {
         self.value = value
@@ -386,18 +406,22 @@ of an optional composite type.
 
 ```cadence
 // Declare a struct with a field and method.
-access(all) struct Value {
-    access(all) var number: Int
+access(all)
+struct Value {
+    access(all)
+    var number: Int
 
     init() {
         self.number = 2
     }
 
-    access(all) fun set(new: Int) {
+    access(all)
+    fun set(new: Int) {
         self.number = new
     }
 
-    access(all) fun setAndReturn(new: Int): Int {
+    access(all)
+    fun setAndReturn(new: Int): Int {
         self.number = new
         return new
     }
@@ -449,18 +473,22 @@ of an optional composite type.
 
 ```cadence
 // Declare a struct with a field and method.
-access(all) struct Value {
-    access(all) var number: Int
+access(all)
+struct Value {
+    access(all)
+    var number: Int
 
     init() {
         self.number = 2
     }
 
-    access(all) fun set(new: Int) {
+    access(all)
+    fun set(new: Int) {
         self.number = new
     }
 
-    access(all) fun setAndReturn(new: Int): Int {
+    access(all)
+    fun setAndReturn(new: Int): Int {
         self.number = new
         return new
     }

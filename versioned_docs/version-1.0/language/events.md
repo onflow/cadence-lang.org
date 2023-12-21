@@ -28,7 +28,8 @@ Events cannot be declared globally or within resource or struct types.
 //
 event GlobalEvent(field: Int)
 
-access(all) contract Events {
+access(all)
+contract Events {
     // Event with explicit argument labels
     //
     event BarEvent(labelA fieldA: Int, labelB fieldB: Int)
@@ -46,7 +47,8 @@ access(all) contract Events {
 To emit an event from a program, use the `emit` statement:
 
 ```cadence
-access(all) contract Events {
+access(all)
+contract Events {
     event FooEvent(x: Int, y: Int)
 
     // Event with argument labels

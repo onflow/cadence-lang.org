@@ -38,7 +38,8 @@ Fields can only be assigned to and mutated from within the same or inner scope.
 For example, to make a function publicly accessible (`access(all)` is explained below):
 
 ```
-access(all) fun test() {}
+access(all)
+fun test() {}
 ```
 
 There are five levels of access control:
@@ -116,13 +117,15 @@ access(self) let a = 1
 
 // Declare a public constant, accessible/visible in all scopes.
 //
-access(all) let b = 2
+access(all)
+let b = 2
 ```
 
 ```cadence
 // Declare a public struct, accessible/visible in all scopes.
 //
-access(all) struct SomeStruct {
+access(all)
+struct SomeStruct {
 
     // Declare a private constant field which is only readable
     // in the current and inner scopes.
@@ -131,7 +134,8 @@ access(all) struct SomeStruct {
 
     // Declare a public constant field which is readable in all scopes.
     //
-    access(all) let b: Int
+    access(all)
+    let b: Int
 
     // Declare a private variable field which is only readable
     // and writable in the current and inner scopes.
@@ -142,11 +146,13 @@ access(all) struct SomeStruct {
     // so it is only writable in the current and inner scopes,
     // and readable in all scopes.
     //
-    access(all) var d: Int
+    access(all)
+    var d: Int
 
     // Arrays and dictionaries declared without (set) cannot be
     // mutated in external scopes
-    access(all) let arr: [Int]
+    access(all)
+    let arr: [Int]
 
     // The initializer is omitted for brevity.
 
@@ -159,7 +165,8 @@ access(all) struct SomeStruct {
 
     // Declare a public function which is callable in all scopes.
     //
-    access(all) fun publicTest() {
+    access(all)
+    fun publicTest() {
         // ...
     }
 

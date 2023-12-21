@@ -20,20 +20,26 @@ if the function accidentally attempts to access other functionality,
 this is prevented by the static checker.
 
 ```cadence
-access(all) struct interface HasID {
-    access(all) let id: String
+access(all)
+struct interface HasID {
+    access(all)
+    let id: String
 }
 
-access(all) struct A: HasID {
-    access(all) let id: String
+access(all)
+struct A: HasID {
+    access(all)
+    let id: String
 
     init(id: String) {
         self.id = id
     }
 }
 
-access(all) struct B: HasID {
-    access(all) let id: String
+access(all)
+struct B: HasID {
+    access(all)
+    let id: String
 
     init(id: String) {
         self.id = id
@@ -52,7 +58,8 @@ let hasID2: {HasID} = B(id: "2")
 // The type `{HasID}` is a short-hand for `AnyStruct{HasID}`:
 // Some structure which only allows access to the functionality of interface `HasID`.
 //
-access(all) fun getID(_ value: {HasID}): String {
+access(all)
+fun getID(_ value: {HasID}): String {
     return value.id
 }
 
@@ -67,13 +74,18 @@ If more than two interfaces are present in an intersection type,
 any concrete value of that type must implement both of them:
 
 ```cadence
-access(all) struct interface HasMetadata {
-    access(all) let metadata: AnyStruct
+access(all)
+struct interface HasMetadata {
+    access(all)
+    let metadata: AnyStruct
 }
 
-access(all) struct C: HasID, HasMetadata {
-    access(all) let id: String
-    access(all) var metadata: AnyStruct
+access(all)
+struct C: HasID, HasMetadata {
+    access(all)
+    let id: String
+    access(all)
+    var metadata: AnyStruct
 
     init(id: String) {
         self.id = id

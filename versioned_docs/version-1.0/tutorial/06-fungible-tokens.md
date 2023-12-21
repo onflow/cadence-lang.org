@@ -46,7 +46,8 @@ contract LedgerToken {
 
     // Transfer tokens from one user to the other
     // by updating their balances in the central ledger
-    access(all) fun transfer(from: Address, to: Address, amount: UFix64) {
+    access(all)
+    fun transfer(from: Address, to: Address, amount: UFix64) {
         balances[from] = balances[from] - amount
         balances[to] = balances[to] + amount
     }
@@ -194,23 +195,27 @@ It is important to remember that each account stores only a copy of the `Vault` 
 The `ExampleToken` contract only needs to be stored in the initial account that manages the token definitions.
 
 ```cadence Token.cdc
-access(all) resource Vault: Provider, Receiver {
+access(all)
+resource Vault: Provider, Receiver {
 
     // Balance of a user's Vault
     // we use unsigned fixed point numbers for balances
     // because they can represent decimals and do not allow negative values
-    access(all) var balance: UFix64
+    access(all)
+    var balance: UFix64
 
     init(balance: UFix64) {
         self.balance = balance
     }
 
-    access(all) fun withdraw(amount: UFix64): @Vault {
+    access(all)
+    fun withdraw(amount: UFix64): @Vault {
         self.balance = self.balance - amount
         return <-create Vault(balance: amount)
     }
 
-    access(all) fun deposit(from: @Vault) {
+    access(all)
+    fun deposit(from: @Vault) {
         self.balance = self.balance + from.balance
         destroy from
     }
@@ -229,7 +234,8 @@ The language requires that the initialization function `init`, which is only run
 // Balance of a user's Vault
 // we use unsigned fixed-point integers for balances because they do not require the
 // concept of a negative number and allow for more clear precision
-access(all) var balance: UFix64
+access(all)
+var balance: UFix64
 
 init(balance: UFix64) {
     self.balance = balance
@@ -244,7 +250,8 @@ the balance field is no longer initialized.
 Then, the deposit function is available for any account to transfer tokens to.
 
 ```cadence
-access(all) fun deposit(from: @Vault) {
+access(all)
+fun deposit(from: @Vault) {
     self.balance = self.balance + from.balance
     destroy from
 }
@@ -263,7 +270,8 @@ When interacting with resources, you use the `@` symbol to specify the type, and
 when moving the resource, such as assigning the resource, when passing it as an argument to a function, or when returning it from a function.
 
 ```cadence
-access(all) fun withdraw(amount: UInt64): @Vault {
+access(all)
+fun withdraw(amount: UInt64): @Vault {
 ```
 
 This `@` symbol is required when specifying a resource **type** for a field, an argument, or a return value.
@@ -332,7 +340,8 @@ open and should see the code below.
 // This is a basic implementation of a Fungible Token and is NOT meant to be used in production
 // See the Flow Fungible Token standard for real examples: https://github.com/onflow/flow-ft
 
-access(all) contract BasicToken {
+access(all)
+contract BasicToken {
 
     // Vault
     //
@@ -346,10 +355,12 @@ access(all) contract BasicToken {
     // out of thin air. A special Minter resource or constructor function needs to be defined to mint
     // new tokens.
     //
-    access(all) resource Vault {
+    access(all)
+    resource Vault {
 
 		// keeps track of the total balance of the account's tokens
-        access(all) var balance: UFix64
+        access(all)
+        var balance: UFix64
 
         // initialize the balance at resource creation time
         init(balance: UFix64) {
@@ -366,7 +377,8 @@ access(all) contract BasicToken {
         // created Vault to the context that called so it can be deposited
         // elsewhere.
         //
-        access(all) fun withdraw(amount: UFix64): @Vault {
+        access(all)
+        fun withdraw(amount: UFix64): @Vault {
             self.balance = self.balance - amount
             return <-create Vault(balance: amount)
         }
@@ -379,7 +391,8 @@ access(all) contract BasicToken {
         // It is allowed to destroy the sent Vault because the Vault
         // was a temporary holder of the tokens. The Vault's balance has
         // been consumed and therefore can be destroyed.
-        access(all) fun deposit(from: @Vault) {
+        access(all)
+        fun deposit(from: @Vault) {
             self.balance = self.balance + from.balance
             destroy from
         }
@@ -392,7 +405,8 @@ access(all) contract BasicToken {
     // and store the returned Vault in their storage in order to allow their
     // account to be able to receive deposits of this token type.
     //
-    access(all) fun createVault(): @Vault {
+    access(all)
+    fun createVault(): @Vault {
         return <-create Vault(balance: 30.0)
     }
 
@@ -556,8 +570,10 @@ Here is an example of how interfaces for the `Vault` resource we defined above w
 // Interface that enforces the requirements for withdrawing
 // tokens from the implementing type
 //
-access(all) resource interface Provider {
-    access(all) fun withdraw(amount: UFix64): @Vault {
+access(all)
+resource interface Provider {
+    access(all)
+    fun withdraw(amount: UFix64): @Vault {
         post {
             result.balance == amount:
                 "Withdrawal amount must be the same as the balance of the withdrawn Vault"
@@ -567,19 +583,23 @@ access(all) resource interface Provider {
 // Interface that enforces the requirements for depositing
 // tokens into the implementing type
 //
-access(all) resource interface Receiver {
+access(all)
+resource interface Receiver {
 
     // There aren't any meaningful requirements for only a deposit function
     // but this still shows that the deposit function is required in an implementation.
-    access(all) fun deposit(from: @Vault)
+    access(all)
+    fun deposit(from: @Vault)
 }
 
 // Balance
 //
 // Interface that specifies a public `balance` field for the vault
 //
-access(all) resource interface Balance {
-    access(all) var balance: UFix64
+access(all)
+resource interface Balance {
+    access(all)
+    var balance: UFix64
 }
 ```
 
@@ -662,7 +682,8 @@ We already use this pattern in the `VaultMinter` resource in the `mintTokens` fu
 // using their `Receiver` capability.
 // We say `&AnyResource{Receiver}` to say that the recipient can be any resource
 // as long as it implements the ExampleToken.Receiver interface
-access(all) fun mintTokens(amount: UFix64, recipient: Capability<&AnyResource{Receiver}>) {
+access(all)
+fun mintTokens(amount: UFix64, recipient: Capability<&AnyResource{Receiver}>) {
     let recipientRef = recipient.borrow()
         ?? panic("Could not borrow a receiver reference to the vault")
 
@@ -976,7 +997,8 @@ Open the script named `Get Balances` in the scripts pane.
 import FungibleToken from 0x02
 
 // This script reads the Vault balances of two accounts.
-access(all) fun main() {
+access(all)
+fun main() {
     // Get the accounts' public account objects
     let acct2 = getAccount(0x02)
     let acct3 = getAccount(0x03)

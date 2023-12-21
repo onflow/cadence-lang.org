@@ -86,25 +86,31 @@ The deployed contract should have the following contents:
 *
 */
 
-access(all) contract ApprovalVoting {
+access(all)
+contract ApprovalVoting {
 
     //list of proposals to be approved
-    access(all) var proposals: [String]
+    access(all)
+    var proposals: [String]
 
     // number of votes per proposal
-    access(all) let votes: {Int: Int}
+    access(all)
+    let votes: {Int: Int}
 
     // This is the resource that is issued to users.
     // When a user gets a Ballot object, they call the `vote` function
     // to include their votes, and then cast it in the smart contract
     // using the `cast` function to have their vote included in the polling
-    access(all) resource Ballot {
+    access(all)
+    resource Ballot {
 
         // array of all the proposals
-        access(all) let proposals: [String]
+        access(all)
+        let proposals: [String]
 
         // corresponds to an array index in proposals after a vote
-        access(all) var choices: {Int: Bool}
+        access(all)
+        var choices: {Int: Bool}
 
         init() {
             self.proposals = ApprovalVoting.proposals
@@ -120,7 +126,8 @@ access(all) contract ApprovalVoting {
 
         // modifies the ballot
         // to indicate which proposals it is voting for
-        access(all) fun vote(proposal: Int) {
+        access(all)
+        fun vote(proposal: Int) {
             pre {
                 self.proposals[proposal] != nil: "Cannot vote for a proposal that doesn't exist"
             }
@@ -130,10 +137,12 @@ access(all) contract ApprovalVoting {
 
     // Resource that the Administrator of the vote controls to
     // initialize the proposals and to pass out ballot resources to voters
-    access(all) resource Administrator {
+    access(all)
+    resource Administrator {
 
         // function to initialize all the proposals for the voting
-        access(all) fun initializeProposals(_ proposals: [String]) {
+        access(all)
+        fun initializeProposals(_ proposals: [String]) {
             pre {
                 ApprovalVoting.proposals.length == 0: "Proposals can only be initialized once"
                 proposals.length > 0: "Cannot initialize with no proposals"
@@ -150,14 +159,16 @@ access(all) contract ApprovalVoting {
 
         // The admin calls this function to create a new Ballot
         // that can be transferred to another user
-        access(all) fun issueBallot(): @Ballot {
+        access(all)
+        fun issueBallot(): @Ballot {
             return <-create Ballot()
         }
     }
 
     // A user moves their ballot to this function in the contract where
     // its votes are tallied and the ballot is destroyed
-    access(all) fun cast(ballot: @Ballot) {
+    access(all)
+    fun cast(ballot: @Ballot) {
         var index = 0
         // look through the ballot
         while index < self.proposals.length {
@@ -190,7 +201,8 @@ This contract implements a simple voting mechanism where an `Administrator` can 
 
 ```cadence
 // function to initialize all the proposals for the voting
-access(all) fun initializeProposals(_ proposals: [String]) {
+access(all)
+fun initializeProposals(_ proposals: [String]) {
     pre {
         ApprovalVoting.proposals.length == 0: "Proposals can only be initialized once"
         proposals.length > 0: "Cannot initialize with no proposals"
@@ -209,7 +221,8 @@ access(all) fun initializeProposals(_ proposals: [String]) {
 Then they can give `Ballot` resources to other accounts. The other accounts can record their votes on their `Ballot` resource by calling the `vote` function.
 
 ```cadence
-access(all) fun vote(proposal: Int) {
+access(all)
+fun vote(proposal: Int) {
     pre {
         self.proposals[proposal] != nil: "Cannot vote for a proposal that doesn't exist"
     }
@@ -222,7 +235,8 @@ After a user has voted, they submit their vote to the central smart contract by 
 ```cadence
 // A user moves their ballot to this function in the contract where
 // its votes are tallied and the ballot is destroyed
-access(all) fun cast(ballot: @Ballot) {
+access(all)
+fun cast(ballot: @Ballot) {
     var index = 0
     // look through the ballot
     while index < self.proposals.length {
@@ -400,7 +414,8 @@ import ApprovalVoting from 0x01
 // This script allows anyone to read the tallied votes for each proposal
 //
 
-access(all) fun main() {
+access(all)
+fun main() {
 
     // Access the public fields of the contract to log
     // the proposal names and vote counts

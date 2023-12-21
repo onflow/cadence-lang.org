@@ -491,11 +491,18 @@ Functions can be annotated as `view` to indicate that they do not modify any ext
 A `view` annotation can be added to the beginning of a function declaration or expression like so: 
 
 ```cadence
-view access(all) fun foo(): Void {}
+view access(all)
+fun foo(): Void {}
+
 let x = view fun(): Void {}
-access(all) struct S {
-    view access(all) fun foo(): Void {}
-    view init()
+
+access(all)
+struct S {
+    view access(all) 
+    fun foo(): Void {}
+
+    view 
+    init()
 }
 ```
 
@@ -592,7 +599,8 @@ or passed to functions as arguments.
 // Declare a function named `transform` which applies a function to each element
 // of an array of integers and returns a new array of the results.
 //
-access(all) fun transform(function: fun(Int): Int, integers: [Int]): [Int] {
+access(all)
+fun transform(function: fun(Int): Int, integers: [Int]): [Int] {
     var newIntegers: [Int] = []
     for integer in integers {
         newIntegers.append(function(integer))
@@ -600,7 +608,8 @@ access(all) fun transform(function: fun(Int): Int, integers: [Int]): [Int] {
     return newIntegers
 }
 
-access(all) fun double(_ integer: Int): Int {
+access(all)
+fun double(_ integer: Int): Int {
     return integer * 2
 }
 

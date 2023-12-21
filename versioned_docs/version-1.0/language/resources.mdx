@@ -40,8 +40,10 @@ and when it is returned from a function.
 ```cadence
 // Declare a resource named `SomeResource`, with a variable integer field.
 //
-access(all) resource SomeResource {
-    access(all) var value: Int
+access(all)
+resource SomeResource {
+    access(all)
+    var value: Int
 
     init(value: Int) {
         self.value = value
@@ -69,7 +71,8 @@ b.value // equals 0
 //
 // The parameter has a resource type, so the type annotation must be prefixed with `@`.
 //
-access(all) fun use(resource: @SomeResource) {
+access(all)
+fun use(resource: @SomeResource) {
     // ...
 }
 
@@ -128,7 +131,8 @@ let someResource: @SomeResource <- create SomeResource(value: 5)
 //
 // The parameter has a resource type, so the type annotation must be prefixed with `@`.
 //
-access(all) fun use(resource: @SomeResource) {
+access(all)
+fun use(resource: @SomeResource) {
     destroy resource
 }
 
@@ -137,7 +141,8 @@ access(all) fun use(resource: @SomeResource) {
 // The return type is a resource type, so the type annotation must be prefixed with `@`.
 // The return statement must also use the `<-` operator to make it explicit the resource is moved.
 //
-access(all) fun get(): @SomeResource {
+access(all)
+fun get(): @SomeResource {
     let newResource <- create SomeResource()
     return <-newResource
 }
@@ -149,7 +154,8 @@ Resources **must** be used exactly once.
 // Declare a function which consumes a resource but does not use it.
 // This function is invalid, because it would cause a loss of the resource.
 //
-access(all) fun forgetToUse(resource: @SomeResource) {
+access(all)
+fun forgetToUse(resource: @SomeResource) {
     // Invalid: The resource parameter `resource` is not used, but must be.
 }
 ```
@@ -177,7 +183,8 @@ res.value
 // This function is invalid, because it does not always use the resource parameter,
 // which would cause a loss of the resource.
 //
-access(all) fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool) {
+access(all)
+fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool) {
     if destroyResource {
         destroy resource
     }
@@ -192,7 +199,8 @@ access(all) fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool)
 // This function is valid, as it always uses the resource parameter,
 // and does not cause a loss of the resource.
 //
-access(all) fun alwaysUse(resource: @SomeResource, destroyResource: Bool) {
+access(all)
+fun alwaysUse(resource: @SomeResource, destroyResource: Bool) {
     if destroyResource {
         destroy resource
     } else {
@@ -208,7 +216,8 @@ access(all) fun alwaysUse(resource: @SomeResource, destroyResource: Bool) {
 // This function is invalid, because it does not always use the resource parameter,
 // which would cause a loss of the resource.
 //
-access(all) fun returnBeforeDestroy(move: Bool) {
+access(all)
+fun returnBeforeDestroy(move: Bool) {
     let res <- create SomeResource(value: 1)
     if move {
         use(resource: <-res)
@@ -234,7 +243,8 @@ Instead, use a swap statement (`<->`) or shift statement (`<- target <-`)
 to replace the resource variable with another resource.
 
 ```cadence
-access(all) resource R {}
+access(all)
+resource R {}
 
 var x <- create R()
 var y <- create R()
@@ -291,7 +301,8 @@ all the nested resources are also destroyed.
 ```cadence
 // Declare a resource with resource fields
 //
-access(all) resource Parent {
+access(all)
+resource Parent {
     var child1: @Child
     var child2: @Child
     init(child1: @Child, child2: @Child) {

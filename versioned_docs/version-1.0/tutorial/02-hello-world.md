@@ -143,12 +143,14 @@ Open the Account `0x01` tab with the file called
 ```cadence HelloWorld.cdc
 // HelloWorld.cdc
 //
-access(all) contract HelloWorld {
+access(all)
+contract HelloWorld {
 
     // Declare a public field of type String.
     //
     // All fields must be initialized in the initializer.
-    access(all) let greeting: String
+    access(all)
+    let greeting: String
 
     // The initializer is required if the contract contains any fields.
     init() {
@@ -156,7 +158,8 @@ access(all) contract HelloWorld {
     }
 
     // Public function that returns our friendly greeting!
-    access(all) fun hello(): String {
+    access(all)
+    fun hello(): String {
         return self.greeting
     }
 }

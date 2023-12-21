@@ -70,7 +70,8 @@ For now, the syntax `{I}` can be read as the type of any value that implements t
 // Declare a resource interface for a fungible token.
 // Only resources can implement this resource interface.
 //
-access(all) resource interface FungibleToken {
+access(all)
+resource interface FungibleToken {
 
     // Require the implementing type to provide a field for the balance
     // that is readable in all scopes (`access(all)`).
@@ -79,7 +80,8 @@ access(all) resource interface FungibleToken {
     // so the field may be implemented as either a variable
     // or as a constant field.
     //
-    access(all) balance: Int
+    access(all)
+    balance: Int
 
     // Require the implementing type to provide an initializer that
     // given the initial balance, must initialize the balance field.
@@ -109,7 +111,8 @@ access(all) resource interface FungibleToken {
     // The type `{FungibleToken}` is the type of any resource
     // that implements the resource interface `FungibleToken`.
     //
-    access(all) fun withdraw(amount: Int): @{FungibleToken} {
+    access(all)
+    fun withdraw(amount: Int): @{FungibleToken} {
         pre {
             amount > 0:
                 "the amount must be positive"
@@ -135,7 +138,8 @@ access(all) resource interface FungibleToken {
     // The parameter type `{FungibleToken}` is the type of any resource
     // that implements the resource interface `FungibleToken`.
     //
-    access(all) fun deposit(_ token: @{FungibleToken}) {
+    access(all)
+    fun deposit(_ token: @{FungibleToken}) {
         post {
             self.balance == before(self.balance) + token.balance:
                 "the amount must be added to the balance"
@@ -182,7 +186,8 @@ in terms of name, parameter argument labels, parameter types, and the return typ
 // It has a variable field named `balance`, that can be written
 // by functions of the type, but outer scopes can only read it.
 //
-access(all) resource ExampleToken: FungibleToken {
+access(all)
+resource ExampleToken: FungibleToken {
 
     // Implement the required field `balance` for the `FungibleToken` interface.
     // The interface does not specify if the field must be variable, constant,
@@ -190,7 +195,8 @@ access(all) resource ExampleToken: FungibleToken {
     // but limit outer scopes to only read from the field, it is declared variable,
     // and only has public access (non-settable).
     //
-    access(all) var balance: Int
+    access(all)
+    var balance: Int
 
     // Implement the required initializer for the `FungibleToken` interface:
     // accept an initial balance and initialize the `balance` field.
@@ -214,7 +220,8 @@ access(all) resource ExampleToken: FungibleToken {
     // NOTE: neither the precondition nor the postcondition declared
     // in the interface have to be repeated here in the implementation.
     //
-    access(all) fun withdraw(amount: Int): @ExampleToken {
+    access(all)
+    fun withdraw(amount: Int): @ExampleToken {
         self.balance = self.balance - amount
         return create ExampleToken(balance: amount)
     }
@@ -235,7 +242,8 @@ access(all) resource ExampleToken: FungibleToken {
     // NOTE: neither the precondition nor the postcondition declared
     // in the interface have to be repeated here in the implementation.
     //
-    access(all) fun deposit(_ token: @{FungibleToken}) {
+    access(all)
+    fun deposit(_ token: @{FungibleToken}) {
         if let exampleToken <- token as? ExampleToken {
             self.balance = self.balance + exampleToken.balance
             destroy exampleToken
@@ -290,7 +298,8 @@ and an implementation may provide a variable field which is public,
 (the `access(all)` modifier is used).
 
 ```cadence
-access(all) struct interface AnInterface {
+access(all)
+struct interface AnInterface {
     // Require the implementing type to provide a contract-readable
     // field named `a` that has type `Int`. It may be a variable
     // or a constant field.
@@ -298,11 +307,13 @@ access(all) struct interface AnInterface {
     access(contract) a: Int
 }
 
-access(all) struct AnImplementation: AnInterface {
+access(all)
+struct AnImplementation: AnInterface {
     // Declare a public variable field named `a` that has type `Int`.
     // This implementation satisfies the requirement for interface `AnInterface`:
     //
-    access(all) var a: Int
+    access(all)
+    var a: Int
 
     init(a: Int) {
         self.a = a
@@ -325,18 +336,23 @@ when accessing a value of such a type.
 // Require implementing types to provide a field which returns the area,
 // and a function which scales the shape by a given factor.
 //
-access(all) struct interface Shape {
-    access(all) fun getArea(): Int
-    access(all) fun scale(factor: Int)
+access(all)
+struct interface Shape {
+    access(all)
+    fun getArea(): Int
+    access(all)
+    fun scale(factor: Int)
 }
 
 // Declare a structure named `Square` the implements the `Shape` interface.
 //
-access(all) struct Square: Shape {
+access(all)
+struct Square: Shape {
     // In addition to the required fields from the interface,
     // the type can also declare additional fields.
     //
-    access(all) var length: Int
+    access(all)
+    var length: Int
 
     // Provided the field `area`  which is required to conform
     // to the interface `Shape`.
@@ -344,36 +360,44 @@ access(all) struct Square: Shape {
     // Since `area` was not declared as a constant, variable,
     // field in the interface, it can be declared.
     //
-    access(all) fun getArea(): Int {
+    access(all)
+    fun getArea(): Int {
         return self.length * self.length
     }
 
-    access(all) init(length: Int) {
+    access(all)
+    init(length: Int) {
         self.length = length
     }
 
     // Provided the implementation of the function `scale`
     // which is required to conform to the interface `Shape`.
     //
-    access(all) fun scale(factor: Int) {
+    access(all)
+    fun scale(factor: Int) {
         self.length = self.length * factor
     }
 }
 
 // Declare a structure named `Rectangle` that also implements the `Shape` interface.
 //
-access(all) struct Rectangle: Shape {
-    access(all) var width: Int
-    access(all) var height: Int
+access(all)
+struct Rectangle: Shape {
+    access(all)
+    var width: Int
+    access(all)
+    var height: Int
 
     // Provided the field `area  which is required to conform
     // to the interface `Shape`.
     //
-    access(all) fun getArea(): Int {
+    access(all)
+    fun getArea(): Int {
         return self.width * self.height
     }
 
-    access(all) init(width: Int, height: Int) {
+    access(all)
+    init(width: Int, height: Int) {
         self.width = width
         self.height = height
     }
@@ -381,7 +405,8 @@ access(all) struct Rectangle: Shape {
     // Provided the implementation of the function `scale`
     // which is required to conform to the interface `Shape`.
     //
-    access(all) fun scale(factor: Int) {
+    access(all)
+    fun scale(factor: Int) {
         self.width = self.width * factor
         self.height = self.height * factor
     }
@@ -548,13 +573,17 @@ When an interface inherits from another, all the fields, functions, and types of
 available to the inheriting interface.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun deposit(_ something: @AnyResource)
+access(all)
+resource interface Receiver {
+    access(all)
+    fun deposit(_ something: @AnyResource)
 }
 
 // `Vault` interface inherits from `Receiver` interface.
-access(all) resource interface Vault: Receiver {
-    access(all) fun withdraw(_ amount: Int): @Vault
+access(all)
+resource interface Vault: Receiver {
+    access(all)
+    fun withdraw(_ amount: Int): @Vault
 }
 ```
 
@@ -562,11 +591,14 @@ In the example above, `Vault` inherits `Receiver`. Anyone implementing the `Vaul
 implement the `Receiver` interface.
 
 ```cadence
-access(all) resource MyVault: Vault {
+access(all)
+resource MyVault: Vault {
     // Must implement all the methods coming from both `Vault` and `Receiver` interfaces.
-    access(all) fun deposit(_ something: @AnyResource) {}
+    access(all)
+    fun deposit(_ something: @AnyResource) {}
 
-    access(all) fun withdraw(_ amount: Int): @Vault {}
+    access(all)
+    fun withdraw(_ amount: Int): @Vault {}
 }
 ```
 
@@ -580,26 +612,34 @@ The following sections explain how these ambiguities are resolved for different 
 If two fields with identical names have identical types, then it will be valid.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) var id: UInt64
+access(all)
+resource interface Receiver {
+    access(all)
+    var id: UInt64
 }
 
-access(all) resource interface Vault: Receiver {
+access(all)
+resource interface Vault: Receiver {
     // `id` field has the same type as the `Receiver.id`. Hence this is valid.
-    access(all) var id: UInt64
+    access(all)
+    var id: UInt64
 }
 ```
 
 Otherwise, interface conformance is not valid.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) var id: Int
+access(all)
+resource interface Receiver {
+    access(all)
+    var id: Int
 }
 
-access(all) resource interface Vault: Receiver {
+access(all)
+resource interface Vault: Receiver {
     // `id` field has a different type than the `Receiver.id`. Hence this is invalid.
-    access(all) var id: UInt64
+    access(all)
+    var id: UInt64
 }
 ```
 
@@ -608,29 +648,37 @@ access(all) resource interface Vault: Receiver {
 If two functions with identical names also have identical signatures, that is valid.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun deposit(_ something: @AnyResource)
+access(all)
+resource interface Receiver {
+    access(all)
+    fun deposit(_ something: @AnyResource)
 }
 
-access(all) resource interface Vault: Receiver {
+access(all)
+resource interface Vault: Receiver {
     // `deposit` function has the same signature as the `Receiver.deposit`.
     // Also none of them have any default implementations.
     // Hence this is valid.
-    access(all) fun deposit(_ something: @AnyResource)
+    access(all)
+    fun deposit(_ something: @AnyResource)
 }
 ```
 
 If the signatures of the two functions are different, then the interface conformance is not valid.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun deposit(_ something: @AnyResource)
+access(all)
+resource interface Receiver {
+    access(all)
+    fun deposit(_ something: @AnyResource)
 }
 
-access(all) resource interface Vault: Receiver {
+access(all)
+resource interface Vault: Receiver {
     // Error: `deposit` function has a different signature compared to the `Receiver.deposit`.
     // So these two cannot co-exist.
-    access(all) fun deposit()
+    access(all)
+    fun deposit()
 }
 ```
 
@@ -642,17 +690,21 @@ to determine the order of the execution of the conditions.
 Given the pre/post conditions are `view` only, the order of execution would not have an impact on the conditions.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun deposit(_ something: @AnyResource) {
+access(all)
+resource interface Receiver {
+    access(all)
+    fun deposit(_ something: @AnyResource) {
         pre{ self.balance > 100 }
     }
 }
 
-access(all) resource interface Vault: Receiver {
+access(all)
+resource interface Vault: Receiver {
     // `deposit` function has the same signature as the `Receiver.deposit`.
     // Having pre/post condition is valid.
     // Both conditions would be executed, in a pre-determined order.
-    access(all) fun deposit(_ something: @AnyResource) {
+    access(all)
+    fun deposit(_ something: @AnyResource) {
         pre{ self.balance > 50 }
     }
 }
@@ -663,13 +715,17 @@ access(all) resource interface Vault: Receiver {
 An interface can provide a default implementation to an inherited function.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun log(_ message: String)
+access(all)
+resource interface Receiver {
+    access(all)
+    fun log(_ message: String)
 }
 
-access(all) resource interface Vault: Receiver {
+access(all)
+resource interface Vault: Receiver {
     // Valid: Provides the implementation for `Receiver.log` method.
-    access(all) fun log(_ message: String) {
+    access(all)
+    fun log(_ message: String) {
         log(message.append("from Vault"))
     }
 }
@@ -678,15 +734,19 @@ access(all) resource interface Vault: Receiver {
 However, an interface cannot override an inherited default implementation of a function.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun log(_ message: String) {
+access(all)
+resource interface Receiver {
+    access(all)
+    fun log(_ message: String) {
         log(message.append("from Receiver"))
     }
 }
 
-access(all) resource interface Vault: Receiver {
+access(all)
+resource interface Vault: Receiver {
     // Invalid: Cannot override the `Receiver.log` method.
-    access(all) fun log(_ message: String) {
+    access(all)
+    fun log(_ message: String) {
         log(message.append("from Vault"))
     }
 }
@@ -695,39 +755,49 @@ access(all) resource interface Vault: Receiver {
 It is also invalid to have two or more inherited default implementations for an interface.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun log(_ message: String) {
+access(all)
+resource interface Receiver {
+    access(all)
+    fun log(_ message: String) {
         log(message.append("from Receiver"))
     }
 }
 
-access(all) resource interface Provider {
-    access(all) fun log(_ message: String) {
+access(all)
+resource interface Provider {
+    access(all)
+    fun log(_ message: String) {
         log(message.append("from Provider"))
     }
 }
 
 // Invalid: Two default functions from two interfaces.
-access(all) resource interface Vault: Receiver, Provider {}
+access(all)
+resource interface Vault: Receiver, Provider {}
 ```
 
 Having said that, there can be situations where the same default function can be available via different
 inheritance paths.
 
 ```cadence
-access(all) resource interface Logger {
-    access(all) fun log(_ message: String) {
+access(all)
+resource interface Logger {
+    access(all)
+    fun log(_ message: String) {
         log(message.append("from Logger"))
     }
 }
 
-access(all) resource interface Receiver: Logger {}
+access(all)
+resource interface Receiver: Logger {}
 
-access(all) resource interface Provider: Logger {}
+access(all)
+resource interface Provider: Logger {}
 
 // Valid: `Logger.log()` default function is visible to the `Vault` interface
 // via both `Receiver` and `Provider`.
-access(all) resource interface Vault: Receiver, Provider {}
+access(all)
+resource interface Vault: Receiver, Provider {}
 ```
 
 In the above example, `Logger.log()` default function is visible to the `Vault` interface via both `Receiver` and `Provider`.
@@ -741,20 +811,25 @@ A more complex situation is where a default function is available via one inheri
 is available via another inheritance path.
 
 ```cadence
-access(all) resource interface Receiver {
-    access(all) fun log(_ message: String) {
+access(all)
+resource interface Receiver {
+    access(all)
+    fun log(_ message: String) {
         log(message.append("from Receiver"))
     }
 }
 
-access(all) resource interface Provider {
-    access(all) fun log(_ message: String) {
+access(all)
+resource interface Provider {
+    access(all)
+    fun log(_ message: String) {
         pre{ message != "" }
     }
 }
 
 // Valid: Both the default function and the condition would be available.
-access(all) resource interface Vault: Receiver, Provider {}
+access(all)
+resource interface Vault: Receiver, Provider {}
 ```
 
 In such situations, all rules applicable for default functions inheritance as well as condition inheritance
@@ -768,16 +843,22 @@ Type and event definitions would also behave similarly to the default functions.
 Inherited interfaces can override type definitions and event definitions.
 
 ```cadence
-access(all) contract interface Token {
-    access(all) struct Foo {}
+access(all)
+contract interface Token {
+    access(all)
+    struct Foo {}
 }
 
-access(all) contract interface NonFungibleToken: Token {
-    access(all) struct Foo {}
+access(all)
+contract interface NonFungibleToken: Token {
+    access(all)
+    struct Foo {}
 }
 
-access(all) contract MyToken: NonFungibleToken {
-    access(all) fun test() {
+access(all)
+contract MyToken: NonFungibleToken {
+    access(all)
+    fun test() {
         let foo: Foo  // This will refer to the `NonFungibleToken.Foo`
     }
 }
@@ -789,32 +870,42 @@ access it using the fully qualified name. e.g: `let foo: Token.Foo`.
 However, it is not allowed to have two or more inherited type/events definitions with identical names for an interface.
 
 ```cadence
-access(all) contract interface Token {
-    access(all) struct Foo {}
+access(all)
+contract interface Token {
+    access(all)
+    struct Foo {}
 }
 
-access(all) contract interface Collectible {
-    access(all) struct Foo {}
+access(all)
+contract interface Collectible {
+    access(all)
+    struct Foo {}
 }
 
 // Invalid: Two type definitions with the same name from two interfaces.
-access(all) contract NonFungibleToken: Token, Collectible {
+access(all)
+contract NonFungibleToken: Token, Collectible {
 }
 ```
 Similar to default functions, there can be situations where the same type/event definition can be available
 via different inheritance paths.
 
 ```cadence
-access(all) contract interface Logger {
-    access(all) struct Foo {}
+access(all)
+contract interface Logger {
+    access(all)
+    struct Foo {}
 }
 
-access(all) contract interface Token: Logger {}
+access(all)
+contract interface Token: Logger {}
 
-access(all) contract interface Collectible: Logger {}
+access(all)
+contract interface Collectible: Logger {}
 
 // Valid: `Logger.Foo` struct is visible to the `NonFungibleToken` interface via both `Token` and `Collectible`.
-access(all) contract interface NonFungibleToken: Token, Collectible {}
+access(all)
+contract interface NonFungibleToken: Token, Collectible {}
 ```
 
 In the above example, `Logger.Foo` type definition is visible to the `NonFungibleToken` interface via both `Token`
@@ -827,21 +918,27 @@ However, if at least one of the interfaces in the middle of the chain also overr
 then the code becomes invalid, as there are multiple implementations present now, which leads to ambiguity.
 
 ```cadence
-access(all) contract interface Logger {
-    access(all) struct Foo {}
+access(all)
+contract interface Logger {
+    access(all)
+    struct Foo {}
 }
 
-access(all) contract interface Token: Logger {
-    access(all) struct Foo {}
+access(all)
+contract interface Token: Logger {
+    access(all)
+    struct Foo {}
 }
 
-access(all) contract interface Collectible: Logger {}
+access(all)
+contract interface Collectible: Logger {}
 
 // Invalid: The default implementation of the `Foo` struct by the `Logger`
 // interface is visible to the `NonFungibleToken` via the `Collectible` interface.
 // Another implementation of `Foo` struct is visible to the `NonFungibleToken` via the `Token` interface.
 // This creates ambiguity.
-access(all) resource interface NonFungibleToken: Token, Provider {}
+access(all)
+resource interface NonFungibleToken: Token, Provider {}
 ```
 
 
@@ -865,31 +962,36 @@ This would convert to a Cadence implementation similar to:
 
 ```cadence
 struct interface A: B, C {
-    access(all) fun test() {
+    access(all)
+    fun test() {
         pre { print("A") }
     }
 }
 
 struct interface B: D, E {
-    access(all) fun test() {
+    access(all)
+    fun test() {
         pre { print("B") }
     }
 }
 
 struct interface C: E {
-    access(all) fun test() {
+    access(all)
+    fun test() {
         pre { print("C") }
     }
 }
 
 struct interface D {
-    access(all) fun test() {
+    access(all)
+    fun test() {
         pre { print("D") }
     }
 }
 
 struct interface E {
-    access(all) fun test() {
+    access(all)
+    fun test() {
         pre { print("E") }
     }
 }
@@ -899,7 +1001,8 @@ Any concrete type implementing interface `A` would be equivalent to implementing
 
 ```cadence
 struct Foo: A {
-    access(all) fun test() {
+    access(all)
+    fun test() {
         pre { print("Foo") }
     }
 }
@@ -910,7 +1013,8 @@ The linearized interface order would be: [A, B, D, E, C].
 i.e: same as having:
 ```cadence
 struct Foo: A, B, D, C, E {
-    access(all) fun test() {
+    access(all)
+    fun test() {
         pre { print("Foo") }
     }
 }

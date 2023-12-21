@@ -74,16 +74,21 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  access(all) contract Foo {
-      access(all) var a: String
-      access(all) var b: Int
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
+      access(all)
+      var b: Int
   }
 
 
   // Updated contract
 
-  access(all) contract Foo {
-      access(all) var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
   }
   ```
   - It leaves data for the removed field unused at the storage, as it is no longer accessible.
@@ -93,17 +98,23 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  access(all) contract Foo {
-      access(all) var a: String
-      access(all) var b: Int
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
+      access(all)
+      var b: Int
   }
 
 
   // Updated contract
 
-  access(all) contract Foo {
-      access(all) var b: Int
-      access(all) var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var b: Int
+      access(all)
+      var a: String
   }
   ```
 
@@ -111,14 +122,17 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  access(all) contract Foo {
-      access(all) var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
   }
 
 
   // Updated contract
 
-  access(all) contract Foo {
+  access(all)
+  contract Foo {
       access(self) var a: String   // access modifier changed to 'access(self)'
   }
   ```
@@ -128,16 +142,21 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  access(all) contract Foo {
-      access(all) var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
   }
 
 
   // Updated contract
 
-  access(all) contract Foo {
-      access(all) var a: String
-      access(all) var b: Int      // Invalid new field
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
+      access(all)
+      var b: Int      // Invalid new field
   }
   ```
     - Initializer of a contract only run once, when the contract is deployed for the first time. It does not rerun
@@ -150,15 +169,19 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  access(all) contract Foo {
-      access(all) var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
   }
 
 
   // Updated contract
 
-  access(all) contract Foo {
-      access(all) var a: Int      // Invalid type change
+  access(all)
+  contract Foo {
+      access(all)
+      var a: Int      // Invalid type change
   }
   ```
     - In an already stored contract, the field `a` would have a value of type `String`.
@@ -180,13 +203,15 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing struct
 
-  access(all) struct Foo {
+  access(all)
+  struct Foo {
   }
 
 
   // Upated struct
 
-  access(all) struct Foo: T {
+  access(all)
+  struct Foo: T {
   }
   ```
   - However, if adding a conformance also requires changing the existing structure (e.g: adding a new field that is
@@ -203,26 +228,30 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing struct
 
-  access(all) struct Foo {
+  access(all)
+  struct Foo {
   }
 
 
   // Changed to a struct interface
 
-  access(all) struct interface Foo {    // Invalid type declaration change
+  access(all)
+  struct interface Foo {    // Invalid type declaration change
   }
   ```
 - Removing an interface conformance of a struct/resource is not valid.
   ```cadence
   // Existing struct
 
-  access(all) struct Foo: T {
+  access(all)
+  struct Foo: T {
   }
 
 
   // Upated struct
 
-  access(all) struct Foo {
+  access(all)
+  struct Foo {
   }
   ```
 
@@ -253,17 +282,23 @@ Below sections describes the restrictions imposed on updating the members of a s
   ```cadence
   // Existing enum with `Int` raw type
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case BLUE
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum with `UInt8` raw type
 
-  access(all) enum Color: UInt8 {    // Invalid change of raw type
-    access(all) case RED
-    access(all) case BLUE
+  access(all)
+  enum Color: UInt8 {    // Invalid change of raw type
+    access(all)
+    case RED
+    access(all)
+    case BLUE
   }
   ```
   - When the enum value is stored, the raw value associated with the enum-case gets stored.
@@ -282,18 +317,25 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case BLUE
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case BLUE
-    access(all) case GREEN    // valid new enum-case at the bottom
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case BLUE
+    access(all)
+    case GREEN    // valid new enum-case at the bottom
   }
   ```
 #### Invalid Changes
@@ -301,35 +343,48 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case BLUE
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case GREEN    // invalid new enum-case in the middle
-    access(all) case BLUE
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case GREEN    // invalid new enum-case in the middle
+    access(all)
+    case BLUE
   }
   ```
 - Changing the name of an enum-case is invalid.
   ```cadence
   // Existing enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case BLUE
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case GREEN    // invalid change of names
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case GREEN    // invalid change of names
   }
   ```
   - Previously stored raw values for `Color.BLUE` now represents `Color.GREEN`. i.e: The stored values have changed
@@ -342,16 +397,21 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case BLUE
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
 
     // invalid removal of `case BLUE`
   }
@@ -360,17 +420,23 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  access(all) enum Color: Int {
-    access(all) case RED
-    access(all) case BLUE
+  access(all)
+  enum Color: Int {
+    access(all)
+    case RED
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  access(all) enum Color: UInt8 {
-    access(all) case BLUE   // invalid change of order
-    access(all) case RED
+  access(all)
+  enum Color: UInt8 {
+    access(all)
+    case BLUE   // invalid change of order
+    access(all)
+    case RED
   }
   ```
   - Raw value of an enum is implicit, and corresponds to the defined order.

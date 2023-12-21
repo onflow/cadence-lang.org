@@ -92,12 +92,16 @@ The deployed contract should have the following contents:
 // support even more powerful versions of this.
 //
 
-access(all) contract KittyVerse {
+access(all)
+contract KittyVerse {
 
     // KittyHat is a special resource type that represents a hat
-    access(all) resource KittyHat {
-        access(all) let id: Int
-        access(all) let name: String
+    access(all)
+    resource KittyHat {
+        access(all)
+        let id: Int
+        access(all)
+        let name: String
 
         init(id: Int, name: String) {
             self.id = id
@@ -105,7 +109,8 @@ access(all) contract KittyVerse {
         }
 
         // An example of a function someone might put in their hat resource
-        access(all) fun tipHat(): String {
+        access(all)
+        fun tipHat(): String {
             if self.name == "Cowboy Hat" {
                 return "Howdy Y'all"
             } else if self.name == "Top Hat" {
@@ -117,41 +122,49 @@ access(all) contract KittyVerse {
     }
 
     // Create a new hat
-    access(all) fun createHat(id: Int, name: String): @KittyHat {
+    access(all)
+    fun createHat(id: Int, name: String): @KittyHat {
         return <-create KittyHat(id: id, name: name)
     }
 
-    access(all) resource Kitty {
+    access(all)
+    resource Kitty {
 
-        access(all) let id: Int
+        access(all)
+        let id: Int
 
         // place where the Kitty hats are stored
-        access(all) var items: @{String: KittyHat}
+        access(all)
+        var items: @{String: KittyHat}
 
         init(newID: Int) {
             self.id = newID
             self.items <- {}
         }
 
-        access(all) fun getKittyItems(): @{String: KittyHat} {
+        access(all)
+        fun getKittyItems(): @{String: KittyHat} {
             var other: @{String:KittyHat} <- {}
             self.items <-> other
             return <- other
         }
 
-        access(all) fun setKittyItems(items: @{String: KittyHat}) {
+        access(all)
+        fun setKittyItems(items: @{String: KittyHat}) {
             var other <- items
             self.items <-> other
             destroy other
         }
 
-        access(all) fun removeKittyItem(key: String): @KittyHat? {
+        access(all)
+        fun removeKittyItem(key: String): @KittyHat? {
             var removed <- self.items.remove(key: key)
             return <- removed
         }
     }
 
-    access(all) fun createKitty(): @Kitty {
+    access(all)
+    fun createKitty(): @Kitty {
         return <-create Kitty(newID: 1)
     }
 
@@ -165,7 +178,8 @@ The hats are stored in a variable in the Kitty resource.
 
 ```cadence
     // place where the Kitty hats are stored
-    access(all) var items: <-{String: KittyHat}
+    access(all)
+    var items: <-{String: KittyHat}
 ```
 
 A Kitty owner can take the hats off the Kitty and transfer them individually. Or the owner can transfer a Kitty that owns a hat, and the hat will go along with the Kitty.

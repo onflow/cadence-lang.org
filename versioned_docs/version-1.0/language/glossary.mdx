@@ -53,8 +53,10 @@ This emphasizes the whole type acts like a resource.
 
 ```cadence
 // Declare a resource named `SomeResource`
-access(all) resource SomeResource {
-    access(all) var value: Int
+access(all)
+resource SomeResource {
+    access(all)
+    var value: Int
 
     init(value: Int) {
         self.value = value
@@ -65,7 +67,8 @@ access(all) resource SomeResource {
 let a: @SomeResource <- create SomeResource(value: 0)
 
 // also in functions declarations
-access(all) fun use(resource: @SomeResource) {
+access(all)
+fun use(resource: @SomeResource) {
     destroy resource
 }
 ```
@@ -187,7 +190,8 @@ If the variable is `nil`, the move succeeds.
 If it is not nil, the program aborts.
 
 ```cadence
-access(all) resource R {}
+access(all)
+resource R {}
 
 var a: @R? <- nil
 a <-! create R()

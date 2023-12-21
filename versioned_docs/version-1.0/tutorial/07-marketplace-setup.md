@@ -177,7 +177,8 @@ import ExampleNFT from 0x02
 //
 // Account 0x01: Vault Balance = 40, NFT.id = 1
 // Account 0x02: Vault Balance = 20, No NFTs
-access(all) fun main() {
+access(all)
+fun main() {
     // Get the accounts' public account objects
     let acct1 = getAccount(0x01)
     let acct2 = getAccount(0x02)

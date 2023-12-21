@@ -88,21 +88,25 @@ Open the Account `0x01` tab with file named `HelloWorldResource.cdc`. <br />
 </Callout>
 
 ```cadence HelloWorldResource-2.cdc
-access(all) contract HelloWorld {
+access(all)
+contract HelloWorld {
 
     // Declare a resource that only includes one function.
-    access(all) resource HelloAsset {
+    access(all)
+    resource HelloAsset {
 
         // A transaction can call this function to get the "Hello, World!"
         // message from the resource.
-        access(all) fun hello(): String {
+        access(all)
+        fun hello(): String {
             return "Hello, World!"
         }
     }
 
     // We're going to use the built-in create function to create a new instance
     // of the HelloAsset resource
-    access(all) fun createHelloAsset(): @HelloAsset {
+    access(all)
+    fun createHelloAsset(): @HelloAsset {
         return <-create HelloAsset()
     }
 
@@ -329,7 +333,8 @@ Open the file `Script1.cdc`.
 ```cadence Script1.cdc
 import HelloWorld from 0x01
 
-access(all) fun main() {
+access(all)
+fun main() {
 
     // Cadence code can get an account's public account object
     // by using the getAccount() built-in function.

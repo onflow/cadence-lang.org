@@ -14,7 +14,8 @@ Attachments are declared with the `attachment` keyword, which would be declared 
 As such, the following would be examples of legal declarations of attachments:
 
 ```cadence
-access(all) attachment Foo for MyStruct {
+access(all)
+attachment Foo for MyStruct {
     // ...
 }
 
@@ -57,24 +58,30 @@ So, for an attachment declared `access(all) attachment Foo for Bar`, the `base` 
 So, for example, this would be a valid declaration of an attachment:
 
 ```
-access(all) resource R {
-    access(all) let x: Int
+access(all)
+resource R {
+    access(all)
+    let x: Int
 
     init (_ x: Int) {
         self.x = x
     }
 
-    access(all) fun foo() { ... }
+    access(all)
+    fun foo() { ... }
 }
 
-access(all) attachment A for R {
-    access(all) let derivedX: Int
+access(all)
+attachment A for R {
+    access(all)
+    let derivedX: Int
 
     init (_ scalar: Int) {
         self.derivedX = base.x * scalar
     }
 
-    access(all) fun foo() {
+    access(all)
+    fun foo() {
         base.foo()
     }
 }
@@ -88,13 +95,18 @@ A developer cannot, therefore, access any `access(self)` fields
 on the `base` value, nor can they mutate any array or dictionary typed fields.
 
 ```cadence
-access(all) resource interface SomeInterface {
-    access(all) let b: Bool
+access(all)
+resource interface SomeInterface {
+    access(all)
+    let b: Bool
     access(self) let i: Int
-    access(all) let a: [String]
+    access(all)
+    let a: [String]
 }
-access(all) attachment SomeAttachment for SomeContract.SomeStruct {
-    access(all) let i: Int
+access(all)
+attachment SomeAttachment for SomeContract.SomeStruct {
+    access(all)
+    let i: Int
     init(i: Int) {
         if base.b {
             self.i = base.i // cannot access `i` on the `base` value
@@ -102,7 +114,8 @@ access(all) attachment SomeAttachment for SomeContract.SomeStruct {
             self.i = i
         }
     }
-    access(all) fun foo() {
+    access(all)
+    fun foo() {
         base.a.append("hello") // cannot mutate `a` outside of the composite where it was defined
     }
 }
@@ -119,7 +132,8 @@ resource R {
     }
 }
 
-access(all) attachment A for R {
+access(all)
+attachment A for R {
     access(E) fun bar() {
         base.foo() // available because `E` is required above, and thus `base` is type `auth(E) &R`.
     }
@@ -135,7 +149,8 @@ resource R {
     }
 }
 
-access(all) attachment A for R {
+access(all)
+attachment A for R {
     access(self) fun bar() {
         base.foo() // unavailable because this function has `self` access, and thus `base` only is type `&R`.
     }
@@ -170,8 +185,10 @@ the `to` keyword, and an expression that evaluates to the base value for that at
 Any arguments required by the attachment's initializer are provided in its constructor call.
 
 ```cadence
-access(all) resource R {}
-access(all) attachment A for R {
+access(all)
+resource R {}
+access(all)
+attachment A for R {
     init(x: Int) {
         //...
     }
@@ -190,9 +207,12 @@ but it is important to note that the attachment being created will not be access
 
 
 ```cadence
-access(all) resource interface I {}
-access(all) resource R: I {}
-access(all) attachment A for I {}
+access(all)
+resource interface I {}
+access(all)
+resource R: I {}
+access(all)
+attachment A for I {}
 
 // ...
 let r <- create R() // has type @R

@@ -73,13 +73,16 @@ resource interface HasCount {
 // Declare a resource named `Counter` that conforms to `HasCount`
 //
 resource Counter: HasCount {
-    access(all) var count: Int
+    access(all)
+    var count: Int
 
-    access(all) init(count: Int) {
+    access(all)
+    init(count: Int) {
         self.count = count
     }
 
-    access(all) fun increment() {
+    access(all)
+    fun increment() {
         self.count = self.count + 1
     }
 }
@@ -288,10 +291,12 @@ and the other (ownedNFTs) is dictionary-typed.
 resource Collection {
 
     // Primitive-typed field
-    access(all) var id: String
+    access(all)
+    var id: String
 
     // Dictionary typed field
-    access(all) var ownedNFTs: @{UInt64: NFT}
+    access(all)
+    var ownedNFTs: @{UInt64: NFT}
 }
 ```
 

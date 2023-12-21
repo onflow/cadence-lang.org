@@ -76,8 +76,10 @@ A field may belong to a contract, struct, resource, or interface.
 
   access(all)
   contract Foo {
+    
       access(all)
       var a: String
+
       access(all)
       var b: Int
   }
@@ -100,8 +102,10 @@ A field may belong to a contract, struct, resource, or interface.
 
   access(all)
   contract Foo {
+
       access(all)
       var a: String
+
       access(all)
       var b: Int
   }
@@ -111,8 +115,10 @@ A field may belong to a contract, struct, resource, or interface.
 
   access(all)
   contract Foo {
+
       access(all)
       var b: Int
+
       access(all)
       var a: String
   }
@@ -133,7 +139,8 @@ A field may belong to a contract, struct, resource, or interface.
 
   access(all)
   contract Foo {
-      access(self) var a: String   // access modifier changed to 'access(self)'
+      access(self)
+      var a: String   // access modifier changed to 'access(self)'
   }
   ```
 
@@ -153,8 +160,10 @@ A field may belong to a contract, struct, resource, or interface.
 
   access(all)
   contract Foo {
+    
       access(all)
       var a: String
+
       access(all)
       var b: Int      // Invalid new field
   }
@@ -284,8 +293,10 @@ Below sections describes the restrictions imposed on updating the members of a s
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case BLUE
   }
@@ -295,8 +306,10 @@ Below sections describes the restrictions imposed on updating the members of a s
 
   access(all)
   enum Color: UInt8 {    // Invalid change of raw type
+
     access(all)
     case RED
+
     access(all)
     case BLUE
   }
@@ -319,8 +332,10 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case BLUE
   }
@@ -330,10 +345,13 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case BLUE
+
     access(all)
     case GREEN    // valid new enum-case at the bottom
   }
@@ -345,8 +363,10 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case BLUE
   }
@@ -356,10 +376,13 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case GREEN    // invalid new enum-case in the middle
+
     access(all)
     case BLUE
   }
@@ -370,8 +393,10 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case BLUE
   }
@@ -381,8 +406,10 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case GREEN    // invalid change of names
   }
@@ -399,8 +426,10 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case BLUE
   }
@@ -410,6 +439,7 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
 
@@ -422,8 +452,10 @@ it originally was (type confusion).
 
   access(all)
   enum Color: Int {
+
     access(all)
     case RED
+
     access(all)
     case BLUE
   }
@@ -433,8 +465,10 @@ it originally was (type confusion).
 
   access(all)
   enum Color: UInt8 {
+
     access(all)
     case BLUE   // invalid change of order
+    
     access(all)
     case RED
   }

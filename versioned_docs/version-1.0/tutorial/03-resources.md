@@ -55,6 +55,7 @@ Here is an example definition of a resource:
 ```cadence
 access(all)
 resource Money {
+  
   access(all)
   let balance: Int
 

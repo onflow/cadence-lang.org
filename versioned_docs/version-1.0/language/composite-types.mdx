@@ -165,8 +165,10 @@ and the name of the field.
 //
 access(all)
 struct Token {
+
     access(all)
     let id: Int
+
     access(all)
     var balance: Int
 
@@ -195,6 +197,7 @@ The field access syntax must be used to access fields –  fields are not availa
 ```cadence
 access(all)
 struct Token {
+
     access(all)
     let id: Int
 
@@ -212,6 +215,7 @@ The initializer is **not** automatically derived from the fields, it must be exp
 ```cadence
 access(all)
 struct Token {
+
     access(all)
     let id: Int
 
@@ -248,8 +252,10 @@ as the value being constructed here is by definition local to the context callin
 ```cadence
 access(all)
 struct Token {
+
     access(all)
     let id: Int
+
     access(all)
     var balance: Int
 
@@ -272,8 +278,10 @@ that the function is called on.
 //
 access(all)
 struct Rectangle {
+
     access(all)
     var width: Int
+
     access(all)
     var height: Int
 
@@ -356,6 +364,7 @@ Accessing a field or calling a function of a structure does not copy it.
 //
 access(all)
 struct SomeStruct {
+    
     access(all)
     var value: Int
 
@@ -408,6 +417,7 @@ of an optional composite type.
 // Declare a struct with a field and method.
 access(all)
 struct Value {
+
     access(all)
     var number: Int
 
@@ -475,6 +485,7 @@ of an optional composite type.
 // Declare a struct with a field and method.
 access(all)
 struct Value {
+
     access(all)
     var number: Int
 

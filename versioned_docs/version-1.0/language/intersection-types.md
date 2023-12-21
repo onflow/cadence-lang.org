@@ -28,6 +28,7 @@ struct interface HasID {
 
 access(all)
 struct A: HasID {
+
     access(all)
     let id: String
 
@@ -38,6 +39,7 @@ struct A: HasID {
 
 access(all)
 struct B: HasID {
+
     access(all)
     let id: String
 
@@ -82,8 +84,10 @@ struct interface HasMetadata {
 
 access(all)
 struct C: HasID, HasMetadata {
+
     access(all)
     let id: String
+    
     access(all)
     var metadata: AnyStruct
 

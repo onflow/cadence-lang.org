@@ -148,6 +148,7 @@ import Test
 
 access(all)
 struct Foo {
+
     access(all)
     let answer: Int
 
@@ -199,7 +200,8 @@ import Test
 
 access(all)
 struct Foo {
-    access(self) let answer: UInt8
+    access(self)
+    let answer: UInt8
 
     init(answer: UInt8) {
         self.answer = answer
@@ -845,6 +847,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 
@@ -871,8 +874,10 @@ The returned account consists of the `address` of the account, and a `publicKey`
 ///
 access(all)
 struct Account {
+
     access(all)
     let address: Address
+
     access(all)
     let publicKey: PublicKey
 
@@ -920,10 +925,13 @@ successful, or an `error` otherwise (see [errors](#errors) section for more deta
 ///
 access(all)
 struct ScriptResult {
+
     access(all)
     let status: ResultStatus
+
     access(all)
     let returnValue: AnyStruct?
+
     access(all)
     let error: Error?
 
@@ -945,12 +953,16 @@ a list of signers that would sign the transaction, and the transaction arguments
 ///
 access(all)
 struct Transaction {
+
     access(all)
     let code: String
+
     access(all)
     let authorizers: [Address]
+
     access(all)
     let signers: [Account]
+
     access(all)
     let arguments: [AnyStruct]
 
@@ -970,6 +982,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 
@@ -1018,8 +1031,10 @@ The result of a transaction consists of the status of the execution, and an `Err
 ///
 access(all)
 struct TransactionResult {
+
     access(all)
     let status: ResultStatus
+
     access(all)
     let error: Error?
 
@@ -1039,6 +1054,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 
@@ -1069,6 +1085,7 @@ Suppose we have this contract (`Foo.cdc`):
 ```cadence
 access(all)
 contract Foo {
+
     access(all)
     let msg: String
 
@@ -1088,6 +1105,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 
@@ -1126,6 +1144,7 @@ The `Configuration` struct consists of a mapping of import locations to their ad
 ///
 access(all)
 struct Configuration {
+
     access(all)
     let addresses: {String: Address}
 
@@ -1163,6 +1182,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 
@@ -1209,6 +1229,7 @@ It contains a message indicating why the operation failed.
 //
 access(all)
 struct Error {
+
     access(all)
     let message: String
 
@@ -1225,6 +1246,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 
@@ -1263,6 +1285,7 @@ Suppose we have this contract (`Foo.cdc`):
 ```cadence
 access(all)
 contract Foo {
+    
     access(all)
     let msg: String
 
@@ -1286,6 +1309,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 
@@ -1392,6 +1416,7 @@ import Test
 
 access(all)
 let blockchain = Test.newEmulatorBlockchain()
+
 access(all)
 let account = blockchain.createAccount()
 

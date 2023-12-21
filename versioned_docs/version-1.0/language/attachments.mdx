@@ -60,6 +60,7 @@ So, for example, this would be a valid declaration of an attachment:
 ```
 access(all)
 resource R {
+
     access(all)
     let x: Int
 
@@ -73,6 +74,7 @@ resource R {
 
 access(all)
 attachment A for R {
+    
     access(all)
     let derivedX: Int
 
@@ -97,16 +99,22 @@ on the `base` value, nor can they mutate any array or dictionary typed fields.
 ```cadence
 access(all)
 resource interface SomeInterface {
+
     access(all)
     let b: Bool
-    access(self) let i: Int
+
+    access(self)
+    let i: Int
+
     access(all)
     let a: [String]
 }
 access(all)
 attachment SomeAttachment for SomeContract.SomeStruct {
+
     access(all)
     let i: Int
+
     init(i: Int) {
         if base.b {
             self.i = base.i // cannot access `i` on the `base` value
@@ -114,6 +122,7 @@ attachment SomeAttachment for SomeContract.SomeStruct {
             self.i = i
         }
     }
+
     access(all)
     fun foo() {
         base.a.append("hello") // cannot mutate `a` outside of the composite where it was defined
@@ -127,14 +136,16 @@ the type of `base` would be `auth(E) &R`, and the type of `self` would be `auth(
 
 ```cadence
 resource R {
-    access(E) fun foo() {
+    access(E)
+    fun foo() {
         //...
     }
 }
 
 access(all)
 attachment A for R {
-    access(E) fun bar() {
+    access(E)
+    fun bar() {
         base.foo() // available because `E` is required above, and thus `base` is type `auth(E) &R`.
     }
 }
@@ -144,16 +155,20 @@ while this would not:
 
 ```cadence
 resource R {
-    access(E) fun foo() {
+    access(E)
+    fun foo() {
         //...
     }
 }
 
 access(all)
 attachment A for R {
-    access(self) fun bar() {
+
+    access(self)
+    fun bar() {
         base.foo() // unavailable because this function has `self` access, and thus `base` only is type `&R`.
     }
+
 }
 ```
 
@@ -187,6 +202,7 @@ Any arguments required by the attachment's initializer are provided in its const
 ```cadence
 access(all)
 resource R {}
+
 access(all)
 attachment A for R {
     init(x: Int) {
@@ -209,8 +225,10 @@ but it is important to note that the attachment being created will not be access
 ```cadence
 access(all)
 resource interface I {}
+
 access(all)
 resource R: I {}
+
 access(all)
 attachment A for I {}
 
@@ -248,16 +266,20 @@ entitlement E
 entitlement F 
 
 resource R {
-    access(E) fun foo() {
+    access(E)
+    fun foo() {
         // ... 
     }
-    access(F) fun bar() { 
+
+    access(F)
+    fun bar() { 
         // ... 
     }
 }
 
 attachment A for R {
-    access(E | F) fun qux() { 
+    access(E | F)
+    fun qux() { 
         // ... 
     }
 }

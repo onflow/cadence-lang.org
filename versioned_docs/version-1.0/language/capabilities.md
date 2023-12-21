@@ -39,6 +39,7 @@ Capabilities are created and managed through [capability controllers](./accounts
 ```cadence
 access(all)
 struct Capability<T: &Any> {
+    
     /// The address of the account which the capability targets.
     access(all)
     let address: Address

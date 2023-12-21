@@ -304,7 +304,8 @@ struct interface AnInterface {
     // field named `a` that has type `Int`. It may be a variable
     // or a constant field.
     //
-    access(contract) a: Int
+    access(contract)
+    a: Int
 }
 
 access(all)
@@ -338,8 +339,10 @@ when accessing a value of such a type.
 //
 access(all)
 struct interface Shape {
+
     access(all)
     fun getArea(): Int
+
     access(all)
     fun scale(factor: Int)
 }
@@ -383,8 +386,10 @@ struct Square: Shape {
 //
 access(all)
 struct Rectangle: Shape {
+
     access(all)
     var width: Int
+
     access(all)
     var height: Int
 
@@ -593,6 +598,7 @@ implement the `Receiver` interface.
 ```cadence
 access(all)
 resource MyVault: Vault {
+    
     // Must implement all the methods coming from both `Vault` and `Receiver` interfaces.
     access(all)
     fun deposit(_ something: @AnyResource) {}

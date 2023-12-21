@@ -244,10 +244,13 @@ contract ExampleMarketplace {
     //
     access(all)
     resource interface SalePublic {
+
         access(all)
         fun purchase(tokenID: UInt64, recipient: Capability<&AnyResource{ExampleNFT.NFTReceiver}>, buyTokens: @ExampleToken.Vault)
+
         access(all)
         fun idPrice(tokenID: UInt64): UFix64?
+        
         access(all)
         fun getIDs(): [UInt64]
     }
@@ -261,15 +264,18 @@ contract ExampleMarketplace {
     resource SaleCollection: SalePublic {
 
         /// A capability for the owner's collection
-        access(self) var ownerCollection: Capability<&ExampleNFT.Collection>
+        access(self)
+        var ownerCollection: Capability<&ExampleNFT.Collection>
 
         // Dictionary of the prices for each NFT by ID
-        access(self) var prices: {UInt64: UFix64}
+        access(self)
+        var prices: {UInt64: UFix64}
 
         // The fungible token vault of the owner of this sale.
         // When someone buys a token, this resource can deposit
         // tokens into their account.
-        access(account) let ownerVault: Capability<&AnyResource{ExampleToken.Receiver}>
+        access(account)
+        let ownerVault: Capability<&AnyResource{ExampleToken.Receiver}>
 
         init (ownerCollection: Capability<&ExampleNFT.Collection>,
               ownerVault: Capability<&AnyResource{ExampleToken.Receiver}>) {
@@ -485,12 +491,14 @@ We store two different capabilities in the marketplace sale collection:
 
 ```cadence
 /// A capability for the owner's collection
-access(self) var ownerCollection: Capability<&ExampleNFT.Collection>
+access(self)
+var ownerCollection: Capability<&ExampleNFT.Collection>
 
 // The fungible token vault of the owner of this sale.
 // When someone buys a token, this resource can deposit
 // tokens into their account.
-access(account) let ownerVault: Capability<&AnyResource{ExampleToken.Receiver}>
+access(account)
+let ownerVault: Capability<&AnyResource{ExampleToken.Receiver}>
 ```
 
 If an object like a contract or resource owns a capability, they can borrow a reference to that capability at any time
@@ -518,7 +526,8 @@ resource SaleCollection: SalePublic {
     /// Dictionary of NFT objects for sale
     /// Maps ID to NFT resource object
     /// Not recommended
-    access(self) var forSale: @{UInt64: ExampleNFT.NFT}
+    access(self)
+    var forSale: @{UInt64: ExampleNFT.NFT}
 }
 ```
 

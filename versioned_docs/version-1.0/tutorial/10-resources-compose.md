@@ -98,8 +98,10 @@ contract KittyVerse {
     // KittyHat is a special resource type that represents a hat
     access(all)
     resource KittyHat {
+
         access(all)
         let id: Int
+        
         access(all)
         let name: String
 

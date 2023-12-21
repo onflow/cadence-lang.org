@@ -42,7 +42,8 @@ In traditional software and smart contracts, balances for each user are tracked 
 // DO NOT USE THIS CODE FOR YOUR PROJECT
 contract LedgerToken {
     // Tracks every user's balance
-    access(contract) let balances: {Address: UFix64}
+    access(contract)
+    let balances: {Address: UFix64}
 
     // Transfer tokens from one user to the other
     // by updating their balances in the central ledger

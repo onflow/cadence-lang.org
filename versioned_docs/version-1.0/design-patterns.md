@@ -54,6 +54,7 @@ contract NamedFields {
 //
 access(all)
 contract NamedFields {
+    
     access(all)
     resource Test {}
 

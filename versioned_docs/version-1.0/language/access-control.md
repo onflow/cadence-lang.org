@@ -113,7 +113,8 @@ from inside the contract they are declared in.
 ```cadence
 // Declare a private constant, inaccessible/invisible in outer scope.
 //
-access(self) let a = 1
+access(self)
+let a = 1
 
 // Declare a public constant, accessible/visible in all scopes.
 //
@@ -130,7 +131,8 @@ struct SomeStruct {
     // Declare a private constant field which is only readable
     // in the current and inner scopes.
     //
-    access(self) let a: Int
+    access(self)
+    let a: Int
 
     // Declare a public constant field which is readable in all scopes.
     //
@@ -140,7 +142,8 @@ struct SomeStruct {
     // Declare a private variable field which is only readable
     // and writable in the current and inner scopes.
     //
-    access(self) var c: Int
+    access(self)
+    var c: Int
 
     // Declare a public variable field which is not settable,
     // so it is only writable in the current and inner scopes,
@@ -159,7 +162,8 @@ struct SomeStruct {
     // Declare a private function which is only callable
     // in the current and inner scopes.
     //
-    access(self) fun privateTest() {
+    access(self)
+    fun privateTest() {
         // ...
     }
 
@@ -340,6 +344,7 @@ entitlement OuterEntitlement
 entitlement InnerEntitlement
 
 resource InnerResource {
+
     access(all)
     fun foo() { ... }
 
@@ -427,6 +432,7 @@ entitlement mapping OuterToInnerMap {
 }
 
 resource InnerResource {
+  
     access(all)
     fun foo() { ... }
 

@@ -36,10 +36,13 @@ Enum cases can be compared using the equality operators `==` and `!=`.
 //
 access(all)
 enum Color: UInt8 {
+
     access(all)
     case red
+
     access(all)
     case green
+    
     access(all)
     case blue
 }

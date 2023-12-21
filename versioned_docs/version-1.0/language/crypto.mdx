@@ -129,6 +129,7 @@ enum SignatureAlgorithm: UInt8 {
 ```cadence
 access(all)
 struct PublicKey {
+
     access(all)
     let publicKey: [UInt8]
 
@@ -406,14 +407,19 @@ The API of the Crypto contract related to key lists is:
 ```cadence
 access(all)
 struct KeyListEntry {
+
     access(all)
     let keyIndex: Int
+
     access(all)
     let publicKey: PublicKey
+
     access(all)
     let hashAlgorithm: HashAlgorithm
+
     access(all)
     let weight: UFix64
+
     access(all)
     let isRevoked: Bool
 
@@ -458,8 +464,10 @@ struct KeyList {
 
 access(all)
 struct KeyListSignature {
+
     access(all)
     let keyIndex: Int
+    
     access(all)
     let signature: [UInt8]
 

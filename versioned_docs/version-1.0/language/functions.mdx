@@ -491,10 +491,17 @@ Functions can be annotated as `view` to indicate that they do not modify any ext
 A `view` annotation can be added to the beginning of a function declaration or expression like so: 
 
 ```cadence
-view access(all) fun foo(): Void {}
+access(all) 
+view fun foo(): Void {}
+
 let x = view fun(): Void {}
-access(all) struct S {
-    view access(all) fun foo(): Void {}
+
+access(all) 
+struct S {
+
+    access(all)
+    view fun foo(): Void {}
+    
     view init()
 }
 ```

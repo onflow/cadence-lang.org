@@ -889,6 +889,34 @@ Strings have multiple built-in functions you can use:
     example.toLower()  // is `flowers`
     ```
 
+-
+    ```cadence
+    view fun replaceAll(of: String, with: String): String
+    ```
+
+    Returns a string where all occurences of `of` are replaced with `with`.
+    If `of` is empty, it matches at the beginning of the string and after each UTF-8 sequence, yielding k+1 replacements for a string of length k.
+
+    ```cadence
+    let example = "abababa"
+
+    example.replaceAll(of: "a", with: "o")  // is `obobobo`
+    ```
+
+-
+    ```cadence
+    view fun split(separator: String): [String]
+    ```
+
+    Returns the variable-sized array of strings created splitting the receiver string on the `separator`.
+
+    ```cadence
+    let example = "hello world"
+
+    example.split(separator: " ")  // is `["hello", "world"]`
+    ```
+
+
 The `String` type also provides the following functions:
 
 -
@@ -902,6 +930,18 @@ The `String` type also provides the following functions:
     let data = [1 as UInt8, 2, 3, 0xCA, 0xDE]
 
     String.encodeHex(data)  // is `"010203cade"`
+    ```
+
+-
+    ```cadence
+    view fun String.join(_ strings: [String], separator: String): String
+    ```
+
+    Returns the string created by joining the array of `strings` with the provided `separator`.
+
+    ```cadence
+    let strings = ["hello", "world"]
+    String.join(strings, " ") // is "hello world"
     ```
 
 `String`s are also indexable, returning a `Character` value.

@@ -180,6 +180,7 @@ A field may belong to a contract, struct, resource, or interface.
 
   access(all)
   contract Foo {
+
       access(all)
       var a: String
   }
@@ -189,6 +190,7 @@ A field may belong to a contract, struct, resource, or interface.
 
   access(all)
   contract Foo {
+
       access(all)
       var a: Int      // Invalid type change
   }

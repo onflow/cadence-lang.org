@@ -321,7 +321,8 @@ Owned values are not affected by entitled declarations.
 Entitlement mappings are a way to statically declare how entitlements are propagated
 from parents to child objects in a nesting hierarchy.
 
-When objects have fields that are child objects,
+When objects have fields that are child objects, 
+entitlement mappings can be used
 to grant access to the inner object based on the entitlements of the reference to the parent object.
 
 Consider the following example,

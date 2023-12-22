@@ -3,10 +3,6 @@ title: Attachments
 sidebar_position: 21
 ---
 
-<Callout type="warning">
-⚠️ This section describes a feature that is not yet released on Mainnet.
-</Callout>
-
 Attachments are a feature of Cadence designed to allow developers to extend a struct or resource type
 (even one that they did not declare) with new functionality,
 without requiring the original author of the type to plan or account for the intended behavior.
@@ -41,15 +37,15 @@ while in the case of an interface the attachment is usable on any type that conf
 The body of the attachment follows the same declaration rules as composites.
 In particular, they may have both field and function members,
 and any field members must be initialized in an initializer.
-Only resource-kinded attachments may have resource members,
-and such members must be explicitly handled in the `destroy` function.
+Only resource-kinded attachments may have resource members.
+
 The `self` keyword is available in attachment bodies, but unlike in a composite,
 `self` is a **reference** type, rather than a composite type:
 In an attachment declaration for `A`, the type of `self` would be a reference to `A`, rather than `A` like in other composite declarations.
 The specific entitlements that this reference has depends on the access modifier associated with the member function in which the `self` reference
 appears, and is explained in more detail below. 
 
-If a resource with attachments on it is `destroy`ed, the `destroy` functions of all its attachments are all run in an unspecified order.
+If a resource with attachments on it is `destroy`ed, all its attachments are `destroy`ed in an unspecified order.
 The only guarantee about the order in which attachments are destroyed in this case is that the base resource will be the last thing destroyed.
 
 Within the body of an attachment, there is also a `base` keyword available,
@@ -267,8 +263,14 @@ the `from` keyword, and the value from which the attachment is meant to be remov
 
 The value on the right-hand side of `from` must be a composite value whose type is a subtype of the attachment type's declared base.
 
+E.g., to remove an `A` attachment from some resource `r` whose type supports that attachment:
+
+```cadence
+remove A from r
+```
+
 After the statement executes, the composite value on the right-hand side of `from` will no longer contain the attachment.
-If the value does not contain `t`, this statement has no effect.
+If the value does not contain the attachment that appears after the `remove` keyword, this statement has no effect.
 
 Attachments may be removed from a type in any order,
 so users should take care not to design any attachments that rely on specific behaviors of other attachments,

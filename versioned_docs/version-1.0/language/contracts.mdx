@@ -114,9 +114,14 @@ but they have to be in the contract and not another top-level definition.
 //          if they were deployed to the account contract storage and
 //          the deployment would be rejected.
 //
-access(all) resource Vault {}
-access(all) struct Hat {}
-access(all) fun helloWorld(): String {}
+access(all)
+resource Vault {}
+
+access(all)
+struct Hat {}
+
+access(all)
+fun helloWorld(): String {}
 let num: Int
 ```
 
@@ -132,13 +137,17 @@ there is no way to create this resource, so it would not be usable.
 
 ```cadence
 // Valid
-access(all) contract FungibleToken {
+access(all)
+contract FungibleToken {
 
-    access(all) resource interface Receiver {
+    access(all)
+    resource interface Receiver {
 
-        access(all) balance: Int
+        access(all)
+        balance: Int
 
-        access(all) fun deposit(from: @{Receiver}) {
+        access(all)
+        fun deposit(from: @{Receiver}) {
             pre {
                 from.balance > 0:
                     "Deposit balance needs to be positive!"
@@ -150,10 +159,12 @@ access(all) contract FungibleToken {
         }
     }
 
-    access(all) resource Vault: Receiver {
+    access(all)
+    resource Vault: Receiver {
 
         // keeps track of the total balance of the accounts tokens
-        access(all) var balance: Int
+        access(all)
+        var balance: Int
 
         init(balance: Int) {
             self.balance = balance
@@ -161,7 +172,8 @@ access(all) contract FungibleToken {
 
         // withdraw subtracts amount from the vaults balance and
         // returns a vault object with the subtracted balance
-        access(all) fun withdraw(amount: Int): @Vault {
+        access(all)
+        fun withdraw(amount: Int): @Vault {
             self.balance = self.balance - amount
             return <-create Vault(balance: amount)
         }
@@ -169,7 +181,8 @@ access(all) contract FungibleToken {
         // deposit takes a vault object as a parameter and adds
         // its balance to the balance of the Account's vault, then
         // destroys the sent vault because its balance has been consumed
-        access(all) fun deposit(from: @{Receiver}) {
+        access(all)
+        fun deposit(from: @{Receiver}) {
             self.balance = self.balance + from.balance
             destroy from
         }
@@ -232,19 +245,23 @@ They can refer to that nested interface by saying `{ContractInterfaceName}.{Nest
 // Declare a contract interface that declares an interface and a resource
 // that needs to implement that interface in the contract implementation.
 //
-access(all) contract interface InterfaceExample {
+access(all)
+contract interface InterfaceExample {
 
     // Implementations do not need to declare this
     // They refer to it as InterfaceExample.NestedInterface
     //
-    access(all) resource interface NestedInterface {}
+    access(all)
+    resource interface NestedInterface {}
 
     // Implementations must declare this type
     //
-    access(all) resource Composite: NestedInterface {}
+    access(all)
+    resource Composite: NestedInterface {}
 }
 
-access(all) contract ExampleContract: InterfaceExample {
+access(all)
+contract ExampleContract: InterfaceExample {
 
     // The contract doesn't need to redeclare the `NestedInterface` interface
     // because it is already declared in the contract interface
@@ -252,7 +269,8 @@ access(all) contract ExampleContract: InterfaceExample {
     // The resource has to refer to the resource interface using the name
     // of the contract interface to access it
     //
-    access(all) resource Composite: InterfaceExample.NestedInterface {
+    access(all)
+    resource Composite: InterfaceExample.NestedInterface {
     }
 }
 ```

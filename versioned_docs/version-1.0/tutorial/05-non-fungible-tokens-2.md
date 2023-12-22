@@ -82,7 +82,8 @@ This example uses a [**Dictionary**: a mutable, unordered collection of key-valu
 ```cadence
 // Keys are `Int`
 // Values are `NFT`
-access(all) let myNFTs: @{Int: NFT}
+access(all)
+let myNFTs: @{Int: NFT}
 ```
 
 In a dictionary, all keys must have the same type, and all values must have the same type.
@@ -137,22 +138,29 @@ It contains what was already in `BasicNFT.cdc` plus additional resource declarat
 //
 // Learn more about non-fungible tokens in this tutorial: https://developers.flow.com/cadence/tutorial/non-fungible-tokens-1
 
-access(all) contract ExampleNFT {
+access(all)
+contract ExampleNFT {
 
     // Declare Path constants so paths do not have to be hardcoded
     // in transactions and scripts
 
-    access(all) let CollectionStoragePath: StoragePath
-    access(all) let CollectionPublicPath: PublicPath
-    access(all) let MinterStoragePath: StoragePath
+    access(all)
+    let CollectionStoragePath: StoragePath
+    access(all)
+    let CollectionPublicPath: PublicPath
+    access(all)
+    let MinterStoragePath: StoragePath
 
     // Tracks the unique IDs of the NFT
-    access(all) var idCount: UInt64
+    access(all)
+    var idCount: UInt64
 
     // Declare the NFT resource type
-    access(all) resource NFT {
+    access(all)
+    resource NFT {
         // The unique ID that differentiates each NFT
-        access(all) let id: UInt64
+        access(all)
+        let id: UInt64
 
         // Initialize both fields in the initializer
         init(initID: UInt64) {
@@ -164,21 +172,27 @@ access(all) contract ExampleNFT {
     // to create public, restricted references to their NFT Collection.
     // They would use this to publicly expose only the deposit, getIDs,
     // and idExists fields in their Collection
-    access(all) resource interface NFTReceiver {
+    access(all)
+    resource interface NFTReceiver {
 
-        access(all) fun deposit(token: @NFT)
+        access(all)
+        fun deposit(token: @NFT)
 
-        access(all) fun getIDs(): [UInt64]
+        access(all)
+        fun getIDs(): [UInt64]
 
-        access(all) fun idExists(id: UInt64): Bool
+        access(all)
+        fun idExists(id: UInt64): Bool
     }
 
     // The definition of the Collection resource that
     // holds the NFTs that a user owns
-    access(all) resource Collection: NFTReceiver {
+    access(all)
+    resource Collection: NFTReceiver {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` ID field
-        access(all) var ownedNFTs: @{UInt64: NFT}
+        access(all)
+        var ownedNFTs: @{UInt64: NFT}
 
         // Initialize the NFTs field to an empty collection
         init () {
@@ -189,7 +203,8 @@ access(all) contract ExampleNFT {
         //
         // Function that removes an NFT from the collection
         // and moves it to the calling context
-        access(all) fun withdraw(withdrawID: UInt64): @NFT {
+        access(all)
+        fun withdraw(withdrawID: UInt64): @NFT {
             // If the NFT isn't found, the transaction panics and reverts
             let token <- self.ownedNFTs.remove(key: withdrawID)!
 
@@ -200,7 +215,8 @@ access(all) contract ExampleNFT {
         //
         // Function that takes a NFT as an argument and
         // adds it to the collections dictionary
-        access(all) fun deposit(token: @NFT) {
+        access(all)
+        fun deposit(token: @NFT) {
             // add the new token to the dictionary with a force assignment
             // if there is already a value at that key, it will fail and revert
             self.ownedNFTs[token.id] <-! token
@@ -208,18 +224,21 @@ access(all) contract ExampleNFT {
 
         // idExists checks to see if a NFT
         // with the given ID exists in the collection
-        access(all) fun idExists(id: UInt64): Bool {
+        access(all)
+        fun idExists(id: UInt64): Bool {
             return self.ownedNFTs[id] != nil
         }
 
         // getIDs returns an array of the IDs that are in the collection
-        access(all) fun getIDs(): [UInt64] {
+        access(all)
+        fun getIDs(): [UInt64] {
             return self.ownedNFTs.keys
         }
     }
 
     // creates a new empty Collection resource and returns it
-    access(all) fun createEmptyCollection(): @Collection {
+    access(all)
+    fun createEmptyCollection(): @Collection {
         return <- create Collection()
     }
 
@@ -227,7 +246,8 @@ access(all) contract ExampleNFT {
     //
     // Function that mints a new NFT with a new ID
     // and returns it to the caller
-    access(all) fun mintNFT(): @NFT {
+    access(all)
+    fun mintNFT(): @NFT {
 
         // create a new NFT
         var newNFT <- create NFT(initID: self.idCount)
@@ -304,7 +324,8 @@ of the keys of the dictionary using the built-in `keys` function.
 
 ```cadence
 // getIDs returns an array of the IDs that are in the collection
-access(all) fun getIDs(): [UInt64] {
+access(all)
+fun getIDs(): [UInt64] {
     return self.ownedNFTs.keys
 }
 ```
@@ -360,13 +381,17 @@ is only accessible by its owner. To give external accounts access to the `deposi
 the `getIDs` function, and the `idExists` function, the owner creates an interface that only includes those fields:
 
 ```cadence
-access(all) resource interface NFTReceiver {
+access(all)
+resource interface NFTReceiver {
 
-    access(all) fun deposit(token: @NFT)
+    access(all)
+    fun deposit(token: @NFT)
 
-    access(all) fun getIDs(): [UInt64]
+    access(all)
+    fun getIDs(): [UInt64]
 
-    access(all) fun idExists(id: UInt64): Bool
+    access(all)
+    fun idExists(id: UInt64): Bool
 }
 ```
 
@@ -411,7 +436,8 @@ Open the script file named `Print 0x01 NFTs`.
 import ExampleNFT from 0x01
 
 // Print the NFTs owned by account 0x01.
-access(all) fun main() {
+access(all)
+fun main() {
     // Get the public account object for account 0x01
     let nftOwner = getAccount(0x01)
 
@@ -504,7 +530,8 @@ This prints a list of the NFTs that account `0x01` owns.
 import ExampleNFT from 0x01
 
 // Print the NFTs owned by account 0x01.
-access(all) fun main() {
+access(all)
+fun main() {
     // Get the public account object for account 0x01
     let nftOwner = getAccount(0x01)
 
@@ -629,7 +656,8 @@ Execute the script `Print all NFTs` to see the tokens in each account:
 import ExampleNFT from 0x01
 
 // Print the NFTs owned by accounts 0x01 and 0x02.
-access(all) fun main() {
+access(all)
+fun main() {
 
     // Get both public account objects
     let account1 = getAccount(0x01)

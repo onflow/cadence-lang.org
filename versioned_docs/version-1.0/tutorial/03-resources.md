@@ -53,8 +53,11 @@ Resources are one of Cadence's defining features.
 In Cadence, resources are a composite type like a struct or a class, but with some special rules.
 Here is an example definition of a resource:
 ```cadence
-access(all) resource Money {
-  access(all) let balance: Int
+access(all)
+resource Money {
+  
+  access(all)
+  let balance: Int
 
   init() {
     self.balance = 0
@@ -103,21 +106,25 @@ Open the Account `0x01` tab with file named `HelloWorldResource.cdc`. <br />
 </Callout>
 
 ```cadence HelloWorldResource.cdc
-access(all) contract HelloWorld {
+access(all)
+contract HelloWorld {
 
     // Declare a resource that only includes one function.
-    access(all) resource HelloAsset {
+    access(all)
+    resource HelloAsset {
 
         // A transaction can call this function to get the "Hello, World!"
         // message from the resource.
-        access(all) fun hello(): String {
+        access(all)
+        fun hello(): String {
             return "Hello, World!"
         }
     }
 
     // We're going to use the built-in create function to create a new instance
     // of the HelloAsset resource
-    access(all) fun createHelloAsset(): @HelloAsset {
+    access(all)
+    fun createHelloAsset(): @HelloAsset {
         return <-create HelloAsset()
     }
 
@@ -154,8 +161,10 @@ Let's walk through this contract in more detail, starting with the resource.
 Resources are one of the most important things that Cadence introduces to the smart contract design experience:
 
 ```cadence
-access(all) resource HelloAsset {
-    access(all) fun hello(): String {
+access(all)
+resource HelloAsset {
+    access(all)
+    fun hello(): String {
         return "Hello, World!"
     }
 }
@@ -200,7 +209,8 @@ This prevents anyone from being able to create arbitrary amounts of resource obj
 
 In this example, we declared a function that can create `HelloAsset` resources:
 ```cadence
-access(all) fun createHelloAsset(): @HelloAsset {
+access(all)
+fun createHelloAsset(): @HelloAsset {
     return <-create HelloAsset()
 }
 ```

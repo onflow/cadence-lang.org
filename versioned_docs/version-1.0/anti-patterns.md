@@ -30,7 +30,8 @@ which provides the opportunity for bad actors to take advantage of.
 
 // They could deploy the contract with an Ethereum-style access control list functionality
 
-access(all) fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
+access(all)
+fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
     assert(owner(id) == owner.address)
 
     transfer(id)
@@ -42,7 +43,8 @@ access(all) fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
 // should not be accessible in this function
 // BAD
 
-access(all) fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
+access(all)
+fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
     assert(owner(id) == owner.address)
 
     transfer(id)
@@ -120,14 +122,20 @@ and then a new creation function can be potentially included within the admin re
 // Pseudo-code
 
 // BAD
-access(all) contract Currency {
-    access(all) resource Admin {
-        access(all) fun mintTokens()
+access(all)
+contract Currency {
+
+    access(all)
+    resource Admin {
+
+        access(all)
+        fun mintTokens()
     }
 
     // Anyone in the network can call this function
     // And use the Admin resource to mint tokens
-    access(all) fun createAdmin(): @Admin {
+    access(all)
+    fun createAdmin(): @Admin {
         return <-create Admin()
     }
 }
@@ -135,12 +143,18 @@ access(all) contract Currency {
 // This contract makes the admin creation private and in the initializer
 // so that only the one who controls the account can mint tokens
 // GOOD
-access(all) contract Currency {
-    access(all) resource Admin {
-        access(all) fun mintTokens()
+access(all)
+contract Currency {
+
+    access(all)
+    resource Admin {
+
+        access(all)
+        fun mintTokens()
 
         // Only an admin can create new Admins
-        access(all) fun createAdmin(): @Admin {
+        access(all)
+        fun createAdmin(): @Admin {
             return <-create Admin()
         }
     }
@@ -181,14 +195,18 @@ which increments the number that tracks the play IDs and emits an event:
 // Simplified Code
 // BAD
 //
-access(all) contract TopShot {
+access(all)
+contract TopShot {
 
     // The Record that is used to track every unique play ID
-    access(all) var nextPlayID: UInt32
+    access(all)
+    var nextPlayID: UInt32
 
-    access(all) struct Play {
+    access(all)
+    struct Play {
 
-        access(all) let playID: UInt32
+        access(all)
+        let playID: UInt32
 
         init() {
 
@@ -216,24 +234,30 @@ that creates the plays.
 // Update contract state in admin resource functions
 // GOOD
 //
-access(all) contract TopShot {
+access(all)
+contract TopShot {
 
     // The Record that is used to track every unique play ID
-    access(all) var nextPlayID: UInt32
+    access(all)
+    var nextPlayID: UInt32
 
-    access(all) struct Play {
+    access(all)
+    struct Play {
 
-        access(all) let playID: UInt32
+        access(all)
+        let playID: UInt32
 
         init() {
             self.playID = TopShot.nextPlayID
         }
     }
 
-    access(all) resource Admin {
+    access(all)
+    resource Admin {
 
         // Protected within the private admin resource
-        access(all) fun createPlay() {
+        access(all)
+        fun createPlay() {
             // Create the new Play
             var newPlay = Play()
 

@@ -38,8 +38,11 @@ Example Snippet:
 ```cadence
 
 // BAD Practice: Do not hard code storage paths
-access(all) contract NamedFields {
-    access(all) resource Test {}
+access(all)
+contract NamedFields {
+
+    access(all)
+    resource Test {}
 
     init() {
         // BAD: Hard-coded storage path
@@ -49,11 +52,15 @@ access(all) contract NamedFields {
 
 // GOOD practice: Instead, use a field
 //
-access(all) contract NamedFields {
-    access(all) resource Test {}
+access(all)
+contract NamedFields {
+    
+    access(all)
+    resource Test {}
 
     // GOOD: field storage path
-    access(all) let TestStoragePath: StoragePath
+    access(all)
+    let TestStoragePath: StoragePath
 
     init() {
         // assign and access the field here and in transactions
@@ -88,10 +95,12 @@ Example:
 
 ```cadence
 // BAD: Field is private, so it cannot be read by the public
-access(self) let totalSupply: UFix64
+access(self)
+let totalSupply: UFix64
 
 // GOOD: Field is public, so it can be read and used by anyone
-access(all) let totalSupply: UFix64
+access(all)
+let totalSupply: UFix64
 ```
 
 ## Script-Accessible report
@@ -117,9 +126,14 @@ See [Script-Accessible public field/function](#script-accessible-public-fieldfun
 ### Example
 
 ```cadence
-access(all) contract AContract {
-    access(all) let BResourceStoragePath: StoragePath
-    access(all) let BResourcePublicPath: PublicPath
+access(all)
+contract AContract {
+
+    access(all)
+    let BResourceStoragePath: StoragePath
+
+    access(all)
+    let BResourcePublicPath: PublicPath
 
     init() {
         self.BResourceStoragePath = /storage/BResource
@@ -127,15 +141,21 @@ access(all) contract AContract {
     }
 
     // Resource definition
-    access(all) resource BResource {
-        access(all) var c: UInt64
-        access(all) var d: String
+    access(all)
+    resource BResource {
+
+        access(all)
+        var c: UInt64
+
+        access(all)
+        var d: String
 
 
         // Generate a struct with the same fields
         // to return when a script wants to see the fields of the resource
         // without having to return the actual resource
-        access(all) fun generateReport(): BReportStruct {
+        access(all)
+        fun generateReport(): BReportStruct {
             return BReportStruct(c: self.c, d: self.d)
         }
 
@@ -146,9 +166,14 @@ access(all) contract AContract {
     }
 
     // Define a struct with the same fields as the resource
-    access(all) struct BReportStruct {
-        access(all) var c: UInt64
-        access(all) var d: String
+    access(all)
+    struct BReportStruct {
+
+        access(all)
+        var c: UInt64
+
+        access(all)
+        var d: String
 
         init(c: UInt64, d: String) {
             self.c = c
@@ -172,7 +197,8 @@ transaction {
 import AContract from 0xAContract
 
 // Return the struct with a script
-access(all) fun main(account: Address): AContract.BReportStruct {
+access(all)
+fun main(account: Address): AContract.BReportStruct {
     // borrow the resource
     let b = getAccount(account).capabilities
         .borrow<&AContract.BResource>(AContract.BResourcePublicPath)
@@ -225,12 +251,16 @@ All fields, functions, types, variables, etc., need to have names that clearly d
 ```cadence
 // BAD: Unclear naming
 //
-access(all) contract Tax {
+access(all)
+contract Tax {
+    
     // Do not use abbreviations unless absolutely necessary
-    access(all) var pcnt: UFix64
+    access(all)
+    var pcnt: UFix64
 
     // Not clear what the function is calculating or what the parameter should be
-    access(all) fun calculate(num: UFix64): UFix64 {
+    access(all)
+    fun calculate(num: UFix64): UFix64 {
         // What total is this referring to?
         let total = num + (num * self.pcnt)
 
@@ -240,13 +270,17 @@ access(all) contract Tax {
 
 // GOOD: Clear naming
 //
-access(all) contract TaxUtilities {
+access(all)
+contract TaxUtilities {
+
     // Clearly states what the field is for
-    access(all) var taxPercentage: UFix64
+    access(all)
+    var taxPercentage: UFix64
 
     // Clearly states that this function calculates the
     // total cost after tax
-    access(all) fun calculateTotalCostPlusTax(preTaxCost: UFix64): UFix64 {
+    access(all)
+    fun calculateTotalCostPlusTax(preTaxCost: UFix64): UFix64 {
         let postTaxCost = preTaxCost + (preTaxCost * self.taxPercentage)
 
         return postTaxCost
@@ -281,7 +315,8 @@ This could be used when purchasing an NFT to verify that the NFT was deposited i
 
 transaction {
 
-    access(all) let buyerCollectionRef: &NonFungibleToken.Collection
+    access(all)
+    let buyerCollectionRef: &NonFungibleToken.Collection
 
     prepare(acct: auth(BorrowValue) &Account) {
 

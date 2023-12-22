@@ -110,8 +110,12 @@ struct DeployedContract {
     /// For example, given a contract
     /// ```
     /// contract Foo {
-    ///       access(all) struct Bar {...}
-    ///       access(all) resource Qux {...}
+    ///
+    ///       access(all)
+    ///       struct Bar {...}
+    ///
+    ///       access(all)
+    ///       resource Qux {...}
     /// }
     /// ```
     /// then `.publicTypes()` will return an array equivalent to the expression `[Type<Bar>(), Type<Qux>()]`
@@ -212,6 +216,7 @@ For example, assuming the following contract code should be deployed:
 ```cadence
 access(all)
 contract Test {
+
     access(all)
     let message: String
 
@@ -273,8 +278,11 @@ For example, assuming that a contract named `Test` is already deployed to the ac
 and it should be updated with the following contract code:
 
 ```cadence
-access(all) contract Test {
-    access(all) let message: String
+access(all)
+contract Test {
+    
+    access(all)
+    let message: String
 
     init(message: String) {
         self.message = message

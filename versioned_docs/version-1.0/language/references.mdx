@@ -73,13 +73,17 @@ resource interface HasCount {
 // Declare a resource named `Counter` that conforms to `HasCount`
 //
 resource Counter: HasCount {
-    access(all) var count: Int
+    
+    access(all)
+    var count: Int
 
-    access(all) init(count: Int) {
+    access(all)
+    init(count: Int) {
         self.count = count
     }
 
-    access(all) fun increment() {
+    access(all)
+    fun increment() {
         self.count = self.count + 1
     }
 }
@@ -149,7 +153,9 @@ entitlement Reset
 
 resource interface HasCount {
     count: Int
-    access(Reset) fun resetCount()
+    
+    access(Reset)
+    fun resetCount()
 }
 ```
 
@@ -244,7 +250,8 @@ entitlement mapping M {
     // omitted
 }
 resource interface I {
-    access(M) let foo: auth(M) &T
+    access(M)
+    let foo: auth(M) &T
 }
 ```
 
@@ -259,9 +266,11 @@ entitlement mapping M {
     // omitted
 }
 resource I {
-    access(self) let myField: T
+    access(self)
+    let myField: T
 
-    access(M) fun getMyField(): auth(M) &T {
+    access(M)
+    fun getMyField(): auth(M) &T {
         return &self.myField as auth(M) &T
     }
 }
@@ -288,10 +297,12 @@ and the other (ownedNFTs) is dictionary-typed.
 resource Collection {
 
     // Primitive-typed field
-    access(all) var id: String
+    access(all)
+    var id: String
 
     // Dictionary typed field
-    access(all) var ownedNFTs: @{UInt64: NFT}
+    access(all)
+    var ownedNFTs: @{UInt64: NFT}
 }
 ```
 
@@ -344,7 +355,8 @@ In other words, the assignment operator for arrays/dictionaries would also have 
 Think of assignment as a built-in function with `Mutate` or `(Insert, Remove)` entitlements. e.g:
 
 ```cadence
-access(Mutate | (Insert, Remove)) set(keyOrIndex, value) { ... }
+access(Mutate | (Insert, Remove))
+set(keyOrIndex, value) { ... }
 ```
 
 Note that the syntax for having nested entitlements in access modifiers like `(Mutate | (Insert, Remove))`

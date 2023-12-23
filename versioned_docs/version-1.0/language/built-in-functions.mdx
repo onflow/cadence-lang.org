@@ -32,7 +32,7 @@ The message argument is optional.
 ## `revertibleRandom`
 
 ```cadence
-view fun revertibleRandom<T>(modulo: T): T
+view fun revertibleRandom<T: FixedSizeUnsignedInteger>(modulo: T): T
 ```
 Returns a pseudo-random integer.
 

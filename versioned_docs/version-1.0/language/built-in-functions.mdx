@@ -32,10 +32,17 @@ The message argument is optional.
 ## `revertibleRandom`
 
 ```cadence
-view fun revertibleRandom(): UInt64
+view fun revertibleRandom<T>(modulo: T): T
 ```
+Returns a pseudo-random integer.
 
-Returns a pseudo-random number.
+`T` can be any fixed-size unsigned integer type
+(`UInt8`, `UInt16`, `UInt128`, `UInt256`, `Word8`, `Word16`, `Word32`, `Word64`).
+
+The modulo argument is optional. 
+If provided, the returned integer is between `0` and `modulo -1`.
+The function errors if `modulo` is equal to 0.
+
 
 The sequence of returned random numbers is independent for
 every transaction in each block.

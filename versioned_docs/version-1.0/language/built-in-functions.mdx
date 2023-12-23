@@ -36,8 +36,9 @@ view fun revertibleRandom<T: FixedSizeUnsignedInteger>(modulo: T): T
 ```
 Returns a pseudo-random integer.
 
-`T` can be any fixed-size unsigned integer type
-(`UInt8`, `UInt16`, `UInt128`, `UInt256`, `Word8`, `Word16`, `Word32`, `Word64`).
+`T` can be any fixed-size unsigned integer type (`FixedSizeUnsignedInteger`, i.e.
+(`UInt8`, `UInt16`, `UInt32`, `UInt64`, `UInt128`, `UInt256`, 
+`Word8`, `Word16`, `Word32`, `Word64`, `Word128`, `Word256`).
 
 The modulo argument is optional. 
 If provided, the returned integer is between `0` and `modulo -1`.

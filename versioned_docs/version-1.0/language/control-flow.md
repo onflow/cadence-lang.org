@@ -358,6 +358,65 @@ dictionary.forEachKey(fun (key: String): Bool {
 })
 ```
 
+### Ranges in Loops
+
+An [`InclusiveRange` value](#../values-and-types/InclusiveRange) can be used in a for-in statement in place of an array or dictionary. In this case, 
+the loop will iterate over all the values contained in the range, beginning with `range.start` and ending with `range.end`. E.g. 
+
+```cadence
+let range: InclusiveRange<UInt> = InclusiveRange(1, 100, step: 2)
+var elements : [UInt] = []
+for element in range {
+    elements.append(element)
+}
+// after this loop, `elements` contains all the odd integers from 1 to 99
+```
+
+Note that in this example, even though `100` is the end of the `range`, it is not included in the loop because it cannot be reached with the given `start` and `step`.
+
+The above loop is equivalent to: 
+
+```cadence
+let range: InclusiveRange<UInt> = InclusiveRange(1, 100, step: 2)
+var elements : [UInt] = []
+var index = range.start
+while index <= range.end {
+    elements.append(element)
+    index = index + range.step
+}
+// after this loop, `elements` contains all the odd integers from 1 to 99
+```
+
+In general, a for-in loop over an increasing range (a positive `step`) is equivalent to:
+
+```cadence
+var index = range.start
+while index <= range.end {
+    // loop body
+    index = index + range.step
+}
+```
+
+While a for-in loop over a decreasing range (a negative `step`) is equivalent to: 
+
+```cadence
+var index = range.start
+while index >= range.end {
+    // loop body
+    index = index + range.step // `range.step` here is negative, so this decreases `index`
+}
+```
+
+Both can be equivalently rewritten to:
+
+```cadence
+var index = range.start
+while range.contains(index) {
+    // loop body
+    index = index + range.step
+}
+```
+
 ### `continue` and `break`
 
 In for-loops and while-loops, the `continue` statement can be used to stop

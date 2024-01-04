@@ -306,22 +306,21 @@ p {
   margin: 1rem 0;
 }
 
-
-main {
-  font-weight: 400;
+body {
+  font-weight: 300;
   font-size: 1rem;
   line-height: 1.75rem;
 }
 
-main ul {
+ul {
   list-style: disc outside;
 }
 
-main li {
+li {
   margin-left: 1.8rem;
 }
 
-main a {
+a {
   color: #00c271;
 }
 

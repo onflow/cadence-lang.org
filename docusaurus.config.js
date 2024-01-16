@@ -99,7 +99,7 @@ const config = {
           Please visit our migration guide here:
           <a href="https://developers.flow.com/build/cadence-migration-guide">https://developers.flow.com/build/cadence-migration-guide</a>`,
         backgroundColor: '#F27360',
-        textColor: '#585F71',
+        textColor: '#FFFFFF',
         isCloseable: true,
       },
 

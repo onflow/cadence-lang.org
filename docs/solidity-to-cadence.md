@@ -1,6 +1,6 @@
 ---
 title: Guide for Solidity developers
-sidebar_position: 8
+sidebar_position: 9
 ---
 Cadence introduces a different way to approach smart contract development which may feel unfamiliar to
 Solidity developers. There are fundamental mindset and platform differences, and also several new language

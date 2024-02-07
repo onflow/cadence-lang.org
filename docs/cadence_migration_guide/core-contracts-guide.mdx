@@ -1,0 +1,55 @@
+---
+title: Protocol Smart Contracts 1.0 Changes Guide
+sidebar_position: 4
+sidebar_label: Core Contracts Guide
+---
+
+# Protocol Smart Contracts in Cadence 1.0
+
+In 2024, the network will be upgrading to Cadence 1.0. 
+In addition to many changes to the Cadence programming language and
+the Cadence token standards, the flow protocol smart contracts
+are also being updated to be compatible with the changes.
+
+All applications and smart contracts that interact with these contracts
+will need to update their transactions and scripts in order to be compatible with the changes.
+
+# Important Info
+
+We are assuming that you are somewhat familiar with the Cadence 1.0 changes
+and the changes to the fungible token standard for this document. Please
+read those guides if you are curious about those changes.
+
+The updated code for the Cadence 1.0 versions of the protocol smart contracts
+is locaed in the [`stable-cadence` branch of the flow-core-contracts repo](https://github.com/onflow/flow-core-contracts/pull/319).
+Please look at the changes there to understand how the contracts have changed.
+Every contract in the repo is changing.
+
+In the latest version of the emulator, here are the import addresses
+for all of the important contracts related to the protocol:
+
+| Contract                    | Emulator Import Address |
+| --------------------------- | ----------------------- |
+| `FungibleToken`             | `0xee82856bf20e2aa6`    |
+| `ViewResolver`              | `0xf8d6e0586b0a20c7`    |
+| `Burner`                    | `0xf8d6e0586b0a20c7`    |
+| `MetadataViews`             | `0xf8d6e0586b0a20c7`    |
+| `FungibleTokenMetadataViews`| `0xee82856bf20e2aa6`    |
+| `FlowToken`                 | `0x0ae53cb6e3f42a79`    |
+| `FlowFees`                  | `0xe5a8b7f23e8b548f`    |
+| `FlowStorageFees`           | `0xf8d6e0586b0a20c7`    |
+| `FlowServiceAccount`        | `0xf8d6e0586b0a20c7`    |
+| `NodeVersionBeacon`         | `0xf8d6e0586b0a20c7`    |
+| `RandomBeaconHistory`       | `0xf8d6e0586b0a20c7`    |
+| `LockedTokens`              | `0xf8d6e0586b0a20c7`    |
+| `StakingProxy`              | `0xf8d6e0586b0a20c7`    |
+| `FlowIDTableStaking`        | `0xf8d6e0586b0a20c7`    |
+| `FlowClusterQC`             | `0xf8d6e0586b0a20c7`    |
+| `FlowDKG`                   | `0xf8d6e0586b0a20c7`    |
+| `FlowEpoch`                 | `0xf8d6e0586b0a20c7`    |
+| `FlowStakingCollection`     | `0xf8d6e0586b0a20c7`    |
+
+
+# Upgrade Guide
+
+Coming soon!

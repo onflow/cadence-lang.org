@@ -1,0 +1,59 @@
+---
+title: Non-Fungible Token Cadence 1.0 Migration Guide
+sidebar_position: 2
+sidebar_label: NFT Cadence 1.0 Guide
+---
+
+# Non-Fungible Tokens in Cadence 1.0
+
+In 2024, the network will be upgrading to Cadence 1.0. 
+In addition to many changes to the Cadence programming language,
+the Cadence token standards are also being streamlined and improved.
+All applications will need to prepare and migrate their existing
+Cadence smart contracts, scripts, and transactions for the update.
+If you do not update your code, your applications will become non-functional
+after the network upgrade.
+
+This document describes the changes to the Cadence NFT standard and
+gives a step-by-step guide for how to upgrade your NFT contract from Cadence 0.42
+to Cadence 1.0.
+
+We'll be using the `ExampleNFT` contract as an example. Many projects
+have used `ExampleNFT` as a starting point for their projects,
+so it is widely applicable to most NFT developers on Flow.
+The upgrades required for `ExampleNFT` will cover 90%+ of what you'll 
+need to do to update your contract. Each project most likely has
+additional logic or features that aren't included in `ExampleNFT`,
+but hopefully after reading this guide, you'll understand Cadence 1.0
+well enough that you can easily make any other changes that are necessary.
+
+As always, there are plenty of people on the Flow team and in the community 
+who are happy to help answer any questions you may have, so please reach out
+in Discord if you need any help.
+
+# Important Info
+
+Please read [the FLIP](https://github.com/onflow/flips/pull/56)
+that describes the changes to the `NonFungibleToken` standard first.
+
+The updated code for the V2 Fungible Token standard is locaed in the
+[`standard-v2` branch of the flow-nft repo](https://github.com/onflow/flow-nft/pull/126).
+Please look at the changes there to understand how the standard and examples have changed.
+This branch also includes the updated versions of `MetadataViews`, `ViewResolver`,
+and `NFTForwarding`.
+
+In the latest version of the emulator, here are the import addresses
+for all of the important contracts related to non-fungible tokens:
+
+| Contract                    | Emulator Import Address |
+| --------------------------- | ----------------------- |
+| `NonFungibleToken`          | `0xf8d6e0586b0a20c7`    |
+| `FungibleToken`             | `0xee82856bf20e2aa6`    |
+| `ViewResolver`              | `0xf8d6e0586b0a20c7`    |
+| `Burner`                    | `0xf8d6e0586b0a20c7`    |
+| `MetadataViews`             | `0xf8d6e0586b0a20c7`    |
+
+# Upgrade Guide
+
+Coming soon!
+

@@ -13,8 +13,8 @@ We have created several resources to help developers update their applications. 
 - [Understand the upgrade, the timeline, and how it affects you](https://forum.flow.com/t/cadence-1-0-upgrade-plan/5477)
 - [Learn how Cadence will be changing for 1.0](https://forum.flow.com/t/update-on-cadence-1-0/5197)
 - [Learn how to update your Flow CLI to test against Cadence 1.0](https://forum.flow.com/t/update-on-cadence-1-0/5197/7)
-- [Learn how to update your Non-Fungible Token and Fungible Token contracts for Cadence 1.0](./cadence_migration_guide/nft-guide.mdx)
-- [Learn how to update your Fungible Token contracts for Cadence 1.0](./cadence_migration_guide/ft-guide.mdx)
+- [Learn how to update your Non-Fungible Token and Fungible Token contracts for Cadence 1.0](./nft-guide.mdx)
+- [Learn how to update your Fungible Token contracts for Cadence 1.0](./ft-guide.mdx)
 - [Check out the Cadence language 1.0 docs](https://cadencelang.dev/docs/1.0/)
 
 ## Get Help With Migrating Your Dapp to Cadence 1.0

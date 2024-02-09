@@ -1,7 +1,7 @@
 ---
 title: Flow Smart Contract Project Development Standards
 sidebar_label: Development Standards
-sidebar_position: 7
+sidebar_position: 8
 description: "Learn how to effectively organize and manage a Cadence project"
 ---
 

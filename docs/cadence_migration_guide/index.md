@@ -14,9 +14,9 @@ To ensure your contracts are fully operational with Cadence 1.0, follow these es
 
 1. **Understand the Changes:** Start by familiarizing yourself with the [changes](https://forum.flow.com/t/update-on-cadence-1-0/5197) to identify how they might affect your code.
 2. **Modify Your Code:** Update your contracts, transactions, and scripts in accordance with the new changes.
-3. **Test Your Code:** Use the [Cadence 1.0 Emulator](https://www.loom.com/share/4467610b7beb4ebbaabed6b430dc25c4?sid=14ecb3e7-e933-409c-a6a4-add40c6971d0) to test your code by running:
+3. **Test Your Code:** The latest emulator [release](https://github.com/onflow/flow-cli/releases/tag/v1.12.0-cadence-v1.0.0-M4-2) includes all updated standards and core contracts. Check out this [video](https://www.loom.com/share/4467610b7beb4ebbaabed6b430dc25c4?sid=14ecb3e7-e933-409c-a6a4-add40c6971d0) from the Flow team on how to install and use the Cadence 1.0 emulator. The code can be accessed with:
 
-Linux/macOS
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Linux/macOS
 
 ```bash
 
@@ -24,14 +24,14 @@ sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/mast
 
 ```
 
-Windows (in PowerShell):
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Windows (in PowerShell):
 
 ```
 
 iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/master/install.ps1') } v1.12.0-cadence-v1.0.0-M4-2
 ```
 
-1. **Stage**: A new **_Staging process_** will be released in the coming weeks that checks if your updated code is compatible with Cadence 1.0. Complete this [form](https://docs.google.com/forms/d/e/1FAIpQLSfprZJLPSEAS6H7_oL0j6bzetDzkHPmDZHYAGgqAAOAdLDKqw/viewform) to stay informed about updates and receive recommendations tailored to your code.
+4. **Stage**: A new **_Staging process_** will be released in the coming weeks that checks if your updated code is compatible with Cadence 1.0. Complete this [form](https://docs.google.com/forms/d/e/1FAIpQLSfprZJLPSEAS6H7_oL0j6bzetDzkHPmDZHYAGgqAAOAdLDKqw/viewform) to stay informed about updates and receive recommendations tailored to your code.
 
 ### Resources
 
@@ -41,8 +41,9 @@ For assistance with the most common updates developers will face, explore these 
 
 - Upgrading [Capabilities](https://academy.ecdao.org/en/catalog/tutorials/capability-controllers)
 - Upgrading [Entitlements](https://academy.ecdao.org/en/catalog/tutorials/entitlements)
-- Migration Guide for [Fungible Tokens](https://cadence-lang.org/docs/cadence_migration_guide/ft-guide)
-- Migration Guide for [NFTs](https://cadence-lang.org/docs/cadence_migration_guide/nft-guide)
+- Migration Guide for [Fungible Tokens](./ft-guide.mdx)
+- Migration Guide for [NFTs](./nft-guide.mdx)
+- Migration Guide for [Core Contracts](./core-contracts-guide.mdx)
 
 **Helper Tools**
 

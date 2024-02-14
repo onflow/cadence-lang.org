@@ -39,6 +39,7 @@ iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/master/install
 
 For assistance with the most common updates developers will face, explore these resources:
 
+- Cadence 1.0 [Beginner Course](https://academy.ecdao.org/en/catalog/courses/learn-cadence-beginner-1.0)
 - Upgrading [Capabilities](https://academy.ecdao.org/en/catalog/tutorials/capability-controllers)
 - Upgrading [Entitlements](https://academy.ecdao.org/en/catalog/tutorials/entitlements)
 - Migration Guide for [Fungible Tokens](./ft-guide.mdx)

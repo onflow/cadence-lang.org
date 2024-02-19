@@ -28,7 +28,7 @@ sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/mast
 
 ```
 
-iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/master/install.ps1') } v1.12.0-cadence-v1.0.0-M4-2
+iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/master/install.ps1') } v1.12.0-cadence-v1.0.0-M4-2"
 ```
 
 4. **Stage**: A new **_Staging process_** will be released in the coming weeks that checks if your updated code is compatible with Cadence 1.0. Complete this [form](https://docs.google.com/forms/d/e/1FAIpQLSfprZJLPSEAS6H7_oL0j6bzetDzkHPmDZHYAGgqAAOAdLDKqw/viewform) to stay informed about updates and receive recommendations tailored to your code.

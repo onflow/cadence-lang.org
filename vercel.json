@@ -1,0 +1,11 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/docs/cadence-migration-guide",
+      "destination": "/docs/cadence_migration_guide",
+      "permanent": true
+    }
+  ]
+}

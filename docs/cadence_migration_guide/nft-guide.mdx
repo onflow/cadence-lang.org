@@ -27,6 +27,10 @@ additional logic or features that aren't included in `ExampleNFT`,
 but hopefully after reading this guide, you'll understand Cadence 1.0
 well enough that you can easily make any other changes that are necessary.
 
+Additionally, most of the changes described here also apply to anyone
+who is updating a Fungible Token contract or interacting with one, 
+so keep that in mind while reading if that applies to you.
+
 As always, there are plenty of people on the Flow team and in the community 
 who are happy to help answer any questions you may have, so please reach out
 in Discord if you need any help.
@@ -36,10 +40,10 @@ in Discord if you need any help.
 Please read [the FLIP](https://github.com/onflow/flips/pull/56)
 that describes the changes to the `NonFungibleToken` standard first.
 
-The updated code for the V2 Fungible Token standard is locaed in the
+The updated code for the V2 Non-Fungible Token standard is located in the
 [`standard-v2` branch of the flow-nft repo](https://github.com/onflow/flow-nft/pull/126).
 Please look at the changes there to understand how the standard and examples have changed.
-This branch also includes the updated versions of `MetadataViews`, `ViewResolver`,
+This branch includes the updated versions of `NonFungibleToken`, `MetadataViews`, `ViewResolver`,
 and `NFTForwarding`.
 
 In the latest version of the emulator, here are the import addresses
@@ -53,7 +57,17 @@ for all of the important contracts related to non-fungible tokens:
 | `Burner`                    | `0xf8d6e0586b0a20c7`    |
 | `MetadataViews`             | `0xf8d6e0586b0a20c7`    |
 
+See the other guides in this section of the docs for the import
+addresses of other important contracts in the emulator.
+
 # Upgrade Guide
 
-Coming soon!
+This guide is primarily for developers who have existing contracts
+deployed to Flow mainnet that they need to update for Cadence 1.0.
+If you don't have any contracts deployed yet, it is recommended that
+you start an NFT contract from scratch by either copying the `ExampleNFT`
+contract or the `BasicNFT` contract from the `standard-v2` branch of the flow-nft
+github repo and wait to deploy it until Flow has been upgraded for Cadence 1.0.
+
+
 

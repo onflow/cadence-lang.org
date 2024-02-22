@@ -400,7 +400,7 @@ case Type<MetadataViews.NFTCollectionData>():
 The `pub` access modifier was removed from the language to better support unified
 representation of access control, especially now that entitlements exist.
 
-Please familiarize yourself with [the new entitlements feature](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)
+Please familiarize yourself with [the new entitlements feature](./../versioned_docs/version-1.0/language/access-control#entitlements)
 because it is extremely important for you to understand in order to build safe smart contracts.
 
 Most contracts can update and `pub` access modifiers to `access(all)`,
@@ -415,7 +415,7 @@ these privledged functions.
 ### Add `NonFungibleToken.Withdraw` and `NonFungibleToken.Owner` entitlements to your `withdraw()` methods
 
 Now that unrestricted casting is possible in Cadence, it is necessary to use
-[entitlements](./1.0/language/access-control#entitlements)
+[entitlements](./../versioned_docs/version-1.0/language/access-control#entitlements)
 to restrict access to privledged functions in any composite type.
 
 The only default method that needs to be restricted is the `withdraw` method:
@@ -459,7 +459,7 @@ that provide access to entitled functions, the relevant entitlements will be add
 
 ### Update all getter functions to be `view`
 
-Cadence 1.0 introduces [view functions](https://cadence-lang.org/docs/1.0/language/functions#view-functions)
+Cadence 1.0 introduces [view functions](./../versioned_docs/version-1.0/language/functions#view-functions)
 which enforce that a function does not modify any state.
 
 The default view functions will be enforced by the token standard,
@@ -508,7 +508,7 @@ that references private paths needs to be changed to use capability controllers 
 `AuthAccount` objects are not referred to as `Account`
 and there are now more restrictions on how accounts can be used.
 
-See the [Cadence 1.0 Account documentation](https://cadence-lang.org/docs/1.0/language/accounts/) for more information.
+See the [Cadence 1.0 Account documentation](./../versioned_docs/version-1.0/language/accounts/) for more information.
 
 Most of the functionality on `Account` objects is now hidden by entitlements,
 so a transaction has to declare what `Account` functionality the transaction will access

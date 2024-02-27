@@ -150,7 +150,7 @@ In this transaction, you issue a new capability using the `issue` function.
 This create a link to your `HelloAsset` resource object.
 Then you publish that link to your account's public space, so others can access it.
 
-Next, anyone can use that link to borrow a [reference](../language/references.mdx)
+Next, anyone can use that link to borrow a [reference](https://cadence-lang.org/docs/1.0/language/references)
 to the underlying object and call the `hello()` function.
 A detailed explanation of what is happening in this transaction
 is below the transaction code so, if you feel lost, keep reading!
@@ -307,7 +307,7 @@ The reference could be `nil` if the targeted storage slot is empty, is already b
 or if the requested type exceeds what is allowed by the capability.
 We panic with a descriptive error message so the caller can know better what went wrong.
 
-Additionally, the owner of an object can effectively [revoke capabilities](../language/accounts/capabilities#revoking-capabilities)
+Additionally, the owner of an object can effectively [revoke capabilities](https://cadence-lang.org/docs/1.0/language/accounts/capabilities#revoking-capabilities)
 they have created by using the `delete` method on the Capability Controller
 that was created for the capability when it was issued.
 
@@ -457,7 +457,7 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 - Interact with resources using both signed transactions and scripts
 
 Feel free to modify the smart contract to create different resources,
-experiment with the available [account storage API](../language/accounts/storage.mdx),
+experiment with the available [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage),
 and write new transactions and scripts that execute different functions from your smart contract.
 Have a look at the [capability-based access control page](../language/capabilities.md)
 to find out more about what you can do with capabilities.

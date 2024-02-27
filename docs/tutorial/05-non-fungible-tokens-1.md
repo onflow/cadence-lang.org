@@ -137,7 +137,7 @@ The contract will:
 2. Declare an ID field, a metadata field and an initializer in the NFT resource.
 3. Create an initializer for the contract that saves an NFT to an account.
 
-This contract relies on the [account storage API](../language/accounts/storage.mdx)
+This contract relies on the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 to save NFTs in the account.
 
 <Callout type="info">

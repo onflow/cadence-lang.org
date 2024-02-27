@@ -468,7 +468,7 @@ acct.link<&ExampleToken.Vault{ExampleToken.Receiver, ExampleToken.Balance}>
     (/public/CadenceFungibleTokenTutorialReceiver, target: /storage/CadenceFungibleTokenTutorialVault)
 ```
 
-Then, users can get that capability if it was created [in a public path](../language/accounts/paths.mdx),
+Then, users can get that capability if it was created [in a public path](https://cadence-lang.org/docs/1.0/language/accounts/paths),
 borrow it, and access the functionality that the owner specified.
 
 ```cadence

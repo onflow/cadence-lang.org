@@ -93,7 +93,7 @@ To interact with resources, you'll learn a few important concepts:
 
 - Using the `create` keyword
 - The move operator `<-`
-- The [Account Storage API](../language/accounts/storage.mdx)
+- The [Account Storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 
 Let's start by looking at how to create a resource with the `create` keyword and the move operator `<-`.
 
@@ -201,7 +201,7 @@ this function has to be used to initialize them.
 
 Contracts also have read and write access to the storage of the account that they are deployed to
 by using the built-in [`self.account`](../language/contracts.mdx) field.
-This is an [account reference](../language/accounts/index.mdx) (`&Account`),
+This is an [account reference](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx) (`&Account`),
 authorized to access and manage all aspects of the account,
 such as account storage, keys, and contracts.
 

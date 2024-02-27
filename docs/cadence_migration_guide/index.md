@@ -45,6 +45,7 @@ For assistance with the most common updates developers will face, explore these 
 - Migration Guide for [Fungible Tokens](./ft-guide.mdx)
 - Migration Guide for [NFTs](./nft-guide.mdx)
 - Migration Guide for [Core Contracts](./core-contracts-guide.mdx)
+- Migration Guide for [Type Annotations](./type-annotations-guide.mdx)
 
 **Helper Tools**
 

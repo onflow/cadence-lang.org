@@ -151,6 +151,7 @@ contract HelloWorld {
     }
 
     // Public function that returns our friendly greeting!
+    // Specified as `view` to declare that it does not change any state
     access(all) view
     fun hello(): String {
         return self.greeting
@@ -165,8 +166,7 @@ It's followed by `access(all) let greeting: String` which declares a state const
 You would have used `var` to declare a variable, which means that the value
 can be changed later on instead of remaining constant like with `let`.
 
-You can use `access(all)` and the `access(all)` keyword interchangeably.
-They are both examples of an access control specification that means an interface can be accessed in all scopes, but not written to in all scopes.
+It is an access control specification that means an interface can be accessed in all scopes, but not written to in all scopes.
 For more information about the different levels of access control permitted in Cadence, refer to the [Access Control section of the language reference](../language/access-control.md).
 
 The `init()` section is called the initializer. It is a special function that only runs when the contract is first created.
@@ -176,8 +176,10 @@ In the above example, the initializer sets the `greeting` field to `"Hello, Worl
 
 The last part of our `HelloWorld` contract is a public function called `hello()`.
 This declaration returns a value of type `String`.
+The `view` keyword means that it is a function that only reads state and does not modify anything.
 Anyone who imports this contract in their transaction or script can read the public fields,
-use the public types, and call the public contract functions; i.e. the ones that have `access(all)` or `access(all)` specified.
+use the public types, and call the public contract functions; i.e. the ones that have `access(all)`
+specified.
 
 Soon you'll deploy this contract to your account and run a transaction that calls its function, but first, let's look at what accounts and transactions are.
 

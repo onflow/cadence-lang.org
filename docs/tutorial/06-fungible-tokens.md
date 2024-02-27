@@ -20,6 +20,11 @@ In this tutorial, we're going to deploy, store, and transfer fungible tokens.
 </Callout>
 
 <Callout type="info">
+  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+</Callout>
+
+<Callout type="info">
   Instructions that require you to take action are always included in a callout
   box like this one. These highlighted actions are all that you need to do to
   get your code running, but reading the rest is necessary to understand the
@@ -42,11 +47,13 @@ In traditional software and smart contracts, balances for each user are tracked 
 // DO NOT USE THIS CODE FOR YOUR PROJECT
 contract LedgerToken {
     // Tracks every user's balance
-    access(contract) let balances: {Address: UFix64}
+    access(contract)
+    let balances: {Address: UFix64}
 
     // Transfer tokens from one user to the other
     // by updating their balances in the central ledger
-    access(all) fun transfer(from: Address, to: Address, amount: UFix64) {
+    access(all)
+    fun transfer(from: Address, to: Address, amount: UFix64) {
         balances[from] = balances[from] - amount
         balances[to] = balances[to] + amount
     }
@@ -194,23 +201,27 @@ It is important to remember that each account stores only a copy of the `Vault` 
 The `ExampleToken` contract only needs to be stored in the initial account that manages the token definitions.
 
 ```cadence Token.cdc
-access(all) resource Vault: Provider, Receiver {
+access(all)
+resource Vault: Provider, Receiver {
 
     // Balance of a user's Vault
     // we use unsigned fixed point numbers for balances
     // because they can represent decimals and do not allow negative values
-    access(all) var balance: UFix64
+    access(all)
+    var balance: UFix64
 
     init(balance: UFix64) {
         self.balance = balance
     }
 
-    access(all) fun withdraw(amount: UFix64): @Vault {
+    access(all)
+    fun withdraw(amount: UFix64): @Vault {
         self.balance = self.balance - amount
         return <-create Vault(balance: amount)
     }
 
-    access(all) fun deposit(from: @Vault) {
+    access(all)
+    fun deposit(from: @Vault) {
         self.balance = self.balance + from.balance
         destroy from
     }
@@ -229,14 +240,15 @@ The language requires that the initialization function `init`, which is only run
 // Balance of a user's Vault
 // we use unsigned fixed-point integers for balances because they do not require the
 // concept of a negative number and allow for more clear precision
-access(all) var balance: UFix64
+access(all)
+var balance: UFix64
 
 init(balance: UFix64) {
     self.balance = balance
 }
 ```
 
-If you remove the initializer from your `ExampleToken` contract, it will cause an error because
+If you remove the `init` function from your `ExampleToken` contract, it will cause an error because
 the balance field is no longer initialized.
 
 ### Deposit
@@ -244,7 +256,8 @@ the balance field is no longer initialized.
 Then, the deposit function is available for any account to transfer tokens to.
 
 ```cadence
-access(all) fun deposit(from: @Vault) {
+access(all)
+fun deposit(from: @Vault) {
     self.balance = self.balance + from.balance
     destroy from
 }
@@ -263,7 +276,8 @@ When interacting with resources, you use the `@` symbol to specify the type, and
 when moving the resource, such as assigning the resource, when passing it as an argument to a function, or when returning it from a function.
 
 ```cadence
-access(all) fun withdraw(amount: UInt64): @Vault {
+access(all)
+fun withdraw(amount: UInt64): @Vault {
 ```
 
 This `@` symbol is required when specifying a resource **type** for a field, an argument, or a return value.
@@ -332,7 +346,8 @@ open and should see the code below.
 // This is a basic implementation of a Fungible Token and is NOT meant to be used in production
 // See the Flow Fungible Token standard for real examples: https://github.com/onflow/flow-ft
 
-access(all) contract BasicToken {
+access(all)
+contract BasicToken {
 
     // Vault
     //
@@ -346,10 +361,12 @@ access(all) contract BasicToken {
     // out of thin air. A special Minter resource or constructor function needs to be defined to mint
     // new tokens.
     //
-    access(all) resource Vault {
+    access(all)
+    resource Vault {
 
 		// keeps track of the total balance of the account's tokens
-        access(all) var balance: UFix64
+        access(all)
+        var balance: UFix64
 
         // initialize the balance at resource creation time
         init(balance: UFix64) {
@@ -366,7 +383,8 @@ access(all) contract BasicToken {
         // created Vault to the context that called so it can be deposited
         // elsewhere.
         //
-        access(all) fun withdraw(amount: UFix64): @Vault {
+        access(all)
+        fun withdraw(amount: UFix64): @Vault {
             self.balance = self.balance - amount
             return <-create Vault(balance: amount)
         }
@@ -379,7 +397,8 @@ access(all) contract BasicToken {
         // It is allowed to destroy the sent Vault because the Vault
         // was a temporary holder of the tokens. The Vault's balance has
         // been consumed and therefore can be destroyed.
-        access(all) fun deposit(from: @Vault) {
+        access(all)
+        fun deposit(from: @Vault) {
             self.balance = self.balance + from.balance
             destroy from
         }
@@ -392,13 +411,14 @@ access(all) contract BasicToken {
     // and store the returned Vault in their storage in order to allow their
     // account to be able to receive deposits of this token type.
     //
-    access(all) fun createVault(): @Vault {
+    access(all)
+    fun createVault(): @Vault {
         return <-create Vault(balance: 30.0)
     }
 
-    // The initializer for the contract.
-    // All fields in the contract must be initialized at deployment.
-    // This is just an example of what an implementation could do in the init initializer.
+    // The init function for the contract. All fields in the contract must
+    // be initialized at deployment. This is just an example of what
+    // an implementation could do in the init function. The numbers are arbitrary.
     init() {
         // create the Vault with the initial balance and put it in storage
         // account.save saves an object to the specified `to` path
@@ -406,7 +426,7 @@ access(all) contract BasicToken {
         // The domain must be `storage`, `private`, or `public`
         // the identifier can be any name
         let vault <- self.createVault()
-        self.account.storage.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
+        self.account.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
     }
 }
 ```
@@ -422,7 +442,7 @@ Click the `Deploy` button at the top right of the editor to deploy the code.
 This deployment stores the contract for the basic fungible token
 in the selected account (account `0x01`) so that it can be imported into transactions.
 
-A contract's initializer runs at contract creation, and never again afterwards.
+A contract's `init` function runs at contract creation, and never again afterwards.
 In our example, this function stores an instance of the `Vault` object with an initial balance of 30.
 
 ```cadence
@@ -432,7 +452,7 @@ In our example, this function stores an instance of the `Vault` object with an i
 // The domain must be `storage`, `private`, or `public`
 // the identifier can be any name
 let vault <- self.createVault()
-self.account.storage.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
+self.account.save(<-vault, to: /storage/CadenceFungibleTokenTutorialVault)
 ```
 
 This line saves the new `@Vault` object to storage.
@@ -475,10 +495,10 @@ import BasicToken from 0x01
 
 transaction {
 
-  prepare(acct: auth(BorrowValue) &Account) {
+  prepare(acct: AuthAccount) {
     // withdraw tokens from your vault by borrowing a reference to it
     // and calling the withdraw function with that reference
-    let vaultRef = acct.storage.borrow<auth(FungibleToken.Withdrawable) &BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
+    let vaultRef = acct.borrow<&BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
         ?? panic("Could not borrow a reference to the owner's vault")
 
     let temporaryVault <- vaultRef.withdraw(amount: 10.0)
@@ -507,7 +527,7 @@ you can borrow a reference directly from an object in storage.
 
 ```cadence
 // Borrow a reference to the stored, private Vault resource
-let vaultRef = acct.storage.borrow<&BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
+let vaultRef = acct.borrow<&BasicToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
     ?? panic("Could not borrow a reference to the owner's vault")
 ```
 
@@ -521,7 +541,7 @@ Capabilities allow us to accomplish this safely.
 
 ---
 
-Another important feature in Cadence is its utilization of [**Capability-Based Security.**](../language/capabilities)
+Another important feature in Cadence is its utilization of [**Capability-Based Security.**](../language/capabilities.md)
 This feature ensures that while the withdraw function is declared public on the resource,
 no one except the intended user and those they approve of can withdraw tokens from their vault.
 
@@ -556,8 +576,10 @@ Here is an example of how interfaces for the `Vault` resource we defined above w
 // Interface that enforces the requirements for withdrawing
 // tokens from the implementing type
 //
-access(all) resource interface Provider {
-    access(all) fun withdraw(amount: UFix64): @Vault {
+access(all)
+resource interface Provider {
+    access(all)
+    fun withdraw(amount: UFix64): @Vault {
         post {
             result.balance == amount:
                 "Withdrawal amount must be the same as the balance of the withdrawn Vault"
@@ -567,19 +589,23 @@ access(all) resource interface Provider {
 // Interface that enforces the requirements for depositing
 // tokens into the implementing type
 //
-access(all) resource interface Receiver {
+access(all)
+resource interface Receiver {
 
     // There aren't any meaningful requirements for only a deposit function
     // but this still shows that the deposit function is required in an implementation.
-    access(all) fun deposit(from: @Vault)
+    access(all)
+    fun deposit(from: @Vault)
 }
 
 // Balance
 //
 // Interface that specifies a public `balance` field for the vault
 //
-access(all) resource interface Balance {
-    access(all) var balance: UFix64
+access(all)
+resource interface Balance {
+    access(all)
+    var balance: UFix64
 }
 ```
 
@@ -604,7 +630,7 @@ fields private unless it is explicitly needed to be public.
   This is one of THE MOST COMMON security mistakes that Cadence developers make,
   so it is vitally important to be aware of this.
 
-  See the [Cadence Best Practices document](../anti-patterns#array-or-dictionary-fields-should-be-private) for more details.
+  See the [Cadence Best Practices document](../anti-patterns.md#array-or-dictionary-fields-should-be-private) for more details.
 </Callout>
 
 ## Adding Interfaces to Our Fungible Token
@@ -630,10 +656,10 @@ This method for authorization can be used in many different ways
 and further decentralizes the control of the contract.
 
 We also store the `VaultMinter` object to `/storage/`
-in the initializer in the same way as the vault, but in a different storage path:
+in the `init()` function in the same way as the vault, but in a different storage path:
 
 ```cadence
-self.account.storage<-create VaultMinter(), to: /storage/CadenceFungibleTokenTutorialMinter)
+self.account.save(<-create VaultMinter(), to: /storage/CadenceFungibleTokenTutorialMinter)
 ```
 
 Now is an important time to remind you that account storage not namespaced by contract,
@@ -662,7 +688,8 @@ We already use this pattern in the `VaultMinter` resource in the `mintTokens` fu
 // using their `Receiver` capability.
 // We say `&AnyResource{Receiver}` to say that the recipient can be any resource
 // as long as it implements the ExampleToken.Receiver interface
-access(all) fun mintTokens(amount: UFix64, recipient: Capability<&AnyResource{Receiver}>) {
+access(all)
+fun mintTokens(amount: UFix64, recipient: Capability<&AnyResource{Receiver}>) {
     let recipientRef = recipient.borrow()
         ?? panic("Could not borrow a receiver reference to the vault")
 
@@ -832,7 +859,7 @@ transaction {
 		let vaultA <- ExampleToken.createEmptyVault()
 
 		// Store the vault in the account storage
-		acct.storage.save(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
+		acct.save<@ExampleToken.Vault>(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
 
         log("Empty Vault stored")
 
@@ -976,7 +1003,8 @@ Open the script named `Get Balances` in the scripts pane.
 import FungibleToken from 0x02
 
 // This script reads the Vault balances of two accounts.
-access(all) fun main() {
+access(all)
+fun main() {
     // Get the accounts' public account objects
     let acct2 = getAccount(0x02)
     let acct3 = getAccount(0x03)
@@ -1124,5 +1152,5 @@ From here, you could try to extend the functionality of fungible tokens by makin
 ## Create a Flow Marketplace
 
 ---
-Now that you have an understanding of how fungible tokens work on Flow and have a working NFT, you can learn how to create 
+Now that you have an understanding of how fungible tokens work on Flow and have a working NFT, you can learn how to create
 a marketplace that uses both fungible tokens and NFTs. Move on to the next tutorial to learn about Marketplaces in Cadence!

@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 2. Hello World
 description: A smart contract tutorial for Cadence.
-date: 2022-05-10
+date: 2024-02-26
 meta:
   keywords:
     - tutorial
@@ -30,6 +30,12 @@ In this tutorial, we'll write and deploy our first smart contract!
   </a>
   <br />
   The tutorial will ask you to take various actions to interact with this code.
+</Callout>
+
+<Callout type="info">
+  The playground code that is linked uses Cadence 0.42, but the examples
+  use Cadence 1.0 to show how each contract, transaction and script
+  is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -67,30 +73,15 @@ Our "Hello World" smart contract will:
 We will deploy this contract in an account, then use a transaction to interact with the contract,
 and finally discuss the role of signers in the transaction.
 
-## Follow Along!
-
-Before we get started if you'd prefer to learn from a video, feel free to join Kim
-as she walks you through the basics of accounts, smart contracts, Cadence, transactions & more!
-
-<iframe
-  width="560"
-  height="315"
-  src="https://www.youtube.com/embed/pRz7EzrWchs"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen
-></iframe>
-
 ## How to Use Playground
 
-For this tutorial, you'll be using the [Flow Playground](https://play.onflow.org/),
+For this tutorial, you'll be using the [Flow Playground](https://play.flow.com),
 an interactive web interface that lets you write and run smart contracts in a test environment.
 It also allows you to save and share your work with others so that you can test smart contracts collaboratively.
 
 When you work with accounts in the Flow Playground, you start with five default accounts that you can change and reconfigure.
-Each account in your environment has a unique address, and you can select an account in the left toolbar,
-which will open up the contracts that are saved for that account. 
+Each account in your environment has a unique address, and you can select an account in the bottom left toolbar,
+which will open up the contracts that are saved for that account.
 The `HelloWorld` contracts are loaded by default for each account
 unless you load an existing playground project with other saved contracts.
 
@@ -104,10 +95,12 @@ You will start by using a smart contract that contains a public function that re
 
 Like most other blockchains, the programming model in Flow is centered around accounts and transactions.
 All state that persists permanently is stored in [accounts](../language/accounts)
-and all accounts have the same core functionality. (users, smart contracts, data storage)
+and all accounts have the same core functionality. (users, smart contracts, data storage).
+This is unlike other blockchains like Ethereum where there are two types of accounts
+(smart contract accounts and user accounts).
 
 The interfaces to this state (the ways to interact with it, otherwise known as methods or functions) are also stored in accounts.
-All code execution takes place within [transactions](../language/transactions),
+All code execution takes place within [transactions](../language/transactions.md),
 which are blocks of code that are authorized and submitted by external users
 to interact with the persistent state, which includes directly modifying account storage.
 
@@ -143,44 +136,48 @@ Open the Account `0x01` tab with the file called
 ```cadence HelloWorld.cdc
 // HelloWorld.cdc
 //
-pub contract HelloWorld {
+access(all)
+contract HelloWorld {
 
     // Declare a public field of type String.
     //
-    // All fields must be initialized in the init() function.
-    pub let greeting: String
+    // All fields must be initialized in the initializer.
+    access(all)
+    let greeting: String
 
-    // The init() function is required if the contract contains any fields.
+    // The initializer is required if the contract contains any fields.
     init() {
         self.greeting = "Hello, World!"
     }
 
     // Public function that returns our friendly greeting!
-    pub fun hello(): String {
+    access(all) view
+    fun hello(): String {
         return self.greeting
     }
 }
 ```
 
-The line `pub contract HelloWorld ` declares a contract that is accessible in all scopes (public).
-It's followed by `pub let greeting: String` which declares a state constant (`let`) of type `String` that is accessible in all scopes(`pub`).
+The line `access(all) contract HelloWorld ` declares a contract
+that is accessible in all scopes (`access(all)`, typically known as public).
+It's followed by `access(all) let greeting: String` which declares a state constant (`let`) of type `String` that is accessible in all scopes(`access(all)`).
 
 You would have used `var` to declare a variable, which means that the value
 can be changed later on instead of remaining constant like with `let`.
 
-You can use `access(all)` and the `pub` keyword interchangeably.
+You can use `access(all)` and the `access(all)` keyword interchangeably.
 They are both examples of an access control specification that means an interface can be accessed in all scopes, but not written to in all scopes.
-For more information about the different levels of access control permitted in Cadence, refer to the [Access Control section of the language reference](../language/access-control).
+For more information about the different levels of access control permitted in Cadence, refer to the [Access Control section of the language reference](../language/access-control.md).
 
 The `init()` section is called the initializer. It is a special function that only runs when the contract is first created.
-Objects similar to contracts, such as other [composite types like structs or resources](../language/composite-types),
-require that the `init()` function initialize any fields that are declared in a composite type.
+Objects similar to contracts, such as other [composite types like structs or resources](../language/composite-types.mdx),
+require that the initializer initializes all fields that are declared in a composite type.
 In the above example, the initializer sets the `greeting` field to `"Hello, World!"` when the contract is initialized.
 
 The last part of our `HelloWorld` contract is a public function called `hello()`.
 This declaration returns a value of type `String`.
 Anyone who imports this contract in their transaction or script can read the public fields,
-use the public types, and call the public contract functions; i.e. the ones that have `pub` or `access(all)` specified.
+use the public types, and call the public contract functions; i.e. the ones that have `access(all)` or `access(all)` specified.
 
 Soon you'll deploy this contract to your account and run a transaction that calls its function, but first, let's look at what accounts and transactions are.
 
@@ -246,7 +243,7 @@ button next to the contracts section in the playground.
 
 ---
 
-A [Transaction](../language/transactions) in Flow is defined as an arbitrary-sized block of Cadence code that is authorized by one or more accounts.
+A [Transaction](../language/transactions.md) in Flow is defined as an arbitrary-sized block of Cadence code that is authorized by one or more accounts.
 When an account authorizes a transaction, the code in that transaction has access to the authorizers' private storage.
 An account authorizes a transaction by performing a cryptographic signature on the transaction with the account's private key,
 which should only be accessible to the account owner. Therefore, authorizers are also known as signers.
@@ -266,7 +263,7 @@ import HelloWorld from 0x01
 
 transaction {
 
-  prepare(acct: AuthAccount) {}
+  prepare(acct: &Account) {}
 
   execute {
     log(HelloWorld.hello())
@@ -329,5 +326,5 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 - Sign the transaction with one or multiple signers
 
 Feel free to modify the smart contract to implement different functions,
-experiment with the available [Cadence types](../language/values-and-types),
+experiment with the available [Cadence types](../language/values-and-types.mdx),
 and write new transactions that execute multiple functions from your `HelloWorld` smart contract.

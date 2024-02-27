@@ -7,15 +7,20 @@ In this tutorial, we're going to deploy a contract that allows users to vote on 
 ---
 
 <Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: 
-  <a 
-    href="https://play.onflow.org/d120f0a7-d411-4243-bc59-5125a84f99b3" 
+  Open the starter code for this tutorial in the Flow Playground:
+  <a
+    href="https://play.onflow.org/d120f0a7-d411-4243-bc59-5125a84f99b3"
     target="_blank"
   >
     https://play.onflow.org/d120f0a7-d411-4243-bc59-5125a84f99b3
   </a>
   <br/>
   The tutorial will be asking you to take various actions to interact with this code.
+</Callout>
+
+<Callout type="info">
+  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
 </Callout>
 
 <Callout type="info">
@@ -86,25 +91,31 @@ The deployed contract should have the following contents:
 *
 */
 
-pub contract ApprovalVoting {
+access(all)
+contract ApprovalVoting {
 
     //list of proposals to be approved
-    pub var proposals: [String]
+    access(all)
+    var proposals: [String]
 
     // number of votes per proposal
-    pub let votes: {Int: Int}
+    access(all)
+    let votes: {Int: Int}
 
     // This is the resource that is issued to users.
     // When a user gets a Ballot object, they call the `vote` function
     // to include their votes, and then cast it in the smart contract
     // using the `cast` function to have their vote included in the polling
-    pub resource Ballot {
+    access(all)
+    resource Ballot {
 
         // array of all the proposals
-        pub let proposals: [String]
+        access(all)
+        let proposals: [String]
 
         // corresponds to an array index in proposals after a vote
-        pub var choices: {Int: Bool}
+        access(all)
+        var choices: {Int: Bool}
 
         init() {
             self.proposals = ApprovalVoting.proposals
@@ -120,7 +131,8 @@ pub contract ApprovalVoting {
 
         // modifies the ballot
         // to indicate which proposals it is voting for
-        pub fun vote(proposal: Int) {
+        access(all)
+        fun vote(proposal: Int) {
             pre {
                 self.proposals[proposal] != nil: "Cannot vote for a proposal that doesn't exist"
             }
@@ -130,10 +142,12 @@ pub contract ApprovalVoting {
 
     // Resource that the Administrator of the vote controls to
     // initialize the proposals and to pass out ballot resources to voters
-    pub resource Administrator {
+    access(all)
+    resource Administrator {
 
         // function to initialize all the proposals for the voting
-        pub fun initializeProposals(_ proposals: [String]) {
+        access(all)
+        fun initializeProposals(_ proposals: [String]) {
             pre {
                 ApprovalVoting.proposals.length == 0: "Proposals can only be initialized once"
                 proposals.length > 0: "Cannot initialize with no proposals"
@@ -150,14 +164,16 @@ pub contract ApprovalVoting {
 
         // The admin calls this function to create a new Ballot
         // that can be transferred to another user
-        pub fun issueBallot(): @Ballot {
+        access(all)
+        fun issueBallot(): @Ballot {
             return <-create Ballot()
         }
     }
 
     // A user moves their ballot to this function in the contract where
     // its votes are tallied and the ballot is destroyed
-    pub fun cast(ballot: @Ballot) {
+    access(all)
+    fun cast(ballot: @Ballot) {
         var index = 0
         // look through the ballot
         while index < self.proposals.length {
@@ -177,7 +193,10 @@ pub contract ApprovalVoting {
         self.proposals = []
         self.votes = {}
 
-        self.account.save<@Administrator>(<-create Administrator(), to: /storage/VotingAdmin)
+        self.account.storage.save(
+            <-create Administrator(),
+            to: /storage/VotingAdmin
+        )
     }
 }
 
@@ -187,7 +206,8 @@ This contract implements a simple voting mechanism where an `Administrator` can 
 
 ```cadence
 // function to initialize all the proposals for the voting
-pub fun initializeProposals(_ proposals: [String]) {
+access(all)
+fun initializeProposals(_ proposals: [String]) {
     pre {
         ApprovalVoting.proposals.length == 0: "Proposals can only be initialized once"
         proposals.length > 0: "Cannot initialize with no proposals"
@@ -206,7 +226,8 @@ pub fun initializeProposals(_ proposals: [String]) {
 Then they can give `Ballot` resources to other accounts. The other accounts can record their votes on their `Ballot` resource by calling the `vote` function.
 
 ```cadence
-pub fun vote(proposal: Int) {
+access(all)
+fun vote(proposal: Int) {
     pre {
         self.proposals[proposal] != nil: "Cannot vote for a proposal that doesn't exist"
     }
@@ -219,7 +240,8 @@ After a user has voted, they submit their vote to the central smart contract by 
 ```cadence
 // A user moves their ballot to this function in the contract where
 // its votes are tallied and the ballot is destroyed
-pub fun cast(ballot: @Ballot) {
+access(all)
+fun cast(ballot: @Ballot) {
     var index = 0
     // look through the ballot
     while index < self.proposals.length {
@@ -244,7 +266,7 @@ Performing the common actions in this voting contract only takes three types of 
 2. Send `Ballot` to a voter
 3. Cast Vote
 
-We have a transaction for each step that we provide for you. With the `ApprovalVoting` contract to account `0x01`: 
+We have a transaction for each step that we provide for you. With the `ApprovalVoting` contract to account `0x01`:
 
 <Callout type="info">
 
@@ -263,7 +285,7 @@ transaction {
     prepare(admin: AuthAccount) {
 
         // borrow a reference to the admin Resource
-        let adminRef = admin.borrow<&ApprovalVoting.Administrator>(from: /storage/VotingAdmin)!
+        let adminRef = admin.storage.borrow<&ApprovalVoting.Administrator>(from: /storage/VotingAdmin)!
 
         // Call the initializeProposals function
         // to create the proposals array as an array of strings
@@ -321,14 +343,14 @@ transaction {
     prepare(admin: AuthAccount, voter: AuthAccount) {
 
         // borrow a reference to the admin Resource
-        let adminRef = admin.borrow<&ApprovalVoting.Administrator>(from: /storage/VotingAdmin)!
+        let adminRef = admin.storage.borrow<&ApprovalVoting.Administrator>(from: /storage/VotingAdmin)!
 
         // create a new Ballot by calling the issueBallot
         // function of the admin Reference
         let ballot <- adminRef.issueBallot()
 
         // store that ballot in the voter's account storage
-        voter.save<@ApprovalVoting.Ballot>(<-ballot, to: /storage/Ballot)
+        voter.storage.save(<-ballot, to: /storage/Ballot)
 
         log("Ballot transferred to voter")
     }
@@ -365,7 +387,7 @@ transaction {
     prepare(voter: AuthAccount) {
 
         // take the voter's ballot our of storage
-        let ballot <- voter.load<@ApprovalVoting.Ballot>(from: /storage/Ballot)!
+        let ballot <- voter.storage.load<@ApprovalVoting.Ballot>(from: /storage/Ballot)!
 
         // Vote on the proposal
         ballot.vote(proposal: 1)
@@ -397,7 +419,8 @@ import ApprovalVoting from 0x01
 // This script allows anyone to read the tallied votes for each proposal
 //
 
-pub fun main() {
+access(all)
+fun main() {
 
     // Access the public fields of the contract to log
     // the proposal names and vote counts

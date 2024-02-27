@@ -6,17 +6,17 @@ sidebar_label: Anti-Patterns
 
 This is an opinionated list of issues that can be improved if they are found in Cadence code intended for production.
 
-## Avoid using authorized account references as a function parameter
+## Avoid using fully authorized account references as a function parameter
 
 ### Problem
 
-A developer may choose to authenticate or perform operations for their users by using the users' account addresses.
+A developer may choose to authenticate or perform operations for their users by using the users' account reference or addresses.
 In order to do this, they might add a parameter to a function which has an authorized account reference type (`auth(...) &Account`),
 as an authorized account reference can only be obtained by signing a transaction.
 
-This is problematic, as the authorized account reference allows access to some sensitive operations on the account,
-for example, to write to storage,
-which provides the opportunity for bad actors to take advantage of.
+If it is a fully authorized account reference, this is problematic,
+as the fully-authorized account reference allows access to some sensitive operations on the account,
+for example, to write to storage, which provides the opportunity for bad actors to take advantage of.
 
 ### Example:
 
@@ -70,7 +70,8 @@ rather than inside contract utility functions.
 
 There are some scenarios where using an authorized account reference (`auth(...) &Account`) is necessary,
 such as a cold storage multi-sig,
-but those cases are rare and such usage should still be avoided unless absolutely necessary.
+but those cases are rare and should only be used if it is a very restricted subset
+of account functionality that is required.
 
 ## Public functions and fields should be avoided
 

@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 3. Resource Contract Tutorial
 description: An introduction to resources, capabilities, and account storage in Cadence
-date: 2022-05-10
+date: 2024-02-26
 meta:
   keywords:
     - tutorial
@@ -32,6 +32,13 @@ socialImageDescription: Resource smart contract image.
   <br />
   The tutorial will ask you to take various actions to interact with this code.
 </Callout>
+
+<Callout type="info">
+  The playground code that is linked uses Cadence 0.42, but the examples
+  use Cadence 1.0 to show how each contract, transaction and script
+  is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
+</Callout>
+
 <Callout type="info">
   Instructions that require you to take action are always included in a callout
   box like this one. These highlighted actions are all that you need to do to
@@ -56,8 +63,7 @@ Here is an example definition of a resource:
 access(all)
 resource Money {
   
-  access(all)
-  let balance: Int
+  access(all) let balance: Int
 
   init() {
     self.balance = 0
@@ -85,7 +91,7 @@ In this tutorial, you will:
 
 To interact with resources, you'll learn a few important concepts:
 
-- Using the create keyword
+- Using the `create` keyword
 - The move operator `<-`
 - The [Account Storage API](../language/accounts/storage.mdx)
 
@@ -116,7 +122,7 @@ contract HelloWorld {
         // A transaction can call this function to get the "Hello, World!"
         // message from the resource.
         access(all)
-        fun hello(): String {
+        view fun hello(): String {
             return "Hello, World!"
         }
     }
@@ -150,7 +156,7 @@ We start by declaring a new `HelloWorld` contract in account `0x01`, inside this
 This is another example of what we can do with a contract.
 Cadence can declare type definitions within deployed contracts.
 A type definition is simply a description of how a particular set of data is organized.
-It **isn't** a copy or instance of that data on its own.
+It **is not** a copy or instance of that data on its own.
 Any account can import these definitions and use them to create an object
 that follows the imported definition or to interact with other objects of those types.
 
@@ -164,7 +170,7 @@ Resources are one of the most important things that Cadence introduces to the sm
 access(all)
 resource HelloAsset {
     access(all)
-    fun hello(): String {
+    view fun hello(): String {
         return "Hello, World!"
     }
 }
@@ -270,6 +276,10 @@ import HelloWorld from 0x01
 
 transaction {
 
+  /// `auth(SaveValue) &Account` means that it is an account object
+  /// that has the `SaveValue` authorization entitlement, which means
+  /// that this transaction can't do anything with the &Account object
+  /// besides saving values to storage.
 	prepare(acct: auth(SaveValue) &Account) {
         // Here we create a resource and move it to the variable newHello,
         // then we save it in the account storage
@@ -296,6 +306,10 @@ This is our first transaction using the `prepare` phase!
 The `prepare` phase is the only place that has access to the signing accounts,
 via [account references (`&Account`)](../language/accounts/index.mdx).
 Account references have access to many different methods that are used to interact with account, e.g., the account's storage.
+In this case, the transaction uses `auth(SaveValue) &Account`. This means
+that it is an account object that has the `SaveValue` authorization entitlement,
+which means that this transaction can't do anything with the &Account object
+besides saving values to storage.
 You can see the documentation for all of these in the [account section of the language reference](../language/accounts/index.mdx).
 In this tutorial, we'll be using account functions to save to and load from account storage (`/storage/`).
 
@@ -441,6 +455,8 @@ import HelloWorld from 0x01
 
 transaction {
 
+    /// In this prepare block, we have to load a value from storage
+    /// in addition to saving it, so we also need the `LoadValue` authorization entitlement
     prepare(acct: auth(LoadValue, SaveValue) &Account) {
 
         // Load the resource from storage, specifying the type to load it as

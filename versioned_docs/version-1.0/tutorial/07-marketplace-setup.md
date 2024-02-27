@@ -24,6 +24,11 @@ for an example of a production ready marketplace that you can use right now on t
   The tutorial will be asking you to take various actions to interact with this code.
 </Callout>
 
+<Callout type="info">
+  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+</Callout>
+
 If you have already completed the Marketplace tutorial, please move on to [Composable Resources: Kitty Hats](./10-resources-compose.md).
 
 This guide will help you quickly get the playground to the state you need to complete the Marketplace tutorial.

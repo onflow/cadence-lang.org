@@ -304,13 +304,13 @@ Here's what this transaction does:
 
 This is our first transaction using the `prepare` phase!
 The `prepare` phase is the only place that has access to the signing accounts,
-via [account references (`&Account`)](../language/accounts/index.mdx).
+via [account references (`&Account`)](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx).
 Account references have access to many different methods that are used to interact with account, e.g., the account's storage.
 In this case, the transaction uses `auth(SaveValue) &Account`. This means
 that it is an account object that has the `SaveValue` authorization entitlement,
 which means that this transaction can't do anything with the &Account object
 besides saving values to storage.
-You can see the documentation for all of these in the [account section of the language reference](../language/accounts/index.mdx).
+You can see the documentation for all of these in the [account section of the language reference](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx).
 In this tutorial, we'll be using account functions to save to and load from account storage (`/storage/`).
 
 By not allowing the execute phase to access account storage,
@@ -328,9 +328,9 @@ let newHello <- HelloWorld.createHelloAsset()
 ```
 
 Next, we save the resource to the account storage.
-We use the [account storage API](../language/accounts/storage.mdx) to interact with the account storage in Flow.
+We use the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage) to interact with the account storage in Flow.
 To save the resource, we'll be using the
-[`save()`](../language/accounts/storage.mdx)
+[`save()`](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 method from the account storage API to store the resource in the account at the path `/storage/HelloAssetTutorial`.
 
 ```cadence
@@ -479,15 +479,15 @@ Here's what this transaction does:
 
 1. Import the `HelloWorld` definitions from account `0x01`
 2. Moves the `HelloAsset` object from storage to `helloResource` with the move operator
-  and the `load` function from the [account storage API](../language/accounts/storage.mdx)
+  and the `load` function from the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 3. Calls the `hello()` function of the `HelloAsset` resource stored in `helloResource` and logs the result
 4. Saves the resource in the account that we originally moved it from at the path `/storage/HelloAssetTutorial`
 
 We're going to be using the `prepare` phase again to load the resource
-using the [reference to the account](../language/accounts/index.mdx) that is passed in.
+using the [reference to the account](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx) that is passed in.
 
 Let's go over the transaction in more detail.
-To remove an object from storage, we use the `load` method from the [account storage API](../language/accounts/storage.mdx)
+To remove an object from storage, we use the `load` method from the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 
 ```cadence
 let helloResource <- acct.storage.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
@@ -586,7 +586,7 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 - Use the `prepare` phase of a transaction to load resources from account storage
 
 Feel free to modify the smart contract to create different resources,
-experiment with the available [account storage API](../language/accounts/storage.mdx),
+experiment with the available [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage),
 and write new transactions and scripts that execute different functions from your smart contract.
 Have a look at the [resource reference page](../language/resources.mdx)
 to find out more about what you can do with resources.

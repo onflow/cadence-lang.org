@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 2. Hello World
 description: A smart contract tutorial for Cadence.
-date: 2022-05-10
+date: 2024-02-26
 meta:
   keywords:
     - tutorial
@@ -30,6 +30,12 @@ In this tutorial, we'll write and deploy our first smart contract!
   </a>
   <br />
   The tutorial will ask you to take various actions to interact with this code.
+</Callout>
+
+<Callout type="info">
+  The playground code that is linked uses Cadence 0.42, but the examples
+  use Cadence 1.0 to show how each contract, transaction and script
+  is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -67,29 +73,14 @@ Our "Hello World" smart contract will:
 We will deploy this contract in an account, then use a transaction to interact with the contract,
 and finally discuss the role of signers in the transaction.
 
-## Follow Along!
-
-Before we get started if you'd prefer to learn from a video, feel free to join Kim
-as she walks you through the basics of accounts, smart contracts, Cadence, transactions & more!
-
-<iframe
-  width="560"
-  height="315"
-  src="https://www.youtube.com/embed/pRz7EzrWchs"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen
-></iframe>
-
 ## How to Use Playground
 
-For this tutorial, you'll be using the [Flow Playground](https://play.onflow.org/),
+For this tutorial, you'll be using the [Flow Playground](https://play.flow.com),
 an interactive web interface that lets you write and run smart contracts in a test environment.
 It also allows you to save and share your work with others so that you can test smart contracts collaboratively.
 
 When you work with accounts in the Flow Playground, you start with five default accounts that you can change and reconfigure.
-Each account in your environment has a unique address, and you can select an account in the left toolbar,
+Each account in your environment has a unique address, and you can select an account in the bottom left toolbar,
 which will open up the contracts that are saved for that account.
 The `HelloWorld` contracts are loaded by default for each account
 unless you load an existing playground project with other saved contracts.
@@ -104,7 +95,9 @@ You will start by using a smart contract that contains a public function that re
 
 Like most other blockchains, the programming model in Flow is centered around accounts and transactions.
 All state that persists permanently is stored in [accounts](../language/accounts)
-and all accounts have the same core functionality. (users, smart contracts, data storage)
+and all accounts have the same core functionality. (users, smart contracts, data storage).
+This is unlike other blockchains like Ethereum where there are two types of accounts
+(smart contract accounts and user accounts).
 
 The interfaces to this state (the ways to interact with it, otherwise known as methods or functions) are also stored in accounts.
 All code execution takes place within [transactions](../language/transactions.md),
@@ -158,14 +151,15 @@ contract HelloWorld {
     }
 
     // Public function that returns our friendly greeting!
-    access(all)
+    access(all) view
     fun hello(): String {
         return self.greeting
     }
 }
 ```
 
-The line `access(all) contract HelloWorld ` declares a contract that is accessible in all scopes (public).
+The line `access(all) contract HelloWorld ` declares a contract
+that is accessible in all scopes (`access(all)`, typically known as public).
 It's followed by `access(all) let greeting: String` which declares a state constant (`let`) of type `String` that is accessible in all scopes(`access(all)`).
 
 You would have used `var` to declare a variable, which means that the value

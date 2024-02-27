@@ -8,7 +8,7 @@ In this tutorial, we're going to walk through how resources can own other resour
 
 <Callout type="success">
   Open the starter code for this tutorial in the Flow Playground:
-  <a 
+  <a
     href="https://play.onflow.org/01f812d7-799a-42fd-b9cb-9ffe556e02ad"
     target="_blank"
   >
@@ -16,6 +16,11 @@ In this tutorial, we're going to walk through how resources can own other resour
   </a>
   <br/>
   The tutorial will be asking you do take various actions to interact with this code.
+</Callout>
+
+<Callout type="info">
+  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
 </Callout>
 
 <Callout type="info">
@@ -92,12 +97,18 @@ The deployed contract should have the following contents:
 // support even more powerful versions of this.
 //
 
-pub contract KittyVerse {
+access(all)
+contract KittyVerse {
 
     // KittyHat is a special resource type that represents a hat
-    pub resource KittyHat {
-        pub let id: Int
-        pub let name: String
+    access(all)
+    resource KittyHat {
+
+        access(all)
+        let id: Int
+        
+        access(all)
+        let name: String
 
         init(id: Int, name: String) {
             self.id = id
@@ -105,7 +116,8 @@ pub contract KittyVerse {
         }
 
         // An example of a function someone might put in their hat resource
-        pub fun tipHat(): String {
+        access(all)
+        fun tipHat(): String {
             if self.name == "Cowboy Hat" {
                 return "Howdy Y'all"
             } else if self.name == "Top Hat" {
@@ -117,45 +129,49 @@ pub contract KittyVerse {
     }
 
     // Create a new hat
-    pub fun createHat(id: Int, name: String): @KittyHat {
+    access(all)
+    fun createHat(id: Int, name: String): @KittyHat {
         return <-create KittyHat(id: id, name: name)
     }
 
-    pub resource Kitty {
+    access(all)
+    resource Kitty {
 
-        pub let id: Int
+        access(all)
+        let id: Int
 
         // place where the Kitty hats are stored
-        pub var items: @{String: KittyHat}
+        access(all)
+        var items: @{String: KittyHat}
 
         init(newID: Int) {
             self.id = newID
             self.items <- {}
         }
 
-        pub fun getKittyItems(): @{String: KittyHat} {
+        access(all)
+        fun getKittyItems(): @{String: KittyHat} {
             var other: @{String:KittyHat} <- {}
             self.items <-> other
             return <- other
         }
 
-        pub fun setKittyItems(items: @{String: KittyHat}) {
+        access(all)
+        fun setKittyItems(items: @{String: KittyHat}) {
             var other <- items
             self.items <-> other
             destroy other
         }
 
-        pub fun removeKittyItem(key: String): @KittyHat? {
+        access(all)
+        fun removeKittyItem(key: String): @KittyHat? {
             var removed <- self.items.remove(key: key)
             return <- removed
         }
-
-        destroy() {
-            destroy self.items
-        }
     }
 
-    pub fun createKitty(): @Kitty {
+    access(all)
+    fun createKitty(): @Kitty {
         return <-create Kitty(newID: 1)
     }
 
@@ -169,7 +185,8 @@ The hats are stored in a variable in the Kitty resource.
 
 ```cadence
     // place where the Kitty hats are stored
-    pub var items: <-{String: KittyHat}
+    access(all)
+    var items: <-{String: KittyHat}
 ```
 
 A Kitty owner can take the hats off the Kitty and transfer them individually. Or the owner can transfer a Kitty that owns a hat, and the hat will go along with the Kitty.
@@ -210,7 +227,7 @@ transaction {
         log("The cat has the hats")
 
         // Store the Kitty in storage
-        acct.save(<-kitty, to: /storage/kitty)
+        acct.storage.save(<-kitty, to: /storage/kitty)
     }
 }
 ```
@@ -243,7 +260,7 @@ transaction {
     prepare(acct: AuthAccount) {
 
         // Move the Kitty out of storage, which also moves its hat along with it
-        let kitty <- acct.load<@KittyVerse.Kitty>(from: /storage/kitty)
+        let kitty <- acct.storage.load<@KittyVerse.Kitty>(from: /storage/kitty)
             ?? panic("Kitty doesn't exist!")
 
         // Take the cowboy hat off the Kitty
@@ -259,7 +276,7 @@ transaction {
 
         // Move the Kitty to storage, which
         // also moves its hat along with it.
-        acct.save(<-kitty, to: /storage/kitty)
+        acct.storage.save(<-kitty, to: /storage/kitty)
     }
 }
 ```

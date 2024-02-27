@@ -13,8 +13,8 @@ for an example of a production ready marketplace that you can use right now on t
 ---
 
 <Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: 
-  <a 
+  Open the starter code for this tutorial in the Flow Playground:
+  <a
     href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
     target="_blank"
   >
@@ -22,6 +22,11 @@ for an example of a production ready marketplace that you can use right now on t
   </a>
   <br/>
   The tutorial will be asking you to take various actions to interact with this code.
+</Callout>
+
+<Callout type="info">
+  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
 </Callout>
 
 If you have already completed the Marketplace tutorial, please move on to [Composable Resources: Kitty Hats](./10-resources-compose.md).
@@ -61,7 +66,7 @@ transaction {
     log("Created Vault references")
 
     // store an empty NFT Collection in account storage
-    acct.save<@ExampleNFT.Collection>(<-ExampleNFT.createEmptyCollection(), to: /storage/nftTutorialCollection)
+    acct.storage.save(<-ExampleNFT.createEmptyCollection(), to: /storage/nftTutorialCollection)
 
     // publish a capability to the Collection in storage
     acct.link<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath, target: ExampleNFT.CollectionStoragePath)
@@ -93,7 +98,7 @@ transaction {
     let vaultA <- ExampleToken.createEmptyVault()
 
     // Store the vault in the account storage
-    acct.save<@ExampleToken.Vault>(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
+    acct.storage.save(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
 
     // Create a public Receiver capability to the Vault
     let ReceiverRef = acct.link<&ExampleToken.Vault{ExampleToken.Receiver, ExampleToken.Balance}>(/public/CadenceFungibleTokenTutorialReceiver, target: /storage/CadenceFungibleTokenTutorialVault)
@@ -177,7 +182,8 @@ import ExampleNFT from 0x02
 //
 // Account 0x01: Vault Balance = 40, NFT.id = 1
 // Account 0x02: Vault Balance = 20, No NFTs
-pub fun main() {
+access(all)
+fun main() {
     // Get the accounts' public account objects
     let acct1 = getAccount(0x01)
     let acct2 = getAccount(0x02)

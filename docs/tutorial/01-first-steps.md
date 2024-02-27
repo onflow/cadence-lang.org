@@ -14,7 +14,7 @@ Cadence introduces new features to smart contract programming that help develope
 - Type safety and a strong static type system
 - Resource-oriented programming, a new paradigm that pairs linear types with object capabilities to create a secure and declarative model for digital ownership
   by ensuring that resources (and their associated assets) can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted
-- Built-in pre-conditions and post-conditions for functions and [transactions](../language/transactions)
+- Built-in pre-conditions and post-conditions for functions and [transactions](../language/transactions.md)
 - The utilization of capability-based security, which enforces access control by requiring that access to objects
   is restricted to only the owner and those who have a valid reference to the object
 
@@ -62,21 +62,24 @@ to deploy that contract to the currently selected account.
 
 After a few seconds, the contract should deploy. In the accounts section, you should 
 now see the name of the contract next to the selected account that you deployed too
-and if you click on "Log" in the bottom section of the scrren, you should 
-see a message in the console confirming that the contract was deployed and which account it was deployed to.
+and if you click on "Log" in the bottom section of the screen, you should 
+see a message in the console confirming that the contract was deployed and which account it was deployed to. This will also show any errors that might have happened
+as part of deployment.
 
 You can also select transactions and scripts from the left selection menu
 and submit them to interact with your deployed smart contracts,
 which will be covered in the Hello World tutorial.
 
 This is just a small set of the things you can do with the Playground.
-If you would like a more detailed explanation of the different Playground features, look at the Playground Manual.
+The rest of the tutorials will cover more of the features.
 
 ## Resources
 
 Each tutorial in this package uses several files containing transactions, contracts, and scripts.
-All the code you need will be provided in the text of the tutorials for you to copy and paste,
-or you can use the pre-generated tutorial setups in the Playground.
+Each tutorial contains a link to a pre-made Cadence project that contains
+all the code that you'll need to execute to complete the tutorial.
+Additionally, all the code is provided within the tutorials in case you
+would like to copy and paste it into your playground project yourself.
 
 ## Say Hello, World!
 

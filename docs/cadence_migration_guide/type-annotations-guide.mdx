@@ -65,7 +65,7 @@ are instead granted only entitlements based on the interfaces in the restriction
 access(all) resource interface I {
     access(E) fun foo()
 }
-access(all) resource R {
+access(all) resource R: I {
     access(E) fun foo() { ... }
     access(F) fun bar() { ... }
 }

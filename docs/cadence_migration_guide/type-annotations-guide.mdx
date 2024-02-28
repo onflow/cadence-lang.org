@@ -14,7 +14,7 @@ the types of these fields' values, and the Cadence 1.0 upgrade validator will en
 
 ## Restricted Types
 
-In Cadence 1.0, support for restricted types was dropped, and replaced with intersection types. 
+In Cadence 1.0, support for restricted types was dropped, and replaced with [intersection types](https://cadence-lang.org/docs/1.0/language/intersection-types). 
 As such, any existing restricted types must be replaced with a different type. 
 Restricted typed-values are migrated according to a specific set of rules, and type updates must also mirror this. 
 
@@ -22,11 +22,13 @@ Restricted typed-values are migrated according to a specific set of rules, and t
 * For any other type `T`, `T{I}` should be migrated to `T`, as this is the most specific possible type that can go here
 * For any type `T`, `T{}` should be migrated to just `T`, as there is no support for empty intersection types
 
-So, for example, a value of type `Vault{Receiver}` should be migrated to just a `Vault` value.
+So, for example, a value of type `Vault{Receiver}` should be migrated to just a `Vault` type, 
+while a value of type `AnyResource{Provider, Receiver}` should be migrated to a `{Provider, Receiver}` intersection. 
 
 ## Reference Types
 
-Reference types from contracts written in Cadence v0.42 will need to be given entitlements in order to retain the same functionality 
+Reference types from contracts written in Cadence v0.42 will need to be given 
+[entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements) in order to retain the same functionality 
 in Cadence 1.0. 
 The Cadence 1.0 data migration will automatically grant the appropriate entitlements to stored values, 
 but any reference types that appear in your contracts will need to be manually updated. 

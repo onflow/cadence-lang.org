@@ -27,7 +27,8 @@ while a value of type `AnyResource{Provider, Receiver}` should be migrated to a 
 
 ## Reference Types
 
-Reference types from contracts written in Cadence v0.42 will need to be given 
+Reference types (whether on their own like `&FlowToken.Vault` or within a capability type like `Capability<&FlowToken.Vault{FungibleToken.Provider}>`)
+from contracts written in Cadence v0.42 will need to be given 
 [entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements) in order to retain the same functionality 
 in Cadence 1.0. 
 The Cadence 1.0 data migration will automatically grant the appropriate entitlements to stored values, 

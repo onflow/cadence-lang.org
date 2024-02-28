@@ -36,7 +36,10 @@ but any reference types that appear in your contracts will need to be manually u
 
 The update you will need to perform involves changing each reference type to have the appropriate entitlements necessary to perform 
 the same operations in Cadence 1.0 that it previously could in Cadence v0.42. 
-The Cadence 1.0 upgrade validator will enforce that these upgrades are accurate. 
+The Cadence 1.0 upgrade validator will enforce that these upgrades are accurate, and will suggest the correct type in case of an error.
+However, if you'd like to understand how the validator computes this type, the next section has a technical explanation of what the validator is computing.
+
+### How the Validator Computes Entitlements
 
 The first basic concept necessary to understand the upgrade is the "entitlements function"; 
 i.e. a hypothetical function that computes the set of entitlements that are valid for some composite or interface type `T`. 

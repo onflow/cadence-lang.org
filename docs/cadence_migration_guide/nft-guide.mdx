@@ -393,6 +393,58 @@ case Type<MetadataViews.NFTCollectionData>():
     return collectionData
 ```
 
+### Utilize the `NonFungibleToken.emitNFTUpdated()` function if updates to NFTs are possible
+
+This is an optional change and only applies to projects that have functionality
+that updates the metadata of NFTs periodically. It allows those projects to emit
+[the standard `Updated` event](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/NonFungibleToken.cdc#L55-L69)
+so that event listeners can know when NFTs have been updated
+so they can query collections to get the updated metadata to show in their user interfaces.
+
+```cadence
+    access(all) event Updated(type: String, id: UInt64, uuid: UInt64, owner: Address?)
+    access(contract) view fun emitNFTUpdated(_ nftRef: auth(Update | Owner) &{NonFungibleToken.NFT})
+    {
+        emit Updated(type: nftRef.getType().identifier, id: nftRef.id, uuid: nftRef.uuid, owner: nftRef.owner?.address)
+    }
+```
+
+As you can see, it requires an authorized reference to an NFT, so only the owner of
+and NFT can call this to emit an event. This could be called from within a `Collection`
+resource when a piece of metadata on an owned NFT is updated. For example,
+if a developer wanted to track the time of the latest transfer for each NFT,
+they could do it in the `deposit()` function:
+
+```cadence
+access(all) resource Collection: NonFungibleToken.Collection {
+
+    access(contract) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
+
+    ...
+
+    /// deposit takes a NFT and adds it to the collections dictionary
+    /// and adds the ID to the id array
+    access(all) fun deposit(token: @{NonFungibleToken.NFT}) {
+        let token <- token as! @ExampleNFT.NFT
+
+        let id = token.id
+
+        // add the new token to the dictionary which removes the old one
+        let oldToken <- self.ownedNFTs[token.id] <- token
+        destroy oldToken
+
+        // Get an authorized reference to the NFT so that
+        // the update transfer date function can be called
+        // and the emitNFTUpdated function can be called
+        let authTokenRef = (&self.ownedNFTs[id] as auth(Update | Owner) &{NonFungibleToken.NFT}?)!
+        authTokenRef.updateTransferDate(date: getCurrentBlock().timestamp)
+        NonFungibleToken.emitNFTUpdated(authTokenRef)
+    }
+
+    ...
+}
+```
+
 ## Cadence Changes
 
 ### Update all `pub` access modfiers

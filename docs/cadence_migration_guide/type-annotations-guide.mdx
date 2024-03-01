@@ -16,7 +16,7 @@ the types of these fields' values, and the Cadence 1.0 upgrade validator will en
 
 In Cadence 1.0, support for restricted types was dropped, and replaced with [intersection types](https://cadence-lang.org/docs/1.0/language/intersection-types). 
 As such, any existing restricted types must be replaced with a different type. 
-Restricted typed-values are migrated according to a specific set of rules, and type updates must also mirror this. 
+During the automated state migration for the Cadence 1.0 upgrade, restricted typed-values will be migrated according to a specific set of rules, and all developers must update the types in their contracts to mirror this. 
 
 * `AnyStruct{I}` and `AnyResource{I}` should be migrated to just `{I}`, as these types have identical behavior
 * For any other type `T`, `T{I}` should be migrated to `T`, as this is the most specific possible type that can go here

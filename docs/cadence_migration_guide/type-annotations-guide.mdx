@@ -22,7 +22,7 @@ During the automated state migration for the Cadence 1.0 upgrade, restricted typ
 * For any other type `T`, `T{I}` should be migrated to `T`, as this is the most specific possible type that can go here
 * For any type `T`, `T{}` should be migrated to just `T`, as there is no support for empty intersection types
 
-So, for example, a value of type `Vault{Receiver}` should be migrated to just a `Vault` type, 
+So, for example, a value of type `FlowToken.Vault{FungibleToken.Receiver}` should be migrated to just a `FlowToken.Vault` type, 
 while a value of type `AnyResource{Provider, Receiver}` should be migrated to a `{Provider, Receiver}` intersection. 
 
 ## Reference Types

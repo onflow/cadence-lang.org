@@ -19,16 +19,19 @@ To ensure your contracts are fully operational with Cadence 1.0, follow these es
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Linux/macOS
 
 ```bash
-
-sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)" -- v1.12.0-cadence-v1.0.0-M4-2
-
+sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.sh)"
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Windows (in PowerShell):
 
+```powershell
+iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.ps1') }"
 ```
 
-iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/master/install.ps1') } v1.12.0-cadence-v1.0.0-M4-2"
+The Cadence 1.0 CLI will now be installed on your machine and can be accessed via the `flow-c1` command. To verify the installation, run:
+
+```bash
+flow-c1 version
 ```
 
 4. **Stage**: A new **_Staging process_** will be released in the coming weeks that checks if your updated code is compatible with Cadence 1.0. Complete this [form](https://docs.google.com/forms/d/e/1FAIpQLSfprZJLPSEAS6H7_oL0j6bzetDzkHPmDZHYAGgqAAOAdLDKqw/viewform) to stay informed about updates and receive recommendations tailored to your code.

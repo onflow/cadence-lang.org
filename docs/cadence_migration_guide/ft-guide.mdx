@@ -88,7 +88,7 @@ for your fungible token contract, you'll be most of the way there.
 
 Here, we will only describe the changes that are specific to the fungible token standard.
 
-## Ensure that your `Vault` implements only `FungibleToken.Vault`
+## `Vault` implements `FungibleToken.Vault`
 
 `FungibleToken.Vault` is no longer a resource type specification.
 It is now an interface that inherits from `Provider`, `Receiver`, `Balance`,
@@ -113,7 +113,7 @@ access(all) fun deposit(from: @{FungibleToken.Vault})
 `FungibleToken.Vault` will be automatically migrated to use the interface type `{NonFungibleToken.Vault}`
 as part of the Flow team's custom state migrations.
 
-## Add `FungibleToken.Withdraw` entitlements to your `withdraw()` methods
+## Add `Withdraw` entitlements to `withdraw()`
 
 Now that unrestricted casting is possible in Cadence, it is necessary to use
 [entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)
@@ -177,7 +177,7 @@ access(all) view fun isAvailableToWithdraw(amount: UFix64): Bool {
 }
 ```
 
-## Remove the Private Path and Type fields from the `FTVaultData` Metadata View
+## Remove Private Path and Type fields
 
 Since private paths were removed in Cadence 1.0, these fields are no longer needed,
 so remove the code that returns them in your `resolveView` method for `FTVaultData`:
@@ -198,6 +198,10 @@ case Type<FungibleTokenMetadataViews.FTVaultData>():
         })
     )
 ```
+
+Private paths are no longer able to be used in Cadence across the board,
+so you'll need to find other ways to do what you were doing with them before.
+This will likely involve [Capability Controllers](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md).
 
 ## Conclusion
 

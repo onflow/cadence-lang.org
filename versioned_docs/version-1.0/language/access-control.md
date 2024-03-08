@@ -333,7 +333,9 @@ refEOrF.c
 ```
 
 Note particularly in this example how the owned value `r` can access all entitled members on `SomeResource`.
-Owned values are not affected by entitled declarations.
+Owned values are not affected by entitled declarations. 
+
+Further details about authorized references can be found [here](./references.mdx#authorized-references).
 
 ### Entitlement mappings
 

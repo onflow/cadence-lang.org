@@ -43,7 +43,12 @@ This branch also includes the updated versions of `FungibleTokenMetadataViews`,
 `Burner`, `FungibleTokenSwitchboard`, and `TokenForwarding`.
 
 Please see the latest post in [this forum thread](https://forum.flow.com/t/update-on-cadence-1-0/5197/8)
-to find the latest version of the CLI and emulator that you should be testing with,
+to find the latest version of the CLI and emulator that you should be testing with.
+
+It is also important to remember that after you've made your changes to your contracts,
+you will have to stage the upgrades on testnet and mainnet in order for them
+to be upgraded and migrated properly. You can find informaion about how to do that
+here: https://github.com/onflow/contract-updater
 
 Additionally, here are the import addresses
 for all of the important contracts related to fungible tokens:
@@ -60,6 +65,19 @@ for all of the important contracts related to fungible tokens:
 See the other guides in this section of the docs for the import
 addresses of other important contracts in the emulator.
 
+As for contracts that are important for NFT developers but aren't "core contracts",
+here is information about where to find the Cadence 1.0 Versions of Each:
+
+**USDC:** The USDC contract is still being updated for Cadence 1.0 and is currently not available.
+
+**Account Linking and Hybrid Custody:** The account linking and hybrid custody contracts
+are still being updated for Cadence 1.0 and are currently not available.
+
+For any other contracts, search for their github repo and there will likely be
+a PR or feature branch with the Cadence 1.0 changes. If there isn't, please
+create an issue in the repo or reach out to that team directly via their support
+or Discord channel to ask them about their plans to update their contracts.
+
 # Migration Guide
 
 Please see the [NFT Cadence 1.0 migration guide](./nft-guide). While
@@ -70,7 +88,7 @@ for your fungible token contract, you'll be most of the way there.
 
 Here, we will only describe the changes that are specific to the fungible token standard.
 
-## Ensure that your `Vault` implements only `FungibleToken.Vault`
+## `Vault` implements `FungibleToken.Vault`
 
 `FungibleToken.Vault` is no longer a resource type specification.
 It is now an interface that inherits from `Provider`, `Receiver`, `Balance`,
@@ -95,7 +113,7 @@ access(all) fun deposit(from: @{FungibleToken.Vault})
 `FungibleToken.Vault` will be automatically migrated to use the interface type `{NonFungibleToken.Vault}`
 as part of the Flow team's custom state migrations.
 
-## Add `FungibleToken.Withdraw` entitlements to your `withdraw()` methods
+## Add `Withdraw` entitlements to `withdraw()`
 
 Now that unrestricted casting is possible in Cadence, it is necessary to use
 [entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)
@@ -159,7 +177,7 @@ access(all) view fun isAvailableToWithdraw(amount: UFix64): Bool {
 }
 ```
 
-## Remove the Private Path and Type fields from the `FTVaultData` Metadata View
+## Remove Private Path and Type fields
 
 Since private paths were removed in Cadence 1.0, these fields are no longer needed,
 so remove the code that returns them in your `resolveView` method for `FTVaultData`:
@@ -180,6 +198,10 @@ case Type<FungibleTokenMetadataViews.FTVaultData>():
         })
     )
 ```
+
+Private paths are no longer able to be used in Cadence across the board,
+so you'll need to find other ways to do what you were doing with them before.
+This will likely involve [Capability Controllers](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md).
 
 ## Conclusion
 

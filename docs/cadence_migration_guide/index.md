@@ -14,24 +14,30 @@ To ensure your contracts are fully operational with Cadence 1.0, follow these es
 
 1. **Understand the Changes:** Start by familiarizing yourself with the [changes](https://forum.flow.com/t/update-on-cadence-1-0/5197) to identify how they might affect your code.
 2. **Modify Your Code:** Update your contracts, transactions, and scripts in accordance with the new changes.
-3. **Test Your Code:** The latest emulator [release](https://github.com/onflow/flow-cli/releases/tag/v1.12.0-cadence-v1.0.0-M4-2) includes all updated standards and core contracts. Check out this [video](https://www.loom.com/share/4467610b7beb4ebbaabed6b430dc25c4?sid=14ecb3e7-e933-409c-a6a4-add40c6971d0) from the Flow team on how to install and use the Cadence 1.0 emulator. The code can be accessed with:
+3. **Test Your Code:** The latest emulator release includes all updated standards and core contracts. Check out this [video](https://www.loom.com/share/4467610b7beb4ebbaabed6b430dc25c4?sid=14ecb3e7-e933-409c-a6a4-add40c6971d0) from the Flow team on how to install and use the Cadence 1.0 emulator.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Linux/macOS
+    Run the following command:
 
-```bash
+    - Linux/macOS
 
-sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)" -- v1.12.0-cadence-v1.0.0-M4-2
+      ```bash
+      sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.sh)"
+      ```
 
-```
+    - Windows (in PowerShell):
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Windows (in PowerShell):
+      ```powershell
+      iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.ps1') }"
+      ```
 
-```
+    The Cadence 1.0 CLI will now be installed on your machine and can be accessed via the `flow-c1` command.
+    To verify the installation, run:
 
-iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/master/install.ps1') } v1.12.0-cadence-v1.0.0-M4-2"
-```
+    ```bash
+    flow-c1 version
+    ```
 
-4. **Stage**: A new **_Staging process_** will be released in the coming weeks that checks if your updated code is compatible with Cadence 1.0. Complete this [form](https://docs.google.com/forms/d/e/1FAIpQLSfprZJLPSEAS6H7_oL0j6bzetDzkHPmDZHYAGgqAAOAdLDKqw/viewform) to stay informed about updates and receive recommendations tailored to your code.
+5. **Stage**: A new **_Staging process_** will be released in the coming weeks that checks if your updated code is compatible with Cadence 1.0. Complete this [form](https://docs.google.com/forms/d/e/1FAIpQLSfprZJLPSEAS6H7_oL0j6bzetDzkHPmDZHYAGgqAAOAdLDKqw/viewform) to stay informed about updates and receive recommendations tailored to your code.
 
 ### Resources
 
@@ -45,6 +51,7 @@ For assistance with the most common updates developers will face, explore these 
 - Migration Guide for [Fungible Tokens](./ft-guide.mdx)
 - Migration Guide for [NFTs](./nft-guide.mdx)
 - Migration Guide for [Core Contracts](./core-contracts-guide.mdx)
+- Migration Guide for [Type Annotations](./type-annotations-guide.mdx)
 
 **Helper Tools**
 

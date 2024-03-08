@@ -399,3 +399,36 @@ Similar to functions, constructors are also not stored. Hence, any changes to co
 A contract may import declarations (types, functions, variables, etc.) from other programs. These imported programs are
 already validated at the time of their deployment. Hence, there is no need for validating any declaration every time
 they are imported.
+
+# Cadence 1.0 Contract Updates
+
+For the upcoming network upgrade that will update the Cadence version to 1.0, all contracts will need to be upgraded to Cadence 1.0.
+Numerous changes have been made to the language, and many types and patterns that were previously valid are no longer permitted, or behave differently.
+In particulary, reference types work very differently after the introduction of [entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements), 
+and restricted types have been replaced with the similar but different [intersection types](https://cadence-lang.org/docs/1.0/language/intersection-types).
+
+In order to allow contracts to be upgraded in anticipation of these changes, 
+numerous migrations will be run on the network in order to transform data created in v0.42 of Cadence (the current version) into data that is compatible with version 1.0.
+The fact that these migrations are being run also allows for certain relaxations of the contract update rules outlined above. 
+In general, all the previously described restrictions still apply to v0.42 -> v1.0 contract updates, with the exceptions enabled by the data migrations outlined below:
+
+* Composite (struct, resource, and contract) field types can be changed according to specific rules. Specifically, reference-typed fields (or fields whose types contain references, like a `Capability`) can be updated to have the appropriate entitlements, while restricted-typed fields can be updated to be the appropriate intersection types.
+The update validator that will run when scheduling a 1.0 contract upgrade will enforce that these types are correct, 
+but those curious can read in depth about the update rules for these cases [here](https://cadence-lang.org/docs/cadence_migration_guide/type-annotations-guide). 
+
+* Given that [type requirements](./interfaces.mdx#nested-type-requirements) have been removed in Cadence 1.0, the update rules have been relaxed to allow 
+struct or resource types defined in contract interfaces to be converted to struct or resource interfaces. E.g. a contract interface originally written as:
+
+  ```cadence
+  access(all) contract interface C {
+    access(all) resource R {}
+  }
+  ```
+
+  can be updated to 
+
+  ```cadence
+  access(all) contract interface C {
+    access(all) resource interface R {}
+  }
+  ```

@@ -79,7 +79,7 @@ any concrete value of that type must implement both of them:
 access(all)
 struct interface HasMetadata {
     access(all)
-    let metadata: AnyStruct
+    var metadata: AnyStruct
 }
 
 access(all)
@@ -93,8 +93,10 @@ struct C: HasID, HasMetadata {
 
     init(id: String) {
         self.id = id
+        self.metadata = []
     }
 
+    access(all)
     fun setMetadata(_ data: AnyStruct) {
         self.metadata = data
     }
@@ -103,6 +105,6 @@ struct C: HasID, HasMetadata {
 // valid, because `C` implements both `HasID` and `HasMetadata`.
 let hasID3: {HasID, HasMetadata} = C(id: "3")
 
-// valid, because `A` implements only `HasID`.
+// Invalid, because `A` implements only `HasID`.
 let hasID4: {HasID, HasMetadata} = A(id: "4")
 ```

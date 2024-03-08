@@ -290,6 +290,7 @@ let r: @SomeResource = // ...
 let refE: auth(E) &SomeResource = // ...
 let refF: auth(F) &SomeResource = // ...
 let refEF: auth(E, F) &SomeResource = // ...
+let refEOrF: auth(E | F) &SomeResource = // ...
 ```
 
 The references can be used as follows:
@@ -322,10 +323,19 @@ refEF.a
 refEF.b
 // valid, because `refEF` has both of the two required entitlements
 refEF.c
+
+// invalid, because `refEOrF` might not have an `E` entitlement (it may have `F` instead)
+refEOrF.a
+// valid, because `refEOrF` has one of the two entitlements necessary
+refEOrF.b
+// invalid, because `refEOrF` is only known to have one of the two required entitlements
+refEOrF.c
 ```
 
 Note particularly in this example how the owned value `r` can access all entitled members on `SomeResource`.
-Owned values are not affected by entitled declarations.
+Owned values are not affected by entitled declarations. 
+
+Further details about authorized references can be found [here](./references.mdx#authorized-references).
 
 ### Entitlement mappings
 

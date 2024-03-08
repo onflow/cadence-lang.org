@@ -419,16 +419,16 @@ but those curious can read in depth about the update rules for these cases [here
 * Given that [type requirements](./interfaces.mdx#nested-type-requirements) have been removed in Cadence 1.0, the update rules have been relaxed to allow 
 struct or resource types defined in contract interfaces to be converted to struct or resource interfaces. E.g. a contract interface originally written as:
 
-```cadence
-access(all) contract interface C {
-  access(all) resource R {}
-}
-```
+  ```cadence
+  access(all) contract interface C {
+    access(all) resource R {}
+  }
+  ```
 
-can be updated to 
+  can be updated to 
 
-```cadence
-access(all) contract interface C {
-  access(all) resource interface R {}
-}
-```
+  ```cadence
+  access(all) contract interface C {
+    access(all) resource interface R {}
+  }
+  ```

@@ -37,7 +37,30 @@ Such contracts are required for the migration.
 
 ### Migrating the state
 
-Download and install the latest CLI, that runs Cadence 1.0.
+#### Download and install CLI
+
+Download and install the latest CLI, that runs Cadence 1.0, by running the below command.
+
+ - Linux/macOS
+   ```shell
+   sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.sh)"
+   ```
+
+ - Windows (in PowerShell):
+   ```shell
+   iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.ps1') }"
+   ```
+
+The Cadence 1.0 CLI will now be available on your system as `flow-c1`.
+You can interact with this CLI using this command, i.e.
+
+```shell
+flow-c1 help
+```
+
+_Note: Any existing previous Flow CLI installation will still remain available via the `flow` command._
+
+#### Run migration
 
 - Run `flow-c1 migrate` against the previously created state.
 

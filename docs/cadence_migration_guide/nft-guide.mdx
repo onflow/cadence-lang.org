@@ -6,7 +6,7 @@ sidebar_label: NFT Cadence 1.0 Guide
 
 # Non-Fungible Tokens in Cadence 1.0
 
-In 2024, the network will be upgrading to Cadence 1.0. 
+In 2024, the network will be upgrading to Cadence 1.0.
 In addition to many changes to the Cadence programming language,
 the Cadence token standards are also being streamlined and improved.
 All applications will need to prepare and migrate their existing
@@ -21,17 +21,17 @@ to Cadence 1.0.
 We'll be using the [`ExampleNFT` contract](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/ExampleNFT.cdc)
 as an example. Many projects have used `ExampleNFT` as a starting point for their projects,
 so it is widely applicable to most NFT developers on Flow.
-The upgrades required for `ExampleNFT` will cover 90%+ of what you'll 
+The upgrades required for `ExampleNFT` will cover 90%+ of what you'll
 need to do to update your contract. Each project most likely has
 additional logic or features that aren't included in `ExampleNFT`,
 but hopefully after reading this guide, you'll understand Cadence 1.0
 well enough that you can easily make any other changes that are necessary.
 
 Additionally, most of the changes described here also apply to anyone
-who is updating a Fungible Token contract or interacting with one, 
+who is updating a Fungible Token contract or interacting with one,
 so keep that in mind while reading if that applies to you.
 
-As always, there are plenty of people on the Flow team and in the community 
+As always, there are plenty of people on the Flow team and in the community
 who are happy to help answer any questions you may have, so please reach out
 in Discord if you need any help.
 
@@ -57,13 +57,13 @@ here: https://github.com/onflow/contract-updater
 Additionally, here are the import addresses
 for all of the important contracts related to non-fungible tokens:
 
-| Contract                    | Emulator Import Address |
-| --------------------------- | ----------------------- |
-| `NonFungibleToken`          | `0xf8d6e0586b0a20c7`    |
-| `FungibleToken`             | `0xee82856bf20e2aa6`    |
-| `ViewResolver`              | `0xf8d6e0586b0a20c7`    |
-| `Burner`                    | `0xf8d6e0586b0a20c7`    |
-| `MetadataViews`             | `0xf8d6e0586b0a20c7`    |
+| Contract           | Emulator Import Address |
+| ------------------ | ----------------------- |
+| `NonFungibleToken` | `0xf8d6e0586b0a20c7`    |
+| `FungibleToken`    | `0xee82856bf20e2aa6`    |
+| `ViewResolver`     | `0xf8d6e0586b0a20c7`    |
+| `Burner`           | `0xf8d6e0586b0a20c7`    |
+| `MetadataViews`    | `0xf8d6e0586b0a20c7`    |
 
 See the other guides in this section of the docs for the import
 addresses of other important contracts in the emulator.
@@ -97,7 +97,7 @@ contract or the [`BasicNFT` contract](https://github.com/onflow/flow-nft/blob/st
 from the `standard-v2` branch of the flow-nft
 github repo and wait to deploy it until Flow has been upgraded for Cadence 1.0.
 
-## `BasicNFT` and `UniversalCollection`
+## BasicNFT and UniversalCollection
 
 As part of the improvements to the NFT standard, there is now a new NFT contract
 example in the `flow-nft` github repo: [`BasicNFT`](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/BasicNFT.cdc).
@@ -106,8 +106,8 @@ example in the `flow-nft` github repo: [`BasicNFT`](https://github.com/onflow/fl
 This is possible because the contract basically only defines the NFT resource,
 the essential metadata views, and a minter resource.
 It doesn't have to define a collection! Most collection resources are 99% boilerplate
-code, so it really doesn't make sense for most projects to have to define their own 
-collection. 
+code, so it really doesn't make sense for most projects to have to define their own
+collection.
 
 Instead, `BasicNFT` uses [`UniversalCollection`](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/UniversalCollection.cdc),
 a contract that defines a collection resource
@@ -132,6 +132,7 @@ access(all) fun deposit(token: @{NonFungibleToken.NFT}) {
         panic("Cannot deposit an NFT of the given type")
     }
 ```
+
 It also constructs standard paths based on the identifier provided.
 
 `UniversalCollection` will be deployed to all the networks soon after the Cadence 1.0 upgrade,
@@ -182,7 +183,7 @@ and the removal of nested type requirements and restricted types.
 
 ## Token Standard Changes
 
-### Continue to implement `NonFungibleToken`
+### Continue to implement NonFungibleToken
 
 Make sure your contract still implements the `NonFungibleToken` interface:
 
@@ -203,10 +204,11 @@ because now the token standards support defining multiple token types in a singl
 Most projects won't utilize this, but it is important to understand in relation
 to some of the other changes that are needed, like the next one for example.
 
-### Add type argument to `contract.createEmptyCollection()`
+### Add type argument to contract.createEmptyCollection()
 
 Because contracts can now define multiple token types, all `contract.createEmptyCollection()`
 functions now have a `nftType` argument:
+
 ```cadence
 /// createEmptyCollection creates an empty Collection for the specified NFT type
 /// and returns it to the caller so that they can own NFTs
@@ -214,32 +216,36 @@ access(all) fun createEmptyCollection(nftType: Type): @{NonFungibleToken.Collect
     return <- create Collection()
 }
 ```
+
 As is shown here, if you only have a single collection type defined in your contract,
 you can just return that collection type regardless of what the type argument is,
 but you could also make sure that the caller provides the correct type
 before returning the collection.
 
-### Your `NFT` implements `NonFungibleToken.NFT`
+### Your NFT implements NonFungibleToken.NFT
 
 `NonFungibleToken.NFT` used to be a nested type specification, but now it is an interface!
 This means that in your contract, your `NFT` resource needs to implement it
 in order to be considered compatible with the standard!
+
 ```cadence
 access(all) contract ExampleNFT: NonFungibleToken {
     /// We choose the name NFT here, but this type can have any name now
     /// because the interface does not require it to have a specific name any more
     access(all) resource NFT: NonFungibleToken.NFT {
 ```
+
 This will ensure that your `NFT` resource has all the correct fields and functions.
 
 **Note for Custom Migrations:** All stored objects that currently use the concrete type
 `NonFungibleToken.NFT` will be automatically migrated to use the interface type `{NonFungibleToken.NFT}`
 as part of the Flow team's custom state migrations.
 
-### Your `Collection` implements `NonFungibleToken.Collection`
+### Your Collection implements NonFungibleToken.Collection
 
 Similar to `NFT`, `NonFungibleToken.Collection` is now an interface,
 so your `Collection` resource type needs to implement it in order to be conformant.
+
 ```cadence
 /// In the `ExampleToken` smart contract
 access(all) resource Collection: NonFungibleToken.Collection {
@@ -288,13 +294,14 @@ As you can see [in the `ExampleNFT` diff](https://github.com/onflow/flow-nft/pul
 the events have been removed completely.
 
 For event listeners, the events will have this format:
+
 ```cadence
 A.f8d6e0586b0a20c7.NonFungibleToken.Deposited(...)
 ```
 
 Where the address is whatever address the `NonFungibleToken` contract is deployed to.
 
-### Implement `ViewResolver`
+### Implement ViewResolver
 
 The new standard enforces that implementations also implement
 [the `ViewResolver` functions](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/ViewResolver.cdc),
@@ -345,20 +352,20 @@ In the new standard examples, we often use UUID for NFT IDs. Many early Flow pro
 used a project-specific ID system for their NFTs. It is important that you stick with
 whatever ID system your project used from the beginning so NFT IDs don't get mixed up.
 
-### Add `createEmptyCollection()` to `NFT` and `Collection`.
+### AddcreateEmptyCollection() to NFT and Collection.
 
 These function requirements were added to [`NFT`](https://github.com/onflow/flow-nft/pull/126/files#diff-0f42f974b7e6311f474d087fea60fbd57b5fda90294853811e492f965da21d36R58-R60)
 and [`Collection`](https://github.com/onflow/flow-nft/pull/126/files#diff-0f42f974b7e6311f474d087fea60fbd57b5fda90294853811e492f965da21d36R203-R206)
 so that holders of any of those objects could create a new collection of the correct type,
 no matter if they imported the contract or knew the type ahead of time.
 
-### Make `Collection.ownedNFTs` `access(contract)`
+### Make Collection.ownedNFTs access(contract)
 
 `ownedNFTs` was removed as a requirement for Collections, so this change is completely optional,
 but it is recommended to make fields and functions as restrictive as possible,
 so `ownedNFTs` should be `access(contract)`
 
-### Add `getSupportedNFTTypes()` and `isSupportedNFTType()`
+### Add getSupportedNFTTypes() and isSupportedNFTType()
 
 All resources that implement `NonFungibleToken.Receiver` now have to include these
 two functions that indicate which types they are able to receive in their `deposit()` calls.
@@ -368,7 +375,7 @@ for both of these functions.
 As is done [in the `ExampleNFT.Collection`](https://github.com/onflow/flow-nft/pull/126/files#diff-0f42f974b7e6311f474d087fea60fbd57b5fda90294853811e492f965da21d36R142-R157),
 if your `Collection` can only accept a single NFT type, then the implementation is simple.
 
-### Add `getLength()`
+### Add getLength()
 
 Add [a `getLength()` function](https://github.com/onflow/flow-nft/pull/126/files#diff-0f42f974b7e6311f474d087fea60fbd57b5fda90294853811e492f965da21d36R183-R185)
 to your `Collection` resource so that callers can quickly
@@ -381,7 +388,7 @@ get an idea of the size of your collection.
     }
 ```
 
-### Update `borrowNFT()` to Return an Optional
+### Update borrowNFT() to Return an Optional
 
 The `borrowNFT()` method is used to get a reference to any NFT in the collection.
 It is a common best practice in Cadence smart contracts for getter functions
@@ -407,6 +414,7 @@ any usage of them from transactions and scripts.
 
 Since private paths were removed in Cadence 1.0, these fields are no longer needed,
 so remove the code that returns them in your `resolveView` method for `NFTCollectionData`:
+
 ```cadence
 case Type<MetadataViews.NFTCollectionData>():
     let collectionData = MetadataViews.NFTCollectionData(
@@ -427,7 +435,7 @@ Private paths are no longer able to be used in Cadence across the board,
 so you'll need to find other ways to do what you were doing with them before.
 This will likely involve [Capability Controllers](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md).
 
-### Use the `NonFungibleToken.emitNFTUpdated()` function
+### Use the NonFungibleToken.emitNFTUpdated() function
 
 This is an optional change and only applies to projects that have functionality
 that updates the metadata of NFTs periodically. It allows those projects to emit
@@ -481,7 +489,7 @@ access(all) resource Collection: NonFungibleToken.Collection {
 
 ## Cadence Changes
 
-### Update all `pub` access modfiers
+### Update all pub access modfiers
 
 The `pub` access modifier was removed from the language to better support unified
 representation of access control, especially now that entitlements exist.
@@ -489,7 +497,7 @@ representation of access control, especially now that entitlements exist.
 Please familiarize yourself with [the new entitlements feature](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)
 because it is extremely important for you to understand in order to build safe smart contracts.
 
-Most contracts can update and `pub` access modifiers to `access(all)`,
+Most contracts can update and `pub` access modifiers to **access(all)**,
 but there are some functions, such as `withdraw`, that need to have entitled access.
 
 A good rule to follow is that if there is a resource that will ever have a reference
@@ -498,27 +506,31 @@ you don't want everyone in the network to be able to have access to should be
 restricted by an entitlement so that people cannot downcast the reference to access
 these privledged functions.
 
-### Add `Withdraw` and `Owner` Entitlements to `withdraw()`
+### Add Withdraw and Owner Entitlements to withdraw()
 
 Now that unrestricted casting is possible in Cadence, it is necessary to use
 [entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)
 to restrict access to privledged functions in any composite type.
 
 The only default method that needs to be restricted is the `withdraw` method:
+
 ```cadence
 access(NonFungibleToken.Withdraw) fun withdraw(withdrawID: UInt64): @ExampleNFT.NFT {
 ```
+
 This means that you can only call the `withdraw` method if you control the actual object
 or if you have an `auth(NonFungibleToken.Withdraw)` entitled reference to it.
 
 So in a typical transfer transaction when you need to withdraw from a vault,
 you would get the reference like this:
+
 ```cadence
 // borrow a reference to the signer's NFT collection
 self.withdrawRef = signer.storage.borrow<auth(NonFungibleToken.Withdraw) &{NonFungibleToken.Collection}>(
         from: collectionData.storagePath
     ) ?? panic("Account does not store an object at the specified path")
 ```
+
 From the [flow-nft `transfer_nft.cdc` transaction](https://github.com/onflow/flow-nft/blob/standard-v2/transactions/transfer_nft.cdc).
 
 In addition, since `Collection` is an interface, you will need to update every instance in your code
@@ -530,7 +542,8 @@ This also applies to `NonFungibleToken.NFT`. Any instance that refers
 to `@NonFungibleToken.NFT` or `&NonFungibleToken.NFT` need to be updated to
 `@{NonFungibleToken.NFT}` or `&{NonFungibleToken.NFT}` respectively.
 
-Example in `deposit()`: 
+Example in `deposit()`:
+
 ```cadence
 /// deposit now accepts a resource that implements the `NonFungibleToken.NFT` interface type
 access(all) fun deposit(token: @{NonFungibleToken.NFT})
@@ -540,10 +553,10 @@ access(all) fun deposit(token: @{NonFungibleToken.NFT})
 how you can get these entitlements onto capabilities
 that already exist in a contract or in an account. As part of the automatic
 migrations, all existing capabilities will be automatically migrated to
-use a type that offers the same level of access. In the case of Capabilities 
+use a type that offers the same level of access. In the case of Capabilities
 that provide access to entitled functions, the relevant entitlements will be added.
 
-### Update all getter functions to `view`
+### Update all getter functions to view
 
 Cadence 1.0 introduces [view functions](https://cadence-lang.org/docs/1.0/language/functions#view-functions)
 which enforce that a function does not modify any state.
@@ -555,7 +568,7 @@ and don't modify any state, then you should add `view` to these functions.
 ### Remove Restricted Types
 
 Cadence 1.0 makes it so restricted types
-(for example: `@ExampleNFT.Collection{NonFungibleToken.Receiver}` instead of 
+(for example: `@ExampleNFT.Collection{NonFungibleToken.Receiver}` instead of
 `@ExampleNFT.Collection` or `{NonFungibleToken.Receiver}`) are no longer permitted.
 
 See [the FLIP](https://github.com/onflow/flips/blob/main/cadence/20230505-remove-restricted-types.md)
@@ -602,9 +615,11 @@ in the `prepare` block.
 
 For example, in [the `transfer_nft` transaction](https://github.com/onflow/flow-nft/blob/standard-v2/transactions/transfer_nft.cdc),
 these are the entitlements that are required:
+
 ```cadence
 prepare(signer: auth(BorrowValue) &Account) {
 ```
+
 The transaction needs to borrow a value from storage to withdraw the NFT,
 so the `BorrowValue` entitlement is required.
 

@@ -37,7 +37,7 @@ To ensure your contracts are fully operational with Cadence 1.0, follow these es
     flow-c1 version
     ```
 
-5. **Stage**: A new **_Staging process_** will be released in the coming weeks that checks if your updated code is compatible with Cadence 1.0. Complete this [form](https://docs.google.com/forms/d/e/1FAIpQLSfprZJLPSEAS6H7_oL0j6bzetDzkHPmDZHYAGgqAAOAdLDKqw/viewform) to stay informed about updates and receive recommendations tailored to your code.
+5. **Stage**: The last step is to get your updated code ready to replace your live pre-cadence 1.0 code when the upgrade occurs, to do this you need to [stage](https://cadence-lang.org/docs/cadence_migration_guide/staging-guide) your contracts. Stage them on testnet and ensure that they are working as expected along with their staged dependencies. Staging for mainnet contracts is coming soon.
 
 ### Resources
 

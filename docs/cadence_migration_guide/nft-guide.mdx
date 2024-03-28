@@ -237,7 +237,7 @@ access(all) contract ExampleNFT: NonFungibleToken {
 
 This will ensure that your `NFT` resource has all the correct fields and functions.
 
-As part of this, you should remove the `NonFungibleToken.INFT` implementation specification
+As part of this upgrade, you should remove the `NonFungibleToken.INFT` implementation specification
 from the declaration of your `NFT` because the `INFT` interface has been removed.
 
 **Note for Custom Migrations:** All stored objects that currently use the concrete type
@@ -265,8 +265,9 @@ now anyone with a reference to your collection can downcast it to its concrete t
 even if the reference is just of an interface type. This means that you have to be
 very careful about which fields and functions are declared as public.
 
-`ownedNFTs` used to be `access(all)`, but it should be changed to `access(contract)`.
-If this isn't done, then anyone would be able to access that field, which is dangerous.
+`ownedNFTs` used to be `access(all)`, but it should be changed to `access(contract)`
+which means that only code from your contract can access it.
+If this isn't done, then anyone would be able to access that field, which could be dangerous.
 
 ### Remove Project-Specific Events
 

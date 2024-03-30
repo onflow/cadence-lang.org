@@ -34,7 +34,10 @@ Event name: `flow.AccountKeyAdded`
 access(all)
 event AccountKeyAdded(
     address: Address,
-    publicKey: PublicKey
+    publicKey: PublicKey,
+    weight: UFix64,
+    hashAlgorithm: HashAlgorithm,
+    keyIndex: Int
 )
 ```
 

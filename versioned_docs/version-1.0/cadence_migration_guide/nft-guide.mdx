@@ -466,37 +466,54 @@ so they can query collections to get the updated metadata to show in their user 
 ```
 
 As you can see, it requires an authorized reference to an NFT, so only the owner of
-and NFT can call this to emit an event. This could be called from within a `Collection`
+and NFT can call this to emit an event. Additionally, as is noted in the example below,
+you have to use your own contract's name to call the function because the code
+that emits the event is a default implementation of an `access(contract)` function.
+
+This restriction is to make it so only the code in your contract can call the function
+to emit the events about your NFT. DO NOT Re-implement the `emitNFTUpdated` function
+in your contract or you will lose access to the ability to emit the standard event.
+
+This function could be called from within a `Collection`
 resource when a piece of metadata on an owned NFT is updated. For example,
 if a developer wanted to track the time of the latest transfer for each NFT,
 they could do it in the `deposit()` function:
 
 ```cadence
-access(all) resource Collection: NonFungibleToken.Collection {
+access(all) contract ExampleNFT {
+    access(all) resource Collection: NonFungibleToken.Collection {
 
-    access(contract) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
+        access(contract) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
 
-    ...
+        ...
 
-    /// deposit takes a NFT and adds it to the collections dictionary
-    /// and adds the ID to the id array
-    access(all) fun deposit(token: @{NonFungibleToken.NFT}) {
-        let token <- token as! @ExampleNFT.NFT
+        /// deposit takes a NFT and adds it to the collections dictionary
+        /// and adds the ID to the id array
+        access(all) fun deposit(token: @{NonFungibleToken.NFT}) {
+            let token <- token as! @ExampleNFT.NFT
 
-        let id = token.id
+            let id = token.id
 
-        // add the new token to the dictionary which removes the old one
-        let oldToken <- self.ownedNFTs[token.id] <- token
-        destroy oldToken
+            // add the new token to the dictionary which removes the old one
+            let oldToken <- self.ownedNFTs[token.id] <- token
+            destroy oldToken
 
-        // Get an authorized reference to the NFT so that
-        // the update transfer date function can be called
-        // and the emitNFTUpdated function can be called
-        let authTokenRef = (&self.ownedNFTs[id] as auth(Update | Owner) &{NonFungibleToken.NFT}?)!
-        authTokenRef.updateTransferDate(date: getCurrentBlock().timestamp)
-        NonFungibleToken.emitNFTUpdated(authTokenRef)
+            // Get an authorized reference to the NFT so that
+            // the update transfer date function can be called
+            // and the emitNFTUpdated function can be called
+            let authTokenRef = (&self.ownedNFTs[id] as auth(Update | Owner) &{NonFungibleToken.NFT}?)!
+            authTokenRef.updateTransferDate(date: getCurrentBlock().timestamp)
+
+            // EMIT THE UPDATED EVENT
+            // Note: You have to use your own contract's name for the call
+            // because the code that emits the event is a default implementation
+            // DO NOT Re-implement the `emitNFTUpdated` function or you will lose
+            // access to the ability to emit the standard event
+            ExampleNFT.emitNFTUpdated(authTokenRef)
+        }
+
+        ...
     }
-
     ...
 }
 ```

@@ -501,7 +501,7 @@ access(all) contract ExampleNFT {
             // Get an authorized reference to the NFT so that
             // the update transfer date function can be called
             // and the emitNFTUpdated function can be called
-            let authTokenRef = (&self.ownedNFTs[id] as auth(Update | Owner) &{NonFungibleToken.NFT}?)!
+            let authTokenRef = (&self.ownedNFTs[id] as auth(NonFungibleToken.Update) &{NonFungibleToken.NFT}?)!
             authTokenRef.updateTransferDate(date: getCurrentBlock().timestamp)
 
             // EMIT THE UPDATED EVENT

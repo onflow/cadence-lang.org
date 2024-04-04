@@ -105,10 +105,10 @@ Crescendo Previewnet is available for access at the following URLs:
 1. Generate a new key pair with the Flow CLI
 2. Fund your account with [Previewnet Faucet](https://previewnet-faucet.onflow.org/fund-account) - If you generated the keypair through the CLI, you can click on the URL provided to create an account and request crescendo FLOW tokens.
 3. Use **Flow Reference Wallet (Chrome Extension)** which provides support for Crescendo Previewnet
-   a. Install [Flow Wallet Chrome Extension](https://chromewebstore.google.com/detail/flow-reference-wallet/hpclkefagolihohboafpheddmmgdffjm) from Chrome Web Store
-   b. Navigate to settings
-   c. Enable "Developer Mode"
-   d. Select Previewnet
+   1. Install [Flow Wallet Chrome Extension](https://chromewebstore.google.com/detail/flow-reference-wallet/hpclkefagolihohboafpheddmmgdffjm) from Chrome Web Store
+   2. Navigate to settings
+   3. Enable "Developer Mode"
+   4. Select Previewnet
 4. Use [FlowDiver](https://previewnet.flowdiver.io/), the Flow Blockchain Explorer to review analytics, transactions, block, account and contract information for Previewnet.
 
 ### Upgrading NFT and FT Contracts
@@ -158,17 +158,16 @@ Flow CLI provides the `flow migrate state` command to migrate your local emulato
 To test the migration, first you would need an emulator state, created with an emulator/CLI release that uses a pre-1.0 Cadence version. It is recommended to use the latest pre-1.0 CLI version (e.g: v1.17.0) for creating the old state.
 
 1. **Get Emulator State**
-   a. To get an emulator state with Flow CLI 1.17.0, start the emulator with the --persist flag.
-   i. `flow emulator --persist`
-   b. Deploy the pre-1.0 project/contracts to the emulator
-   c. Run transactions if there are any.
-   d. Stop the emulator (Ctrl-C on \*nix platforms, and Ctrl-Break or Ctrl-Pause on Windows). It is important to make sure the emulator is stopped before taking the snapshot, so that any pending in-memory data would be written to the persisted state properly.
-   e. Locate the persisted state ./flowdb/emulator.sqlite file, from the project root.
+   1. To get an emulator state with Flow CLI 1.17.0, start the emulator with the `--persist` flag (e.g. `flow emulator --persist`)
+   2. Deploy the pre-1.0 project/contracts to the emulator
+   3. Run transactions if there are any.
+   4. Stop the emulator (Ctrl-C on \*nix platforms, and Ctrl-Break or Ctrl-Pause on Windows). It is important to make sure the emulator is stopped before taking the snapshot, so that any pending in-memory data would be written to the persisted state properly.
+   5. Locate the persisted state ./flowdb/emulator.sqlite file, from the project root.
 2. **Migrate**
-   a. Download and install the latest CLI, that runs Cadence 1.0.
-   b. Run `flow-c1 migrate` against the previously created state. The state file (emulator.sqlite) can be provided using the `--db-path` flag.
-   c. If there are any contracts that also need to be upgraded, those can be specified using the `--contracts` flag. Note that, the paths to these updated contracts and their deployed addresses must be specified in the flow.json file.
-   d. A sample migrate command would look like:
+   1. Download and install the latest CLI, that runs Cadence 1.0.
+   2. Run `flow-c1 migrate` against the previously created state. The state file (emulator.sqlite) can be provided using the `--db-path` flag.
+   3. If there are any contracts that also need to be upgraded, those can be specified using the `--contracts` flag. Note that, the paths to these updated contracts and their deployed addresses must be specified in the flow.json file.  (see (Flow CLI documentation about contract deployments)[https://developers.flow.com/tools/flow-cli/deployment/project-contracts#define-contract-deployment-targets] for more info)
+   4. A sample migrate command would look like:
    `flow-c1 migrate state --db-path=/path/to/emulator.sqlite --save-report=./reports --contracts="Test"`
 3. **Testing the Migrated State**
    Once the migration is completed successfully, the emulator can be started with the migrated state. For that, ensure the emulator is started again using the new CLI version (that runs Cadence 1.0), with the `--persist` flag. Now the emulator should be up and running using the migrated state and the updated contracts.
@@ -244,7 +243,7 @@ A response of true indicates that your contract has been successfully staged and
 
 ## Additional Resources
 
-- Crescendo & Cadence 1.0[Roadmap](https://flow.com/upgrade/crescendo/cadence-1#roadmap)
+- [Crescendo & Cadence 1.0 Roadmap](https://flow.com/upgrade/crescendo/cadence-1#roadmap)
 
 - [Flow.com FAQ](https://flow.com/upgrade/crescendo/cadence-1#faq)
 

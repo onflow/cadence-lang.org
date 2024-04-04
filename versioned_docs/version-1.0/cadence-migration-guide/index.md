@@ -153,7 +153,7 @@ Valid Input: Existing contract name in flow.json.
 
 ### Test Local State Migration
 
-Flow CLI provides the flow migrate state command to migrate your local emulator state to Cadence 1.0, and to deploy upgraded contracts to the emulator. This is useful for locally testing the staged contract upgrades, and to see how the new network and the upgraded contracts would behave with the migrated data.
+Flow CLI provides the `flow migrate state` command to migrate your local emulator state to Cadence 1.0, and to deploy upgraded contracts to the emulator. This is useful for locally testing the staged contract upgrades, and to see how the new network and the upgraded contracts would behave with the migrated data.
 
 To test the migration, first you would need an emulator state, created with an emulator/CLI release that uses a pre-1.0 Cadence version. It is recommended to use the latest pre-1.0 CLI version (e.g: v1.17.\*) for creating the old state.
 

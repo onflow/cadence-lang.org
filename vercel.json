@@ -3,8 +3,13 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/docs/cadence-migration-guide",
-      "destination": "/docs/cadence_migration_guide",
+      "source": "/docs/cadence_migration_guide",
+      "destination": "/docs/cadence-migration-guide",
+      "permanent": true
+    },
+    {
+      "source": "/docs/1.0/cadence_migration_guide",
+      "destination": "/docs/1.0/cadence-migration-guide",
       "permanent": true
     }
   ]

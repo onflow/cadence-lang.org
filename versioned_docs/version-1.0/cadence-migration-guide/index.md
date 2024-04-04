@@ -117,11 +117,11 @@ In addition to changes to the Cadence programming language, the Cadence token st
 
 #### NFT Standard v2
 
-[This document](https://cadence-lang.org/docs/cadence_migration_guide/nft-guide) describes the changes to the Cadence Non-Fungible Token (NFT) standard and gives a step-by-step guide for how to upgrade your NFT contract from Cadence 0.42 to Cadence 1.0.
+[This document](./nft-guide.mdx) describes the changes to the Cadence Non-Fungible Token (NFT) standard and gives a step-by-step guide for how to upgrade your NFT contract from Cadence 0.42 to Cadence 1.0.
 
 #### FT Standard v2
 
-[This document](https://cadence-lang.org/docs/cadence_migration_guide/ft-guide) describes the changes to the Cadence Non-Fungible Token (NFT) standard and gives a step-by-step guide for how to upgrade your NFT contract from Cadence 0.42 to Cadence 1.0.
+[This document](./ft-guide.mdx) describes the changes to the Cadence Non-Fungible Token (NFT) standard and gives a step-by-step guide for how to upgrade your NFT contract from Cadence 0.42 to Cadence 1.0.
 
 ## Perform Local Staging/Migration Testing
 
@@ -244,17 +244,13 @@ A response of true indicates that your contract has been successfully staged and
 
 ## Additional Resources
 
-- [Cadence 1.0 Migration Guide](https://cadence-lang.org/docs/1.0/cadence_migration_guide)
-
-- Crescendo & Cadence 1.0[ Roadmap](https://flow.com/upgrade/crescendo/cadence-1#roadmap)
+- Crescendo & Cadence 1.0[Roadmap](https://flow.com/upgrade/crescendo/cadence-1#roadmap)
 
 - [Flow.com FAQ](https://flow.com/upgrade/crescendo/cadence-1#faq)
 
 - [Update on Cadence 1.0](https://forum.flow.com/t/update-on-cadence-1-0/5197/1)
 
 - [Cadence 1.0 Upgrade Plan](https://forum.flow.com/t/cadence-1-0-upgrade-plan/5477)
-
-- [Cadence 1.0 Migration guide](https://cadence-lang.org/docs/cadence_migration_guide)
 
 - [Cadence 1.0 Office Hours Notes](https://dapperlabs.notion.site/Cadence-1-0-Office-Hours-680c7c63921940248380e2ffcf74b804)
 
@@ -302,22 +298,22 @@ A response of true indicates that your contract has been successfully staged and
 
 - [FlowDiver](https://previewnet.flowdiver.io/)
 
-- [Non-Fungible Tokens in Cadence 1.0](https://cadence-lang.org/docs/cadence_migration_guide/nft-guide)
+- [Non-Fungible Tokens in Cadence 1.0](./nft-guide.mdx)
 
-- [Fungible Tokens in Cadence 1.0](https://cadence-lang.org/docs/cadence_migration_guide/ft-guide)
+- [Fungible Tokens in Cadence 1.0](./ft-guide.mdx)
 
 - Cadence Linter ([Cadence VSCode Extension](https://developers.flow.com/tools/vscode-extension), [CLI Linter](https://developers.flow.com/tools/flow-cli/lint))
 
 - [Flow GPT Assistant](https://chat.openai.com/g/g-a1jOaEj1h-flow-assistant) and [Flow GPT Cadence Migration Helper](https://chat.openai.com/g/g-lt4a6jvfj-flow-cadence-1-0-migration-helper)
 
-- [Cadence Test Framework](https://cadence-lang.org/docs/testing-framework)
+- [Cadence Test Framework](../testing-framework.mdx)
 
-- [Contract Browser](<https://contractbrowser.com/](https://contractbrowser.com/)>)
+- [Contract Browser](https://contractbrowser.com/](https://contractbrowser.com/))
 
 - [Staging a 1.0 Contract](https://developers.flow.com/tools/flow-cli/migrate/migrate-stage-contract)
 
-- [How to migrate your smart contracts to Cadence 1.0](https://cadence-lang.org/docs/cadence_migration_guide/staging-guide)
+- [How to migrate your smart contracts to Cadence 1.0](./staging-guide.mdx)
 
-- [Emulator State Migration guide](https://cadence-lang.org/docs/cadence_migration_guide/emulator-state-migration-guide)
+- [Emulator State Migration guide](./emulator-state-migration-guide.mdx)
 
 - An [example](https://github.com/bjartek/stable-cadence/tree/give-admin-direct-cap) on how to give a Minter capability to somebody else and be able to revoke it later using capcons and inbox api

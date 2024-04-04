@@ -93,14 +93,14 @@ This guide is primarily for developers who have existing contracts
 deployed to Flow mainnet that they need to update for Cadence 1.0.
 If you don't have any contracts deployed yet, it is recommended that
 you start an NFT contract from scratch by either copying the `ExampleNFT`
-contract or the [`BasicNFT` contract](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/BasicNFT.cdc)
+contract or the [`BasicNFT` contract](https://github.com/onflow/flow-nft/blob/universal-collection/contracts/BasicNFT.cdc)
 from the `standard-v2` branch of the flow-nft
 github repo and wait to deploy it until Flow has been upgraded for Cadence 1.0.
 
 ## BasicNFT and UniversalCollection
 
 As part of the improvements to the NFT standard, there is now a new NFT contract
-example in the `flow-nft` github repo: [`BasicNFT`](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/BasicNFT.cdc).
+example in the `flow-nft` github repo: [`BasicNFT`](https://github.com/onflow/flow-nft/blob/universal-collection/contracts/BasicNFT.cdc).
 
 `BasicNFT` defines a Cadence NFT in as few lines of code as possible, 137 at the moment!
 This is possible because the contract basically only defines the NFT resource,
@@ -109,7 +109,7 @@ It doesn't have to define a collection! Most collection resources are 99% boiler
 code, so it really doesn't make sense for most projects to have to define their own
 collection.
 
-Instead, `BasicNFT` uses [`UniversalCollection`](https://github.com/onflow/flow-nft/blob/standard-v2/contracts/UniversalCollection.cdc),
+Instead, `BasicNFT` uses [`UniversalCollection`](https://github.com/onflow/flow-nft/blob/universal-collection/contracts/UniversalCollection.cdc),
 a contract that defines a collection resource
 that has all of the standard functionality that a collection needs and nothing else.
 From now on, any project that doesn't want to do anything unique with their collection
@@ -237,6 +237,9 @@ access(all) contract ExampleNFT: NonFungibleToken {
 
 This will ensure that your `NFT` resource has all the correct fields and functions.
 
+As part of this upgrade, you should remove the `NonFungibleToken.INFT` implementation specification
+from the declaration of your `NFT` because the `INFT` interface has been removed.
+
 **Note for Custom Migrations:** All stored objects that currently use the concrete type
 `NonFungibleToken.NFT` will be automatically migrated to use the interface type `{NonFungibleToken.NFT}`
 as part of the Flow team's custom state migrations.
@@ -254,6 +257,17 @@ access(all) resource Collection: NonFungibleToken.Collection {
 **Note for Custom Migrations:** All stored objects that currently use the concrete type
 `NonFungibleToken.Collection` will be automatically migrated to use the interface type `{NonFungibleToken.Collection}`
 as part of the Flow team's custom state migrations.
+
+### Change the access specification of `ownedNFTs` to `access(contract)`
+
+This one is EXTREMELY important. With the addition of entitlements and safe downcasting,
+now anyone with a reference to your collection can downcast it to its concrete type
+even if the reference is just of an interface type. This means that you have to be
+very careful about which fields and functions are declared as public.
+
+`ownedNFTs` used to be `access(all)`, but it should be changed to `access(contract)`
+which means that only code from your contract can access it.
+If this isn't done, then anyone would be able to access that field, which could be dangerous.
 
 ### Remove Project-Specific Events
 
@@ -352,7 +366,7 @@ In the new standard examples, we often use UUID for NFT IDs. Many early Flow pro
 used a project-specific ID system for their NFTs. It is important that you stick with
 whatever ID system your project used from the beginning so NFT IDs don't get mixed up.
 
-### AddcreateEmptyCollection() to NFT and Collection.
+### Add createEmptyCollection() to NFT and Collection.
 
 These function requirements were added to [`NFT`](https://github.com/onflow/flow-nft/pull/126/files#diff-0f42f974b7e6311f474d087fea60fbd57b5fda90294853811e492f965da21d36R58-R60)
 and [`Collection`](https://github.com/onflow/flow-nft/pull/126/files#diff-0f42f974b7e6311f474d087fea60fbd57b5fda90294853811e492f965da21d36R203-R206)
@@ -445,44 +459,60 @@ so they can query collections to get the updated metadata to show in their user 
 
 ```cadence
     access(all) event Updated(type: String, id: UInt64, uuid: UInt64, owner: Address?)
-    access(contract) view fun emitNFTUpdated(_ nftRef: auth(Update | Owner) &{NonFungibleToken.NFT})
+    access(all) view fun emitNFTUpdated(_ nftRef: auth(Update | Owner) &{NonFungibleToken.NFT})
     {
         emit Updated(type: nftRef.getType().identifier, id: nftRef.id, uuid: nftRef.uuid, owner: nftRef.owner?.address)
     }
 ```
 
 As you can see, it requires an authorized reference to an NFT, so only the owner of
-and NFT can call this to emit an event. This could be called from within a `Collection`
+and NFT can call this to emit an event. Additionally, as is noted in the example below,
+you have to use your own contract's name to call the function because the code
+that emits the event is a default implementation that can only be accessed from an implementation.
+
+DO NOT Re-implement the `emitNFTUpdated` function
+in your contract or you will lose access to the ability to emit the standard event.
+
+This function could be called from within a `Collection`
 resource when a piece of metadata on an owned NFT is updated. For example,
 if a developer wanted to track the time of the latest transfer for each NFT,
 they could do it in the `deposit()` function:
 
 ```cadence
-access(all) resource Collection: NonFungibleToken.Collection {
+access(all) contract ExampleNFT {
+    access(all) resource Collection: NonFungibleToken.Collection {
 
-    access(contract) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
+        access(contract) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
 
-    ...
+        ...
 
-    /// deposit takes a NFT and adds it to the collections dictionary
-    /// and adds the ID to the id array
-    access(all) fun deposit(token: @{NonFungibleToken.NFT}) {
-        let token <- token as! @ExampleNFT.NFT
+        /// deposit takes a NFT and adds it to the collections dictionary
+        /// and adds the ID to the id array
+        access(all) fun deposit(token: @{NonFungibleToken.NFT}) {
+            let token <- token as! @ExampleNFT.NFT
 
-        let id = token.id
+            let id = token.id
 
-        // add the new token to the dictionary which removes the old one
-        let oldToken <- self.ownedNFTs[token.id] <- token
-        destroy oldToken
+            // add the new token to the dictionary which removes the old one
+            let oldToken <- self.ownedNFTs[token.id] <- token
+            destroy oldToken
 
-        // Get an authorized reference to the NFT so that
-        // the update transfer date function can be called
-        // and the emitNFTUpdated function can be called
-        let authTokenRef = (&self.ownedNFTs[id] as auth(Update | Owner) &{NonFungibleToken.NFT}?)!
-        authTokenRef.updateTransferDate(date: getCurrentBlock().timestamp)
-        NonFungibleToken.emitNFTUpdated(authTokenRef)
+            // Get an authorized reference to the NFT so that
+            // the update transfer date function can be called
+            // and the emitNFTUpdated function can be called
+            let authTokenRef = (&self.ownedNFTs[id] as auth(NonFungibleToken.Update) &{NonFungibleToken.NFT}?)!
+            authTokenRef.updateTransferDate(date: getCurrentBlock().timestamp)
+
+            // EMIT THE UPDATED EVENT
+            // Note: You have to use your own contract's name for the call
+            // because the code that emits the event is a default implementation
+            // DO NOT Re-implement the `emitNFTUpdated` function or you will lose
+            // access to the ability to emit the standard event
+            ExampleNFT.emitNFTUpdated(authTokenRef)
+        }
+
+        ...
     }
-
     ...
 }
 ```
@@ -564,6 +594,17 @@ which enforce that a function does not modify any state.
 The default view functions will be enforced by the token standard,
 but if your project has any other getter functions that aren't in the standard
 and don't modify any state, then you should add `view` to these functions.
+
+Style Tip: The recommended style for view functions is to put the `view` keyword
+after the access specification instead of before, like this:
+
+```cadence
+/// Recommended
+access(all) view fun getIDs(): [UInt64] {
+
+/// NOT Recommended
+view access(all) fun getIDs(): [UInt64] {
+```
 
 ### Remove Restricted Types
 

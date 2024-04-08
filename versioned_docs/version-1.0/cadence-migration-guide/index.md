@@ -88,7 +88,9 @@ Additionally you can use the [Cadence VSCode Extension](https://developers.flow.
 
 ### Using Cadence 1.0 in VSCode
 
-The Cadence VSCode Plugin now supports Cadence 1.0. Instantly identify and learn about all the changes you need to make to become Crescendo ready.
+The [Cadence VSCode Extension](https://marketplace.visualstudio.com/items?itemName=onflow.cadence) now supports Cadence 1.0. Instantly identify and learn about all the changes you need to make to become Crescendo ready.
+
+![Cadence 1.0 in VSCode](./vscode-cadence-1.0.gif)
 
 ### Test Code Changes on Crescendo Previewnet
 

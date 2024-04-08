@@ -417,3 +417,29 @@ ref.id = 2
 <Callout type="info">
 Invalidations of storage references are not statically caught, but only at run-time.
 </Callout>
+
+## Dereferencing values
+
+Primitive values (and arrays or dictionaries of primitive values) can be "de-referenced" using the unary `*` operator. 
+This operation produces a copy of the referenced value, so e.g. given some example code:
+
+```cadence 
+var x = 3
+let ref: &Int = &x
+var y = *ref
+y = y + 1
+```
+
+At the end of the execution of this code, `y` will clearly be `4`, but `x` will still be `3`, as the `*ref` operation copies 
+the value. This can be seen even more clearly using an example with arrays:
+
+```cadence 
+let x = [0]
+let ref: &[Int] = &x
+var y = *ref
+y.append(1)
+```
+
+At the end of this execution, `y` will contain `[0, 1]`, while `x` will remain `[0]` only.
+
+References to non-primitive values (e.g. structs, resources, contracts and enums) cannot be dereferenced.

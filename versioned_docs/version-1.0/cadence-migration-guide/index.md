@@ -79,7 +79,7 @@ This [video guide](https://www.loom.com/share/4467610b7beb4ebbaabed6b430dc25c4?s
 
 Run the following command to install the CLI version with support for Cadence 1.0.
 
-- Linux/MacOS: `sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.sh)`
+- Linux/MacOS: `sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.sh)"`
 - Windows: `iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.ps1') }"`
 
 The Cadence 1.0 CLI will now be installed on your machine and can be accessed via the flow-c1 command. To verify the installation, run: `flow-c1 version`

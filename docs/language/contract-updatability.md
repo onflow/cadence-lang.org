@@ -400,7 +400,7 @@ A contract may import declarations (types, functions, variables, etc.) from othe
 already validated at the time of their deployment. Hence, there is no need for validating any declaration every time
 they are imported.
 
-# Cadence 1.0 Contract Updates
+## Cadence 1.0 Contract Updates
 
 For the upcoming network upgrade that will update the Cadence version to 1.0, all contracts will need to be upgraded to Cadence 1.0.
 Numerous changes have been made to the language, and many types and patterns that were previously valid are no longer permitted, or behave differently.

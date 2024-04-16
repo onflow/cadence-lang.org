@@ -183,8 +183,8 @@ They have the clearest understanding of the code paths and edge cases.
 
 Tests should be **mandatory**, not optional, even if the contract is copied from somewhere else.
 There should be thorough emulator unit tests in the public repo.
-[See the flow fungible token repo](https://github.com/onflow/flow-ft/tree/master/lib/js/test)
-for an example of unit tests in javascript.
+[See the flow fungible token repo](https://github.com/onflow/flow-ft/tree/master/tests)
+for an example of unit tests in cadence.
 
 
 Every time there is a new Cadence version or emulator version,

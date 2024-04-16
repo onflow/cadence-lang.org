@@ -4,6 +4,19 @@ sidebar_position: 1
 sidebar_label: Cadence 1.0 Migration Guide
 ---
 
+<div style={{position: "relative", paddingBottom: "56.25%", height: 0}}>
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/3WH5Bz56xPI"
+    title="Cadence 1.0 E2E Migration Guide"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}}
+  ></iframe>
+</div>
+
 This upgrade roadmap offers developers guidance, actionable steps, and expectations around updating your project to be compatible with Cadence 1.0.
 
 The Cadence 1.0 release is a breaking change – developers need to update all Cadence code used by their app (including all existing smart contracts deployed on Flow) to Cadence 1.0, to ensure it continues to work after the network upgrade.

@@ -5,8 +5,6 @@ sidebar_label: Cadence 1.0 Migration Guide
 ---
 
 <iframe
-  width="560"
-  height="315"
   src="https://www.youtube.com/embed/3WH5Bz56xPI"
   title="YouTube video player"
   frameborder="0"

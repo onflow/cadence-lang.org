@@ -258,17 +258,6 @@ access(all) resource Collection: NonFungibleToken.Collection {
 `NonFungibleToken.Collection` will be automatically migrated to use the interface type `{NonFungibleToken.Collection}`
 as part of the Flow team's custom state migrations.
 
-### Change the access specification of `ownedNFTs` to `access(contract)`
-
-This one is EXTREMELY important. With the addition of entitlements and safe downcasting,
-now anyone with a reference to your collection can downcast it to its concrete type
-even if the reference is just of an interface type. This means that you have to be
-very careful about which fields and functions are declared as public.
-
-`ownedNFTs` used to be `access(all)`, but it should be changed to `access(contract)`
-which means that only code from your contract can access it.
-If this isn't done, then anyone would be able to access that field, which could be dangerous.
-
 ### Remove Project-Specific Events
 
 Standard events are being added to the token standards! These are events
@@ -372,12 +361,6 @@ These function requirements were added to [`NFT`](https://github.com/onflow/flow
 and [`Collection`](https://github.com/onflow/flow-nft/pull/126/files#diff-0f42f974b7e6311f474d087fea60fbd57b5fda90294853811e492f965da21d36R203-R206)
 so that holders of any of those objects could create a new collection of the correct type,
 no matter if they imported the contract or knew the type ahead of time.
-
-### Make Collection.ownedNFTs access(contract)
-
-`ownedNFTs` was removed as a requirement for Collections, so this change is completely optional,
-but it is recommended to make fields and functions as restrictive as possible,
-so `ownedNFTs` should be `access(contract)`
 
 ### Add getSupportedNFTTypes() and isSupportedNFTType()
 

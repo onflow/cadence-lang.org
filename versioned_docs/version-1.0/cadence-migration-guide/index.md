@@ -168,9 +168,9 @@ To test the migration, first you would need an emulator state, created with an e
 2. **Migrate**
    1. Download and install the latest CLI, that runs Cadence 1.0.
    2. Run `flow-c1 migrate` against the previously created state. The state file (emulator.sqlite) can be provided using the `--db-path` flag.
-   3. If there are any contracts that also need to be upgraded, those can be specified using the `--contracts` flag. Note that, the paths to these updated contracts and their deployed addresses must be specified in the flow.json file.  (see (Flow CLI documentation about contract deployments)[https://developers.flow.com/tools/flow-cli/deployment/project-contracts#define-contract-deployment-targets] for more info)
+   3. If there are any contracts that also need to be upgraded, those can be specified using the `--contracts` flag. Note that, the paths to these updated contracts and their deployed addresses must be specified in the flow.json file. (see (Flow CLI documentation about contract deployments)[https://developers.flow.com/tools/flow-cli/deployment/project-contracts#define-contract-deployment-targets] for more info)
    4. A sample migrate command would look like:
-   `flow-c1 migrate state --db-path=/path/to/emulator.sqlite --save-report=./reports --contracts="Test"`
+      `flow-c1 migrate state --db-path=/path/to/emulator.sqlite --save-report=./reports --contracts="Test"`
 3. **Testing the Migrated State**
    Once the migration is completed successfully, the emulator can be started with the migrated state. For that, ensure the emulator is started again using the new CLI version (that runs Cadence 1.0), with the `--persist` flag. Now the emulator should be up and running using the migrated state and the updated contracts.
 
@@ -249,6 +249,8 @@ A response of true indicates that your contract has been successfully staged and
 
 - [Flow.com FAQ](https://flow.com/upgrade/crescendo/cadence-1#faq)
 
+- [Cadence 1.0 Breaking Improvements](./breaking-improvements.md)
+
 - [Update on Cadence 1.0](https://forum.flow.com/t/update-on-cadence-1-0/5197/1)
 
 - [Cadence 1.0 Upgrade Plan](https://forum.flow.com/t/cadence-1-0-upgrade-plan/5477)
@@ -309,7 +311,7 @@ A response of true indicates that your contract has been successfully staged and
 
 - [Cadence Test Framework](../testing-framework.mdx)
 
-- [Contract Browser](https://contractbrowser.com/](https://contractbrowser.com/))
+- [Contract Browser](<https://contractbrowser.com/](https://contractbrowser.com/)>)
 
 - [Staging a 1.0 Contract](https://developers.flow.com/tools/flow-cli/migrate/migrate-stage-contract)
 

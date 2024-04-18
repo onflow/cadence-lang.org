@@ -63,7 +63,6 @@ After:
 The function `getCount` does not perform any state changes, it only reads the length of the collection and returns it. Therefore it can be marked as `view.`
 
 ```cadence
-
     access(all)
     view fun getCount(): Int {
 //  ^^^^ addedreturnself.ownedNFTs.length
@@ -93,14 +92,14 @@ With interface inheritance, the `Vault` interface can now inherit/conform to t
 ```cadence
 access(all)
 resource interface Receiver {
-    access(all)
-    fun deposit(_ something:@AnyResource)
+  access(all)
+  fun deposit(_ something:@AnyResource)
 }
 
 access(all)
 resource interface Vault: Receiver {
-    access(all)
-    fun withdraw(_ amount: Int):@Vault
+  access(all)
+  fun withdraw(_ amount: Int):@Vault
 }
 ```
 
@@ -179,7 +178,7 @@ resource interface Collection {
   access(all)
   fun withdraw(id: UInt64):@NFT {
     post {
-          getCount() == before(getCount()) - 1
+      getCount() == before(getCount()) - 1
     }
   }
 
@@ -250,19 +249,18 @@ The initializer of `TestContract.TestStruct` expects the argument labels `fir
 However, the call of the initializer provides the incorrect argument label `wrong` for the first argument, and is missing the label for the second argument.
 
 ```cadence
-
-// Scriptimport TestContract from 0x1
+// Script
+import TestContract from 0x1
 
 access(all)
 fun main() {
-    TestContract.TestStruct(wrong: 123, "abc")
+  TestContract.TestStruct(wrong: 123, "abc")
 }
 ```
 
 This now results in the following errors:
 
-```go
-
+```
 error: incorrect argument label
   --> script:4:34
    |
@@ -274,17 +272,17 @@ error: missing argument label: `second`
    |
  4 |           TestContract.TestStruct(wrong: 123, "abc")
    |                                               ^^^^^
-
 ```
 
 **Corrected program**:
 
 ```cadence
+// Script
+import TestContract from 0x1
 
-// Scriptimport TestContract from 0x1
 access(all)
 fun main() {
-    TestContract.TestStruct(first: 123, second: "abc")
+  TestContract.TestStruct(first: 123, second: "abc")
 }
 ```
 
@@ -485,7 +483,7 @@ fun curriedAdd(_ x: Int): fun(Int): Int {
 
 To further bring the syntax for function types closer to the syntax of function declarations expressions, it is now possible to omit the return type, in which case the return type defaults to `Void`.
 
-```rust
+```cadence
 fun logTwice(_ value: AnyStruct) {// Return type is implicitly `Void`
   log(value)
   log(value)
@@ -498,15 +496,13 @@ let logTwice2: fun(AnyStruct) = logTwice
 
 As a bonus consequence, it is now allowed for any type to be parenthesized. This is useful for complex type signatures, or for expressing optional functions:
 
-```rust
-
+```cadence
 // A function that returns an optional Int16
 let optFun1: fun (Int8): Int16? =
   fun (_: Int8): Int? { return nil }
 
 // An optional function that returns an Int16
 let optFun2: (fun (Int8): Int16)? = nil
-
 ```
 
 This improvement was proposed in \*\*\*\*[FLIP 43](https://github.com/onflow/flips/blob/main/cadence/20221018-change-fun-type-syntax.md).
@@ -517,7 +513,7 @@ Programs that use the old function type syntax need to be updated by replacing t
 
 **Before:**
 
-```rust
+```cadence
 let baz: ((Int8, String): Int16) = foo
       // ^                     ^
       // surrounding parentheses of function type
@@ -1329,7 +1325,7 @@ This improvement was proposed in two FLIPs:
 As mentioned in the previous section, the most notable change in this improvement is that, when a field/element is accessed through a reference, a reference to the accessed inner object is returned, instead of the actual object. So developers would need to change their code to:
 
 - Work with references, instead of the actual object, when accessing nested objects through a reference.
-- Use proper entitlements for fields when they declare their ow `struct` and `resource` types.
+- Use proper entitlements for fields when they declare their own `struct` and `resource` types.
 
 #### ✨ Example
 
@@ -1337,16 +1333,16 @@ Consider the below resource collection:
 
 ```cadence
 pub resource MasterCollection {
-    publet kittyCollection:@Collection
-    publet topshotCollection:@Collection
+  pub let kittyCollection:@Collection
+  pub let topshotCollection:@Collection
 }
 
 pub resource Collection {
-    pub(set)var id: String
+  pub(set)var id: String
 
-    access(all)var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
+  access(all)var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
-    access(all) fun deposit(token:@NonFungibleToken.NFT) {... }
+  access(all) fun deposit(token:@NonFungibleToken.NFT) {... }
 }
 ```
 
@@ -1368,21 +1364,21 @@ Once this change is introduced, the above collection can be re-written as below:
 
 ```cadence
 pub resource MasterCollection {
-    access(KittyCollectorMapping)
-let kittyCollection:@Collection
+  access(KittyCollectorMapping)
+  let kittyCollection:@Collection
 
-    access(TopshotCollectorMapping)
-let topshotCollection:@Collection
+  access(TopshotCollectorMapping)
+  let topshotCollection:@Collection
 }
 
 pub resource Collection {
-    pub(set)var id: String
+  pub(set)var id: String
 
-    access(Identity)
-var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
+  access(Identity)
+  var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
-    access(Insert)
-    fun deposit(token:@NonFungibleToken.NFT) {/* ... */ }
+  access(Insert)
+  fun deposit(token:@NonFungibleToken.NFT) {/* ... */ }
 }
 
 // Entitlements and mappings for `kittyCollection`
@@ -1390,8 +1386,8 @@ var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 entitlement KittyCollector
 
 entitlement mapping KittyCollectorMapping {
-    KittyCollector -> Insert
-    KittyCollector -> Remove
+  KittyCollector -> Insert
+  KittyCollector -> Remove
 }
 
 // Entitlements and mappings for `topshotCollection`
@@ -1399,8 +1395,8 @@ entitlement mapping KittyCollectorMapping {
 entitlement TopshotCollector
 
 entitlement mapping TopshotCollectorMapping {
-    TopshotCollector -> Insert
-    TopshotCollector -> Remove
+  TopshotCollector -> Insert
+  TopshotCollector -> Remove
 }
 ```
 
@@ -1425,7 +1421,7 @@ destroy ownedNFTsRef.insert(key: 1234,<-nft)
 To perform these operations on the reference, one would need to have obtained a reference with proper entitlements:
 
 ```cadence
-var masterCollectionRef: auth{KittyCollector}&MasterCollection<-...// Directly updating the field
+var masterCollectionRef: auth{KittyCollector}&MasterCollection<-... // Directly updating the field
 masterCollectionRef.kittyCollection.id= "NewID"
 
 // Updating the dictionary
@@ -1491,22 +1487,20 @@ A contract interface like the one below (`SomeInterface`) used a type requiremen
 
 ```cadence
 contract interface SomeInterface {
+  event Foo()
+//^^^^^^^^^^^ type requirement
 
-    event Foo()
-// ^^^^^^^^^^^ type requirement
-
-    fun inheritedFunction()
+  fun inheritedFunction()
 }
 
 contract MyContract: SomeInterface {
+  event Foo()
+//^^^^^^^^^^^ type definition to satisfy type requirement
 
-    event Foo()
-//  ^^^^^^^^^^^ type definition to satisfy type requirement
-
-    fun inheritedFunction() {
-// ...
-        emit Foo()
-    }
+  fun inheritedFunction() {
+//  ...
+    emit Foo()
+  }
 }
 ```
 
@@ -1516,15 +1510,14 @@ This can be rewritten to emit the event directly from the interface, so that any
 
 ```cadence
 contract interface Intf {
+  event Foo()
+//^^^^^^^^^^^ type definition
 
-    event Foo()
-// ^^^^^^^^^^^ type definition
-
-    fun inheritedFunction() {
-       pre {
-          emit Foo()
-       }
+  fun inheritedFunction() {
+    pre {
+      emit Foo()
     }
+  }
 }
 ```
 
@@ -1554,21 +1547,26 @@ A pair of resources previously written as:
 
 ```cadence
 eventE(id:Int)
-resourceSubResource {
-let id:Intinit(id: Int) {
-        self.id = id
-    }
-destroy() {
-       emitE(id: self.id)
-    }
+
+resource SubResource {
+  let id:Int
+  init(id: Int) {
+    self.id = id
+  }
+
+  destroy() {
+    emitE(id: self.id)
+  }
 }
+
 resource R {
-let subR: @SubResourceinit(id: Int) {
-      self.subR <- createSubResource(id: id)
-   }
-destroy() {
-      destroy self.subR
-   }
+  let subR: @SubResourceinit(id: Int) {
+    self.subR <- createSubResource(id: id)
+  }
+
+  destroy() {
+    destroy self.subR
+  }
 }
 ```
 
@@ -1576,16 +1574,18 @@ can now be equivalently written as:
 
 ```cadence
 resource SubResource {
-    event ResourceDestroyed(id: Int=self.id)
-let id: Int
-init(id: Int) {
-self.id= id
-    }
+  event ResourceDestroyed(id: Int=self.id)
+  let id: Int
+
+  init(id: Int) {
+    self.id= id
+  }
 }
+
 resource R {
-let subR:@SubResourceinit(id: Int) {
-self.subR<- create SubResource(id: id)
-   }
+  let subR:@SubResourceinit(id: Int) {
+    self.subR <- create SubResource(id: id)
+  }
 }
 ```
 
@@ -1611,25 +1611,21 @@ Contracts that use `KeyList` need to update the calls to `verify` by adding 
 
 A previous call to `KeyList`’s `verify` is written as:
 
-```php
-
+```cadence
 let isValid = keyList.verify(
-    signatureSet: signatureSet,
-    signedData: signedData
+  signatureSet: signatureSet,
+  signedData: signedData
 )
-
 ```
 
 can now be equivalently written as:
 
-```php
-
+```cadence
 let isValid = keyList.verify(
-    signatureSet: signatureSet,
-    signedData: signedData,
-    domainSeparationTag: "FLOW-V0.0-user"
+  signatureSet: signatureSet,
+  signedData: signedData,
+  domainSeparationTag: "FLOW-V0.0-user"
 )
-
 ```
 
 Instead of the existing hardcoded domain separation tag, a new domain tag can be defined, but it has to be also used when generating valid signatures, e.g. `"my_app_custom_domain_tag"`.

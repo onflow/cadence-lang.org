@@ -1588,14 +1588,19 @@ Instead of the existing hardcoded domain separation tag, a new domain tag can be
 
 </details>
 
-<details>
+### FT / NFT Standard changes
 
-<summary>FT / NFT Standard changes (Still WIP)</summary>
+In addition to the language changes, the Crescendo upgrade also includes breaking changes to core contracts - such as the FungibleToken and NonFungibleToken standards. All Fungible & Non-Fungible Token contracts will need to be updated to the new standard.
 
-The Fungible Token and Non-Fungible Token Standard interfaces are being upgraded to allow for multiple tokens per contract, fix some issues with the original standards, and introduce other various improvements suggested by the community.
-Original Proposal: [http://forum.flow.com/t/streamlined-token-standards-proposal/3075](http://forum.flow.com/t/streamlined-token-standards-proposal/3075)
-Fungible Token Changes PR: [WIP: V2 FungibleToken Standard by joshuahannan · Pull Request #77 · onflow/flow-ft · GitHub 5](https://github.com/onflow/flow-ft/pull/77)
-NFT Changes PR: [https://github.com/onflow/flow-nft/pull/126 8](https://github.com/onflow/flow-nft/pull/126)
-The changes and the FLIP are still a work in progress, so the expected actions that developers will need to take are not yet finalized, but it will involve upgrading your token contracts with changes to events, function signatures, resource interface conformances, and other small changes. More examples coming soon.
+These interfaces are being upgraded to allow for multiple tokens per contract, fix some issues with the original standards, and introduce other various improvements suggested by the community.
 
-</details>
+- Original Proposal: [http://forum.flow.com/t/streamlined-token-standards-proposal/3075](http://forum.flow.com/t/streamlined-token-standards-proposal/3075)
+- Fungible Token Changes PR: [WIP: V2 FungibleToken Standard by joshuahannan · Pull Request #77 · onflow/flow-ft · GitHub 5](https://github.com/onflow/flow-ft/pull/77)
+- NFT Changes PR: [https://github.com/onflow/flow-nft/pull/126 8](https://github.com/onflow/flow-nft/pull/126)
+
+It will involve upgrading your token contracts with changes to events, function signatures, resource interface conformances, and other small changes.
+
+There are some existing guides for upgrading your token contracts to the new standard:
+
+- [Upgrading Fungible Token Contracts](./ft-guide.mdx)
+- [Upgrading Non-Fungible Token Contracts](./nft-guide.mdx)

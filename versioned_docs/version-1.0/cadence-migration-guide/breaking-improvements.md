@@ -40,7 +40,6 @@ Before:
 The function `getCount` of a hypothetical NFT collection returns the number of NFTs in the collection.
 
 ```cadence
-
 access(all)
 resource Collection {
 
@@ -58,7 +57,6 @@ resource Collection {
 
   /* ... rest of implementation ... */
 }
-
 ```
 
 After:
@@ -70,7 +68,6 @@ The function `getCount` does not perform any state changes, it only reads the 
     view fun getCount(): Int {
 //  ^^^^ addedreturnself.ownedNFTs.length
     }
-
 ```
 
 </details>
@@ -260,7 +257,6 @@ access(all)
 fun main() {
     TestContract.TestStruct(wrong: 123, "abc")
 }
-
 ```
 
 This now results in the following errors:
@@ -290,7 +286,6 @@ access(all)
 fun main() {
     TestContract.TestStruct(first: 123, second: "abc")
 }
-
 ```
 
 We would like to thank community member @justjoolz for reporting this bug.
@@ -616,14 +611,12 @@ resource Vault: Provider, Receiver, Balance {
   access(all)
   var balance: UFix64
 }
-
 ```
 
 **After:**
 The `Vault` resource might now be written like this:
 
 ```cadence
-
 access(all) entitlement Withdraw
 
 access(all)
@@ -788,7 +781,6 @@ fun exampleFun(param: &T{X, Y, Z}) {
   // `param` cannot call `qux` here, because it is restricted to
   // `X`, `Y` and `Z`.
 }
-
 ```
 
 **After:**
@@ -828,7 +820,6 @@ access(all)
 fun exampleFun(param: &T) {
   // `param` still cannot call `qux` here, because it lacks entitlement `Q`
 }
-
 ```
 
 Any functions on `T` that the author of `T` does not want users to be able to call publicly should be defined with entitlements, and thus will not be accessible to the unauthorized `param` reference, like with `qux` above.
@@ -941,13 +932,11 @@ To learn more, please refer to the [documentation](https://developers.flow.com/
 **Before:**
 
 ```cadence
-
 transaction(encodedPublicKey: [UInt8]) {
   prepare(signer: AuthAccount) {
     signer.addPublicKey(encodedPublicKey)
   }
 }
-
 ```
 
 **After:**
@@ -1008,7 +997,6 @@ New programs do not need workarounds anymore, and can be written naturally.
 Programs that previously resolved the incorrect resource loss error with a workaround, for example by invalidating the resource also in the else-branch or after the if-statement, are now invalid:
 
 ```cadence
-
 fun test() {
   let r <- createR()
   let optR <-asOpt(<-r)
@@ -1061,7 +1049,6 @@ New programs do not need workarounds anymore, and can be written naturally.
 Programs that previously resolved the incorrect error with a workaround, for example by adding an additional exit at the end of the function, are now invalid:
 
 ```cadence
-
 resource R {}
 
 fun mint(id: UInt64):@R {
@@ -1189,7 +1176,6 @@ ref.id = 2
 However, not all scenarios can be detected statically. e.g:
 
 ```cadence
-
 fun test(ref: &R) {
   ref.id = 2
 }
@@ -1350,7 +1336,6 @@ As mentioned in the previous section, the most notable change in this improvemen
 Consider the below resource collection:
 
 ```cadence
-
 pub resource MasterCollection {
     publet kittyCollection:@Collection
     publet topshotCollection:@Collection
@@ -1363,13 +1348,11 @@ pub resource Collection {
 
     access(all) fun deposit(token:@NonFungibleToken.NFT) {... }
 }
-
 ```
 
 Earlier, it was possible to mutate the inner collections, even if someone only had a reference to the `MasterCollection`. e.g:
 
 ```cadence
-
 var masterCollectionRef:&MasterCollection=...// Directly updating the field
 masterCollectionRef.kittyCollection.id= "NewID"
 
@@ -1384,7 +1367,6 @@ destroy ownedNFTsRef.insert(key: 1234,<-nft)
 Once this change is introduced, the above collection can be re-written as below:
 
 ```cadence
-
 pub resource MasterCollection {
     access(KittyCollectorMapping)
 let kittyCollection:@Collection
@@ -1420,13 +1402,11 @@ entitlement mapping TopshotCollectorMapping {
     TopshotCollector -> Insert
     TopshotCollector -> Remove
 }
-
 ```
 
 Then for a reference with no entitlements, none of the previously mentioned operations would be allowed:
 
 ```cadence
-
 var masterCollectionRef:&MasterCollection<-...// Error: Cannot update the field. Doesn't have sufficient entitlements.
 masterCollectionRef.kittyCollection.id= "NewID"
 
@@ -1445,7 +1425,6 @@ destroy ownedNFTsRef.insert(key: 1234,<-nft)
 To perform these operations on the reference, one would need to have obtained a reference with proper entitlements:
 
 ```cadence
-
 var masterCollectionRef: auth{KittyCollector}&MasterCollection<-...// Directly updating the field
 masterCollectionRef.kittyCollection.id= "NewID"
 
@@ -1511,7 +1490,6 @@ Contract interfaces that previously used type requirements to enforce that concr
 A contract interface like the one below (`SomeInterface`) used a type requirement to enforce that contracts which implement the interface also define a certain event (`Foo`):
 
 ```cadence
-
 contract interface SomeInterface {
 
     event Foo()
@@ -1530,7 +1508,6 @@ contract MyContract: SomeInterface {
         emit Foo()
     }
 }
-
 ```
 
 **After:**
@@ -1538,7 +1515,6 @@ contract MyContract: SomeInterface {
 This can be rewritten to emit the event directly from the interface, so that any contracts that implement `Intf` will always emit `Foo` when `inheritedFunction` is called:
 
 ```cadence
-
 contract interface Intf {
 
     event Foo()
@@ -1550,7 +1526,6 @@ contract interface Intf {
        }
     }
 }
-
 ```
 
 </details>
@@ -1578,7 +1553,6 @@ Contracts that previously used destroy methods will need to remove them, and pot
 A pair of resources previously written as:
 
 ```cadence
-
 eventE(id:Int)
 resourceSubResource {
 let id:Intinit(id: Int) {
@@ -1596,13 +1570,11 @@ destroy() {
       destroy self.subR
    }
 }
-
 ```
 
 can now be equivalently written as:
 
 ```cadence
-
 resource SubResource {
     event ResourceDestroyed(id: Int=self.id)
 let id: Int
@@ -1615,7 +1587,6 @@ let subR:@SubResourceinit(id: Int) {
 self.subR<- create SubResource(id: id)
    }
 }
-
 ```
 
 </details>

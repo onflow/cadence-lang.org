@@ -45,18 +45,18 @@ access(all)
 resource Collection {
 
   access(all)
-	var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
+  var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
-	init () {
-		self.ownedNFTs<- {}
+  init () {
+    self.ownedNFTs<- {}
   }
 
   access(all)
   fun getCount(): Int {
-		returnself.ownedNFTs.length
+    returnself.ownedNFTs.length
   }
 
-	/* ... rest of implementation ... */
+  /* ... rest of implementation ... */
 }
 
 ```
@@ -112,10 +112,10 @@ Thus, anyone implementing the `Vault` interface would also have to implement t
 ```cadence
 access(all)
 resource MyVault: Vault {
-	// Required!
+  // Required!
   access(all)
   fun withdraw(_ amount: Int):@Vault {}
-	// Required!
+  // Required!
   access(all)
   fun deposit(_ something:@AnyResource) {}
 }
@@ -186,7 +186,7 @@ resource interface Collection {
     }
   }
 
-	/* ... rest of interface ... */
+  /* ... rest of interface ... */
 }
 ```
 
@@ -230,17 +230,17 @@ access(all)
 contract TestContract {
 
   access(all)
-	structTestStruct {
+  structTestStruct {
 
   access(all)
   let a: Int
 
   access(all)
-	let b: String
+  let b: String
 
-	init(first: Int, second: String) {
-		self.a = first
-		self.b = second
+  init(first: Int, second: String) {
+    self.a = first
+    self.b = second
     }
   }
 }
@@ -481,8 +481,8 @@ The `:` token is right-associative, so functions that return other functions c
 
 ```cadence
 fun curriedAdd(_ x: Int): fun(Int): Int {
-	return fun(_ y: Int): Int {
-		return x+ y
+  return fun(_ y: Int): Int {
+    return x+ y
   }
 }
 // function `curriedAdd` has the type `fun(Int): fun(Int): Int`
@@ -492,8 +492,8 @@ To further bring the syntax for function types closer to the syntax of function 
 
 ```rust
 fun logTwice(_ value: AnyStruct) {// Return type is implicitly `Void`
-	log(value)
-	log(value)
+  log(value)
+  log(value)
 }
 
 // The function types of these variables are equivalent
@@ -507,7 +507,7 @@ As a bonus consequence, it is now allowed for any type to be parenthesized. This
 
 // A function that returns an optional Int16
 let optFun1: fun (Int8): Int16? =
-	fun (_: Int8): Int? { return nil }
+  fun (_: Int8): Int? { return nil }
 
 // An optional function that returns an Int16
 let optFun2: (fun (Int8): Int16)? = nil
@@ -524,8 +524,8 @@ Programs that use the old function type syntax need to be updated by replacing t
 
 ```rust
 let baz: ((Int8, String): Int16) = foo
-			// ^                     ^
-			// surrounding parentheses of function type
+      // ^                     ^
+      // surrounding parentheses of function type
 ```
 
 **After:**
@@ -595,26 +595,26 @@ The `Vault` resource was originally written like so:
 ```cadence
 access(all)
 resource interface Provider {
-	access(all)
+  access(all)
   funwithdraw(amount:UFix64): @Vault {
-	// ...
+  // ...
   }
 }
 
 access(all)
 resource Vault: Provider, Receiver, Balance {
-	access(all)
+  access(all)
   fun withdraw(amount:UFix64): @Vault {
-	// ...
+  // ...
   }
 
-	access(all)
+  access(all)
   fun deposit(from: @Vault) {
-	// ...
+  // ...
   }
 
-	access(all)
-	var balance: UFix64
+  access(all)
+  var balance: UFix64
 }
 
 ```
@@ -628,27 +628,27 @@ access(all) entitlement Withdraw
 
 access(all)
 resource interface Provider {
-	access(Withdraw)
+  access(Withdraw)
   funwithdraw(amount:UFix64): @Vault {
-	// ...
+  // ...
   }
 }
 
 access(all)
 resource Vault: Provider, Receiver, Balance {
 
-	access(Withdraw)// withdrawal requires permission
+  access(Withdraw)// withdrawal requires permission
   fun withdraw(amount:UFix64): @Vault {
-	// ...
+  // ...
   }
 
-	access(all)
+  access(all)
   fun deposit(from: @Vault) {
-	// ...
+  // ...
   }
 
-	access(all)
-	var balance: UFix64
+  access(all)
+  var balance: UFix64
 }
 ```
 
@@ -695,9 +695,9 @@ pub resource interface Collection {
 
   priv fun myPrivateFunction()
 
-	pub(set) let settableInt: Int
+  pub(set) let settableInt: Int
 
-	/* ... rest of interface ... */
+  /* ... rest of interface ... */
 }
 ```
 
@@ -708,20 +708,20 @@ The same behavior can be achieved with `access(all)` and `access(self)`
 access(all)
 resource interface Collection {
 
-	access(all)
-	fun getCount(): Int
+  access(all)
+  fun getCount(): Int
 
-	access(self)
-	fun myPrivateFunction()
+  access(self)
+  fun myPrivateFunction()
 
-	access(all)
-	let settableInt: Int
+  access(all)
+  let settableInt: Int
 
-	// Add a public setter method, replacing pub(set)
-	access(all)
-	fun setIntValue(_ i:Int): Int
+  // Add a public setter method, replacing pub(set)
+  access(all)
+  fun setIntValue(_ i:Int): Int
 
-	/* ... rest of interface ... */
+  /* ... rest of interface ... */
 }
 ```
 
@@ -758,35 +758,35 @@ This function accepted a reference to a `T` value, but restricted what functio
 ```cadence
 access(all)
 resource interface X {
-	access(all)
+  access(all)
   fun foo()
 }
 
 access(all)
 resource interface Y {
-	access(all)
+  access(all)
   fun bar()
 }
 
 access(all)
 resource interface Z {
-	access(all)
+  access(all)
   fun baz()
 }
 
 access(all)
 resource T: X, Y, Z {
-	// implement interfaces
-	access(all)
+  // implement interfaces
+  access(all)
   fun qux() {
-	// ...
+  // ...
   }
 }
 
 access(all)
 fun exampleFun(param: &T{X, Y, Z}) {
-	// `param` cannot call `qux` here, because it is restricted to
-	// `X`, `Y` and `Z`.
+  // `param` cannot call `qux` here, because it is restricted to
+  // `X`, `Y` and `Z`.
 }
 
 ```
@@ -797,18 +797,18 @@ This function can be safely rewritten as:
 ```cadence
 access(all)
 resource interface X {
-	access(all)
+  access(all)
   fun foo()
 }
 
 access(all)
 resource interface Y {
-	access(all)
+  access(all)
   fun bar()
 }
 
 resource interface Z {
-	access(all)
+  access(all)
   fun baz()
 }
 
@@ -817,16 +817,16 @@ entitlement Q
 
 access(all)
 resource T: X, Y, Z {
-	// implement interfaces
-	access(Q)
+  // implement interfaces
+  access(Q)
   fun qux() {
-	// ...
+  // ...
   }
 }
 
 access(all)
 fun exampleFun(param: &T) {
-	// `param` still cannot call `qux` here, because it lacks entitlement `Q`
+  // `param` still cannot call `qux` here, because it lacks entitlement `Q`
 }
 
 ```
@@ -902,7 +902,7 @@ transaction {
   prepare(signer: auth(SaveValue)&Account) {
     signer.storage.save("Test", to: /storage/test)
     signer.keys.add(/* ... */)
-		//          ^^^ Error: Cannot call function, requires `AddKey` or `Keys` entitlement
+    //          ^^^ Error: Cannot call function, requires `AddKey` or `Keys` entitlement
   }
 }
 ```
@@ -957,11 +957,11 @@ transaction(publicKey: [UInt8]) {
   prepare(signer: auth(Keys) &Account) {
     signer.keys.add(
       publicKey: PublicKey(
-	      publicKey: publicKey,
+        publicKey: publicKey,
         signatureAlgorithm: SignatureAlgorithm.ECDSA_P256
       ),
-	    hashAlgorithm: HashAlgorithm.SHA3_256,
-		  weight: 100.0
+      hashAlgorithm: HashAlgorithm.SHA3_256,
+      weight: 100.0
     )
   }
 }
@@ -987,7 +987,7 @@ For example, the following program used to be invalid, reporting a resource loss
 ```cadence
 resource R {}
 fun asOpt(_ r: @R): @R? {
-	return <-r
+  return <-r
 }
 
 fun test() {
@@ -1010,11 +1010,11 @@ Programs that previously resolved the incorrect resource loss error with a worka
 ```cadence
 
 fun test() {
-	let r <- createR()
-	let optR <-asOpt(<-r)
-	if let r2 <- optR {
-	  destroy r2
-	} else {
+  let r <- createR()
+  let optR <-asOpt(<-r)
+  if let r2 <- optR {
+    destroy r2
+  } else {
     destroy optR
     // unnecessary, but added to avoid error
   }
@@ -1045,8 +1045,8 @@ This means that the following program is now accepted: both branches of the if-s
 resource R {}
 
 fun mint(id: UInt64):@R {
-	if id > 100 {
-		return <- create R()
+  if id > 100 {
+    return <- create R()
   } else {
     panic("bad id")
   }
@@ -1065,13 +1065,13 @@ Programs that previously resolved the incorrect error with a workaround, for exa
 resource R {}
 
 fun mint(id: UInt64):@R {
-	if id > 100 {
-		return <- create R()
+  if id > 100 {
+    return <- create R()
   } else {
     panic("bad id")
   }
 
-	// unnecessary, but added to avoid error
+  // unnecessary, but added to avoid error
   panic("unreachable")
 }
 ```
@@ -1081,9 +1081,9 @@ The improved type checker now detects and reports the unreachable code after the
 ```bash
 error: unreachable statement
 --> test.cdc:12:4
-	|
+  |
 12|  panic("unreachable")
-	|  ^^^^^^^^^^^^^^^^^^^^
+  |  ^^^^^^^^^^^^^^^^^^^^
 exit status 1
 ```
 
@@ -1119,9 +1119,9 @@ Previously, `values` would result in `[3, 3, 3]`, which might be surprising a
 // Capture the values of the array [1, 2, 3]
 let fs: [((): Int)] = []
 for x in [1, 2, 3] {
-	// Create a list of functions that return the array value
+  // Create a list of functions that return the array value
   fs.append(fun (): Int {
-		return x
+    return x
   })
 }
 
@@ -1191,7 +1191,7 @@ However, not all scenarios can be detected statically. e.g:
 ```cadence
 
 fun test(ref: &R) {
-	ref.id = 2
+  ref.id = 2
 }
 ```
 
@@ -1248,10 +1248,10 @@ resource interface HasCount {
 access(all)
 resource Counter: HasCount {
   access(all)
-	var count: Int
+  var count: Int
 
-	init(count: Int) {
-		self.count = count
+  init(count: Int) {
+    self.count = count
   }
 }
 ```
@@ -1262,12 +1262,12 @@ Granting access, before:
 transaction {
   prepare(signer: AuthAccount) {
     signer.save(
-	    <-create Counter(count: 42),
+      <-create Counter(count: 42),
       to: /storage/counter
     )
     signer.link<&{HasCount}>(
-	    /public/hasCount,
-	    target: /storage/counter
+      /public/hasCount,
+      target: /storage/counter
     )
   }
 }
@@ -1279,12 +1279,12 @@ Granting access, after:
 transaction {
   prepare(signer: auth(Storage, Capabilities)&Account) {
     signer.save(
-	    <-create Counter(count: 42),
+      <-create Counter(count: 42),
       to: /storage/counter
     )
-		let cap = signer.capabilities.storage.issue<&{HasCount}>(
-			/storage/counter
-		)
+    let cap = signer.capabilities.storage.issue<&{HasCount}>(
+      /storage/counter
+    )
     signer.capabilities.publish(cap, at: /public/hasCount)
   }
 }
@@ -1295,7 +1295,7 @@ Getting access, before:
 ```cadence
 access(all)
 fun main(): Int {
-	let counterRef = getAccount(0x1)
+  let counterRef = getAccount(0x1)
     .getCapabilities<&{HasCount}>(/public/hasCount)
     .borrow()!
   return counterRef.count
@@ -1307,9 +1307,9 @@ Getting access, after:
 ```cadence
 access(all)
 fun main(): Int {
-	let counterRef = getAccount(0x1)
-	  .capabilities
-	  .borrow<&{HasCount}>(/public/hasCount)!
+  let counterRef = getAccount(0x1)
+    .capabilities
+    .borrow<&{HasCount}>(/public/hasCount)!
   return counterRef.count
 }
 ```
@@ -1582,8 +1582,8 @@ A pair of resources previously written as:
 eventE(id:Int)
 resourceSubResource {
 let id:Intinit(id: Int) {
-	      self.id = id
-	  }
+        self.id = id
+    }
 destroy() {
        emitE(id: self.id)
     }
@@ -1608,7 +1608,7 @@ resource SubResource {
 let id: Int
 init(id: Int) {
 self.id= id
-	  }
+    }
 }
 resource R {
 let subR:@SubResourceinit(id: Int) {
@@ -1669,7 +1669,7 @@ Instead of the existing hardcoded domain separation tag, a new domain tag can be
 
 ### FT / NFT Standard changes
 
-In addition to the language changes, the Crescendo upgrade also includes breaking changes to core contracts - such as the FungibleToken and NonFungibleToken standards. All Fungible & Non-Fungible Token contracts will need to be updated to the new standard.
+In addition to the upcoming language changes, the Cadence 1.0 upgrade also includes breaking changes to core contracts - such as the FungibleToken and NonFungibleToken standards. All Fungible & Non-Fungible Token contracts will need to be updated to the new standard.
 
 These interfaces are being upgraded to allow for multiple tokens per contract, fix some issues with the original standards, and introduce other various improvements suggested by the community.
 

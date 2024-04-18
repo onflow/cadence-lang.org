@@ -13,19 +13,22 @@ sidebar_label: Breaking Improvements
 #### 💡 Motivation
 
 View functions allow developers to improve the reliability and safety of their programs, and helps them to reason about the effects of their and the programs of others.
+
 Developers can mark their functions as `view`, which disallows the function from performing state changes. That also makes the intent of functions clear to other programmers, as it allows them to distinguish between functions that change state and ones that do not.
 
 #### ℹ️ Description
 
 Cadence has added support for annotating functions with the `view` keyword, which enforces that no “mutating” operations occur inside the body of the function. The `view` keyword is placed before the `fun` keyword in a function declaration or function expression.
+
 If a function has no `view` annotation, it is considered “non-view”, and users should encounter no difference in behavior in these functions from what they are used to.
+
 If a function does have a `view` annotation, then the following mutating operations are not allowed:
 
 - Writing to, modifying, or destroying any resources
 - Writing to or modifying any references
 - Assigning to or modifying any variables that cannot be determined to have been created locally inside of the `view` function in question. In particular, this means that captured and global variables cannot be written in these functions
 - Calling a non-`view` function
-  This feature was proposed in **[FLIP 1056** 7](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md). To learn more, please consult the FLIP and documentation.
+  This feature was proposed in [FLIP 1056](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md). To learn more, please consult the FLIP and documentation.
 
 #### 🔄 Adoption
 
@@ -84,7 +87,9 @@ Interface inheritance allows code abstraction and code reuse.
 #### ℹ️ Description and ✨ example
 
 Interfaces can now inherit from other interfaces of the same kind. This makes it easier for developers to structure their conformances and reduces a lot of redundant code.
+
 For example, suppose there are two resource interfaces `Receiver` and `Vault`, and suppose all implementations of the `Vault` would also need to conform to the interface `Receiver`.
+
 Previously, there was no way to enforce this. Anyone who implements the `Vault` would have to explicitly specify that their concrete type also implements the `Receiver`. But it was not always guaranteed that all implementations would follow this informal agreement.
 With interface inheritance, the `Vault` interface can now inherit/conform to the `Receiver` interface.
 
@@ -116,7 +121,7 @@ resource MyVault: Vault {
 }
 ```
 
-This feature was proposed in [FLIP 40 2](https://github.com/onflow/flips/blob/main/cadence/20221024-interface-inheritance.md). To learn more, please consult the FLIP and documentation.
+This feature was proposed in [FLIP 40](https://github.com/onflow/flips/blob/main/cadence/20221024-interface-inheritance.md). To learn more, please consult the FLIP and documentation.
 
 </details>
 
@@ -141,24 +146,30 @@ The improvements were intentionally bundled into one release to avoid breaking C
 #### 💡 Motivation
 
 In the current version of Cadence, pre-conditions and post-conditions may perform state changes, e.g. by calling a function that performs a mutation. This may result in unexpected behavior, which might lead to bugs.
+
 To make conditions predictable, they are no longer allowed to perform state changes.
 
 #### ℹ️ Description
 
 Pre-conditions and post-conditions are now considered `view` contexts, meaning that any operations that would be prevented inside of a `view` function are also not permitted in a pre-condition or post-condition.
+
 This is to prevent underhanded code wherein a user modifies global or contract state inside of a condition, where they are meant to simply be asserting properties of that state.
+
 In particular, since only expressions were permitted inside conditions already, this means that if users wish to call any functions in conditions, these functions must now be made `view` functions.
+
 This improvement was proposed in [FLIP 1056 7](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md). To learn more, please consult the FLIP and documentation.
 
 #### 🔄 Adoption
 
 Conditions which perform mutations will now result in the error “Impure operation performed in view context”.
 Adjust the code in the condition so it does not perform mutations.
+
 The condition may be considered mutating, because it calls a mutating, i.e. non-`view` function. It might be possible to mark the called function as `view`, and the body of the function may need to get updated in turn.
 
 #### ✨ Example
 
 **Before:**
+
 The function `withdraw` of a hypothetical NFT collection interface allows the withdrawal of an NFT with a specific ID. In its post-condition, the function states that at the end of the function, the collection should have exactly one fewer item than at the beginning of the function.
 
 ```cadence
@@ -180,7 +191,9 @@ resource interface Collection {
 ```
 
 **After:**
+
 The calls to `getCount` in the post-condition are not allowed and result in the error “Impure operation performed in view context”, because the `getCount` function is considered a mutating function, as it does not have the `view` modifier.
+
 Here, as the `getCount` function only performs a read-only operation and does not change any state, it can be marked as `view`.
 
 ```cadence
@@ -197,8 +210,7 @@ Here, as the `getCount` function only performs a read-only operation and does 
 
 #### 💡 Motivation
 
-Previously, missing or incorrect argument labels of function calls were not reported.
-This had the potential to confuse developers or readers of programs, and could potentially lead to bugs.
+Previously, missing or incorrect argument labels of function calls were not reported. This had the potential to confuse developers or readers of programs, and could potentially lead to bugs.
 
 #### ℹ️ Description
 
@@ -206,8 +218,8 @@ Function calls with missing argument labels are now reported with the error mess
 
 #### 🔄 Adoption
 
-Function calls with missing argument labels should be updated to include the required argument labels.
-Function calls with incorrect argument labels should be fixed by providing the correct argument labels.
+- Function calls with missing argument labels should be updated to include the required argument labels.
+- Function calls with incorrect argument labels should be fixed by providing the correct argument labels.
 
 #### ✨ Example
 
@@ -234,8 +246,10 @@ contract TestContract {
 }
 ```
 
-**Incorrect** program:
+**Incorrect program**:
+
 The initializer of `TestContract.TestStruct` expects the argument labels `first` and `second`.
+
 However, the call of the initializer provides the incorrect argument label `wrong` for the first argument, and is missing the label for the second argument.
 
 ```cadence
@@ -267,7 +281,7 @@ error: missing argument label: `second`
 
 ```
 
-**Corrected** program:
+**Corrected program**:
 
 ```cadence
 
@@ -279,7 +293,7 @@ fun main() {
 
 ```
 
-We would like to thank community member justjoolz for reporting this bug.
+We would like to thank community member @justjoolz for reporting this bug.
 
 </details>
 
@@ -290,17 +304,22 @@ We would like to thank community member justjoolz for reporting this bug.
 #### 💡 Motivation
 
 Previously, incorrect operators in reference expressions were not reported.
+
 This had the potential to confuse developers or readers of programs, and could potentially lead to bugs.
 
 #### ℹ️ Description
 
 The syntax for reference expressions is `&v as &T`, which represents taking a reference to value `v` as type `T`.
 Reference expressions that used other operators, such as `as?` and `as!`, e.g. `&v as! &T`, were incorrect and were previously not reported as an error.
+
 The syntax for reference expressions improved to just `&v`. The type of the resulting reference must still be provided explicitly.
 If the type is not explicitly provided, the error “cannot infer type from reference expression: requires an explicit type annotation” is reported.
+
 For example, existing expressions like `&v as &T` provide an explicit type, as they statically assert the type using `as &T`. Such expressions thus keep working and do *not* have to be changed.
+
 Another way to provide the type for the reference is by explicitly typing the target of the expression, for example, in a variable declaration, e.g. via `let ref: &T = &v`.
-This improvement was proposed in [FLIP 941 2](https://github.com/onflow/flips/blob/main/cadence/20220516-reference-creation-semantics.md). To learn more, please consult the FLIP and documentation.
+
+This improvement was proposed in [FLIP 941](https://github.com/onflow/flips/blob/main/cadence/20220516-reference-creation-semantics.md). To learn more, please consult the FLIP and documentation.
 
 #### 🔄 Adoption
 
@@ -309,7 +328,7 @@ In cases where the type is already explicit, the static type assertion (`as &T`)
 
 #### ✨ Example
 
-**Incorrect** program:
+**Incorrect program**:
 The reference expression uses the incorrect operator `as!`.
 
 ```cadence
@@ -327,7 +346,7 @@ error: cannot infer type from reference expression: requires an explicit type an
   |           ^
 ```
 
-**Corrected** program:
+**Corrected program**:
 
 ```cadence
 let number = 1
@@ -369,7 +388,7 @@ Some keywords are still allowed to be used as names, as they have limited signif
   Any other keywords will raise an error during parsing, such as:
 
 ```cadence
-let break: Int= 0
+let break: Int = 0
 //  ^ error: expected identifier after start of variable declaration, got keyword break
 ```
 
@@ -403,12 +422,15 @@ let myContract = signer.borrow<&MyContract>(name: "MyContract")
 #### 💡 Motivation
 
 Previously, the implementation of `.toBigEndianBytes()` was incorrect for the large integer types `Int128`, `Int256`, `UInt128`, and `UInt256`.
+
 This had the potential to confuse developers or readers of programs, and could potentially lead to bugs.
 
 #### ℹ️ Description
 
 Calling the `toBigEndianBytes` function on smaller sized integer types returns the exact number of bytes that fit into the type, left-padded with zeros. For instance, `Int64(1).toBigEndianBytes()` returns an array of 8 bytes, as the size of `Int64` is 64 bits, 8 bytes.
+
 Previously, the `toBigEndianBytes` function erroneously returned variable-length byte arrays without padding for the large integer types `Int128`, `Int256`, `UInt128`, and `UInt256`. This was inconsistent with the smaller fixed-size numeric types, such as `Int8`, and `Int32`.
+
 To fix this inconsistency, `Int128` and `UInt128` now always return arrays of 16 bytes, while `Int256` and `UInt256` return 32 bytes.
 
 #### ✨ Example
@@ -425,6 +447,7 @@ let someBytes: [UInt8] = someNum.toBigEndianBytes()
 #### 🔄 Adoption
 
 Programs that use `toBigEndianBytes` directly, or indirectly by depending on other programs, should be checked for how the result of the function is used. It might be necessary to adjust the code to restore existing behavior.
+
 If a program relied on the previous behavior of truncating the leading zeros, then the old behavior can be recovered by first converting to a variable-length type, `Int` or `UInt`, as the `toBigEndianBytes` function retains the variable-length byte representations, i.e. the result has no padding bytes.
 
 ```cadence
@@ -446,6 +469,7 @@ Previously, function types were expressed using a different syntax from function
 #### ℹ️ Description and ✨ examples
 
 Function types are now expressed using the `fun` keyword, just like expressions and declarations. This improves readability and makes function types more obvious.
+
 For example, given the following function declaration:
 
 ```cadence
@@ -495,6 +519,7 @@ This improvement was proposed in \*\*\*\*[FLIP 43](https://github.com/onflow/fli
 #### 🔄 Adoption
 
 Programs that use the old function type syntax need to be updated by replacing the surrounding parentheses of function types with the `fun` keyword.
+
 **Before:**
 
 ```rust
@@ -518,7 +543,9 @@ let baz: fun (Int8, String): Int16 = foo
 #### 💡 Motivation
 
 Previously, Cadence’s main access-control mechanism, restricted reference types, has been a source of confusion and mistakes for contract developers.
+
 Developers new to Cadence often were surprised and did not understand why access-restricted functions, like the `withdraw` function of the fungible token `Vault` resource type, were declared as `pub`, making the function publicly accessible – access would later be restricted through a restricted type.
+
 It was too easy to accidentally give out a `Capability` with a more permissible type than intended, leading to security problems.
 Additionally, because what fields and functions were available to a reference depended on what the type of the reference was, references could not be downcast, leading to ergonomic issues.
 
@@ -526,11 +553,17 @@ Additionally, because what fields and functions were available to a reference de
 
 Access control has improved significantly.
 When giving another user a reference or `Capability` to a value you own, the fields and functions that the user can access is determined by the type of the reference or `Capability`.
+
 Previously, access to a value of type `T`, e.g. via a reference `&T`, would give access to all fields and functions of `T`. Access could be restricted, by using a restricted type. For example, a restricted reference `&T{I}` could only access members that were `pub` on `I`. Since references could not be downcast, any members defined on `T` but not on `I` were unavailable to this reference, even if they were `pub`.
+
 Access control is now handled using a new feature called Entitlements, as originally proposed across [\*\*FLIP 54 3](https://github.com/onflow/flips/blob/main/cadence/20221214-auth-remodel.md)** and **[FLIP 94 3](https://github.com/onflow/flips/blob/main/cadence/20230623-entitlement-improvements.md)\*\*.
+
 A reference can now be “entitled” to certain facets of an object. For example, the reference `auth(Withdraw) &Vault` is entitled to access fields and functions of `Vault` which require the `Withdraw` entitlement.
+
 Entitlements can be are declared using the new `entitlement` syntax.
+
 Members can be made to require entitlements using the access modifier syntax `access(E)`, where `E` is an entitlement that the user must posses.
+
 For example:
 
 ```cadence
@@ -541,13 +574,17 @@ fun withdraw(amount: UFix64): @Vault
 ```
 
 References can now always be down-casted, the standalone `auth` modifier is not necessary anymore, and got removed.
+
 For example, the reference `&{Provider}` can now be downcast to `&Vault`, so access control is now handled entirely through entitlements, rather than types.
+
 To learn more, please refer to the [documentation](https://cadence-lang.org/docs/1.0/language/access-control#entitlements).
 
 #### 🔄 Adoption
 
 The access modifiers of fields and functions need to be carefully audited and updated.
+
 Fields and functions that have the `pub` access modifier are now callable by anyone with any reference to that type. If access to the member should be restricted, the `pub` access modifier needs to be replaced with an entitlement access modifier.
+
 When creating a `Capability` or a reference to a value, **it must be carefully considered which entitlements are provided to the recipient of that `Capability` or reference** – only the entitlements which are necessary and not more should be include in the `auth` modifier of the reference type.
 
 #### ✨ Example
@@ -616,6 +653,7 @@ resource Vault: Provider, Receiver, Balance {
 ```
 
 Here, the `access(Withdraw)` syntax means that a reference to `Vault` must possess the `Withdraw` entitlement in order to be allowed to call the `withdraw` function, which can be given when a reference or `Capability` is created by using a new syntax: `auth(Withdraw) &Vault`.
+
 This would allow developers to safely downcast `&{Provider}` references to `&Vault` references if they want to access functions like `deposit` and `balance`, without enabling them to call `withdraw`.
 
 </details>
@@ -627,18 +665,23 @@ This would allow developers to safely downcast `&{Provider}` references to `&
 #### 💡 Motivation
 
 With the previously mentioned entitlements feature, which uses `access(E)` syntax to denote entitled access, the `pub`, `priv` and `pub(set)` modifiers became the only access modifiers that did not use the `access` syntax.
+
 This made the syntax inconsistent, making it harder to read and understand programs.
+
 In addition, `pub` and `priv` already had alternatives/equivalents: `access(all)` and `access(self)`.
 
 #### ℹ️ Description
 
 The `pub`, `priv` and `pub(set)` access modifiers got removed from the language, in favor of their more explicit `access(all)` and `access(self)` equivalents (for `pub` and `priv`, respectively).
+
 This makes access modifiers more uniform and better match the new entitlements syntax.
+
 This improvement was originally proposed in [FLIP 84 2](https://github.com/onflow/flips/blob/main/cadence/20230505-remove-priv-and-pub.md).
 
 #### 🔄 Adoption
 
 Users should replace any `pub` modifiers with `access(all)`, and any `priv` modifiers with `access(self)`.
+
 Fields that were defined as `pub(set)` will no longer be publicly assignable, and no access modifier now exists that replicates this old behavior. If the field should stay publicly assignable, a `access(all)` setter function that updates the field needs to be added, and users have to switch to using it instead of directly assigning to the field.
 
 #### ✨ Example
@@ -695,17 +738,21 @@ With the improvements to access control enabled by entitlements and safe down-ca
 #### ℹ️ Description
 
 Restricted types have been removed. All types, including references, can now be down-casted, restricted types are no longer used for access control.
+
 At the same time intersection types got introduced. Intersection types have the syntax `{I1, I2, ... In}`, where all elements of the set of types (`I1, I2, ... In`) are interface types. A value is part of the intersection type if it conforms to all the interfaces in the intersection type’s interface set. This functionality is equivalent to restricted types that restricted `AnyStruct` and `AnyResource.`
+
 This improvement was proposed in [FLIP 85](https://github.com/onflow/flips/blob/main/cadence/20230505-remove-restricted-types.md). To learn more, please consult the FLIP and documentation.
 
 #### 🔄 Adoption
 
 Code that relies on the restriction behavior of restricted types can be safely changed to just use the concrete type directly, as entitlements will make this safe. For example, `&Vault{Balance}` can be replaced with just `&Vault`, as access to `&Vault` only provides access to safe operations, like getting the balance – **privileged operations, like withdrawal, need additional entitlements.**
+
 Code that uses `AnyStruct` or `AnyResource` explicitly as the restricted type, e.g. in a reference, `&AnyResource{I}`, needs to remove the use of `AnyStruct` / `AnyResource`. Code that already uses the syntax `&{I}` can stay as-is.
 
 #### ✨ Example
 
 **Before:**
+
 This function accepted a reference to a `T` value, but restricted what functions were allowed to be called on it to those defined on the `X`, `Y`, and `Z` interfaces.
 
 ```cadence
@@ -795,27 +842,37 @@ Any functions on `T` that the author of `T` does not want users to be able t
 #### 💡 Motivation
 
 Previously, access to accounts was granted wholesale: Users would sign a transaction, authorizing the code of the transaction to perform any kind of operation, for example, write to storage, but also add keys or contracts.
+
 Users had to trust that a transaction would only perform supposed access, e.g. storage access to withdraw tokens, but still had to grant full access, which would allow the transaction to perform other operations.
+
 Dapp developers who require users to sign transactions should be able to request the minimum amount of access to perform the intended operation, i.e. developers should be able to follow the principle of least privilege (PoLA).
+
 This allows users to trust the transaction and Dapp.
 
 #### ℹ️ Description
 
 Previously, access to accounts was provided through the built-in types `AuthAccount` and `PublicAccount`: `AuthAccount` provided full *write* access to an account, whereas `PublicAccount` only provided *read* access.
+
 With the introduction of entitlements, this access is now expressed using entitlements and references, and only a single `Account` type is necessary. In addition, storage related functionality were moved to the field `Account.storage`.
+
 Access to administrative account operations, such as writing to storage, adding keys, or adding contracts, is now gated by both coarse grained entitlements (e.g. `Storage`, which grants access to all storage related functions, and `Keys`, which grants access to all key management functions), as well as fine-grained entitlements (e.g. `SaveValue` to save a value to storage, or `AddKey` to add a new key to the account).
+
 Transactions can now request the particular entitlements necessary to perform the operations in the transaction.
-This improvement was proposed in [FLIP 92 8](https://github.com/onflow/flips/blob/main/cadence/20230525-account-type.md). To learn more, consult the FLIP and the documentation.
+
+This improvement was proposed in [FLIP 92](https://github.com/onflow/flips/blob/main/cadence/20230525-account-type.md). To learn more, consult the FLIP and the documentation.
 
 #### 🔄 Adoption
 
 Code that previously used `PublicAccount` can simply be replaced with an unauthorized account reference, `&Account.`
+
 Code that previously used `AuthAccount` must be replaced with an authorized account reference. Depending on what functionality of the account is accessed, the appropriate entitlements have to be specified.
+
 For example, if the `save` function of `AuthAccount` was used before, the function call must be replaced with `storage.save`, and the `SaveValue` or `Storage` entitlement is required.
 
 #### ✨ Example
 
 **Before:**
+
 The transactions wants to save a value to storage. It must request access to the whole account, even though it does not need access beyond writing to storage.
 
 ```cadence
@@ -827,6 +884,7 @@ transaction {
 ```
 
 **After:**
+
 The transaction requests the fine-grained account entitlement `SaveValue`, which allows the transaction to call the `save` function.
 
 ```cadence
@@ -923,6 +981,7 @@ This required developers to add workarounds to their code.
 #### ℹ️ Description
 
 Resource tracking for optional bindings (”if-let statements”) was fixed.
+
 For example, the following program used to be invalid, reporting a resource loss error for `optR`:
 
 ```cadence
@@ -945,6 +1004,7 @@ This program is now considered valid.
 #### 🔄 Adoption
 
 New programs do not need workarounds anymore, and can be written naturally.
+
 Programs that previously resolved the incorrect resource loss error with a workaround, for example by invalidating the resource also in the else-branch or after the if-statement, are now invalid:
 
 ```cadence
@@ -972,11 +1032,13 @@ The unnecessary workaround needs to be removed.
 #### 💡 Motivation
 
 Definite return analysis determines if a function always exits, in all possible execution paths, e.g. through a `return` statement, or by calling a function that never returns, like `panic`.
+
 This analysis was incomplete and required developers to add workarounds to their code.
 
 #### ℹ️ Description
 
 The definite return analysis got significantly improved.
+
 This means that the following program is now accepted: both branches of the if-statement exit, one using a `return` statement, the other using a function that never returns, `panic`:
 
 ```cadence
@@ -1036,13 +1098,17 @@ To make the code valid, simply remove the unreachable code.
 #### 💡 Motivation
 
 Previously, the iteration variable of `for-in` loops was re-assigned on each iteration.
+
 Even though this is a common behavior in many programming languages, it is surprising behavior and a source of bugs.
+
 The behavior was improved to the often assumed/expected behavior of a new iteration variable being introduced for each iteration, which reduces the likelihood for a bug.
 
 #### ℹ️ Description
 
 The behavior of `for-in` loops improved, so that a new iteration variable is introduced for each iteration.
+
 This change only affects few programs, as the behavior change is only noticeable if the program captures the iteration variable in a function value (closure).
+
 This improvement was proposed in [FLIP 13 1](https://github.com/onflow/flips/blob/main/cadence/20221011-for-loop-semantics.md). To learn more, consult the FLIP and documentation.
 
 #### ✨ Example
@@ -1075,11 +1141,13 @@ for f in fs {
 #### 💡 Motivation
 
 Previously, when a reference is taken to a resource, that reference remains valid even if the resource was moved, for example when created and moved into an account, or moved from one account into another.
+
 In other words, references to resources stayed alive forever. This could be a potential safety foot-gun, where one could gain/give/retain unintended access to resources through references.
 
 #### ℹ️ Description
 
 References are now invalidated if the referenced resource is moved after the reference was taken. The reference is invalidated upon the first move, regardless of the origin and the destination.
+
 This feature was proposed in [FLIP 1043](https://github.com/onflow/flips/blob/main/cadence/20220708-resource-reference-invalidation.md). To learn more, please consult the FLIP and documentation.
 
 #### ✨ Example
@@ -1142,12 +1210,14 @@ Review code that uses references to resources, and check for cases where the ref
 #### 💡 Motivation
 
 Cadence encourages a capability-based security model. Capabilities are themselves a new concept that most Cadence programmers need to understand.
+
 The existing API for capabilities was centered around “links” and “linking”, and the associated concepts of the public and private storage domains, led to capabilities being even confusing and awkward to use.
 An better API is easier to understand and easier to work with.
 
 #### ℹ️ Description
 
 The existing linking-based capability API has been replaced by a more powerful and easier to use API based on the notion of Capability Controllers. The new API makes the creation of new and the revocation of existing capabilities simpler.
+
 This improvement was proposed in [FLIP 798 9](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md). To learn more, consult the FLIP and the documentation.
 
 #### 🔄 Adoption
@@ -1253,7 +1323,9 @@ fun main(): Int {
 #### 💡 Motivation
 
 A previous version of Cadence (“Secure Cadence”), attempted to prevent a common safety foot-gun: Developers might use the `let` keyword for a container-typed field, assuming it would be immutable.
+
 Though Secure Cadence implements the [Cadence mutability restrictions FLIP](https://github.com/onflow/flips/blob/main/cadence/20211129-cadence-mutability-restrictions.md), it did not fully solve the problem / prevent the foot-gun and there were still ways to mutate such fields, so a proper solution was devised.
+
 To learn more about the problem and motivation to solve it, please read the associated [Vision](https://github.com/onflow/flips/blob/main/cadence/vision/mutability-restrictions.md) document.
 
 #### ℹ️ Description
@@ -1395,14 +1467,18 @@ masterCollectionRef.kittyCollection.deposit(<-nft)
 #### 💡 Motivation
 
 [Nested Type Requirements 3](https://docs.onflow.org/cadence/language/interfaces/#nested-type-requirements) were a fairly advanced concept of the language.
+
 Just like an interface could require a conforming type to provide a certain field or function, it could also have required the conforming type to provide a nested type.
+
 This is an uncommon feature in other programming languages and hard to understand.
+
 In addition, the value of nested type requirements was never realized. While it was previously used in the FT and NFT contracts, the addition of other language features like interface inheritance and events being emittable from interfaces, there were no more uses case compelling enough to justify a feature of this complexity.
 
 #### ℹ️ Description
 
 Contract interfaces can no longer declare any concrete types (`struct`, `resource` or `enum`) in their declarations, as this would create a type requirement. `event` declarations are still allowed, but these create an `event` type limited to the scope of that contract interface; this `event` is not inherited by any implementing contracts. Nested interface declarations are still permitted, however.
-This improvement was proposed in [FLIP 118 3](https://github.com/onflow/flips/blob/main/cadence/20230711-remove-type-requirements.md).
+
+This improvement was proposed in [FLIP 118](https://github.com/onflow/flips/blob/main/cadence/20230711-remove-type-requirements.md).
 
 #### 🔄 Adoption
 
@@ -1421,6 +1497,7 @@ In order to support the removal of nested type requirements, events have been ma
 #### ℹ️ Description
 
 Contract interfaces may now define event types, and these events can be emitted from function conditions and default implementations in those contract interfaces.
+
 This improvement was proposed in [FLIP 111](https://github.com/onflow/flips/blob/main/cadence/20230417-events-emitted-from-interfaces.md).
 
 #### 🔄 Adoption
@@ -1429,7 +1506,8 @@ Contract interfaces that previously used type requirements to enforce that concr
 
 #### ✨ Example
 
-Before:
+**Before:**
+
 A contract interface like the one below (`SomeInterface`) used a type requirement to enforce that contracts which implement the interface also define a certain event (`Foo`):
 
 ```cadence
@@ -1455,7 +1533,8 @@ contract MyContract: SomeInterface {
 
 ```
 
-After:
+**After:**
+
 This can be rewritten to emit the event directly from the interface, so that any contracts that implement `Intf` will always emit `Foo` when `inheritedFunction` is called:
 
 ```cadence

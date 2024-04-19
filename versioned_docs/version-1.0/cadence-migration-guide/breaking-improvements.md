@@ -12,7 +12,7 @@ sidebar_label: Breaking Improvements
 
 #### 💡 Motivation
 
-View functions allow developers to improve the reliability and safety of their programs, and helps them to reason about the effects of their and the programs of others.
+View functions enable developers to enhance the reliability and safety of their programs, facilitating a clearer understanding of the impacts of their own code and that of others.
 
 Developers can mark their functions as `view`, which disallows the function from performing state changes. That also makes the intent of functions clear to other programmers, as it allows them to distinguish between functions that change state and ones that do not.
 

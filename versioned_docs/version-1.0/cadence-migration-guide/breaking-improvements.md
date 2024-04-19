@@ -1435,7 +1435,7 @@ masterCollectionRef.kittyCollection.deposit(<-nft)
 
 <details>
 
-<summary>Nested Type Requirements Got Removed</summary>
+<summary>Removal Of Nested Type Requirements</summary>
 
 #### 💡 Motivation
 

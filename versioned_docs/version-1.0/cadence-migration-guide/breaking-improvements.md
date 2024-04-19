@@ -73,7 +73,7 @@ The function `getCount` does not perform any state changes, it only reads the 
 
 <details>
 
-<summary>Interface Inheritance added</summary>
+<summary>Interface Inheritance Added</summary>
 
 #### 💡 Motivation
 

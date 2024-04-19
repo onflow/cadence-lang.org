@@ -545,7 +545,7 @@ When giving another user a reference or `Capability` to a value you own, the f
 
 Previously, access to a value of type `T`, e.g. via a reference `&T`, would give access to all fields and functions of `T`. Access could be restricted, by using a restricted type. For example, a restricted reference `&T{I}` could only access members that were `pub` on `I`. Since references could not be downcast, any members defined on `T` but not on `I` were unavailable to this reference, even if they were `pub`.
 
-Access control is now handled using a new feature called Entitlements, as originally proposed across [\*\*FLIP 54 3](https://github.com/onflow/flips/blob/main/cadence/20221214-auth-remodel.md)** and **[FLIP 94 3](https://github.com/onflow/flips/blob/main/cadence/20230623-entitlement-improvements.md)\*\*.
+Access control is now handled using a new feature called Entitlements, as originally proposed across [FLIP 54](https://github.com/onflow/flips/blob/main/cadence/20221214-auth-remodel.md) and [FLIP 94](https://github.com/onflow/flips/blob/main/cadence/20230623-entitlement-improvements.md).
 
 A reference can now be “entitled” to certain facets of an object. For example, the reference `auth(Withdraw) &Vault` is entitled to access fields and functions of `Vault` which require the `Withdraw` entitlement.
 

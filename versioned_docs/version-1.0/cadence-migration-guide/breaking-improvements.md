@@ -659,7 +659,7 @@ In addition, `pub` and `priv` already had alternatives/equivalents: `access
 
 #### ℹ️ Description
 
-The `pub`, `priv` and `pub(set)` access modifiers got removed from the language, in favor of their more explicit `access(all)` and `access(self)` equivalents (for `pub` and `priv`, respectively).
+The `pub`, `priv` and `pub(set)` access modifiers are being removed from the language, in favor of their more explicit `access(all)` and `access(self)` equivalents (for `pub` and `priv`, respectively).
 
 This makes access modifiers more uniform and better match the new entitlements syntax.
 

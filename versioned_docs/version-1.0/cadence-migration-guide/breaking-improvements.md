@@ -290,7 +290,7 @@ We would like to thank community member @justjoolz for reporting this bug.
 
 <details>
 
-<summary>Incorrect Operators in Reference Expressions Get Reported</summary>
+<summary>Incorrect Operators In Reference Expressions Get Reported</summary>
 
 #### 💡 Motivation
 

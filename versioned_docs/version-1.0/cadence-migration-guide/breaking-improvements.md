@@ -357,7 +357,7 @@ let ref: &Int = &number
 
 <details>
 
-<summary>Naming Rules Got Tightened</summary>
+<summary>Tightening Of Naming Rules</summary>
 
 #### 💡 Motivation
 

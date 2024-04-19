@@ -649,7 +649,7 @@ This would allow developers to safely downcast `&{Provider}` references to `&
 
 <details>
 
-<summary>`pub` and `priv` Access Modifiers Got Removed</summary>
+<summary>Removal of `pub` and `priv` Access Modifiers</summary>
 
 #### 💡 Motivation
 

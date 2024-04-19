@@ -153,7 +153,7 @@ This is to prevent underhanded code wherein a user modifies global or contract s
 
 In particular, since only expressions were permitted inside conditions already, this means that if users wish to call any functions in conditions, these functions must now be made `view` functions.
 
-This improvement was proposed in [FLIP 1056 7](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md). To learn more, please consult the FLIP and documentation.
+This improvement was proposed in [FLIP 1056](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md). To learn more, please consult the FLIP and documentation.
 
 #### 🔄 Adoption
 

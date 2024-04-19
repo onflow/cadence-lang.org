@@ -1300,7 +1300,7 @@ fun main(): Int {
 
 <details>
 
-<summary>External Mutation Got Improved</summary>
+<summary>External Mutation Improvement</summary>
 
 #### 💡 Motivation
 

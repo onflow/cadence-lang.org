@@ -716,7 +716,7 @@ resource interface Collection {
 
 <details>
 
-<summary>Restricted Types Got Replaced with Intersection Types</summary>
+<summary>Replacement of Restricted Types with Intersection Types</summary>
 
 #### 💡 Motivation
 

@@ -129,9 +129,7 @@ Once Cadence 1.0 is live, breaking changes will simply not be acceptable.
 
 So we have, and need to use, this last chance to fix and improve Cadence, so it can deliver on its promise of being a language that provides security and safety, while also providing composability and simplicity.
 
-We very much understand that it is painful for developers to have their code get broken and require them to update it.
-
-However, we believe that the pain is worth it, given the significant improvements that make Cadence development significantly more powerful and pleasant, and enabling developers to for write and deploy immutable contracts.
+We fully recognize the frustration developers feel when updates break their code, necessitating revisions. Nonetheless, we are convinced that this inconvenience is justified by the substantial enhancements to Cadence development. These improvements not only make development more effective and enjoyable but also empower developers to write and deploy immutable contracts.
 
 The improvements were intentionally bundled into one release to avoid breaking Cadence programs multiple times.
 

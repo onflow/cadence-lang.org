@@ -1630,11 +1630,9 @@ let isValid = keyList.verify(
 
 Instead of the existing hardcoded domain separation tag, a new domain tag can be defined, but it has to be also used when generating valid signatures, e.g. `"my_app_custom_domain_tag"`.
 
-#### ➡️Related
-
 </details>
 
-### FT / NFT Standard changes
+## FT / NFT Standard changes
 
 In addition to the upcoming language changes, the Cadence 1.0 upgrade also includes breaking changes to core contracts - such as the FungibleToken and NonFungibleToken standards. All Fungible & Non-Fungible Token contracts will need to be updated to the new standard.
 

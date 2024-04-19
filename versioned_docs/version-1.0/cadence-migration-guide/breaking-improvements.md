@@ -80,7 +80,7 @@ The function `getCount` does not perform any state changes, it only reads the 
 Previously, interfaces could not inherit from other interfaces, which required developers to repeat code.
 Interface inheritance allows code abstraction and code reuse.
 
-#### ℹ️ Description and ✨ example
+#### ℹ️ Description and ✨ Example
 
 Interfaces can now inherit from other interfaces of the same kind. This makes it easier for developers to structure their conformances and reduces a lot of redundant code.
 

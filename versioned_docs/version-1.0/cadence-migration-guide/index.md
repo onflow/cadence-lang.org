@@ -58,7 +58,7 @@ _Estimated Time Required: **~1-2 Weeks**_
 
 ### Review The Cadence 1.0 Breaking Improvements and Upgrade Plan
 
-In order to determine the changes needed for your application, you’ll first need to familiarize yourself with Cadence 1.0 breaking improvements, code updates, and the planned upgrade process.
+In order to determine the changes needed for your application, you’ll first need to familiarize yourself with [Cadence 1.0 breaking improvements](./improvements.md), code updates, and the planned upgrade process.
 
 - Learn how Cadence will be changing for 1.0
 - Understand the upgrade, the timeline, and how it affects you
@@ -249,7 +249,7 @@ A response of true indicates that your contract has been successfully staged and
 
 - [Flow.com FAQ](https://flow.com/upgrade/crescendo/cadence-1#faq)
 
-- [Cadence 1.0 Breaking Improvements](./breaking-improvements.md)
+- [Cadence 1.0 Improvements & New Features](./improvements.md)
 
 - [Update on Cadence 1.0](https://forum.flow.com/t/update-on-cadence-1-0/5197/1)
 

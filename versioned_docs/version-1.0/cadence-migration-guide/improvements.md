@@ -1,7 +1,7 @@
 ---
-title: Cadence 1.0 Breaking Improvements & New Features
+title: Cadence 1.0 Improvements & New Features
 sidebar_position: 0
-sidebar_label: Breaking Improvements
+sidebar_label: Improvements & New Features
 ---
 
 ## 💫 New features
@@ -915,10 +915,12 @@ To learn more,
 #### 🔄 Adoption
 
 Replace uses of the original account key management API functions with equivalents of the improved API:
+
 | Removed | Replacement |
 | --------------------------- | ------------------- |
 | AuthAccount.addPublicKey | Account.keys.add |
 | AuthAccount.removePublicKey | Account.keys.revoke |
+
 To learn more, please refer to the [documentation](https://developers.flow.com/cadence/language/accounts#account-keys).
 
 #### ✨ Example
@@ -1203,16 +1205,18 @@ This improvement was proposed in [FLIP 798 9](https://github.com/onflow/flips/
 #### 🔄 Adoption
 
 Existing uses of the linking-based capability API must be replaced with the new Capability Controller API.
-| Removed | Replacement |
-| --------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------- |
-| AuthAccount.link, with private path | Account.capabilities.storage.issue |
-| AuthAccount.link, with public path | Account.capabilities.storage.issue and Account.capabilities.publish |
-| AuthAccount.linkAccount | AuthAccount.capabilities.account.issue |
-| AuthAccount.unlink, with private path | - Get capability controller: Account.capabilities.storage/account.get |
-| - Revoke controller: Storage/AccountCapabilityController.delete | | AuthAccount.unlink, with public path | - Get capability controller: Account.capabilities.storage/account.get |
 
-- Revoke controller: Storage/AccountCapabilityController.delete
-- Unpublish capability:Account.capabilities.unpublish || AuthAccount/PublicAccount.getCapability | Account.capabilities.get || AuthAccount/PublicAccount.getCapability with followed borrow | Account.capabilities.borow || AuthAccount.getLinkTarget | N/A |
+| Removed                                   | Replacement                                                     |
+| ----------------------------------------- | --------------------------------------------------------------- |
+| AuthAccount.link, with private path       | Account.capabilities.storage.issue                             |
+| AuthAccount.link, with public path        | Account.capabilities.storage.issue and Account.capabilities.publish |
+| AuthAccount.linkAccount                   | AuthAccount.capabilities.account.issue                         |
+| AuthAccount.unlink, with private path     | - Get capability controller: Account.capabilities.storage/account.get <br> - Revoke controller: Storage/AccountCapabilityController.delete |
+| AuthAccount.unlink, with public path      | - Get capability controller: Account.capabilities.storage/account.get <br> - Revoke controller: Storage/AccountCapabilityController.delete <br> - Unpublish capability: Account.capabilities.unpublish |
+| AuthAccount/PublicAccount.getCapability   | Account.capabilities.get                                        |
+| AuthAccount/PublicAccount.getCapability with followed borrow | Account.capabilities.borrow                            |
+| AuthAccount.getLinkTarget                 | N/A                                                             |
+
 
 #### ✨ Example
 
@@ -1331,30 +1335,33 @@ Consider the below resource collection:
 
 ```cadence
 pub resource MasterCollection {
-  pub let kittyCollection:@Collection
-  pub let topshotCollection:@Collection
+  pub let kittyCollection: @Collection
+  pub let topshotCollection: @Collection
 }
 
 pub resource Collection {
-  pub(set)var id: String
+  pub(set)
+  var id: String
 
-  access(all)var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
+  access(all)
+  var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
-  access(all) fun deposit(token:@NonFungibleToken.NFT) {... }
+  access(all)
+  fun deposit(token:@NonFungibleToken.NFT) {... }
 }
 ```
 
 Earlier, it was possible to mutate the inner collections, even if someone only had a reference to the `MasterCollection`. e.g:
 
 ```cadence
-var masterCollectionRef:&MasterCollection=...// Directly updating the field
+var masterCollectionRef:&MasterCollection=... // Directly updating the field
 masterCollectionRef.kittyCollection.id= "NewID"
 
 // Calling a mutating function
 masterCollectionRef.kittyCollection.deposit(<-nft)
 
-// Updating via the referencelet ownedNFTsRef=&masterCollectionRef.kittyCollection.ownedNFTsas&{UInt64: NonFungibleToken.NFT}
-destroy ownedNFTsRef.insert(key: 1234,<-nft)
+// Updating via the referencelet ownedNFTsRef=&masterCollectionRef.kittyCollection.ownedNFTs as &{UInt64: NonFungibleToken.NFT}
+destroy ownedNFTsRef.insert(key: 1234, <-nft)
 
 ```
 
@@ -1363,20 +1370,21 @@ Once this change is introduced, the above collection can be re-written as below:
 ```cadence
 pub resource MasterCollection {
   access(KittyCollectorMapping)
-  let kittyCollection:@Collection
+  let kittyCollection: @Collection
 
   access(TopshotCollectorMapping)
-  let topshotCollection:@Collection
+  let topshotCollection: @Collection
 }
 
 pub resource Collection {
-  pub(set)var id: String
+  pub(set)
+  var id: String
 
   access(Identity)
   var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
   access(Insert)
-  fun deposit(token:@NonFungibleToken.NFT) {/* ... */ }
+  fun deposit(token:@NonFungibleToken.NFT) { /* ... */ }
 }
 
 // Entitlements and mappings for `kittyCollection`
@@ -1544,22 +1552,24 @@ Contracts that previously used destroy methods will need to remove them, and pot
 A pair of resources previously written as:
 
 ```cadence
-eventE(id:Int)
+event E(id: Int)
 
 resource SubResource {
-  let id:Int
+  let id: Int
   init(id: Int) {
     self.id = id
   }
 
   destroy() {
-    emitE(id: self.id)
+    emit E(id: self.id)
   }
 }
 
 resource R {
-  let subR: @SubResourceinit(id: Int) {
-    self.subR <- createSubResource(id: id)
+  let subR: @SubResource
+  
+  init(id: Int) {
+    self.subR <- create SubResource(id: id)
   }
 
   destroy() {
@@ -1572,16 +1582,18 @@ can now be equivalently written as:
 
 ```cadence
 resource SubResource {
-  event ResourceDestroyed(id: Int=self.id)
+  event ResourceDestroyed(id: Int = self.id)
   let id: Int
 
   init(id: Int) {
-    self.id= id
+    self.id = id
   }
 }
 
 resource R {
-  let subR:@SubResourceinit(id: Int) {
+  let subR: @SubResource
+  
+  init(id: Int) {
     self.subR <- create SubResource(id: id)
   }
 }

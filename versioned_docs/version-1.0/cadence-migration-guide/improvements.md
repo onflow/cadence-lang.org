@@ -1211,8 +1211,8 @@ Existing uses of the linking-based capability API must be replaced with the new 
 | AuthAccount.link, with private path       | Account.capabilities.storage.issue                             |
 | AuthAccount.link, with public path        | Account.capabilities.storage.issue and Account.capabilities.publish |
 | AuthAccount.linkAccount                   | AuthAccount.capabilities.account.issue                         |
-| AuthAccount.unlink, with private path     | - Get capability controller: Account.capabilities.storage/account.get <br> - Revoke controller: Storage/AccountCapabilityController.delete |
-| AuthAccount.unlink, with public path      | - Get capability controller: Account.capabilities.storage/account.get <br> - Revoke controller: Storage/AccountCapabilityController.delete <br> - Unpublish capability: Account.capabilities.unpublish |
+| AuthAccount.unlink, with private path     | - Get capability controller: Account.capabilities.storage/account.get <br /> - Revoke controller: Storage/AccountCapabilityController.delete |
+| AuthAccount.unlink, with public path      | - Get capability controller: Account.capabilities.storage/account.get <br /> - Revoke controller: Storage/AccountCapabilityController.delete <br /> - Unpublish capability: Account.capabilities.unpublish |
 | AuthAccount/PublicAccount.getCapability   | Account.capabilities.get                                        |
 | AuthAccount/PublicAccount.getCapability with followed borrow | Account.capabilities.borrow                            |
 | AuthAccount.getLinkTarget                 | N/A                                                             |

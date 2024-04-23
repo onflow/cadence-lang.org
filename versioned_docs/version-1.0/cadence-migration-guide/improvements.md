@@ -8,7 +8,7 @@ sidebar_label: Improvements & New Features
 
 <details>
 
-<summary>View Functions added</summary>
+<summary>View Functions added ([FLIP 1056](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md))</summary>
 
 #### 💡 Motivation
 
@@ -28,7 +28,8 @@ If a function does have a `view` annotation, then the following mutating opera
 - Writing to or modifying any references
 - Assigning to or modifying any variables that cannot be determined to have been created locally inside of the `view` function in question. In particular, this means that captured and global variables cannot be written in these functions
 - Calling a non-`view` function
-  This feature was proposed in [FLIP 1056](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md). To learn more, please consult the FLIP and documentation.
+
+This feature was proposed in [FLIP 1056](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md). To learn more, please consult the FLIP and documentation.
 
 #### 🔄 Adoption
 
@@ -73,7 +74,7 @@ The function `getCount` does not perform any state changes, it only reads the 
 
 <details>
 
-<summary>Interface Inheritance Added</summary>
+<summary>Interface Inheritance Added ([FLIP 40](https://github.com/onflow/flips/blob/main/cadence/20221024-interface-inheritance.md))</summary>
 
 #### 💡 Motivation
 
@@ -135,7 +136,7 @@ The improvements were intentionally bundled into one release to avoid breaking C
 
 <details>
 
-<summary>Conditions No Longer Allow State Changes</summary>
+<summary>Conditions No Longer Allow State Changes ([FLIP 1056](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md))</summary>
 
 #### 💡 Motivation
 
@@ -290,7 +291,7 @@ We would like to thank community member @justjoolz for reporting this bug.
 
 <details>
 
-<summary>Incorrect Operators In Reference Expressions Get Reported</summary>
+<summary>Incorrect Operators In Reference Expressions Get Reported ([FLIP 941](https://github.com/onflow/flips/blob/main/cadence/20220516-reference-creation-semantics.md))</summary>
 
 #### 💡 Motivation
 
@@ -451,7 +452,7 @@ let someBytes: [UInt8] = UInt(someNum).toBigEndianBytes()
 
 <details>
 
-<summary>Syntax for Function Types Improved</summary>
+<summary>Syntax for Function Types Improved ([FLIP 43](https://github.com/onflow/flips/blob/main/cadence/20221018-change-fun-type-syntax.md))</summary>
 
 #### 💡 Motivation
 
@@ -527,7 +528,7 @@ let baz: fun (Int8, String): Int16 = foo
 
 <details>
 
-<summary>Entitlements and Safe Down-casting</summary>
+<summary>Entitlements and Safe Down-casting ([FLIP 54](https://github.com/onflow/flips/blob/main/cadence/20221214-auth-remodel.md) & [FLIP 94](https://github.com/onflow/flips/blob/main/cadence/20230623-entitlement-improvements.md))</summary>
 
 #### 💡 Motivation
 
@@ -647,7 +648,7 @@ This would allow developers to safely downcast `&{Provider}` references to `&
 
 <details>
 
-<summary>Removal of `pub` and `priv` Access Modifiers</summary>
+<summary>Removal of `pub` and `priv` Access Modifiers ([FLIP 84](https://github.com/onflow/flips/blob/main/cadence/20230505-remove-priv-and-pub.md))</summary>
 
 #### 💡 Motivation
 
@@ -716,7 +717,7 @@ resource interface Collection {
 
 <details>
 
-<summary>Replacement of Restricted Types with Intersection Types</summary>
+<summary>Replacement of Restricted Types with Intersection Types ([FLIP 85](https://github.com/onflow/flips/blob/main/cadence/20230505-remove-restricted-types.md))</summary>
 
 #### 💡 Motivation
 
@@ -822,7 +823,7 @@ Any functions on `T` that the author of `T` does not want users to be able t
 
 <details>
 
-<summary>Account Access Got Improved</summary>
+<summary>Account Access Got Improved ([FLIP 92](https://github.com/onflow/flips/blob/main/cadence/20230525-account-type.md))</summary>
 
 #### 💡 Motivation
 
@@ -1076,7 +1077,7 @@ To make the code valid, simply remove the unreachable code.
 
 <details>
 
-<summary>Semantics for Variables in For-Loop Statements Got Improved</summary>
+<summary>Semantics for Variables in For-Loop Statements Got Improved ([FLIP 13](https://github.com/onflow/flips/blob/main/cadence/20221011-for-loop-semantics.md))</summary>
 
 #### 💡 Motivation
 
@@ -1119,7 +1120,7 @@ for f in fs {
 
 <details>
 
-<summary>References to Resource-Kinded Values Get Invalidated When the Referenced Values Are Moved</summary>
+<summary>References to Resource-Kinded Values Get Invalidated When the Referenced Values Are Moved ([FLIP 1043](https://github.com/onflow/flips/blob/main/cadence/20220708-resource-reference-invalidation.md))</summary>
 
 #### 💡 Motivation
 
@@ -1187,7 +1188,7 @@ Review code that uses references to resources, and check for cases where the ref
 
 <details>
 
-<summary>Capability Controller API Replaced Existing Linking-based Capability API</summary>
+<summary>Capability Controller API Replaced Existing Linking-based Capability API ([FLIP 798](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md))</summary>
 
 #### 💡 Motivation
 
@@ -1302,7 +1303,7 @@ fun main(): Int {
 
 <details>
 
-<summary>External Mutation Improvement</summary>
+<summary>External Mutation Improvement ([FLIP 89](https://github.com/onflow/flips/blob/main/cadence/20230517-member-access-semnatics.md) & [FLIP 86](https://github.com/onflow/flips/blob/main/cadence/20230519-built-in-mutability-entitlements.md))</summary>
 
 #### 💡 Motivation
 
@@ -1320,7 +1321,8 @@ This improvement was proposed in two FLIPs:
 
 - [FLIP 89: Change Member Access Semantics](https://github.com/onflow/flips/blob/main/cadence/20230517-member-access-semnatics.md)
 - [FLIP 86: Introduce Built-in Mutability Entitlements 1](https://github.com/onflow/flips/blob/main/cadence/20230519-built-in-mutability-entitlements.md)
-  To learn more, please consult the FLIPs and the documentation.
+
+To learn more, please consult the FLIPs and the documentation.
 
 #### 🔄 Adoption
 
@@ -1443,7 +1445,7 @@ masterCollectionRef.kittyCollection.deposit(<-nft)
 
 <details>
 
-<summary>Removal Of Nested Type Requirements</summary>
+<summary>Removal Of Nested Type Requirements ([FLIP 118](https://github.com/onflow/flips/blob/main/cadence/20230711-remove-type-requirements.md))</summary>
 
 #### 💡 Motivation
 
@@ -1469,7 +1471,7 @@ Any existing code that made use of the type requirements feature should be rewri
 
 <details>
 
-<summary>Event Definition And Emission In Interfaces</summary>
+<summary>Event Definition And Emission In Interfaces ([FLIP 111](https://github.com/onflow/flips/blob/main/cadence/20230417-events-emitted-from-interfaces.md))</summary>
 
 #### 💡 Motivation
 
@@ -1531,7 +1533,7 @@ contract interface Intf {
 
 <details>
 
-<summary>Force Destruction of Resources</summary>
+<summary>Force Destruction of Resources ([FLIP 131](https://github.com/onflow/flips/pull/131))</summary>
 
 #### 💡 Motivation
 

@@ -29,7 +29,8 @@ To get information about a block, the functions `getCurrentBlock` and `getBlock`
     ```
 
   Returns the block at the given height.
-  If the given block does not exist the function returns `nil`.
+  If the block exists within the accessible range defined by `flow.DefaultTransactionExpiry - 10` (`590` blocks), it is returned successfully.
+  If the block at the given height does not exist or is outside the default transaction expiration range of `590` blocks below the current sealed block, the function returns `nil`.
 
 The `Block` type contains the identifier, height, and timestamp:
 

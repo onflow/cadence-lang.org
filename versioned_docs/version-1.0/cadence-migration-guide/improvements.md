@@ -503,7 +503,7 @@ let optFun1: fun (Int8): Int16? =
 let optFun2: (fun (Int8): Int16)? = nil
 ```
 
-This improvement was proposed in \*\*\*\*[FLIP 43](https://github.com/onflow/flips/blob/main/cadence/20221018-change-fun-type-syntax.md).
+This improvement was proposed in [FLIP 43](https://github.com/onflow/flips/blob/main/cadence/20221018-change-fun-type-syntax.md).
 
 #### 🔄 Adoption
 
@@ -663,7 +663,7 @@ The `pub`, `priv` and `pub(set)` access modifiers are being removed from th
 
 This makes access modifiers more uniform and better match the new entitlements syntax.
 
-This improvement was originally proposed in [FLIP 84 2](https://github.com/onflow/flips/blob/main/cadence/20230505-remove-priv-and-pub.md).
+This improvement was originally proposed in [FLIP 84](https://github.com/onflow/flips/blob/main/cadence/20230505-remove-priv-and-pub.md).
 
 #### 🔄 Adoption
 
@@ -1092,7 +1092,7 @@ The behavior of `for-in` loops improved, so that a new iteration variable is i
 
 This change only affects few programs, as the behavior change is only noticeable if the program captures the iteration variable in a function value (closure).
 
-This improvement was proposed in [FLIP 13 1](https://github.com/onflow/flips/blob/main/cadence/20221011-for-loop-semantics.md). To learn more, consult the FLIP and documentation.
+This improvement was proposed in [FLIP 13](https://github.com/onflow/flips/blob/main/cadence/20221011-for-loop-semantics.md). To learn more, consult the FLIP and documentation.
 
 #### ✨ Example
 
@@ -1200,7 +1200,7 @@ An better API is easier to understand and easier to work with.
 
 The existing linking-based capability API has been replaced by a more powerful and easier to use API based on the notion of Capability Controllers. The new API makes the creation of new and the revocation of existing capabilities simpler.
 
-This improvement was proposed in [FLIP 798 9](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md). To learn more, consult the FLIP and the documentation.
+This improvement was proposed in [FLIP 798](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md). To learn more, consult the FLIP and the documentation.
 
 #### 🔄 Adoption
 
@@ -1541,7 +1541,7 @@ It was previously possible to panic in the body of a resource or attachment’s�
 
 Contracts may no longer define `destroy` functions on their resources, and are no longer required to explicitly handle the destruction of resource fields. These will instead be implicitly destroyed whenever a resource is destroyed.
 Additionally, developers may define a `ResourceDestroyed` event in the body of a resource definition using default arguments, which will be lazily evaluated and then emitted whenever a resource of that type is destroyed.
-This improvement was proposed in [FLIP 131 4](https://github.com/onflow/flips/pull/131).
+This improvement was proposed in [FLIP 131](https://github.com/onflow/flips/pull/131).
 
 #### 🔄 Adoption
 

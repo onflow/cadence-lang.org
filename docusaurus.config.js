@@ -14,7 +14,7 @@ const hasTypesense =
 const config = {
   title: 'Cadence',
   tagline: 'Best Programing Language for Smart Contracts',
-  //favicon: 'img/favicon.ico',
+  favicon: 'static/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://cadence-lang.org',

@@ -1395,6 +1395,8 @@ As mentioned in the previous section, the most notable change in this improvemen
 - Work with references, instead of the actual object, when accessing nested objects through a reference.
 - Use proper entitlements for fields when they declare their own `struct` and `resource` types.
 
+<br />
+
 #### ✨ Example
 
 Consider the below resource collection:

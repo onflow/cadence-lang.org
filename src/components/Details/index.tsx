@@ -71,6 +71,9 @@ import React, {
     ) : (
       <summary>{summary ?? 'Details'}</summary>
     );
+
+    // Part of the workaround for the Details component
+    const [skipAnimation, setSkipAnimation] = useState(false);
   
     return (
       // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
@@ -100,6 +103,8 @@ import React, {
             return;
           }
           e.preventDefault();
+
+          setSkipAnimation(false);
           if (collapsed) {
             setCollapsed(false);
             setOpen(true);
@@ -122,6 +127,7 @@ import React, {
           // May skip closing animation if DOM state is forcefully closed
           // But generally this workaround here is needed for triggering open toggle
           if (isDOMOpen !== open) {
+            setSkipAnimation(true);
             setOpen(isDOMOpen);
             setCollapsed(!isDOMOpen);
           }
@@ -135,7 +141,16 @@ import React, {
           onCollapseTransitionEnd={(newCollapsed) => {
             setCollapsed(newCollapsed);
             setOpen(!newCollapsed);
-          }}>
+          }}
+          animation={skipAnimation ? {
+            duration: 0,
+          } : undefined}
+
+          // Part of the workaround for the Details component
+          // 1. Must be displayed to be searchable
+          // 2. Must have a height to find location of the element
+          className={!open && collapsed ? clsx(styles.collapsibleContainer, styles.autoHeight) : styles.collapsibleContainer }
+        >
           <div className={styles.collapsibleContent}>{children}</div>
         </Collapsible>
       </details>

@@ -23,9 +23,11 @@ export default function MDXDetails(props) {
     // Hack to acknowledge browser-induced toggling of details element
     // simulates a click on the summary element when the details element is toggled
     onToggle={(e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      // find related event chain
 
+      const isCollapsed = e.target.getAttribute('data-collapsed') === 'true';
+      if (!isCollapsed) return;
+      
       e.target.querySelector('summary').click();
     }}>
       {children}

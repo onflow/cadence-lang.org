@@ -136,6 +136,70 @@ The improvements were intentionally bundled into one release to avoid breaking C
 
 <details>
 
+<summary style={{backgroundColor: "--ifm-alert-background-color-highlight"}}>Matching Access Modifiers for Interface Implementation Members are now Required ([FLIP 262](https://github.com/onflow/flips/blob/main/cadence/20240415-remove-non-public-entitled-interface-members.md))</summary>
+
+**Note** This is a recent change that may not be reflected in emulated migrations or all tools yet.  Likewise, this may affect existing staged contracts which do not conform to this new requirement.  Please check the latest documentation and tools for the most up-to-date information, and re-stage contracts as necessary.
+
+#### 💡 Motivation
+
+Previously, the access modifier of a member in a type conforming to / implementing an interface
+could not be more restrictive than the access modifier of the member in the interface.
+That meant an implementation may have choosen to use a more permissive access modifier than the interface.
+
+This may have been surprising to developers, as they may have assumed that the access modifier of the member
+in the interface was a _requirement_ / _maximum_, not just a minimum, especially when using
+a non-public / non-entitled access modifier (e.g. `access(contract)`, `access(account)`).
+
+Requiring access modifiers of members in the implementation to match the access modifiers
+of members given in the interface, helps avoid confusion and potential footguns.
+
+#### ℹ️ Description
+
+If an interface member has an access modifier, a composite type that conforms to it / implements
+the interface must use exactly the same access modifier.
+
+#### 🔄 Adoption
+
+Update the access modifiers of members in composite types that conform to / implement interfaces if they do not match the access modifiers of the members in the interface.
+
+#### ✨ Example
+
+**Before:**
+
+```cadence
+access(all)
+resource interface I {
+  access(account)
+  fun foo()
+}
+
+access(all)
+resource R: I {
+  access(all)
+  fun foo() {}
+}
+```
+
+**After:**
+
+```cadence
+access(all)
+resource interface I {
+  access(account)
+  fun foo()
+}
+
+access(all)
+resource R: I {
+  access(account)
+  fun foo() {}
+}
+```
+
+</details>
+
+<details>
+
 <summary>Conditions No Longer Allow State Changes ([FLIP 1056](https://github.com/onflow/flips/blob/main/cadence/20220715-cadence-purity-analysis.md))</summary>
 
 #### 💡 Motivation

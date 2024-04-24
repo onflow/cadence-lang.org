@@ -48,7 +48,7 @@ resource Collection {
   var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
   init () {
-    self.ownedNFTs<- {}
+    self.ownedNFTs <- {}
   }
 
   access(all)
@@ -136,9 +136,9 @@ The improvements were intentionally bundled into one release to avoid breaking C
 
 <details>
 
-<summary style={{backgroundColor: "--ifm-alert-background-color-highlight"}}>Matching Access Modifiers for Interface Implementation Members are now Required ([FLIP 262](https://github.com/onflow/flips/blob/main/cadence/20240415-remove-non-public-entitled-interface-members.md))</summary>
+<summary>Matching Access Modifiers for Interface Implementation Members are now Required ([FLIP 262](https://github.com/onflow/flips/blob/main/cadence/20240415-remove-non-public-entitled-interface-members.md))</summary>
 
-**Note** This is a recent change that may not be reflected in emulated migrations or all tools yet.  Likewise, this may affect existing staged contracts which do not conform to this new requirement.  Please check the latest documentation and tools for the most up-to-date information, and re-stage contracts as necessary.
+**Note** This is a recent change that may not be reflected in emulated migrations or all tools yet.  Likewise, this may affect existing staged contracts which do not conform to this new requirement.  Please ensure your contracts are updated and re-staged, if necessary, to match this new requirement.
 
 #### 💡 Motivation
 
@@ -1422,8 +1422,8 @@ pub resource Collection {
 Earlier, it was possible to mutate the inner collections, even if someone only had a reference to the `MasterCollection`. e.g:
 
 ```cadence
-var masterCollectionRef:&MasterCollection=... // Directly updating the field
-masterCollectionRef.kittyCollection.id= "NewID"
+var masterCollectionRef:&MasterCollection =... // Directly updating the field
+masterCollectionRef.kittyCollection.id = "NewID"
 
 // Calling a mutating function
 masterCollectionRef.kittyCollection.deposit(<-nft)
@@ -1477,8 +1477,8 @@ entitlement mapping TopshotCollectorMapping {
 Then for a reference with no entitlements, none of the previously mentioned operations would be allowed:
 
 ```cadence
-var masterCollectionRef:&MasterCollection<-...// Error: Cannot update the field. Doesn't have sufficient entitlements.
-masterCollectionRef.kittyCollection.id= "NewID"
+var masterCollectionRef:&MasterCollection <- ... // Error: Cannot update the field. Doesn't have sufficient entitlements.
+masterCollectionRef.kittyCollection.id = "NewID"
 
 // Error: Cannot directly update the dictionary. Doesn't have sufficient entitlements.
 destroy masterCollectionRef.kittyCollection.ownedNFTs.insert(key: 1234,<-nft)
@@ -1487,24 +1487,23 @@ destroy masterCollectionRef.ownedNFTs.remove(key: 1234)
 // Error: Cannot call mutating function. Doesn't have sufficient entitlements.
 masterCollectionRef.kittyCollection.deposit(<-nft)
 
-// Error: `masterCollectionRef.kittyCollection.ownedNFTs` is already a non-auth reference.// Thus cannot update the dictionary. Doesn't have sufficient entitlements.let ownedNFTsRef=&masterCollectionRef.kittyCollection.ownedNFTsas&{UInt64: NonFungibleToken.NFT}
-destroy ownedNFTsRef.insert(key: 1234,<-nft)
-
+// Error: `masterCollectionRef.kittyCollection.ownedNFTs` is already a non-auth reference.// Thus cannot update the dictionary. Doesn't have sufficient entitlements.
+let ownedNFTsRef = &masterCollectionRef.kittyCollection.ownedNFTsas&{UInt64: NonFungibleToken.NFT}
+destroy ownedNFTsRef.insert(key: 1234, <-nft)
 ```
 
 To perform these operations on the reference, one would need to have obtained a reference with proper entitlements:
 
 ```cadence
-var masterCollectionRef: auth{KittyCollector}&MasterCollection<-... // Directly updating the field
-masterCollectionRef.kittyCollection.id= "NewID"
+var masterCollectionRef: auth{KittyCollector} &MasterCollection <- ... // Directly updating the field
+masterCollectionRef.kittyCollection.id = "NewID"
 
 // Updating the dictionary
-destroy masterCollectionRef.kittyCollection.ownedNFTs.insert(key: 1234,<-nft)
+destroy masterCollectionRef.kittyCollection.ownedNFTs.insert(key: 1234, <-nft)
 destroy masterCollectionRef.kittyCollection.ownedNFTs.remove(key: 1234)
 
 // Calling a mutating function
 masterCollectionRef.kittyCollection.deposit(<-nft)
-
 ```
 
 </details>

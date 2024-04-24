@@ -21,7 +21,7 @@ This upgrade roadmap offers developers guidance, actionable steps, and expectati
 
 The Cadence 1.0 release is a breaking change – developers need to update all Cadence code used by their app (including all existing smart contracts deployed on Flow) to Cadence 1.0, to ensure it continues to work after the network upgrade.
 
-Many of the improvements of Cadence 1.0 fundamentally change how Cadence works and is used. However, that also means it is necessary to break existing code to release this version, which will guarantee stability (no more planned breaking changes) going forward.
+Many of the improvements of Cadence 1.0 fundamentally change how Cadence works and is used. However, that also means it is necessary to break existing code to release this version, which will guarantee stability going forward.
 
 ### Benefits of Cadence 1.0
 

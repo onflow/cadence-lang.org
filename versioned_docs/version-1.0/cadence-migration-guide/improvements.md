@@ -136,7 +136,61 @@ The improvements were intentionally bundled into one release to avoid breaking C
 
 <details>
 
-<summary>Matching Access Modifiers for Interface Implementation Members are now Required ([FLIP 262](https://github.com/onflow/flips/blob/main/cadence/20240415-remove-non-public-entitled-interface-members.md))</summary>
+<summary> **2024-04-24** Public Capability Acquisition No Longer Returns Optional Capabilities ([FLIP 242](https://github.com/onflow/flips/blob/main/cadence/20240123-capcon-get-capability-api-improvement.md))</summary>
+
+**Note** This is a recent change that may not be reflected in emulated migrations or all tools yet.  Likewise, this may affect existing staged contracts which do not conform to this new requirement.  Please ensure your contracts are updated and re-staged, if necessary, to match this new requirement.
+
+#### 💡 Motivation
+
+In the initial implementation of the new Capability Controller API (a change that is new in Cadence 1.0, proposed in [FLIP 798](https://github.com/onflow/flips/blob/main/cadence/20220203-capability-controllers.md)), `capabilities.get<T>` would return an optional capability, `Capability<T>?`.  When the no capability was published under the requested path, or when type argument `T` was not a subtype of the runtime type of the capability published under the requested path, the capability would be `nil`.
+
+This was a source of confusion among developers, as previously `account.getCapability<T>` did not return an optional capability, but rather one that would simply fail `capability.borrow` if the capability was invalid.
+
+It was concluded that this new behaviour was not ideal, and that there a benefit to an invalid Capability not being `nil`, even if it is not borrowable. A `nil` capability lacked information that was previously available with an invalid capability - primarily the type and address of the capability.  Developers may have wanted to make use of this information, and react to the capability being invalid, as opposed to an uninformative `nil` value and encountering a panic scenario.
+
+#### ℹ️ Description
+
+The `capabilities.get<T>` function now returns an invalid capability when no capability is published under the requested path, or when the type argument `T` is not a subtype of the runtime type of the capability published under the requested path.
+
+This capability has the following properties:
+
+- Always return `false` when `Capability<T>.check` is called.
+- Always return `nil` when `Capability<T>.borrow` is called.
+- Have an ID of `0`.
+- Have a runtime type that is the same as the type requested in the type argument of `capabilities.get<T>`.
+<br />
+
+#### 🔄 Adoption
+
+If you have not updated your code to Cadence 1.0 yet, you will need to follow the same guidelines for updating to the Capability Controller API as you would have before, but will need to handle the new invalid capability type instead of an optional capability.
+
+If you have already updated your code to use `capabilities.get<T>`, and are handling the capability as an optional type, you may need to update your code to handle the new non-optional invalid capability type instead.
+
+#### ✨ Example
+
+**Before:**
+
+```cadence
+let capability = account.capabilities.get<&MyNFT.Collection>(/public/NFTCollection)
+if capability == nil {
+    // Handle the case where the capability is nil
+}
+```
+
+**After:**
+
+```cadence
+let capability = account.capabilities.get<&MyNFT.Collection>(/public/NFTCollection)
+if !capability.check() {
+    // Handle the case where the capability is invalid
+}
+```
+
+</details>
+
+<details>
+
+<summary>**2024-04-23** Matching Access Modifiers for Interface Implementation Members are now Required ([FLIP 262](https://github.com/onflow/flips/blob/main/cadence/20240415-remove-non-public-entitled-interface-members.md))</summary>
 
 **Note** This is a recent change that may not be reflected in emulated migrations or all tools yet.  Likewise, this may affect existing staged contracts which do not conform to this new requirement.  Please ensure your contracts are updated and re-staged, if necessary, to match this new requirement.
 
@@ -193,59 +247,6 @@ access(all)
 resource R: I {
   access(account)
   fun foo() {}
-}
-```
-
-</details>
-
-<details>
-
-<summary>Public Capability Acquisition was Improved [FLIP 242](https://github.com/onflow/flips/blob/main/cadence/20240123-capcon-get-capability-api-improvement.md)</summary>
-
-**Note** This is a recent change that may not be reflected in emulated migrations or all tools yet.  Likewise, this may affect existing staged contracts which do not conform to this new requirement.  Please ensure your contracts are updated and re-staged, if necessary, to match this new requirement.
-
-#### 💡 Motivation
-
-In the initial implementation of the new Capability Controller API (a change that is new in Cadence 1.0), `capabilities.get<T>` would return an optional capability, `Capability<T>?`.  When the no capability was published under the requested path, or when the type argument to get was not a subtype of the runtime type of the capability published under the requested path, the capability would be `nil`.
-
-This was a source of confusion among developers, as previously `account.getCapability<T>` did not return an optional capability, but rather one that would simply fail `capability.borrow` if the capability was invalid.
-
-It was concluded that this new behaviour was not ideal, and that there a benefit to an invalid Capability not being `nil`, even if it is not borrowable. A `nil` capability lacked information that was previously available with an invalid capability - primarily the type and address of the capability.  Developers may have wanted to make use of this information, and react to the capability being invalid, as opposed to an uninformative `nil` value and encountering a panic scenario.
-
-#### ℹ️ Description
-
-The `account.capabilities.get` function now returns an invalid capability when no capability was published under the requested path, or when the type argument to get was not a subtype of the runtime type of the capability published under the requested path.
-
-This capability has the following properties:
-
-- Always return `false` when `Capability<T>.check` is called.
-- Always return `nil` when `Capability<T>.borrow` is called.
-- Have an ID of 0.
-- Have a runtime type that is the same as the type requested in the type argument of `capabilities.get<T>`.
-
-#### 🔄 Adoption
-
-If you have already updated your code to use `capabilities.get<T>`, and are handling the capability as an optional type, you may need to update your code to handle the new invalid capability type instead.
-
-If you have not updated your code to Cadence 1.0 yet, you will need to follow the same guidelines for updating to the Capability Controller API as you would have before, but now you will need to handle the new invalid capability type.
-
-#### ✨ Example
-
-**Before:**
-
-```cadence
-let capability = account.capabilities.get<&MyNFT.Collection>(/public/NFTCollection)
-if capability == nil {
-    // Handle the case where the capability is nil
-}
-```
-
-**After:**
-
-```cadence
-let capability = account.capabilities.get<&MyNFT.Collection>(/public/NFTCollection)
-if !capability.check() {
-    // Handle the case where the capability is invalid
 }
 ```
 

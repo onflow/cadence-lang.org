@@ -13,8 +13,8 @@ const hasTypesense =
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Cadence',
-  tagline: 'Best Programing Language for Smart Contracts',
-  //favicon: 'img/favicon.ico',
+  tagline: 'The Best Programming Language for Smart Contracts',
+  favicon: 'favicon.ico',
 
   // Set the production url of your site here
   url: 'https://cadence-lang.org',

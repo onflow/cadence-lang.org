@@ -10,8 +10,12 @@
  * `@docusaurus/theme-common/src/components/Details/index.tsx` and modified
  * to include a workaround for the Details component.
  * 
+ * All of the parts of the code that hve been modified are marked with
+ * comments like so: `// >>>> THIS IS PART OF THE WORKAROUND FOR DETAILS COMPONENT <<<<`.
+ * 
  * It is needed to allow the Details component to be searchable using
- * the find in page feature of the browser.
+ * the find in page feature of the browser.  And also so tht links can be clicked
+ * inside the summary element.
  */
 
 import React, {
@@ -25,11 +29,13 @@ import React, {
   import {useCollapsible, Collapsible} from '@docusaurus/theme-common';
   import styles from './styles.module.css';
   
-  function isInSummary(node: HTMLElement | null): boolean {
+  // >>>> THIS IS PART OF THE WORKAROUND FOR DETAILS COMPONENT <<<<
+  // we don't recurse parents like the original to allow clicking on links
+  function isTheSummary(node: HTMLElement | null): boolean {
     if (!node) {
       return false;
     }
-    return node.tagName === 'SUMMARY' || isInSummary(node.parentElement);
+    return node.tagName === 'SUMMARY';
   }
   
   function hasParent(node: HTMLElement | null, parent: HTMLElement): boolean {
@@ -72,7 +78,7 @@ import React, {
       <summary>{summary ?? 'Details'}</summary>
     );
 
-    // Part of the workaround for the Details component
+    // >>>> THIS IS PART OF THE WORKAROUND FOR DETAILS COMPONENT <<<<
     const [skipAnimation, setSkipAnimation] = useState(false);
   
     return (
@@ -90,15 +96,16 @@ import React, {
         onMouseDown={(e) => {
           const target = e.target as HTMLElement;
           // Prevent a double-click to highlight summary text
-          if (isInSummary(target) && e.detail > 1) {
+          if (isTheSummary(target) && e.detail > 1) {
             e.preventDefault();
           }
         }}
         onClick={(e) => {
+          console.log(e.target)
           e.stopPropagation(); // For isolation of multiple nested details/summary
           const target = e.target as HTMLElement;
           const shouldToggle =
-            isInSummary(target) && hasParent(target, detailsRef.current!);
+            isTheSummary(target) && hasParent(target, detailsRef.current!);
           if (!shouldToggle) {
             return;
           }
@@ -115,11 +122,7 @@ import React, {
           }
         }}
 
-        ///////////////////////////////////////////////////////
-        //   THIS IS THE WORKAROUND FOR DETAILS COMPONENT    //
-        //   this is the reason why this element has been    //
-        // copied from the original source code and modified //
-        ///////////////////////////////////////////////////////
+        // >>>> THIS IS PART OF THE WORKAROUND FOR DETAILS COMPONENT <<<<
         onToggle={(e) => {
           if (e.target !== detailsRef.current || detailsRef.current === null) return;
           const isDOMOpen = detailsRef.current.open;
@@ -146,7 +149,7 @@ import React, {
             duration: 0,
           } : undefined}
 
-          // Part of the workaround for the Details component
+          // >>>> THIS IS PART OF THE WORKAROUND FOR DETAILS COMPONENT <<<<
           // 1. Must be displayed to be searchable
           // 2. Must have a height to find location of the element
           className={!open && collapsed ? clsx(styles.collapsibleContainer, styles.autoHeight) : styles.collapsibleContainer }

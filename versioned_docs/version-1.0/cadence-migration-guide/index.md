@@ -193,7 +193,7 @@ Run any transactions to verify the correctness of the existing data.
 
 _Estimated Time Required: **~1 Week**_
 
-Beginning approximately April 3, 2024, the Flow team will trigger migration of contracts that were staged for upgrade, run all Cadence 1.0 migrations and restart the network. This completes the first full upgrade process to Cadence 1.0. The next milestone repeats this process on Mainnet. This step creates a fully working “real” environment, where developers can test their apps interaction with other contracts and projects available on Crescendo network. The Flow team may repeat this step multiple times (resetting the Crescendo network to pre-upgrade state and performing the upgrade again) to fix issues found during the upgrade process.
+Beginning April 3rd, 2024, the Flow team triggered migration of contracts that were staged for upgrade, ran all Cadence 1.0 migrations and restarted the network. This completes the first full upgrade process to Cadence 1.0 and the environments are run weekly. The next milestone repeats this process on Mainnet. This step creates a fully working “real” environment, where developers can test their apps interaction with other contracts and projects available on Crescendo network. The Flow team may repeat this step multiple times (resetting the Crescendo network to pre-upgrade state and performing the upgrade again) to fix issues found during the upgrade process.
 
 In order to migrate your updated smart contract to Cadence 1.0, it's crucial to stage it on the Testnet network. This preliminary step not only verifies the contract's compatibility and syntactical correctness but also ensures a seamless transition to the new environment.
 

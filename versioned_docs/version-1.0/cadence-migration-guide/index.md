@@ -33,7 +33,7 @@ The migration to Crescendo requires developers to adapt their code for compatibi
 
 To make the migration process smooth, new tools, testing environments, and networks have been introduced. Previewnet, is a temporary network featuring the upgraded core contracts and Cadence 1.0 language features, it’s designed for experimentation and not involved in the staging process. Additionally, for both Testnet and Mainnet, "Migration Environment" networks will be created which fork all staged contracts, and their dependencies along with their data and state. These migration environments are reset weekly, pulling in any newly staged contracts, static analysis typechecker reports will also be published on all staged contracts that were not updated correctly.
 
-The Testnet Migration environment is estimated to become available April 3rd and the Mainnet Migration environment is scheduled for mid year.
+The Testnet Migration environment is currently being run weekly and the Mainnet Migration environment is scheduled for mid year.
 
 Help is available during the [Cadence 1.0 Office Hours](https://calendar.google.com/calendar/ical/c_47978f5cd9da636cadc6b8473102b5092c1a865dd010558393ecb7f9fd0c9ad0%40group.calendar.google.com/public/basic.ics) each week at 10:00am PST on the Flow Developer Discord.
 

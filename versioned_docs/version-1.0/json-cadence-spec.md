@@ -94,7 +94,6 @@ This format includes less type information than a complete [ABI](https://en.wiki
   "type": "String",
   "value": "..."
 }
-
 ```
 
 ### Example
@@ -130,7 +129,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ## Integers
 
-`[U]Int`, `[U]Int8`, `[U]Int16`, `[U]Int32`,`[U]Int64`,`[U]Int128`, `[U]Int256`,  `Word8`, `Word16`, `Word32`, or `Word64`
+`[U]Int`, `[U]Int8`, `[U]Int16`, `[U]Int32`,`[U]Int64`,`[U]Int128`, `[U]Int256`, `Word8`, `Word16`, `Word32`, or `Word64`
 
 Although JSON supports integer literals up to 64 bits, all integer types are encoded as strings for consistency.
 
@@ -162,8 +161,8 @@ Although fixed point numbers are implemented as integers, JSON-Cadence uses a de
 
 ```json
 {
-    "type": "[U]Fix64",
-    "value": "<integer>.<fractional>"
+  "type": "[U]Fix64",
+  "value": "<integer>.<fractional>"
 }
 ```
 
@@ -171,8 +170,8 @@ Although fixed point numbers are implemented as integers, JSON-Cadence uses a de
 
 ```json
 {
-    "type": "Fix64",
-    "value": "12.3"
+  "type": "Fix64",
+  "value": "12.3"
 }
 ```
 
@@ -248,7 +247,7 @@ Dictionaries are encoded as a list of key-value pairs to preserve the determinis
         "value": "test"
       }
     }
-  ],
+  ]
   // ...
 }
 ```
@@ -285,7 +284,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
     "fields": [
       {
         "name": "power",
-        "value": {"type": "Int", "value": "1"}
+        "value": { "type": "Int", "value": "1" }
       }
     ]
   }
@@ -338,7 +337,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
   "type": "Type",
   "value": {
     "staticType": {
-      "kind": "Int",
+      "kind": "Int"
     }
   }
 }
@@ -510,7 +509,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
   "type": {
     "kind": "String"
   },
-  "size":3
+  "size": 3
 }
 ```
 
@@ -536,7 +535,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
   },
   "value": {
     "kind": "UInt16"
-  },
+  }
 }
 ```
 
@@ -569,7 +568,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
   "kind": "Resource",
   "type": "",
   "typeID": "0x3.GreatContract.GreatNFT",
-  "initializers":[
+  "initializers": [
     [
       {
         "label": "foo",
@@ -710,7 +709,14 @@ Initializer types are encoded a list of parameters to the initializer.
 ```json
 {
   "kind": "Reference",
-  "authorized": true | false,
+  "authorization": {
+    "kind": "Unauthorized" | "EntitlementMapAuthorization" | "EntitlementConjunctionSet" | "EntitlementDisjunctionSet",
+    "entitlements": [
+    <entitlement at index 0>,
+    <entitlement at index 1>
+    // ...
+    ]
+    },
   "type": <type>
 }
 ```
@@ -720,7 +726,15 @@ Initializer types are encoded a list of parameters to the initializer.
 ```json
 {
   "kind": "Reference",
-  "authorized": true,
+  "authorization": {
+		{
+			"kind": "EntitlementMap",
+			"typeID": "foo",
+			"type": null,
+			"fields": null,
+			"initializers": null
+		}
+  },
   "type": {
     "kind": "String"
   }
@@ -750,22 +764,22 @@ Initializer types are encoded a list of parameters to the initializer.
   "kind": "Restriction",
   "typeID": "0x3.GreatContract.GreatNFT",
   "type": {
-    "kind": "AnyResource",
+    "kind": "AnyResource"
   },
   "restrictions": [
     {
-        "kind": "ResourceInterface",
-        "typeID": "0x1.FungibleToken.Receiver",
-        "fields": [
-            {
-                "id": "uuid",
-                "type": {
-                    "kind": "UInt64"
-                }
-            }
-        ],
-        "initializers": [],
-        "type": ""
+      "kind": "ResourceInterface",
+      "typeID": "0x1.FungibleToken.Receiver",
+      "fields": [
+        {
+          "id": "uuid",
+          "type": {
+            "kind": "UInt64"
+          }
+        }
+      ],
+      "initializers": [],
+      "type": ""
     }
   ]
 }
@@ -825,7 +839,7 @@ Initializer types are encoded a list of parameters to the initializer.
     "kind": "String"
   },
   "typeID": "0x3.GreatContract.GreatEnum",
-  "initializers":[],
+  "initializers": [],
   "fields": [
     {
       "id": "rawValue",
@@ -847,21 +861,22 @@ represented by its type ID.
 
 ```json
 {
-  "type":"Type",
+  "type": "Type",
   "value": {
     "staticType": {
-      "kind":"Resource",
-      "typeID":"0x3.GreatContract.NFT",
-      "fields":[
-        {"id":"foo",
-        "type": {
-          "kind":"Optional",
-          "type":"0x3.GreatContract.NFT" // recursive NFT resource type is instead encoded as an ID
+      "kind": "Resource",
+      "typeID": "0x3.GreatContract.NFT",
+      "fields": [
+        {
+          "id": "foo",
+          "type": {
+            "kind": "Optional",
+            "type": "0x3.GreatContract.NFT" // recursive NFT resource type is instead encoded as an ID
           }
         }
       ],
-      "initializers":[],
-      "type":""
+      "initializers": [],
+      "type": ""
     }
   }
 }

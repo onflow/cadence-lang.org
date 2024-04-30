@@ -765,9 +765,11 @@ Initializer types are encoded a list of parameters to the initializer.
 {
   "kind": "Intersection",
   "typeID": "0x3.GreatContract.GreatNFT",
-  "type": {
-    "kind": "AnyResource"
-  }
+  "types": [
+    {
+      "kind": "String"
+    }
+  ]
 }
 ```
 
@@ -788,11 +790,7 @@ Initializer types are encoded a list of parameters to the initializer.
 {
   "kind": "Capability",
   "type": {
-    "kind": "Reference",
-    "authorized": true,
-    "type": {
-      "kind": "String"
-    }
+    "kind": "String"
   }
 }
 ```

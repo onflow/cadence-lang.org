@@ -351,7 +351,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 {
   "type": "Capability",
   "value": {
-    "path": <path>,
+    "id": "identifier",
     "address": "0x0",  // as hex-encoded string with 0x prefix
     "borrowType": <type>,
   }
@@ -364,13 +364,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 {
   "type": "Capability",
   "value": {
-    "path": {
-      "type": "Path",
-      "value": {
-        "domain": "public",
-        "identifier": "someInteger"
-      }
-    },
+    "id": "1",
     "address": "0x1",
     "borrowType": {
       "kind": "Int"

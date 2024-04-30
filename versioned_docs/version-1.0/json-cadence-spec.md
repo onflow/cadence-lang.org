@@ -728,11 +728,13 @@ Initializer types are encoded a list of parameters to the initializer.
   "kind": "Reference",
   "authorization": {
 		{
-			"kind": "EntitlementMap",
-			"typeID": "foo",
-			"type": null,
-			"fields": null,
-			"initializers": null
+			"kind": "EntitlementMapAuthorization",
+      "entitlements": [
+        {
+          "kind": "EntitlementMap",
+			    "typeID": "foo",
+        }
+      ]
 		}
   },
   "type": {

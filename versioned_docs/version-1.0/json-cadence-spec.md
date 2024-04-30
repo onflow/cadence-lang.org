@@ -763,27 +763,11 @@ Initializer types are encoded a list of parameters to the initializer.
 
 ```json
 {
-  "kind": "Restriction",
+  "kind": "Intersection",
   "typeID": "0x3.GreatContract.GreatNFT",
   "type": {
     "kind": "AnyResource"
-  },
-  "restrictions": [
-    {
-      "kind": "ResourceInterface",
-      "typeID": "0x1.FungibleToken.Receiver",
-      "fields": [
-        {
-          "id": "uuid",
-          "type": {
-            "kind": "UInt64"
-          }
-        }
-      ],
-      "initializers": [],
-      "type": ""
-    }
-  ]
+  }
 }
 ```
 

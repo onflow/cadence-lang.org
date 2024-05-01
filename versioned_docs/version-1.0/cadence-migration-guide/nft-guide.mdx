@@ -55,15 +55,17 @@ to be upgraded and migrated properly. You can find informaion about how to do th
 here: https://github.com/onflow/contract-updater
 
 Additionally, here are the import addresses
-for all of the important contracts related to non-fungible tokens:
+for all of the important contracts related to non-fungible tokens.
+The second column is the import address if you are testing with a basic version of the emulator.
+The third column contains the import addresses if you are using the Cadence testing framework.
 
-| Contract           | Emulator Import Address |
-| ------------------ | ----------------------- |
-| `NonFungibleToken` | `0xf8d6e0586b0a20c7`    |
-| `FungibleToken`    | `0xee82856bf20e2aa6`    |
-| `ViewResolver`     | `0xf8d6e0586b0a20c7`    |
-| `Burner`           | `0xf8d6e0586b0a20c7`    |
-| `MetadataViews`    | `0xf8d6e0586b0a20c7`    |
+| Contract           | Emulator Import Address | Testing Framework    |
+| ------------------ | ----------------------- | -------------------- |
+| `NonFungibleToken` | `0xf8d6e0586b0a20c7`    | `0x0000000000000001` |
+| `FungibleToken`    | `0xee82856bf20e2aa6`    | `0x0000000000000002` |
+| `ViewResolver`     | `0xf8d6e0586b0a20c7`    | `0x0000000000000001` |
+| `Burner`           | `0xf8d6e0586b0a20c7`    | `0x0000000000000001` |
+| `MetadataViews`    | `0xf8d6e0586b0a20c7`    | `0x0000000000000001` |
 
 See the other guides in this section of the docs for the import
 addresses of other important contracts in the emulator.
@@ -77,12 +79,16 @@ for the updated versions of NFT Catalog contracts.
 **NFT Storefront:** See [the `cadence-1.0` branch in the NFT Storefront Repo](https://github.com/onflow/nft-storefront/tree/cadence-1.0/contracts)
 for the updated versions of the `NFTStorefront` and `NFTStorefrontV2` contracts.
 
-**USDC:** The USDC contract is still being updated for Cadence 1.0 and is currently not available.
+**USDC:** See [this PR in the USDC repo](https://github.com/flow-usdc/flow-usdc/pull/82)
+for updated USDC contracts.
 
-**Account Linking and Hybrid Custody:** The account linking and hybrid custody contracts
-are still being updated for Cadence 1.0 and are currently not available.
+**Account Linking and Hybrid Custody:** See [this PR in the hybrid custody repo](https://github.com/onflow/hybrid-custody/pull/164)
+for updated hybrid custody contracts.
 
-For any other contracts, search for their github repo and there will likely be
+[This discord announcement](https://discord.com/channels/613813861610684416/811693600403357706/1225909248429527140)
+also contains versions of a lot of important contracts.
+
+For any others, search for their github repo and there will likely be
 a PR or feature branch with the Cadence 1.0 changes. If there isn't, please
 create an issue in the repo or reach out to that team directly via their support
 or Discord channel to ask them about their plans to update their contracts.
@@ -150,15 +156,15 @@ The improvements will be described here as they apply to specific changes
 that projects need to make in order to be ready for the upgrade,
 but it is good to read all sources to fully understand the changes.
 
-Please read the motivation section of the NFT-V2 FLIP to learn about
-why most of the changes to the standard were needed or desired.
+Please read the motivation section of [the NFT-V2 FLIP](https://github.com/onflow/flips/pull/56)
+to learn about why most of the changes to the standard were needed or desired.
 
 First, we will cover the changes that come from the new token standards and then
 we will cover the changes that come from Cadence.
 
 ### Previous Non-Permitted Changes
 
-Until now, there were a lot of restrictions on what changes are allowed
+Until now, there were many restrictions on what changes are allowed
 in upgrades to Cadence smart contracts, like not being allowed to change the type of fields,
 not being able to change interface conformance, and more.
 Many of the Cadence 1.0 changes require updates that break some of these rules,
@@ -196,7 +202,7 @@ currently, but there was a period of time when the new standards defined `NonFun
 as a contract instead of an interface, so anyone who was testing with those early versions
 should make sure that their contract still implements `NonFungibleToken`.
 This will ensure that the correct metadata view methods are enforced from `ViewResolver`
-and that your contract has the correct `createEmptyCollection()` method defined.
+and that your contract has the correct `createEmptyCollection(nftType: Type)` method defined.
 
 It is important to understand that the new `NonFungibleToken` no longer specifies types
 that you need to define like `NFT` and `Collection`. These were changed to interfaces
@@ -230,6 +236,7 @@ in order to be considered compatible with the standard!
 
 ```cadence
 access(all) contract ExampleNFT: NonFungibleToken {
+
     /// We choose the name NFT here, but this type can have any name now
     /// because the interface does not require it to have a specific name any more
     access(all) resource NFT: NonFungibleToken.NFT {
@@ -240,9 +247,20 @@ This will ensure that your `NFT` resource has all the correct fields and functio
 As part of this upgrade, you should remove the `NonFungibleToken.INFT` implementation specification
 from the declaration of your `NFT` because the `INFT` interface has been removed.
 
+In your code, any instance that refers
+to `@NonFungibleToken.NFT` or `&NonFungibleToken.NFT` need to be updated to
+`@{NonFungibleToken.NFT}` or `&{NonFungibleToken.NFT}` respectively.
+
+Example in `deposit()`:
+
+```cadence
+/// deposit now accepts a resource that implements the `NonFungibleToken.NFT` interface type
+access(all) fun deposit(token: @{NonFungibleToken.NFT})
+```
+
 **Note for Custom Migrations:** All stored objects that currently use the concrete type
 `NonFungibleToken.NFT` will be automatically migrated to use the interface type `{NonFungibleToken.NFT}`
-as part of the Flow team's custom state migrations.
+as part of the Flow team's custom state migrations. Your code still needs to be updated to reflect this though.
 
 ### Your Collection implements NonFungibleToken.Collection
 
@@ -254,9 +272,15 @@ so your `Collection` resource type needs to implement it in order to be conforma
 access(all) resource Collection: NonFungibleToken.Collection {
 ```
 
+In addition, since `Collection` is an interface, you will need to update every instance in your code
+that refers to `@NonFungibleToken.Collection` or `&NonFungibleToken.Collection` to
+`@{NonFungibleToken.Collection}` or `&{NonFungibleToken.Collection}` respectively to show
+that it is now an interface specification instead of a concrete type specification.
+
 **Note for Custom Migrations:** All stored objects that currently use the concrete type
 `NonFungibleToken.Collection` will be automatically migrated to use the interface type `{NonFungibleToken.Collection}`
-as part of the Flow team's custom state migrations.
+as part of the Flow team's custom state migrations. Your code still needs to be updated to reflect this though.
+
 
 ### Remove Project-Specific Events
 
@@ -302,7 +326,7 @@ For event listeners, the events will have this format:
 A.f8d6e0586b0a20c7.NonFungibleToken.Deposited(...)
 ```
 
-Where the address is whatever address the `NonFungibleToken` contract is deployed to.
+Where the address is whatever address the `NonFungibleToken` contract interface is deployed to.
 
 ### Implement ViewResolver
 
@@ -381,7 +405,7 @@ get an idea of the size of your collection.
 ```cadence
 /// Gets the amount of NFTs stored in the collection
     access(all) view fun getLength(): Int {
-        return self.ownedNFTs.keys.length
+        return self.ownedNFTs.length
     }
 ```
 
@@ -513,6 +537,13 @@ because it is extremely important for you to understand in order to build safe s
 Most contracts can update and `pub` access modifiers to **access(all)**,
 but there are some functions, such as `withdraw`, that need to have entitled access.
 
+These privledge functions need to have entitled access now because as part of Cadence 1.0,
+any restricted reference can be downcast to the concrete reference type without
+needing to be an authorized reference. This means for example, that a `&{NonFungibleToken.Receiver}`
+reference can be cast to a `&{NonFungibleToken.Collection}` reference, which would give
+access to the `withdraw()` method if it is `access(all)`! 
+You can read more about how references work in Cadence 1.0 [here](https://cadence-lang.org/docs/1.0/language/references).
+
 A good rule to follow is that if there is a resource that will ever have a reference
 created for it (such as for a public or private capability), any functions that
 you don't want everyone in the network to be able to have access to should be
@@ -546,24 +577,8 @@ self.withdrawRef = signer.storage.borrow<auth(NonFungibleToken.Withdraw) &{NonFu
 
 From the [flow-nft `transfer_nft.cdc` transaction](https://github.com/onflow/flow-nft/blob/standard-v2/transactions/transfer_nft.cdc).
 
-In addition, since `Collection` is an interface, you will need to update every instance in your code
-that refers to `@NonFungibleToken.Collection` or `&NonFungibleToken.Collection` to
-`@{NonFungibleToken.Collection}` or `&{NonFungibleToken.Collection}` respectively to show
-that it is now an interface specification instead of a concrete type specification.
-
-This also applies to `NonFungibleToken.NFT`. Any instance that refers
-to `@NonFungibleToken.NFT` or `&NonFungibleToken.NFT` need to be updated to
-`@{NonFungibleToken.NFT}` or `&{NonFungibleToken.NFT}` respectively.
-
-Example in `deposit()`:
-
-```cadence
-/// deposit now accepts a resource that implements the `NonFungibleToken.NFT` interface type
-access(all) fun deposit(token: @{NonFungibleToken.NFT})
-```
-
 **Note on Custom State Migrations:** You may be wondering
-how you can get these entitlements onto capabilities
+how you can get these entitlements onto `Provider` capabilities
 that already exist in a contract or in an account. As part of the automatic
 migrations, all existing capabilities will be automatically migrated to
 use a type that offers the same level of access. In the case of Capabilities

@@ -51,16 +51,18 @@ to be upgraded and migrated properly. You can find informaion about how to do th
 here: https://github.com/onflow/contract-updater
 
 Additionally, here are the import addresses
-for all of the important contracts related to fungible tokens:
+for all of the important contracts related to fungible tokens.
+The second column is the import address if you are testing with a basic version of the emulator.
+The third column contains the import addresses if you are using the Cadence testing framework.
 
-| Contract                    | Emulator Import Address |
-| --------------------------- | ----------------------- |
-| `FungibleToken`             | `0xee82856bf20e2aa6`    |
-| `ViewResolver`              | `0xf8d6e0586b0a20c7`    |
-| `Burner`                    | `0xf8d6e0586b0a20c7`    |
-| `MetadataViews`             | `0xf8d6e0586b0a20c7`    |
-| `FungibleTokenMetadataViews`| `0xee82856bf20e2aa6`    |
-| `FungibleTokenSwitchboard`  | `0xee82856bf20e2aa6`    |
+| Contract                    | Emulator Import Address | Testing Framework    |
+| --------------------------- | ----------------------- | -------------------- |
+| `FungibleToken`             | `0xee82856bf20e2aa6`    | `0x0000000000000002` |
+| `ViewResolver`              | `0xf8d6e0586b0a20c7`    | `0x0000000000000001` |
+| `Burner`                    | `0xf8d6e0586b0a20c7`    | `0x0000000000000001` |
+| `MetadataViews`             | `0xf8d6e0586b0a20c7`    | `0x0000000000000001` |
+| `FungibleTokenMetadataViews`| `0xee82856bf20e2aa6`    | `0x0000000000000002` |
+| `FungibleTokenSwitchboard`  | `0xee82856bf20e2aa6`    | `0x0000000000000002` |
 
 See the other guides in this section of the docs for the import
 addresses of other important contracts in the emulator.
@@ -68,10 +70,14 @@ addresses of other important contracts in the emulator.
 As for contracts that are important for NFT developers but aren't "core contracts",
 here is information about where to find the Cadence 1.0 Versions of Each:
 
-**USDC:** The USDC contract is still being updated for Cadence 1.0 and is currently not available.
+**USDC:** See [this PR in the USDC repo](https://github.com/flow-usdc/flow-usdc/pull/82)
+for updated USDC contracts.
 
-**Account Linking and Hybrid Custody:** The account linking and hybrid custody contracts
-are still being updated for Cadence 1.0 and are currently not available.
+**Account Linking and Hybrid Custody:** See [this PR in the hybrid custody repo](https://github.com/onflow/hybrid-custody/pull/164)
+for updated hybrid custody contracts.
+
+[This discord announcement](https://discord.com/channels/613813861610684416/811693600403357706/1225909248429527140)
+also contains versions of a lot of important contracts.
 
 For any other contracts, search for their github repo and there will likely be
 a PR or feature branch with the Cadence 1.0 changes. If there isn't, please
@@ -112,6 +118,7 @@ access(all) fun deposit(from: @{FungibleToken.Vault})
 **Note for Custom Migrations:** All stored objects that currently use the concrete type
 `FungibleToken.Vault` will be automatically migrated to use the interface type `{NonFungibleToken.Vault}`
 as part of the Flow team's custom state migrations.
+Your code still needs to be updated to reflect this though.
 
 ## Add `Withdraw` entitlements to `withdraw()`
 

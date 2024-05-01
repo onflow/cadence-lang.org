@@ -345,6 +345,43 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 
 ---
 
+## Inclusive Range Value
+
+```json
+{
+  "type": "InclusiveRange",
+  "value": {
+    "start": <start_value>,
+    "end": <end_value>,
+    "step": <step_type>
+  }
+}
+```
+
+### Example
+
+```json
+{
+  "type": "InclusiveRange",
+  "value": {
+    "start": {
+      "type": "Int256",
+      "value": "10"
+    },
+    "end": {
+      "type": "Int256",
+      "value": "20"
+    },
+    "step": {
+      "type": "Int256",
+      "value": "5"
+    }
+  }
+}
+```
+
+---
+
 ## Capability
 
 ```json
@@ -857,5 +894,25 @@ represented by its type ID.
       "type": ""
     }
   }
+}
+```
+
+## Inclusive Range Type
+
+### Example
+
+```json
+{
+	{
+	"type": "Type",
+	"value": {
+		"staticType": {
+		"kind": "InclusiveRange",
+		"element": {
+			"kind": "Int"
+		}
+		}
+	}
+	}
 }
 ```

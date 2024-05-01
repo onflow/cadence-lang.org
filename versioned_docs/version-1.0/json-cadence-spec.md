@@ -896,3 +896,30 @@ represented by its type ID.
   }
 }
 ```
+
+## Inclusive Range Type
+
+```json
+{
+  "kind": "InclusiveRange",
+  "element":  <integer_value>
+}
+```
+
+### Example
+
+```json
+{
+	{
+	"type": "Type",
+	"value": {
+		"staticType": {
+		"kind": "InclusiveRange",
+		"element": {
+			"kind": "Int"
+		}
+		}
+	}
+	}
+}
+```

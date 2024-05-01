@@ -251,7 +251,7 @@ Outside of `C`, `E` is used with `C.E` syntax.
 Entitlements exist in the same namespace as types, so if a contract declares a resource called `R`,
 it is impossible to declare an entitlement that is also called `R`.
 
-Entitlements can be used in access modifiers composite members (fields and functions)
+Entitlements can be used in access modifiers of composite members (fields and functions)
 to specify which references to those composites are allowed to access those members.
 
 An access modifier can include more than one entitlement,
@@ -275,14 +275,14 @@ resource SomeResource {
 
    // requires a reference to have both an `E` AND an `F` entitlement to read this field
   access(E, F)
-  let b: Int
+  let c: Int
 
   // intializers omitted for brevity
   // ...
 }
 ```
 
-Assuming the following constants exists,
+Assuming the following constants exist,
 which have owned or [reference](./references.mdx) types:
 
 ```cadence
@@ -403,13 +403,13 @@ and thus can only obtain an unauthorized reference to `InnerResource`.
 That reference to the `InnerResource` then only allows calling the function `foo`, which is publicly accessible,
 but not function `bar`, as it needs the `InnerEntitlement` entitlement, which is not granted.
 
-However a `OuterEntitlement`-authorized reference to the `OuterResource` can be used to call the `getEntitledRef` function,
+However an `OuterEntitlement`-authorized reference to the `OuterResource` can be used to call the `getEntitledRef` function,
 which returns a `InnerEntitlement`-authorized reference to `InnerResource`,
 which in turn can be used to call function `bar`.
 
 This pattern is functional, but it is unfortunate that the accessor functions to `InnerResource` have to be "duplicated".
 
-To avoid necessitating this duplication, entitlement mappings can be used.
+Entitlement mappings should be used to avoid this duplication. 
 
 Entitlement mappings are declared using the syntax:
 
@@ -423,13 +423,13 @@ Where `M` is the name of the mapping.
 
 The body of the mapping contains zero or more rules of the form `A -> B`,
 where `A` and `B` are entitlements.
-Each rule defines that, given a reference with the entitlement on the left,
-a reference with the entitlement on the right is returned.
+Each rule declares that, given a reference with the entitlement on the left,
+a reference with the entitlement on the right is produced.
 
 An entitlement mapping thus defines a function from an input set of entitlements (called the domain)
 to an output set (called the range or the image).
 
-Using entitlement mappings, the above example could be equivalently written as:
+Using entitlement mappings, the above example could be more concisely written as:
 
 ```cadence
 entitlement OuterEntitlement
@@ -481,8 +481,8 @@ let entitledInnerRef = entitledRef.childResource  // has type `auth(InnerEntitle
 
 // `r` is an owned value, and is thus considered "fully-entitled" to `OuterResource`,
 // so this access yields a value authorized to the entire image of `OuterToInnerMap`,
-// in this case `InnerEntitlement`
-let alsoEntitledInnerRef = r.childResource
+// in this case `InnerEntitlement`, and thus can call `bar`
+r.childResource.bar()
 ```
 
 Entitlement mappings can be used either in accessor functions (as in the example above),
@@ -517,7 +517,7 @@ A good example for how entitlement mappings can be used is the [`Account` type](
 
 ### The `Identity` entitlement mapping
 
-`Identity` is a built-in entitlement mapping that maps every input to itself as the output.
+`Identity` is a special built-in entitlement mapping that maps every input to itself as the output.
 Any entitlement set passed through the `Identity` map will come out unchanged in the output.
 
 For instance:

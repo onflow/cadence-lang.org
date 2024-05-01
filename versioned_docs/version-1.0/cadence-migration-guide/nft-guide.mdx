@@ -465,7 +465,7 @@ they could do it in the `deposit()` function:
 access(all) contract ExampleNFT {
     access(all) resource Collection: NonFungibleToken.Collection {
 
-        access(contract) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
+        access(all) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
 
         ...
 

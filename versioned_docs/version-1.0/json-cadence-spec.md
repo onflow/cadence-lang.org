@@ -708,6 +708,7 @@ Initializer types are encoded a list of parameters to the initializer.
     <parameter at index 1>,
     // ...
   ],
+  "purity: "view",
   "return": <type>
 }
 ```
@@ -727,6 +728,7 @@ Initializer types are encoded a list of parameters to the initializer.
       }
     }
   ],
+  "purity": "view",
   "return": {
     "kind": "String"
   }

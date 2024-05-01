@@ -447,23 +447,6 @@ This means providers should only publish capabilities to recipients they trust t
 or limit the type with which the capability is authorized in order to only give recipients access to the functionality
 that the provider is willing to allow them to copy.
 
-
-## Capability revocation
-
-### Problem
-
-A capability provided by one account to a second account must able to be revoked
-by the first account without the co-operation of the second.
-
-### Solution
-
-The first account should issue a _new_ capability
-and use it only for the purpose of granting the second account access.
-
-Once the first account wants to revoke access to the resource in storage,
-they can simply get the capability controller for that capability and delete it.
-
-
 ## Check for existing capability before publishing new one
 
 ### Problem

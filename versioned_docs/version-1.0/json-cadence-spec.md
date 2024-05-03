@@ -345,7 +345,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 
 ---
 
-## Inclusive Range Value
+## InclusiveRange
 
 ```json
 {
@@ -353,7 +353,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
   "value": {
     "start": <start_value>,
     "end": <end_value>,
-    "step": <step_type>
+    "step": <step_value>
   }
 }
 ```
@@ -708,7 +708,7 @@ Initializer types are encoded a list of parameters to the initializer.
     <parameter at index 1>,
     // ...
   ],
-  "purity: "view",
+  "purity: "view" | undefined,
   "return": <type>
 }
 ```
@@ -915,11 +915,9 @@ represented by its type ID.
 	{
 	"type": "Type",
 	"value": {
-		"staticType": {
 		"kind": "InclusiveRange",
 		"element": {
 			"kind": "Int"
-		}
 		}
 	}
 	}

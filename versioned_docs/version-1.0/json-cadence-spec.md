@@ -708,7 +708,7 @@ Initializer types are encoded a list of parameters to the initializer.
     <parameter at index 1>,
     // ...
   ],
-  "purity: "view" | undefined,
+  "purity: "view" | "",
   "return": <type>
 }
 ```

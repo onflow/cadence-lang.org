@@ -800,7 +800,18 @@ Initializer types are encoded a list of parameters to the initializer.
   "typeID": "0x3.GreatContract.GreatNFT",
   "types": [
     {
-      "kind": "String"
+      "kind": "ResourceInterface",
+      "typeID": "0x1.FungibleToken.Receiver",
+      "fields": [
+        {
+          "id": "uuid",
+          "type": {
+            "kind": "UInt64"
+          }
+        }
+      ],
+      "initializers": [],
+      "type": ""
     }
   ]
 }
@@ -823,7 +834,14 @@ Initializer types are encoded a list of parameters to the initializer.
 {
   "kind": "Capability",
   "type": {
-    "kind": "String"
+    "kind": "Reference",
+    "authorization": {
+      "kind": "Unauthorized",
+      "entitlements": null
+    },
+    "type": {
+      "kind": "String"
+    }
   }
 }
 ```
@@ -904,7 +922,7 @@ represented by its type ID.
 ```json
 {
   "kind": "InclusiveRange",
-  "element":  <integer_value>
+  "element":  <integer_type>
 }
 ```
 

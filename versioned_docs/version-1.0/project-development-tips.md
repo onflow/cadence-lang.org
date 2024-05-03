@@ -293,4 +293,4 @@ Composability and extensibility should also be priorities while designing, devel
 and documenting their projects. (Documentation for these topics coming soon)
 
 
-If you have any feedback about these guidelines, please create an issue in the `onflow/cadence-style-guide` repo or make a PR updating the guidelines so we can start a discussion.
+If you have any feedback about these guidelines, please create an issue in the `cadence-lang.org` repo or make a PR updating the guidelines so we can start a discussion.

@@ -912,14 +912,9 @@ represented by its type ID.
 
 ```json
 {
-	{
-	"type": "Type",
-	"value": {
-		"kind": "InclusiveRange",
-		"element": {
-			"kind": "Int"
-		}
-	}
-	}
+  "kind": "InclusiveRange",
+  "element": {
+    "kind": "Int"
+  }
 }
 ```

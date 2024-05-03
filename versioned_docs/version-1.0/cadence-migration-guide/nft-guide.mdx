@@ -442,7 +442,7 @@ so they can query collections to get the updated metadata to show in their user 
 
 ```cadence
     access(all) event Updated(type: String, id: UInt64, uuid: UInt64, owner: Address?)
-    access(all) view fun emitNFTUpdated(_ nftRef: auth(Update | Owner) &{NonFungibleToken.NFT})
+    access(all) view fun emitNFTUpdated(_ nftRef: auth(Update) &{NonFungibleToken.NFT})
     {
         emit Updated(type: nftRef.getType().identifier, id: nftRef.id, uuid: nftRef.uuid, owner: nftRef.owner?.address)
     }
@@ -465,7 +465,7 @@ they could do it in the `deposit()` function:
 access(all) contract ExampleNFT {
     access(all) resource Collection: NonFungibleToken.Collection {
 
-        access(contract) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
+        access(all) var ownedNFTs: @{UInt64: ExampleNFT.NFT}
 
         ...
 
@@ -519,7 +519,7 @@ you don't want everyone in the network to be able to have access to should be
 restricted by an entitlement so that people cannot downcast the reference to access
 these privledged functions.
 
-### Add Withdraw and Owner Entitlements to withdraw()
+### Add Withdraw Entitlement to withdraw()
 
 Now that unrestricted casting is possible in Cadence, it is necessary to use
 [entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)

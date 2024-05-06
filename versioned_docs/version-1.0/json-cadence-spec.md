@@ -388,7 +388,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 {
   "type": "Capability",
   "value": {
-    "id": "integer",
+    "id": <Number>,
     "address": "0x0",  // as hex-encoded string with 0x prefix
     "borrowType": <type>,
   }

@@ -129,7 +129,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ## Integers
 
-`[U]Int`, `[U]Int8`, `[U]Int16`, `[U]Int32`,`[U]Int64`,`[U]Int128`, `[U]Int256`, `Word8`, `Word16`, `Word32`, or `Word64`
+`[U]Int`, `[U]Int8`, `[U]Int16`, `[U]Int32`,`[U]Int64`,`[U]Int128`, `[U]Int256`, `Word8`, `Word16`, `Word32`, `Word64`, `Word128` or `Word256`
 
 Although JSON supports integer literals up to 64 bits, all integer types are encoded as strings for consistency.
 
@@ -388,7 +388,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 {
   "type": "Capability",
   "value": {
-    "id": "identifier",
+    "id": "integer",
     "address": "0x0",  // as hex-encoded string with 0x prefix
     "borrowType": <type>,
   }
@@ -708,7 +708,7 @@ Initializer types are encoded a list of parameters to the initializer.
     <parameter at index 1>,
     // ...
   ],
-  "purity: "view" | "",
+  "purity: "view" | undefined,
   "return": <type>
 }
 ```

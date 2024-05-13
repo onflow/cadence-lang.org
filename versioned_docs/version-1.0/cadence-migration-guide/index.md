@@ -213,6 +213,7 @@ Valid Input: Existing contract name in flow.json.
 $ flow migrate list-staged --network --network=testnet
 Arguments: network_name
 ```
+You can view all currently staged contracts and see reports on migration status through the [Migrations Data Repository](https://github.com/onflow/cadence/tree/master/migrations_data).
 
 ### Stage and Confirm on Mainnet Migration Env
 

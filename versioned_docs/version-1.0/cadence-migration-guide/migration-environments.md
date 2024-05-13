@@ -1,4 +1,4 @@
-# Migration environments
+# Migration Environments
 
 ## What is a Migration Environment?
 

@@ -16,8 +16,10 @@ Access all weekly migration reports through this [repository](https://github.com
 
 ## Accessing the Migration Environment
 
-The Migration Environment is useful for developers to test their updated transactions against to verify that they will work as expected with Crescendo. To live-test during its operation from Wednesday to Thursday, connect to the Testnet Migration Environment using this endpoint:
+The Migration Environment is useful for developers to test their updated transactions against to verify that they will work as expected with Crescendo. To live-test during its operation connect to the Testnet Migration Environment using this endpoint:
 
 ```
 access-001.migrationtestnet1.nodes.onflow.org:9000 
 ```
+
+Operation times for the Migration Environment can be found [here](https://discord.com/channels/613813861610684416/811693600403357706).

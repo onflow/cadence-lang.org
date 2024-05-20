@@ -94,7 +94,7 @@ const config = {
       announcementBar: {
         id: 'stable_cadence_upgrade',
         content: `🔧 Upgrade to Cadence 1.0 🔧<br />
-          [Upgrade](https://flow.com/upgrade/crescendo/migration) your Cadence contracts on Testnet before June 19th! All contracts must be updated to avoid breaking.
+          <a href="https://flow.com/upgrade/crescendo/migration" target="_blank">Upgrade</a> your Cadence contracts on Testnet before June 19th! All contracts must be updated to avoid breaking.
          `,
         backgroundColor: '#007BFF',
         textColor: '#FFFFFF',

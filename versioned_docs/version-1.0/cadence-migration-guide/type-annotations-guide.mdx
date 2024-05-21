@@ -50,7 +50,7 @@ E.g., for a resource type `R` defined as:
 ```cadence
 access(all) resource R {
     access(E) fun foo() { ... }
-    access(G | H) fun bar() { ... }
+    access(G, H) fun bar() { ... }
 }
 ```
 
@@ -77,6 +77,29 @@ access(all) resource R: I {
 
 A type `&R{I}` should be updated to `auth(E) &R`, since the entitlements it is given is only those in `I`. It does not receive an entitlement to `F`, since
 the old `&R{I}` was not able to call `bar`.
+
+An additional caveat is that entitlement disjunctions behave slightly differently than normal during the migration. 
+While in general (after the release of Cadence 1.0) it will be possible to define a resource `R` like so:
+
+```cadence
+access(all) resource R {
+    access(E) fun foo() { ... }
+    access(G | H) fun bar() { ... }
+}
+```
+
+The validator will reject this particular definition during the migration, as the inferred entitlements granted to a resource reference of this type (`&R`)
+would be `E & (G | H)`, which Cadence cannot represent. The migration will attempt to result simple disjunctions, e.g. if you define a resource `X` like so:
+
+```cadence
+access(all) resource X {
+    access(E) fun foo() { ... }
+    access(E | G) fun bar() { ... }
+}
+```
+
+The migration and validator will correctly realize that you can just grant `E` to `&X` references, but in the general case contract updates that use 
+entitlement disjunctions will fail in the validator. 
 
 ## Account Types
 

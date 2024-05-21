@@ -213,6 +213,9 @@ Valid Input: Existing contract name in flow.json.
 $ flow migrate list-staged --network --network=testnet
 Arguments: network_name
 ```
+You can view all currently staged contracts for Testnet by inspecting the account of the staging contract, `0x2ceae959ed1a7e7a`, for example through https://f.dnz.dev/0x2ceae959ed1a7e7a.
+
+You can see reports on migration status in the [Cadence Repository](https://github.com/onflow/cadence/tree/master/migrations_data).
 
 ### Stage and Confirm on Mainnet Migration Env
 

@@ -230,7 +230,7 @@ A field may belong to a contract, struct, resource, or interface.
     prevent performing such an update.
 
 #### Invalid Changes:
-- Removing an existing declaration is not valid.
+- Removing an existing declaration is not valid without using the `#removedType` pragma
   - Removing a declaration allows adding a new declaration with the same name, but with a different structure.
   - Any program that uses that declaration would face inconsistencies in the stored data.
 - Renaming a declaration is not valid. It can have the same effect as removing an existing declaration and adding
@@ -501,3 +501,44 @@ Similar to functions, constructors are also not stored. Hence, any changes to co
 A contract may import declarations (types, functions, variables, etc.) from other programs. These imported programs are
 already validated at the time of their deployment. Hence, there is no need for validating any declaration every time
 they are imported.
+
+## The `#removedType` Pragma
+
+Under normal circumstances, it is not valid to remove a type declaration, whether a composite or an interface. 
+However, a special pragma can be used when this is necessary to enable composite declarations to be "tombstoned", 
+removing them from a contract and preventing any declarations from being re-added with the same name. 
+This pragma cannot be used with interfaces.
+
+To use this pragma, simply add a `#removedType(T)` line to the contract containing the type `T` you want to remove,
+at the same scope as the declaration of `T`. So, for example, to remove a resource definition `R` defined like so:
+
+```cadence
+access(all) contract Foo {
+
+  access(all) resource R {
+     // definition of R ...
+  }
+
+  // other stuff ... 
+}
+```
+
+change the contract to:
+
+```cadence
+access(all) contract Foo {
+
+  #removedType(R)
+
+  // other stuff ... 
+}
+```
+
+This will prevent any type named `R` from ever being declared again as a nested declaration in `Foo`, 
+preventing the security issues normally posed by removing a type. 
+Specifically, when a `#removedType(T)` pragma is present at a certain scope level in a contract, 
+no new type named `T` can be added at that scope. 
+Additionally, once added, a `#removedType` pragma can never be removed, 
+as this would allow circumventing the above restriction. 
+
+Please note that this pragma's behavior is not necessarily final and is subject to change.

@@ -531,8 +531,14 @@ access(all) contract ExampleNFT {
 The `pub` access modifier was removed from the language to better support unified
 representation of access control, especially now that entitlements exist.
 
+:::warning
+**IMPORTANT SECURITY NOTICE**
 Please familiarize yourself with [the new entitlements feature](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)
 because it is extremely important for you to understand in order to build safe smart contracts.
+If you change `pub` to `access(all)` without paying attention to potential downcasting from public interfaces, you might expose private
+functions like `withdraw` that will cause security problems for your contract.
+Learn more about this [here](https://forum.flow.com/t/update-on-cadence-1-0/5197#adoption-43).
+:::
 
 Most contracts can update and `pub` access modifiers to **access(all)**,
 but there are some functions, such as `withdraw`, that need to have entitled access.
@@ -541,7 +547,7 @@ These privledge functions need to have entitled access now because as part of Ca
 any restricted reference can be downcast to the concrete reference type without
 needing to be an authorized reference. This means for example, that a `&{NonFungibleToken.Receiver}`
 reference can be cast to a `&{NonFungibleToken.Collection}` reference, which would give
-access to the `withdraw()` method if it is `access(all)`! 
+access to the `withdraw()` method if it is `access(all)`!
 You can read more about how references work in Cadence 1.0 [here](https://cadence-lang.org/docs/1.0/language/references).
 
 A good rule to follow is that if there is a resource that will ever have a reference

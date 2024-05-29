@@ -533,10 +533,13 @@ representation of access control, especially now that entitlements exist.
 
 :::warning
 **IMPORTANT SECURITY NOTICE**
+
 Please familiarize yourself with [the new entitlements feature](https://cadence-lang.org/docs/1.0/language/access-control#entitlements)
 because it is extremely important for you to understand in order to build safe smart contracts.
+
 If you change `pub` to `access(all)` without paying attention to potential downcasting from public interfaces, you might expose private
 functions like `withdraw` that will cause security problems for your contract.
+
 Learn more about this [here](https://forum.flow.com/t/update-on-cadence-1-0/5197#adoption-43).
 :::
 

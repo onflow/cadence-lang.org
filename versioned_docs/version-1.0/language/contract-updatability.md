@@ -505,8 +505,9 @@ they are imported.
 ## The `#removedType` Pragma
 
 Under normal circumstances, it is not valid to remove a type declaration, whether a composite or an interface. 
-However, a special pragma can be used when this is necessary to enable declarations to be "tombstoned", 
+However, a special pragma can be used when this is necessary to enable composite declarations to be "tombstoned", 
 removing them from a contract and preventing any declarations from being re-added with the same name. 
+This pragma cannot be used with interfaces.
 
 To use this pragma, simply add a `#removedType(T)` line to the contract containing the type `T` you want to remove,
 at the same scope as the declaration of `T`. So, for example, to remove a resource definition `R` defined like so:
@@ -539,3 +540,5 @@ Specifically, when a `#removedType(T)` pragma is present at a certain scope leve
 no new type named `T` can be added at that scope. 
 Additionally, once added, a `#removedType` pragma can never be removed, 
 as this would allow circumventing the above restriction. 
+
+Please note that this pragma's behavior is not necessarily final and is subject to change.

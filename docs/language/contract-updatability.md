@@ -225,6 +225,9 @@ A field may belong to a contract, struct, resource, or interface.
   pub struct Foo {
   }
   ```
+  This is because if there was a container of type `T` (i.e: an array `[T]` or dictionary `{R:T}`, etc.), 
+  and if a `Foo` value had been stored in that container, then that container value will become invalid,
+  as it will now hold a value that does not conform to `T`.
 
 ### Updating Members
 Similar to contracts, these composite declarations: structs, resources, and interfaces also can have fields and

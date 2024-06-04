@@ -14,7 +14,6 @@ In this tutorial, we're going to walk through how resources can own other resour
   >
     https://play.onflow.org/01f812d7-799a-42fd-b9cb-9ffe556e02ad
   </a>
-  <br/>
   The tutorial will be asking you do take various actions to interact with this code.
 </Callout>
 

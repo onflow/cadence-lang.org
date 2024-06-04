@@ -2,8 +2,8 @@
 archived: false
 draft: false
 title: 5.2 Non-Fungible Token Tutorial Part 2
-description: An introduction to NFTs on Cadence
-date: 2022-05-10
+description: An introduction to NFTs in Cadence
+date: 2024-06-05
 meta:
   keywords:
     - tutorial
@@ -36,13 +36,16 @@ a full implementation for **Non-Fungible Tokens (NFTs)**.
   >
     https://play.onflow.org/f08e8e0d-d28e-4cbe-8d72-3afe2349c629
   </a>
-  <br/>
   The tutorial will ask you to take various actions to interact with this code.
 </Callout>
 
 <Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+  The playground code that is linked uses Cadence 0.42, but the examples
+  use Cadence 1.0 to show how each contract, transaction and script
+  is implemented in Cadence 1.0. 
+  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
+  The project link will still work with the current version of the playground,
+  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -87,8 +90,7 @@ This example uses a [**Dictionary**: a mutable, unordered collection of key-valu
 ```cadence
 // Keys are `Int`
 // Values are `NFT`
-access(all)
-let myNFTs: @{Int: NFT}
+access(all) let myNFTs: @{Int: NFT}
 ```
 
 In a dictionary, all keys must have the same type, and all values must have the same type.
@@ -103,7 +105,7 @@ This means that all the rules that apply to resources apply to this type.
 
 Using a dictionary to store our NFTs would solve the problem
 of having to use different storage paths for each NFT, but it doesn't solve all the problems.
-This types are relatively opaque and doesn't have much useful functionality on its own.
+These types are relatively opaque and don't have much useful functionality on their own.
 
 Instead, we can use a powerful feature of Cadence, resources owning other resources!
 We'll define a new `Collection` resource as our NFT storage place
@@ -113,14 +115,16 @@ The next contract we look at is called `ExampleNFT`, it's stored in Contract 1 i
 
 This contract expands on the `BasicNFT` we looked at by adding:
 1. An `idCount` contract field that tracks unique NFT ids.
-2. An `NFTReceiver` interface that exposes three public functions for the collection.
-3. Declares a resource called `Collection` that implements the `NFTReceiver` interface
+2. An `NFTReceiver` interface that specifies three public functions for the collection.
+3. Declares a resource called `Collection` that acts as a place to intuitively store and manage
+   your NFTs. It implements the `NFTReceiver` interface
 4. The `Collection` will declare fields and functions to interact with it,
-including `ownedNFTs`, `init()`, `withdraw()`, and other important functions
-5. Next, the contract declares functions that create a new NFT (`mintNFT()`) and an empty collection (`createEmptyCollection()`)
+   including `ownedNFTs`, `init()`, `withdraw()`, and other important functions
+5. Next, the contract declares functions that create a new NFT (`mintNFT()`)
+   and an empty collection (`createEmptyCollection()`)
 7. Finally, the contract declares an initializer that initializes the path fields,
-creates an empty collection as well as a reference to it,
-and saves a minter resource to account storage.
+   creates an empty collection as well as a reference to it,
+   and saves a minter resource to account storage.
 
 This contract introduces a few new concepts, we'll look at the new contract, then break down all the new
 concepts this contract introduces.
@@ -143,29 +147,22 @@ It contains what was already in `BasicNFT.cdc` plus additional resource declarat
 //
 // Learn more about non-fungible tokens in this tutorial: https://developers.flow.com/cadence/tutorial/non-fungible-tokens-1
 
-access(all)
-contract ExampleNFT {
+access(all) contract ExampleNFT {
 
     // Declare Path constants so paths do not have to be hardcoded
     // in transactions and scripts
 
-    access(all)
-    let CollectionStoragePath: StoragePath
-    access(all)
-    let CollectionPublicPath: PublicPath
-    access(all)
-    let MinterStoragePath: StoragePath
+    access(all) let CollectionStoragePath: StoragePath
+    access(all) let CollectionPublicPath: PublicPath
+    access(all) let MinterStoragePath: StoragePath
 
     // Tracks the unique IDs of the NFT
-    access(all)
-    var idCount: UInt64
+    access(all) var idCount: UInt64
 
     // Declare the NFT resource type
-    access(all)
-    resource NFT {
+    access(all) resource NFT {
         // The unique ID that differentiates each NFT
-        access(all)
-        let id: UInt64
+        access(all) let id: UInt64
 
         // Initialize both fields in the initializer
         init(initID: UInt64) {
@@ -177,27 +174,23 @@ contract ExampleNFT {
     // to create public, restricted references to their NFT Collection.
     // They would use this to publicly expose only the deposit, getIDs,
     // and idExists fields in their Collection
-    access(all)
-    resource interface NFTReceiver {
+    access(all) resource interface NFTReceiver {
 
-        access(all)
-        fun deposit(token: @NFT)
+        access(all) fun deposit(token: @NFT)
 
-        access(all)
-        fun getIDs(): [UInt64]
+        access(all) fun getIDs(): [UInt64]
 
-        access(all)
-        fun idExists(id: UInt64): Bool
+        access(all) fun idExists(id: UInt64): Bool
     }
+
+    access(all) entitlement Withdraw
 
     // The definition of the Collection resource that
     // holds the NFTs that a user owns
-    access(all)
-    resource Collection: NFTReceiver {
+    access(all) resource Collection: NFTReceiver {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` ID field
-        access(all)
-        var ownedNFTs: @{UInt64: NFT}
+        access(all) var ownedNFTs: @{UInt64: NFT}
 
         // Initialize the NFTs field to an empty collection
         init () {
@@ -208,10 +201,10 @@ contract ExampleNFT {
         //
         // Function that removes an NFT from the collection
         // and moves it to the calling context
-        access(all)
-        fun withdraw(withdrawID: UInt64): @NFT {
+        access(Withdraw) fun withdraw(withdrawID: UInt64): @NFT {
             // If the NFT isn't found, the transaction panics and reverts
-            let token <- self.ownedNFTs.remove(key: withdrawID)!
+            let token <- self.ownedNFTs.remove(key: withdrawID)
+                ?? panic("Could not withdraw an ExampleNFT.NFT with the specified ID")
 
             return <-token
         }
@@ -220,8 +213,7 @@ contract ExampleNFT {
         //
         // Function that takes a NFT as an argument and
         // adds it to the collections dictionary
-        access(all)
-        fun deposit(token: @NFT) {
+        access(all) fun deposit(token: @NFT) {
             // add the new token to the dictionary with a force assignment
             // if there is already a value at that key, it will fail and revert
             self.ownedNFTs[token.id] <-! token
@@ -229,21 +221,18 @@ contract ExampleNFT {
 
         // idExists checks to see if a NFT
         // with the given ID exists in the collection
-        access(all)
-        fun idExists(id: UInt64): Bool {
+        access(all) view fun idExists(id: UInt64): Bool {
             return self.ownedNFTs[id] != nil
         }
 
         // getIDs returns an array of the IDs that are in the collection
-        access(all)
-        fun getIDs(): [UInt64] {
+        access(all) view fun getIDs(): [UInt64] {
             return self.ownedNFTs.keys
         }
     }
 
     // creates a new empty Collection resource and returns it
-    access(all)
-    fun createEmptyCollection(): @Collection {
+    access(all) fun createEmptyCollection(): @Collection {
         return <- create Collection()
     }
 
@@ -251,8 +240,7 @@ contract ExampleNFT {
     //
     // Function that mints a new NFT with a new ID
     // and returns it to the caller
-    access(all)
-    fun mintNFT(): @NFT {
+    access(all) fun mintNFT(): @NFT {
 
         // create a new NFT
         var newNFT <- create NFT(initID: self.idCount)
@@ -282,9 +270,10 @@ contract ExampleNFT {
 ```
 
 This smart contract more closely resembles a contract
-that a project would actually use in production.
+that a project would actually use in production, but still does not use the official NFT standard,
+so it should not be used in any production code.
 
-Any user who owns one or more `ExampleNFT` will have an instance
+Any user who owns one or more `ExampleNFT` should have an instance
 of this `@ExampleNFT.Collection` resource stored in their account.
 This collection stores all of their NFTs in a dictionary that maps integer IDs to `@NFT`s.
 
@@ -302,12 +291,11 @@ There are a few new features that we use in this example, so let's walk through 
 
 We discussed above that when a dictionary stores a resource, it also becomes a resource!
 
-This means that the collection has to
-have special rules for how to handle its own resource.
+This means that the collection has to have special rules for how to handle its own resource.
 You wouldn't want it getting lost by accident!
 
 As we learned in the resource tutorial, you can destroy any resource
-by explicity invoking the `destroy` command.
+by explicitly invoking the `destroy` command.
 
 When the NFT `Collection` resource is destroyed with the `destroy` command,
 all the resources stored in the dictionary are also `destroy`ed.
@@ -329,8 +317,7 @@ of the keys of the dictionary using the built-in `keys` function.
 
 ```cadence
 // getIDs returns an array of the IDs that are in the collection
-access(all)
-fun getIDs(): [UInt64] {
+access(all) view fun getIDs(): [UInt64] {
     return self.ownedNFTs.keys
 }
 ```
@@ -351,7 +338,7 @@ This is an important feature because it enables numerous additional use cases.
 In addition to allowing easy batch transfers,
 this means that if a unique NFT wants to own another unique NFT,
 like a CryptoKitty owning a hat accessory,
-the Kitty literally stores the hat in its own storage and effectively owns it.
+the Kitty literally stores the hat in its own fields and effectively owns it.
 The hat belongs to the CryptoKitty that it is stored in,
 and the hat can be transferred separately or along with the CryptoKitty that owns it.
 
@@ -371,9 +358,10 @@ Now, back to the tutorial!
 
 ## Restricting Access to the NFT Collection
 
-In the NFT Collection, all the functions and fields are public,
-but we do not want everyone in the network to be able to call our `withdraw` function.
-This is where Cadence's second layer of access control comes in.
+In the NFT Collection, we will publish a capability to allow anyone
+to access important functionality for our `Collection`, like `deposit()` and `getIDs()`.
+
+This is where an important layer of access control comes in.
 Cadence utilizes [capability security](../language/capabilities.md),
 which means that for any given object, a user is allowed to access a field or method of that object if they either:
 
@@ -381,7 +369,7 @@ which means that for any given object, a user is allowed to access a field or me
 - Have a valid reference to that field or method (note that references can only be created from capabilities, and capabilities can only be created by the owner of the object)
 
 When a user stores their NFT `Collection` in their account storage, it is by default not available for other users to access.
-A user's authorized account object (`AuthAccount`, which gives access to private storage)
+A user's authorized account object (`&Account`, which gives access to private storage)
 is only accessible by its owner. To give external accounts access to the `deposit` function,
 the `getIDs` function, and the `idExists` function, the owner creates an interface that only includes those fields:
 
@@ -389,14 +377,11 @@ the `getIDs` function, and the `idExists` function, the owner creates an interfa
 access(all)
 resource interface NFTReceiver {
 
-    access(all)
-    fun deposit(token: @NFT)
+    access(all) fun deposit(token: @NFT)
 
-    access(all)
-    fun getIDs(): [UInt64]
+    access(all) fun getIDs(): [UInt64]
 
-    access(all)
-    fun idExists(id: UInt64): Bool
+    access(all) fun idExists(id: UInt64): Bool
 }
 ```
 
@@ -405,18 +390,18 @@ specifying that the link only contains the functions in the `NFTReceiver` interf
 This link creates a capability. From there, the owner can then do whatever they want with that capability:
 they could pass it as a parameter to a function for one-time-use,
 or they could put in the `/public/` domain of their account so that anyone can access it.
-If a user tried to use this capability to call the `withdraw` function,
-it wouldn't work because it doesn't exist in the interface that was used to create the capability.
 
-The creation of the link and capability is seen in the `ExampleNFT.cdc` contract initializer
+The creation and publishing of the capability is seen
+in the `ExampleNFT.cdc` contract initializer.
 
 ```cadence
-// publish a reference to the Collection in storage
-self.account.link<&{NFTReceiver}>(self.CollectionPublicPath, target: self.CollectionStoragePath)
+// publish a capability to the Collection in storage
+let cap = self.account.capabilities.storage.issue<&{NFTReceiver}>(self.CollectionStoragePath)
+self.account.capabilities.publish(cap, at: self.CollectionPublicPath)
 ```
 
-The `link` function specifies that the capability is typed as `&AnyResource{NFTReceiver}` to only expose those fields and functions.
-Then the link is stored in `/public/` which is accessible by anyone.
+The `issue` function specifies that the capability is typed as `&AnyResource{NFTReceiver}` to only expose those fields and functions.
+Then the link is published to `/public/` which is accessible by anyone.
 The link targets the `/storage/NFTCollection` (through the `self.CollectionStoragePath` contract field) that we created earlier.
 
 Now the user has an NFT collection in their account `/storage/`,
@@ -441,26 +426,25 @@ Open the script file named `Print 0x01 NFTs`.
 import ExampleNFT from 0x01
 
 // Print the NFTs owned by account 0x01.
-access(all)
-fun main() {
+access(all) fun main(): [UInt64] {
     // Get the public account object for account 0x01
     let nftOwner = getAccount(0x01)
 
     // Find the public Receiver capability for their Collection and borrow it
     let receiverRef = nftOwner.capabilities
         .borrow<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
-        ?? panic("Could not borrow receiver reference")
+        ?? panic("Could not borrow receiver reference to the ExampleNFT.Collection")
 
     // Log the NFTs that they own as an array of IDs
     log("Account 1 NFTs")
-    log(receiverRef.getIDs())
+    return receiverRef.getIDs()
 }
 ```
 
 <Callout type="info">
 
 Execute `Print 0x01 NFTs` by clicking the Execute button in the top right of the editor box.<br/>
-This script prints a list of the NFTs that account `0x01` owns.
+This script returns a list of the NFTs that account `0x01` owns.
 
 </Callout>
 
@@ -468,12 +452,91 @@ Because account `0x01` currently doesn't own any in its collection, it will just
 
 ```
 "Account 1 NFTs"
-[]
-Result > "void"
+Result > []
 ```
 
 If the script cannot be executed, it probably means that the NFT collection hasn't been stored correctly in account `0x01`.
 If you run into issues, make sure that you deployed the contract in account `0x01` and that you followed the previous steps correctly.
+
+## Using Entitlements
+
+We do not want everyone in the network to be able to call our `withdraw` function though.
+In Cadence, any reference can be freely up-casted or down-casted to any subtype or supertype
+that the reference conforms to. This means that if I had a reference of the type
+`&{ExampleNFT.NFTReceiver}`, I could cast it to `&ExampleNFT.Collection`, which exposes
+all the `access(all)` functions on the `Collection`. 
+
+This is a powerful feature that is very useful, but developers need to understand that
+this means that if there is any privileged functionality on an resource that has a
+public capability, then this functionality cannot be `access(all)`.
+It needs to use [Entitlements](../language/access-control#entitlements).
+
+Entitlements are a way for developers to explicitly declare which functions
+are restricted and to who they are restricted to by adding an entitlement to them.
+As you can see in our NFT contract, we've added an entitlement:
+```cadence
+access(all) entitlement Withdraw
+```
+
+We also added this entitlement to the `withdraw()` method:
+```cadence
+access(Withdraw) fun withdraw(withdrawID: UInt64): @NFT {
+```
+
+A function with entitled access means that that function is callable by someone
+with a concrete object of the containing type as if it were `access(all)`,
+but it is not callable from a regular reference to that object.
+So if I borrowed a public reference to the `Collection` above of the type `&ExampleNFT.Collection`,
+I could call every function and access every field on it except the `withdraw()` function.
+```cadence
+// Get the public capability and borrow a reference from it
+let collectionRef = recipient.capabilities
+    .borrow<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
+    ?? panic("Could not borrow a reference to the ExampleNFT.Collection")
+
+// Try to withdraw an NFT from their collection
+// ERROR: The reference is not entitled, so this call is not possible and will FAIL
+let stolenNFT <- collectionRef.withdraw(withdrawID: 1)
+```
+
+In order to access an **entitled field or function** through a reference,
+the reference needs to also be **entitled**. This means that when
+the reference or capability is created, the owner of that object
+has to explicitly specify that is has that entitlement.
+
+The owner of an object is the only one who can create an entitled capability or reference.
+In the above example, if you wanted to make your withdraw function publicly accessible,
+you would issue the capability as an entitled capability
+by specifying all the entitlements in the capability's type specification
+using the `auth` keyword:
+```cadence
+// publish an entitled capability to the Collection in storage
+// This capability is issued with the `auth(ExampleNFT.Withdraw)` entitlement
+// This gives access to the withdraw function
+let cap = self.account.capabilities.storage.issue<auth(ExampleNFT.Withdraw) &{NFTReceiver}>(self.CollectionStoragePath)
+self.account.capabilities.publish(cap, at: self.CollectionPublicPath)
+```
+
+Now, anyone could borrow that capability as the entitled version it was issued as:
+```cadence
+// Get the public entitled capability and borrow a reference from it
+let entitledCollectionRef = recipient.capabilities
+    .borrow<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
+    ?? panic("Could not borrow a reference to the ExampleNFT.Collection")
+
+// Try to withdraw an NFT from their collection
+// This will succeed because the reference is entitled
+let stolenNFT <- entitledCollectionRef.withdraw(withdrawID: 1)
+```
+
+Obviously, you would not want to create a public entitled reference like this
+because you don't want anyone accessing your withdraw function. 
+Entitlements are primarily meant for sharing private capabilities with small subsets
+of trusted users or smart contracts and should never be used for public capabilities.
+
+The most important thing to remember is, if you don't want everyone in the network
+to be able to access a function on a resource, you should default
+put an entitlement on that function. Better to be safe than sorry. 
 
 ## Mint and Distribute Tokens
 
@@ -494,11 +557,11 @@ This transaction deposits the minted NFT into the account owner's NFT collection
 
 </Callout>
 
-```cadence MintNFT.cdc
+```cadence mint_nft.cdc
 import ExampleNFT from 0x01
 
 // This transaction allows the Minter account to mint an NFT
-// and deposit it into its collection.
+// and deposit it into its own collection.
 
 transaction {
 
@@ -509,7 +572,7 @@ transaction {
         // Get the owner's collection capability and borrow a reference
         self.receiverRef = acct.capabilities
             .borrow<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
-            ?? panic("Could not borrow receiver reference")
+            ?? panic("Could not borrow receiver reference to ExampleNFT.Collection")
     }
 
     execute {
@@ -531,27 +594,25 @@ This prints a list of the NFTs that account `0x01` owns.
 
 </Callout>
 
-```cadence Print0x01NFTs.cdc
+```cadence print_01_nfts.cdc
 import ExampleNFT from 0x01
 
 // Print the NFTs owned by account 0x01.
-access(all)
-fun main() {
+access(all) fun main(): [UInt64] {
     // Get the public account object for account 0x01
     let nftOwner = getAccount(0x01)
 
     // Find the public Receiver capability for their Collection
-    let capability = nftOwner.getCapability<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
+    let capability = nftOwner.capabilities.get<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
 
     // borrow a reference from the capability
     let receiverRef = capability.borrow()
-            ?? panic("Could not borrow receiver reference")
+            ?? panic("Could not borrow receiver reference to 0x01's ExampleNFT.Collection")
 
     // Log the NFTs that they own as an array of IDs
     log("Account 1 NFTs")
-    log(receiverRef.getIDs())
+    return receiverRef.getIDs()
 }
-
 ```
 
 You should see that account `0x01` owns the NFT with `id = 1`
@@ -608,7 +669,7 @@ This transaction transfers a token from account `0x01` to account `0x02`.
 
 </Callout>
 
-```cadence Transfer.cdc
+```cadence transfer_nft.cdc
 import ExampleNFT from 0x01
 
 // This transaction transfers an NFT from one user's collection
@@ -648,6 +709,8 @@ transaction {
     }
 }
 ```
+See, with the use of Collections and capabilities, now the only account
+that needs to sign a transaction to transfer a token is the one who is sending the token.
 
 Now we can check both accounts' collections to make sure that account `0x02` owns the token and account `0x01` has nothing.
 
@@ -657,20 +720,19 @@ Execute the script `Print all NFTs` to see the tokens in each account:
 
 </Callout>
 
-```cadence Script2.cdc
+```cadence print_all_owned_nfts.cdc
 import ExampleNFT from 0x01
 
 // Print the NFTs owned by accounts 0x01 and 0x02.
-access(all)
-fun main() {
+access(all) fun main() {
 
     // Get both public account objects
     let account1 = getAccount(0x01)
 	let account2 = getAccount(0x02)
 
     // Find the public Receiver capability for their Collections
-    let acct1Capability = account1.getCapability(ExampleNFT.CollectionPublicPath)
-    let acct2Capability = account2.getCapability(ExampleNFT.CollectionPublicPath)
+    let acct1Capability = account1.capabilities.get(ExampleNFT.CollectionPublicPath)
+    let acct2Capability = account2.capabilities.get(ExampleNFT.CollectionPublicPath)
 
     // borrow references from the capabilities
     let receiver1Ref = acct1Capability.borrow<&{ExampleNFT.NFTReceiver}>()
@@ -709,7 +771,9 @@ Congratulations, you now have a working NFT!
 
 This was only a basic example how a NFT might work on Flow.
 Please refer to the [Flow NFT Standard repo](https://github.com/onflow/flow-nft)
-for information about the official Flow NFT standard and an example implementation of it.
+and the [NFT Developer Guide](https://developers.flow.com/build/guides/nft)
+for information about the official Flow NFT standard and how to implement
+a real version of an NFT smart contract.
 
 ## Fungible Tokens
 

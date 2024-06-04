@@ -20,7 +20,6 @@ for an example of a production ready marketplace that you can use right now on t
   >
     https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929
   </a>
-  <br/>
   The tutorial will be asking you to take various actions to interact with this code.
 </Callout>
 

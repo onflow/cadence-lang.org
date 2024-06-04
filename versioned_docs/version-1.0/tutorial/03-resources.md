@@ -309,7 +309,7 @@ You can also see the documentation for all of the possible account entitlements
 in the [account section of the language reference](../language/accounts/#performing-write-operations).
 In this tutorial, we'll be using account functions to save to and load from account storage (`/storage/`).
 
-Accounts store objects at [paths](/language/accounts/paths).
+Accounts store objects at [paths](../language/accounts/paths).
 Paths basically represent a file system for your account, where an object can be stored
 at any user-defined path. Often, contracts will specify for the user where objects
 from that contract should be stored. This enables any code to know

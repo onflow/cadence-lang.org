@@ -18,7 +18,6 @@ This contract is already deployed to testnet and mainnet and can be used by anyo
   >
     https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929
   </a>
-  <br/>
   The tutorial will be asking you to take various actions to interact with this code.
   [The marketplace setup guide](./07-marketplace-setup.md) shows you how to get the playground set up to do this tutorial.
 </Callout>

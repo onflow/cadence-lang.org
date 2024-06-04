@@ -14,7 +14,6 @@ In this tutorial, we're going to deploy a contract that allows users to vote on 
   >
     https://play.onflow.org/d120f0a7-d411-4243-bc59-5125a84f99b3
   </a>
-  <br/>
   The tutorial will be asking you to take various actions to interact with this code.
 </Callout>
 

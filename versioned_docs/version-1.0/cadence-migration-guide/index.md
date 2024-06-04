@@ -40,6 +40,8 @@ Help is available during the [Cadence 1.0 Office Hours](https://calendar.google.
 #### Expectations
 
 - Any contracts that are not upgraded will fail after Testnet and Mainnet upgrade.
+  They **WILL NOT** be able to be upgraded again, so it is imperative
+  that developers stage their upgrades before the Cadence 1.0 migration.
 - After the Testnet upgrade, Cadence versions will differ on Testnet (v1.0) and Mainnet (v0.42).
 - Developers must take extra considerations if they wish to continue deploying on the mainnet during this period. Otherwise, incompatibilities between different Cadence versions will lead to failed deployments.
 
@@ -95,7 +97,7 @@ Run the following command to install the CLI version with support for Cadence 1.
 - Linux/MacOS: `sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.sh)"`
 - Windows: `iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/feature/stable-cadence/install.ps1') }"`
 
-The Cadence 1.0 CLI will now be installed on your machine and can be accessed via the flow-c1 command. To verify the installation, run: `flow-c1 version`
+The Cadence 1.0 CLI will now be installed on your machine and can be accessed via **the flow-c1 command**. To verify the installation, run: `flow-c1 version`
 
 Additionally you can use the [Cadence VSCode Extension](https://developers.flow.com/tools/vscode-extension), [Cadence Linter](https://developers.flow.com/tools/flow-cli/lint), and [Chat GPT Flow Migration Assistant](https://chat.openai.com/g/g-lt4a6jvfj-flow-cadence-1-0-migration-helper) to help identify sections of code which must be migrated to Cadence 1.0, view details about what must change as well as suggested fixes for straightforward migrations.
 
@@ -144,24 +146,27 @@ _Estimated Time Required: **~1 Day**_
 
 [Review the documentation](https://developers.flow.com/tools/flow-cli/migrate/migrate-stage-contract) and use Flow CLI to test staging and state migration locally.
 
+Make sure you `flow.json` has the correct accounts and deployments specified for
+the contracts that you are staging.
+
 ```bash
 // Stage a Cadence 1.0 supported contract project using the Flow CLI.
-$ flow migrate stage-contract <contract_name>
+$ flow-c1 migrate stage <contract_name>
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 
 // Unstage a Cadence 1.0 supported contract project using the Flow CLI.
-$ flow migrate unstage-contract <contract_name>
+$ flow-c1 migrate unstage-contract <contract_name>
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 
 // Check to see if a contract has been staged from the Flow CLI
-$ flow migrate is_staged <contract_name>
+$ flow-c1 migrate is-staged <contract_name>
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 
 // Get the staged contract code from a contract that's been correctly staged.
-$ flow migrate staged_code <contract_name>
+$ flow-c1 migrate staged-code <contract_name>
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 ```
@@ -201,16 +206,16 @@ Use the CLI to stage your contracts to Testnet Migration Environment for state m
 
 ```bash
 // Stage a Cadence 1.0 supported contract project using the Flow CLI.
-$ flow migrate stage-contract <contract_name> --network=testnet
+$ flow-c1 migrate stage <contract_name> --network=testnet
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 
 // Check to see if a contract has been successfully staged on Testnet.
-$ flow migrate is_staged <contract_name> --network=testnet
+$ flow-c1 migrate is-staged <contract_name> --network=testnet
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 // Lists all Cadence 1.0 supported contracts that are staged on Testnet.
-$ flow migrate list-staged --network --network=testnet
+$ flow-c1 migrate list-staged --network=testnet
 Arguments: network_name
 ```
 You can view all currently staged contracts for Testnet by inspecting the account of the staging contract, `0x2ceae959ed1a7e7a`, for example through https://f.dnz.dev/0x2ceae959ed1a7e7a.
@@ -231,17 +236,17 @@ Use the CLI to stage your contracts to Mainnet Migration Environment for state m
 
 ```bash
 // Stage a Cadence 1.0 supported contract project using the Flow CLI.
-$ flow migrate stage-contract <contract_name> --network=mainnet
+$ flow-c1 migrate stage <contract_name> --network=mainnet
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 
 // Check to see if a contract has been successfully staged on Mainnet.
-$ flow migrate is_staged <contract_name> --network=mainnet
+$ flow-c1 migrate is-staged <contract_name> --network=mainnet
 Arguments: contract_name
 Valid Input: Existing contract name in flow.json.
 
 // Lists all Cadence 1.0 supported contracts that are staged on Mainnet.
-$ flow migrate list-staged --network --network=mainnet
+$ flow-c1 migrate list-staged --network --network=mainnet
 Arguments: network_name
 ```
 
@@ -251,7 +256,7 @@ To validate your contract, execute the following command:
 
 ```bash
 // Lists all Cadence 1.0 supported contracts that are staged on Mainnet.
-$ flow migrate is-validated --network --network=mainnet
+$ flow-c1 migrate is-validated --network --network=mainnet
 Arguments: network_name
 ```
 

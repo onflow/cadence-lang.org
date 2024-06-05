@@ -524,7 +524,7 @@ Here, we explicitly have to account for the possibility that the `helloResource`
 We use the nil-coalescing operator (`??`) to "unwrap" the optional.
 This basically means that we are handling the case where the `load` method returns `nil`.
 If it returns `nil`. We `panic`, which will abort execution of the transaction
-with an error message. It is important for developers to always to provide detailed error messages
+with an error message. It is important for developers to always provide detailed error messages
 so that if something goes wrong in the code, it is obvious what needs to be fixed.
 
 Refer to [Optionals In Cadence](../language/values-and-types.mdx#optionals) to learn more about optionals and how they are used.

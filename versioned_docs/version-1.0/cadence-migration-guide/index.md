@@ -40,7 +40,7 @@ Help is available during the [Cadence 1.0 Office Hours](https://calendar.google.
 #### Expectations
 
 - Any contracts that are not upgraded will fail after Testnet and Mainnet upgrade.
-  They **WILL NOT** be able to be upgraded again, so it is imperative
+  They **cannot** be upgraded again, so it is imperative
   that developers stage their upgrades before the Cadence 1.0 migration.
 - After the Testnet upgrade, Cadence versions will differ on Testnet (v1.0) and Mainnet (v0.42).
 - Developers must take extra considerations if they wish to continue deploying on the mainnet during this period. Otherwise, incompatibilities between different Cadence versions will lead to failed deployments.

@@ -15,7 +15,8 @@ Cadence introduces new features to smart contract programming that help develope
 - Resource-oriented programming, a new paradigm that pairs linear types with object capabilities to create a secure and declarative model for digital ownership
   by ensuring that resources (and their associated assets) can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted
 - Built-in pre-conditions and post-conditions for functions and [transactions](../language/transactions.md)
-- The utilization of capability-based security and entitlements, which enforces access control by requiring that access to objects
+- The utilization of capability-based security and entitlements,
+  which enforces access control by requiring that access to objects
   is restricted to only the owner and those who have a valid reference to the object
 
 Please see the [Cadence introduction](../index.md) for more information about the high level design of the language.
@@ -29,12 +30,11 @@ an in-browser editor and Flow emulator to experiment with Flow.
 Using the Flow Playground, you can write Cadence smart contracts,
 deploy them to a local Flow emulated blockchain, and submit transactions.
 
-The Flow Playground should be compatible with any standard web browser,
-but we recommend that you use Google Chrome with it,
-because it has been tested and optimized primarily with the Chrome browser so far.
+The Flow Playground should work with any standard web browser.
+However, we recommend using Google Chrome, as it has been primarily tested and optimized for this browser.
 
 The [Flow Crescendo (Cadence 1.0) upgrade](https://flow.com/upgrade/crescendo)
-introduces new powerful features to Cadence. Currently, the playground uses an older version
+introduces new and powerful features to Cadence. Currently, the playground uses an older version
 of Cadence, but you can interact with a Cadence 1.0 playground by going to
 https://v1.play.flow.com/.
 
@@ -76,8 +76,8 @@ that verifies and executes the performance of a contract (like a lawyer does)
 without the need for any trusted third party anywhere in the process, because the code itself is trusted.
 
 Programs that run on blockchains are commonly referred to as smart contracts
-because they mediate important functionality (such as currency)
-without having to rely on a central authority (like a bank).
+because they facilitate important functions, such as managing digital currency,
+without relying on a central authority like a bank.
 
 [Cadence is the premier resource-oriented programming language](../index.md)
 for developing smart contracts and is currently

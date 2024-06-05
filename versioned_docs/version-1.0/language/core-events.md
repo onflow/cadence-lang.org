@@ -34,15 +34,20 @@ Event name: `flow.AccountKeyAdded`
 access(all)
 event AccountKeyAdded(
     address: Address,
-    publicKey: PublicKey
+    publicKey: PublicKey,
+    weight: UFix64,
+    hashAlgorithm: HashAlgorithm,
+    keyIndex: Int
 )
 ```
 
-| Field         | Type        | Description                                     |
-| ------------- | ----------- | ----------------------------------------------- |
-| `address`     | `Address`   | The address of the account the key is added to  |
-| `publicKey`   | `PublicKey` | The public key added to the account             |
-
+| Field           | Type            | Description                                    |
+|-----------------|-----------------|------------------------------------------------|
+| `address`       | `Address`       | The address of the account the key is added to |
+| `publicKey`     | `PublicKey`     | The public key added to the account            |
+| `weight`        | `UFix64`        | Weight of the new account key                  |
+| `hashAlgorithm` | `HashAlgorithm` | HashAlgorithm of the new account key           |
+| `keyIndex`      | `Int`           | Index of the new account key                   |
 
 ### Account Key Removed
 
@@ -58,11 +63,10 @@ event AccountKeyRemoved(
 )
 ```
 
-| Field       | Type        | Description                                         |
-| ----------- | ----------- | --------------------------------------------------- |
-| `address`   | `Address`   | The address of the account the key is removed from  |
-| `publicKey` | `PublicKey` | Public key removed from the account                 |
-
+| Field       | Type      | Description                                        |
+|-------------|-----------|----------------------------------------------------|
+| `address`   | `Address` | The address of the account the key is removed from |
+| `publicKey` | `Int`     | Index of public key removed from the account       |
 
 ### Account Contract Added
 

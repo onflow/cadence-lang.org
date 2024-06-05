@@ -368,9 +368,12 @@ which means that for any given object, a user is allowed to access a field or me
 - Are the owner of the object
 - Have a valid reference to that field or method (note that references can only be created from capabilities, and capabilities can only be created by the owner of the object)
 
-When a user stores their NFT `Collection` in their account storage, it is by default not available for other users to access.
-A user's authorized account object (`&Account`, which gives access to private storage)
-is only accessible by its owner. To give external accounts access to the `deposit` function,
+When a user stores their NFT `Collection` in their account storage,
+it is by default not available for other users to access
+because it requires access to the authorized account object (`auth(Storage) &Account`)
+which is only accessible by a transaction that the owner authorizes and signs.
+
+To give external accounts access to the `deposit` function,
 the `getIDs` function, and the `idExists` function, the owner creates an interface that only includes those fields:
 
 ```cadence

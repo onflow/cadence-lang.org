@@ -19,9 +19,15 @@ sidebar_label: Cadence 1.0 Migration Guide
 
 This upgrade roadmap offers developers guidance, actionable steps, and expectations around updating your project to be compatible with Cadence 1.0.
 
-The Cadence 1.0 release is a breaking change – developers need to update all Cadence code used by their app (including all existing smart contracts deployed on Flow) to Cadence 1.0, to ensure it continues to work after the network upgrade.
+The Cadence 1.0 release, introduced in the [Crescendo](https://flow.com/upgrade/crescendo) network upgrade, is a breaking change.Developers need to update all Cadence code used by their app (including all existing smart contracts deployed on Flow, their transactions and scripts) to Cadence 1.0, to ensure it continues to work after the network upgrade. 
 
-Many of the improvements of Cadence 1.0 fundamentally change how Cadence works and is used. However, that also means it is necessary to break existing code to release this version, which will guarantee stability going forward.
+Many of the improvements of Cadence 1.0 fundamentally change how Cadence works and is used. This means it is necessary to break existing code to release this version, which will guarantee stability going forward.
+
+The dates for the Crescendo upgrade are as follows:
+- Testnet: June 20
+- Mainnet: July 31
+
+**Any contracts not upgraded on their respective networks by these dates will break.**
 
 ### Benefits of Cadence 1.0
 
@@ -39,11 +45,11 @@ Help is available during the [Cadence 1.0 Office Hours](https://calendar.google.
 
 #### Expectations
 
-- Any contracts that are not upgraded will fail after Testnet and Mainnet upgrade.
+- Any contracts that are not upgraded will fail after the Testnet and Mainnet upgrade.
   They **cannot** be upgraded again, so it is imperative
   that developers stage their upgrades before the Cadence 1.0 migration.
 - After the Testnet upgrade, Cadence versions will differ on Testnet (v1.0) and Mainnet (v0.42).
-- Developers must take extra considerations if they wish to continue deploying on the mainnet during this period. Otherwise, incompatibilities between different Cadence versions will lead to failed deployments.
+- Developers must take extra considerations if they wish to continue deploying on the Mainnet during this period. Otherwise, incompatibilities between different Cadence versions will lead to failed deployments.
 
 ## Developer Steps to Upgrade
 
@@ -62,10 +68,10 @@ Under each Milestone breakdown we include the steps you need to take, the tools 
 | ------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------ | --------------------------- | --------------------------------------------------------------------------- |
 | **Milestone** | **Overview**                                                                              | **Description**                                                                                          | **Dates**    | **Example NFT Time Est** | **Requirements**                                                            |
 | 1             | [Update and Test Your Code](#update-and-test-your-code)                                   | Update your code (contracts, scripts, transactions, and event listeners) and test on Emulator/Previewnet | Ongoing      | \~ 1-2 weeks                | Cadence 1.0 documentation, CLI/Emulator support for Cadence 1.0, Previewnet |
-| 2             | [Perform Local Staging/Migration Testing](#perform-local-stagingmigration-testing)        | Test contract staging and state migration on Emulator                                                    | Ongoing      | \~ 2-5 days                 | CLI Emulator support for staging, state migration                           |
-| 3             | [Stage and Confirm on Testnet Migration Env](#stage-and-confirm-on-mainnet-migration-env) | Test contract staging and state migrations on Testnet Migration Environment                              | April 1 - ?  | \~ 1 Week (Stage/QA)        | Flow CLI, Testnet Migration Environment                                     |
-| 4             | [Stage and Confirm on Mainnet Migration Env](#stage-and-confirm-on-mainnet-migration-env) | Test contract staging and state migrations on Mainnet Migration Environment                              | April 15 - ? | \~ 1 Week (Stage/QA)        | Flow CLI, Mainnet Migration Environment                                     |
-| 5             | Mainnet Migration                                                                         | Mainnet Migration                                                                                        | ?            | n/a                         | All contracts staged to Mainnet                                             |
+| 2             | [Perform Local Staging/Migration Testing](#perform-local-stagingmigration-testing)        | Test contract staging and state migration on Emulator                                                    | Ongoing      | \~ 1 day                 | CLI Emulator support for staging, state migration                           |
+| 3             | [Stage and Confirm on Testnet Migration Env](#stage-and-confirm-on-mainnet-migration-env) | Test contract staging and state migrations on Testnet Migration Environment                              | April 1 - June 20  | \~ 1 Week (Stage/QA)        | Flow CLI, Testnet Migration Environment                                     |
+| 4             | [Stage and Confirm on Mainnet Migration Env](#stage-and-confirm-on-mainnet-migration-env) | Test contract staging and state migrations on Mainnet Migration Environment                              | April 15 - June 20 | \~ 1 Week (Stage/QA)        | Flow CLI, Mainnet Migration Environment                                     |
+| 5             | Mainnet Migration                                                                         | Mainnet Migration                                                                                        | June 20 - July 31            | n/a                         | All contracts staged to Mainnet                                             |
 
 ## Update and Test Your Code
 
@@ -146,7 +152,7 @@ _Estimated Time Required: **~1 Day**_
 
 [Review the documentation](https://developers.flow.com/tools/flow-cli/migrate/migrate-stage-contract) and use Flow CLI to test staging and state migration locally.
 
-Make sure you `flow.json` has the correct accounts and deployments specified for
+Make sure your `flow.json` has the correct accounts and deployments specified for
 the contracts that you are staging.
 
 ```bash
@@ -198,11 +204,11 @@ Run any transactions to verify the correctness of the existing data.
 
 _Estimated Time Required: **~1 Week**_
 
-Beginning April 3rd, 2024, the Flow team triggered migration of contracts that were staged for upgrade, ran all Cadence 1.0 migrations and restarted the network. This completes the first full upgrade process to Cadence 1.0 and the environments are run weekly. The next milestone repeats this process on Mainnet. This step creates a fully working “real” environment, where developers can test their apps interaction with other contracts and projects available on Crescendo network. The Flow team may repeat this step multiple times (resetting the Crescendo network to pre-upgrade state and performing the upgrade again) to fix issues found during the upgrade process.
+Beginning April 3rd, 2024, the Flow team triggered [migration](https://github.com/onflow/cadence/tree/master/migrations_data) of contracts that were staged for upgrade, ran all Cadence 1.0 migrations and simulated a snapshot of Testnet state in is called the Testnet Migration Enviroment. This completes the first full upgrade process to Cadence 1.0 and the environment is run weekly. Following the upgrade on Testnet, the migrations will begin on Mainnet. This step creates a fully working “real” environment, where developers can see if their staged code is valid, has any failing dependenceis, or test their app's interactions with other contracts and projects available on Crescendo network. The Flow team may repeat this step multiple times (resetting the Crescendo network to pre-upgrade state and performing the upgrade again) to fix issues found during the upgrade process.
 
-In order to migrate your updated smart contract to Cadence 1.0, it's crucial to stage it on the Testnet network. This preliminary step not only verifies the contract's compatibility and syntactical correctness but also ensures a seamless transition to the new environment.
+In order to migrate your updated smart contract to Cadence 1.0, it's crucial to stage it on the network. This preliminary step not only verifies the contract's compatibility and syntactical correctness but also ensures a seamless transition to the new environment.
 
-Use the CLI to stage your contracts to Testnet Migration Environment for state migration testing. Automatic state migrations will happen several times over the Testnet Migration Environment testing period on a weekly cadence.
+Use the CLI to stage your contracts to the Migration Environment for state migration testing. Automatic state migrations will happen several times over the Testnet Migration Environment testing period on a weekly cadence.
 
 ```bash
 // Stage a Cadence 1.0 supported contract project using the Flow CLI.
@@ -221,6 +227,8 @@ Arguments: network_name
 You can view all currently staged contracts for Testnet by inspecting the account of the staging contract, `0x2ceae959ed1a7e7a`, for example through https://f.dnz.dev/0x2ceae959ed1a7e7a.
 
 You can see reports on migration status in the [Cadence Repository](https://github.com/onflow/cadence/tree/master/migrations_data).
+
+Staging not only allows a developer to test their migration. At the time of the official network upgrades, all staged contracts will replace currently deployed code.
 
 ### Stage and Confirm on Mainnet Migration Env
 

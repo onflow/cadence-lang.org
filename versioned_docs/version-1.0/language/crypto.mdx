@@ -70,7 +70,7 @@ let digest = HashAlgorithm.SHA3_256.hash(data)
 ## Hashing with a domain tag
 
 `hashWithTag` hashes the input data along with an input tag.
-It allows instanciating independent hashing functions customized with a domain separation tag (DST).
+It allows instantiating independent hashing functions customized with a domain separation tag (DST).
 For most of the hashing algorithms, mixing the data with the tag is done by pre-fixing the data with the tag and
 hashing the result.
 
@@ -90,7 +90,7 @@ Although this is a MAC algorithm, KMAC can be used as a hash when the key is use
 It is a customized instance of KMAC128 and is compatible with the hashing to curve used by BLS signatures.
 It is the same hasher used by the internal Flow protocol, and can be used to verify Flow protocol signatures on-chain.
 
-To define the MAC instance, `KMAC128(customizer, key, data, length)` is instanciated with the following parameters
+To define the MAC instance, `KMAC128(customizer, key, data, length)` is instantiated with the following parameters
 (as referred to by the NIST [SHA-3 Derived Functions](https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-185.pdf)):
   - `customizer` is the UTF-8 encoding of `"H2C"`.
   - `key` is the UTF-8 encoding of `"FLOW--V00-CS00-with-BLS_SIG_BLS12381G1_XOF:KMAC128_SSWU_RO_POP_"` when `hash` is used. It includes the input `tag`
@@ -261,7 +261,7 @@ A valid signature would be generated using the expected `signedData`, `domainSep
 BLS verification performs the necessary membership check on the signature while the membership check of the public key is performed at the creation of the `PublicKey` object
 and is not repeated during the signature verification. In order to prevent equivocation issues, a verification under the identity public key always returns `false`.
 
-The verificaction uses a hash-to-curve algorithm to hash the `signedData` into a `G_1` point, following the `hash_to_curve` method described in the [draft-irtf-cfrg-hash-to-curve-14](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-hash-to-curve-14#section-3).
+The verification uses a hash-to-curve algorithm to hash the `signedData` into a `G_1` point, following the `hash_to_curve` method described in the [draft-irtf-cfrg-hash-to-curve-14](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-hash-to-curve-14#section-3).
 While KMAC128 is used as a hash-to-field method resulting in two field elements, the mapping to curve is implemented using the [simplified SWU](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-hash-to-curve-14#section-6.6.3).
 
 A valid signature would be generated using the expected `signedData` and `domainSeparationTag`, as well the same hashing to curve process.
@@ -300,7 +300,7 @@ If the array is empty or if decoding one of the signatures fails, the program ab
 
 The output signature can be verified against an aggregated public key to authenticate multiple
 signers at once. Since the `verify` method accepts a single data to verify against, it is only possible to
-verfiy multiple signatures of the same message.
+verify multiple signatures of the same message.
 
 ### BLS public key aggregation
 
@@ -319,11 +319,11 @@ identity element of aggregation.
 
 The output public key can be used to verify aggregated signatures to authenticate multiple
 signers at once. Since the `verify` method accepts a single data to verify against, it is only possible to
-verfiy multiple signatures of the same message.
+verify multiple signatures of the same message.
 The identity public key is a possible output of the function, though signature verifications
 against identity result in `false`.
 
-In order to prevent rogue key attacks when verifying aggregated signatures, it is important to verfiy the
+In order to prevent rogue key attacks when verifying aggregated signatures, it is important to verify the
 PoP of each individual key involved in the aggregation process.
 
 ## Crypto Contract

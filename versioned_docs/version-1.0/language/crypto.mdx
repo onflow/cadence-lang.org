@@ -242,7 +242,7 @@ The inputs to `verify` depend on the signature scheme used:
   The signature is 64 bytes-long for both curves.
   - `signedData` is the arbitrary message to verify the signature against.
   - `domainSeparationTag` is the expected domain tag, i.e, the value that a correctly generated signature is expected to use.
-  The domain tag prefixes the message during the signature generation or verification before the hashing step (check [`hashWithTag`](#hashing-with-a-domain-tag)).
+  The domain tag prefixes the message during the signature generation or verification before the hashing step (more details in [`hashWithTag`](#hashing-with-a-domain-tag)).
   The tag's purpose is to separate different contexts or domains so that a signature can't be re-used for a different context other than its original one.
   An application should define its own arbitrary domain tag value to distance its user's signatures from other applications.
   The application tag should be enforced for valid signature generations and verifications.
@@ -352,7 +352,7 @@ entry specifies the public key index to be used against. The list verification i
 the list are valid, each public key is used at most once, and the used keys weights add up to at least `1`.
 
 The verification of each signature uses the Cadence single signature verification function with the key entry
-hash algorithm and the input domain separation tag ((check)[#signature-verification] for details).
+hash algorithm and the input domain separation tag (check [signature verification](#signature-verification) for details).
 
 It is possible to disable a public key by revoking it.
 The revoked keys remain in the list and retain the same index. Only signatures against non-revoked keys

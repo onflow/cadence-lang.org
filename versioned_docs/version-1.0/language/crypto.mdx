@@ -344,7 +344,20 @@ The contract can be imported using `import Crypto`.
 
 ### Key Lists
 
-The crypto contract also allows creating key lists to be used for multi-signature verification.
+The crypto contract allows creating key lists to be used for multi-signature verification.
+
+A key list is basically a list of public keys where each public key is assigned a key index,
+a hash algorithm and a weight. A list of `KeyListSignature` can be verified against a key list where each signature
+entry specifies the public key index to be used against. The list verification is successful if all signatures from
+the list are valid, each public key is used at most once, and the used keys weights add up to at least `1`.
+
+The verification of each signature uses the Cadence single signature verification function with the key entry
+hash algorithm and the input domain separation tag ((check)[#signature-verification] for details).
+
+It is possible to disable a public key by revoking it.
+The revoked keys remain in the list and retain the same index. Only signatures against non-revoked keys
+are considered valid.
+
 For example, to verify two signatures with equal weights for some signed data:
 
 ```cadence
@@ -400,8 +413,7 @@ fun test main() {
 }
 ```
 
-
-The API of the Crypto contract related to key lists is:
+Below are the implementation details of the key list and the signature list:
 
 ```cadence
 access(all)

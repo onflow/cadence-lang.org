@@ -23,9 +23,6 @@ The Cadence 1.0 release, introduced in the [Crescendo](https://flow.com/upgrade/
 
 Many of the improvements of Cadence 1.0 fundamentally change how Cadence works and is used. This means it is necessary to break existing code to release this version, which will guarantee stability going forward.
 
-The dates for the Crescendo upgrade are as follows:
-- Testnet: June 20
-- Mainnet: July 31
 
 **Any contracts not upgraded on their respective networks by these dates will break.**
 

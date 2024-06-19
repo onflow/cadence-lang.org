@@ -159,7 +159,9 @@ struct PublicKey {
 }
 ```
 
-`PublicKey` supports two methods `verify` and `verifyPoP`. 
+The public key has the format `X || Y`, i.e. is uncompressed and is *not* in e.g DER format.
+
+`PublicKey` supports two methods `verify` and `verifyPoP`.
 `verify` is the [signature verification](#signature-verification) function, while `verifyPoP` is covered under [BLS multi-signature](#proof-of-possession-pop).
 
 ### Public Key construction
@@ -481,7 +483,7 @@ struct KeyListSignature {
 
     access(all)
     let keyIndex: Int
-    
+
     access(all)
     let signature: [UInt8]
 

@@ -59,13 +59,13 @@ let x = 1
 **/
 ```
 
-## Names
+## Identifiers
 
-Names may start with any upper or lowercase letter (A-Z, a-z)
+Identifiers may start with any upper or lowercase letter (A-Z, a-z)
 or an underscore (`_`).
 This may be followed by zero or more upper and lower case letters,
 underscores, and numbers (0-9).
-Names may not begin with a number.
+Identifiers may not begin with a number.
 
 ```cadence
 // Valid: title-case
@@ -99,10 +99,31 @@ _#1
 !@#$%^&*
 ```
 
+### Reserved identifiers
+
+The following identifiers are reserved, as they are keywords of the language:
+
+- `if`, `else`, `while`, `for`, `in`, `as`
+- `break`, `continue`, `return`
+- `true`, `false`, `nil`
+- `let`, `var`
+- `create`, `destroy`, `emit`
+- `fun`, `pre`, `post`,
+- `auth`, `access`
+- `self`, `init`
+- `contract`, `event`, `struct`, `resource`, `interface`,
+  `entitlement`, `enum`, `mapping`, `attachment`
+- `transaction`, `prepare`, `execute`
+- `switch`, `case`, `default`
+- `import`, `include`
+- `require`, `requires`, `static`, `native`, `pub`, `priv`, `try`, `catch`, `finally`,
+  `goto`, `const`, `export`, `throw`, `throws`, `where`, `final`, `internal`, `typealias`,
+  `repeat`, `guard`, `is`
+
 ### Conventions
 
-By convention, variables, constants, and functions have lowercase names;
-and types have title-case names.
+By convention, variables, constants, and functions have lowercase identifiers;
+and types have title-case identifiers.
 
 ## Semicolons
 

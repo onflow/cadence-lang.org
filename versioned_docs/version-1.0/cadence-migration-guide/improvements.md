@@ -1782,6 +1782,6 @@ There are some existing guides for upgrading your token contracts to the new sta
 
 ## More Resources
 
-If you have any questions or need help with the upgrade, feel free to reach out to the Flow team on the [Flow Discord](https://discord.gg/flow).
+If you have any questions or need help with the upgrade, feel free to reach out to the Flow team on the [Flow Discord](https://discord.gg/flowblockchain).
 
 Help is also available during the [Cadence 1.0 Office Hours](https://calendar.google.com/calendar/ical/c_47978f5cd9da636cadc6b8473102b5092c1a865dd010558393ecb7f9fd0c9ad0%40group.calendar.google.com/public/basic.ics) each week at 10:00am PST on the Flow Developer Discord.

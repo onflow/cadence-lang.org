@@ -256,9 +256,9 @@ These tools are defined in the built-in `BLS` contract, which does not need to b
 Multi-signature verification in BLS requires a defense against rogue public-key attacks. Multiple ways are
 available to protect BLS verification. Cadence provides the proof of possession of private key as a defense tool.
 The proof of possession of private key is a BLS signature over the public key itself.
-The PoP signature follows the same requirements of a BLS signature (detailed in [Signature verification](#Signature-verification)),
+The PoP signature follows the same requirements of a BLS signature (detailed in [Signature verification](#signature-verification)),
 except it uses a special domain separation tag. The key expected to be used in KMAC128 is the UTF-8 encoding of `"BLS_POP_BLS12381G1_XOF:KMAC128_SSWU_RO_POP_"`.
-The expected message to be signed by the PoP is the serialization of the BLS public key corresponding to the signing private key ([serialization details](#PublicKey)).
+The expected message to be signed by the PoP is the serialization of the BLS public key corresponding to the signing private key ([serialization details](#public-key-construction)).
 The PoP can only be verified using the `PublicKey` method `verifyPoP`.
 
 ### BLS signature aggregation

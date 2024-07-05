@@ -274,7 +274,7 @@ access(all) contract ExampleMarketplace {
     access(all) resource SaleCollection: SalePublic {
 
         /// A capability for the owner's collection
-        access(self) var ownerCollection: Capability<&auth(ExampleNFT.Withdraw) ExampleNFT.Collection>
+        access(self) var ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>
 
         // Dictionary of the prices for each NFT by ID
         access(self) var prices: {UInt64: UFix64}
@@ -284,7 +284,7 @@ access(all) contract ExampleMarketplace {
         // tokens into their account.
         access(account) let ownerVault: Capability<&{ExampleToken.Receiver}>
 
-        init (ownerCollection: Capability<&auth(ExampleNFT.Withdraw) ExampleNFT.Collection>,
+        init (ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>,
               ownerVault: Capability<&{ExampleToken.Receiver}>) {
 
             pre {
@@ -374,7 +374,7 @@ access(all) contract ExampleMarketplace {
     }
 
     // createCollection returns a new collection resource to the caller
-    access(all) fun createSaleCollection(ownerCollection: Capability<&auth(ExampleNFT.Withdraw) ExampleNFT.Collection>,
+    access(all) fun createSaleCollection(ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>,
                                  ownerVault: Capability<&{ExampleToken.Receiver}>): @SaleCollection {
         return <- create SaleCollection(ownerCollection: ownerCollection, ownerVault: ownerVault)
     }
@@ -488,7 +488,7 @@ We store two different capabilities in the marketplace sale collection:
 
 ```cadence
 /// A capability for the owner's collection
-access(self) var ownerCollection: Capability<&auth(ExampleNFT.Withdraw) ExampleNFT.Collection>
+access(self) var ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>
 
 // The fungible token vault of the owner of this sale.
 // When someone buys a token, this resource can deposit
@@ -583,7 +583,7 @@ transaction {
 
         // Create an entitled capability to the NFT Collection
         let collectionCapability = acct.capabilities.storage.issue
-                                   <&auth(ExampleNFT.Withdraw) ExampleNFT.Collection>
+                                   <auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>
                                    (ExampleNFT.CollectionStoragePath)
 
         // Create a new Sale object,

@@ -218,7 +218,7 @@ In this example, we use a simple `String`-to-`String` mapping, but you could ima
 version](https://github.com/onflow/flow-nft#nft-metadata)
 that can allow the storage of complex file formats and other such data.
 
-An NFT could even own other NFTs! This functionality is shown in a later next tutorial.
+An NFT could even own other NFTs! This functionality is shown in a later tutorial.
 
 ### Initializers
 

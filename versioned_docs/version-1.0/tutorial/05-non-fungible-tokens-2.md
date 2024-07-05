@@ -474,8 +474,12 @@ this means that if there is any privileged functionality on an resource that has
 public capability, then this functionality cannot be `access(all)`.
 It needs to use [Entitlements](../language/access-control#entitlements).
 
-Entitlements are a way for developers to explicitly declare which functions
-are restricted and to who they are restricted to by adding an entitlement to them.
+Entitlements enable authors to restrict the scope of access 
+at a granular level with the option to group restrictions 
+under similarly name entitlements. Owners of resources can then 
+use these entitlements to grant access to the subset of actions 
+enabled by the authorized reference.
+
 As you can see in our NFT contract, we've added an entitlement:
 ```cadence
 access(all) entitlement Withdraw

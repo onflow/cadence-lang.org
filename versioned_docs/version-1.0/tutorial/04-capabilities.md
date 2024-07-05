@@ -277,7 +277,7 @@ First, we issue a capability to the private `HelloAsset` object in `/storage/`:
 To create a capability, we use the `Account.capabilities.issue()` method to issue a new capability to an object in storage.
 The type contained in `<>` is the reference type that the capability represents.
 The capability says that whoever borrows a reference from this capability has access to the fields and methods
-that are specified by the type in `<>`.
+that are specified by the type and entitlements in `<>`.
 The specified type has to be a subtype of the type of the object being linked to,
 meaning that it cannot contain any fields or functions that the linked object doesn't have.
 
@@ -443,7 +443,12 @@ view fun getAuthAccount<T: &Account>(_ address: Address): &T
 ```
 
 The caller needs to specify which entitlements they want in `<>`
-for which parts of the account they want to access.
+for which parts of the account they want to access. See such an example below:
+```cadence
+access(all) fun main(address: Address) {
+    let entitledAccount = getAuthAccount<auth(BorrowValue) &Account>(address)
+}
+```
 
 See the [language reference](../language/accounts) for more information about accounts.
 

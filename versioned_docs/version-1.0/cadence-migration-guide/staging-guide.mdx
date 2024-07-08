@@ -30,7 +30,7 @@ This guide aims to simplify the migration process to Cadence 1.0, making it acce
 In order to migrate your updated smart contract to Cadence 1.0, it's crucial to stage it on the Testnet network. This preliminary step not only verifies the contract's compatibility and syntactical correctness but also ensures a seamless transition to the new environment.
 
 ```bash
-flow-c1 migrate stage-contract HelloWorld --network=testnet
+flow-c1 migrate stage HelloWorld --network=testnet
 ```
 
 Ensure that HelloWorld accurately reflects the name of your contract as specified in your flow.json configuration file.
@@ -62,5 +62,5 @@ You can view all currently staged contracts and see reports on migration status 
 Once your contract has been successfully staged and validated on the Testnet network, you can proceed with the migration process to the Mainnet network. Execute the following command to migrate your contract to the Mainnet network when ready:
 
 ```bash
-flow-c1 migrate stage-contract HelloWorld --network=mainnet
+flow-c1 migrate stage HelloWorld --network=mainnet
 ```

@@ -13,8 +13,8 @@
       "permanent": true
     },
     {
-      "source": "/docs/tutorial/:number(\\d+)-:path*",
-      "destination": "/docs/tutorial/:path*",
+      "source": "/docs/tutorial/:number(\\d+)-:path",
+      "destination": "/docs/tutorial/:path",
       "permanent": true
     }
   ]

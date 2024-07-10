@@ -16,6 +16,11 @@
       "source": "/docs/tutorial/:number(\\d+)-:path",
       "destination": "/docs/tutorial/:path",
       "permanent": true
+    },
+    {
+      "source": "/docs/1.0/tutorial/:number(\\d+)-:path",
+      "destination": "/docs/1.0/tutorial/:path",
+      "permanent": true
     }
   ]
 }

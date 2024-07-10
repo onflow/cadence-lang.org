@@ -11,6 +11,11 @@
       "source": "/docs/1.0/cadence_migration_guide/:path*",
       "destination": "/docs/1.0/cadence-migration-guide/:path*",
       "permanent": true
+    },
+    {
+      "source": "/docs/tutorial/:number-:path*",
+      "destination": "/docs/tutorial/:path*",
+      "permanent": true
     }
   ]
 }

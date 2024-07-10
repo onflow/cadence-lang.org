@@ -13,7 +13,7 @@
       "permanent": true
     },
     {
-      "source": "/docs/tutorial/:number+?-:path*",
+      "source": "/docs/tutorial/:id(\\d+)-:path*",
       "destination": "/docs/tutorial/:path*",
       "permanent": true
     }

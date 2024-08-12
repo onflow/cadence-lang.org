@@ -44,7 +44,7 @@ from relevant ecosystem apps for more detail about `USDCFlow` migration.
 # What can regular USDC holders do?
 
 If you are a user with USDC in your account, the recommended path is to directly 
-swap your USDC with `USDCFlow` using [this transaction](https://github.com/onflow/bridged-usdc/blob/main/transactions/wrap_fiatToken.cdc)
+swap your `USDC` with `USDCFlow` using [this transaction](https://github.com/onflow/bridged-usdc/blob/main/transactions/wrap_fiatToken.cdc)
 that calls the `USDCFlow.wrapFiatToken()` function. This functionality
 is available on [Flow Port](https://port.flow.com/) with any Flow-compatible wallet (not including ledger).
 
@@ -58,13 +58,14 @@ can also swap to FLOW on [increment.fi](https://app.increment.fi/),
 deposit to [Dapper Wallet](https://meetdapper.com/) as Dapper balance, 
 or wait until after September 3rd and manually redeem with Circle.
 
-If you are a USDC holder on Flow and you use an app that transacts in USDC in any way,
-you should reach out to the app's support channels to see if there is anything specific
-you need to do to migrate your usage of that app to the new `USDCFlow` token.
-The Flow foundation is already working with most apps that use USDC
-to help them with their migration plans to the new `USDCFlow`,
-so rest assured that there will be a path for you to retain your assets
-past the Crescendo migration, regardless of what form that takes.
+If you hold `USDC` on Flow and use any apps that transact in `USDC`,
+refer to the app's communication and use the app's support channels
+to inquire about specific migration procedures for the new USDCFlow token.
+Be aware that the Flow Foundation is collaborating with most apps
+who are using `USDC` to facilitate their migration to `USDCFlow`.
+Rest assured that there will be a way for you
+to retain your assets after the Crescendo migration,
+regardless of the specific migration path.
 
 If you cannot get in touch with the support channels of whatever app you use,
 please reach out in the [Flow Discord](https://discord.com/invite/J6fFnh2xx6)
@@ -72,17 +73,24 @@ with your issues and the Flow team will definitely help you get it resolved.
 
 ## Flow Users with Marketplace listings for USDC
 
-If you are a user with a NFT listing on a marketplace with USDC as the payment currency,
-your existing listings will not work any more after the Crescendo upgrade.
-If you still want your listings to work, you will need to create new listings
-with the new `USDCFlow` currency so they are still available after the Crescendo upgrade.
-This will likely require that whatever app you were using for marketplace listings
-supports the transaction that lists for `USDCFlow` instead of `FiatToken`,
-so if this isn't immediately available, please contact their support
-to ask if it will be supported.
-Luckily, this is not time sensistive and can be completed
-any time after the Crescendo migration with no downside besides
-old listings not being purchasable until new ones with `USDCFlow` are created.
+If you have NFT listings on a marketplace that accepts `USDC`
+as the payment currency, your existing listings
+will no longer work after the Crescendo upgrade.
+
+To ensure your listings remain active,
+you will need to create new listings that accept the new `USDCFlow` currency.
+This will likely require the marketplace app you used
+for your listings to support the transaction
+for listing with `USDCFlow` instead of `FiatToken`.
+If this functionality is not immediately available,
+please contact the app's support team to inquire about
+their plans to add support for `USDCFlow` listings.
+
+Fortunately, this migration process is not time-sensitive.
+You can complete the transition to `USDCFlow` listings
+at any point after the Crescendo upgrade.
+The only downside is that your old listings using `USDC`
+will not be purchasable until you create new ones with `USDCFlow`.
 
 ## Flow Users with USDC in Defi
 
@@ -217,7 +225,7 @@ but you won't be able to call any functions on them, including `deposit()` and `
 This means that if your contract relies on any of that functionality,
 you'll need to do some extra work to migrate to the new token.
 
-The first thing to consider is if you are able to withdraw the USDC from these fields
+The first thing to consider is if you are able to withdraw the `USDC` from these fields
 in any way. Ideally, you could withdraw the USDC from these `FiatToken` fields
 and swap it for `USDCFlow`,
 upgrade the contract to create new fields that store `USDCFlow` instead,

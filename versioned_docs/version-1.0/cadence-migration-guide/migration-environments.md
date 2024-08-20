@@ -6,20 +6,26 @@ To facilitate a seamless migration to Crescendo, all contracts must be updated t
 
 ## When Does the Migration Occur?
 
-The Migration Environment for Testnet launched in April and is currently active. It will transition to a Migration Environment for Mainnet on May 22nd.
+The Migration Environment for Testnet launched in April and existed till the upgrade went live August 14th, 2024.
 
-The Testnet Migration Environment operates every Thursday. Upon completion of the migration, a report is generated and shared with the community. Regular review of these reports is crucial as community-proposed language changes, if implemented, could introduce breaking changes requiring re-staging of contracts.
+The Testnet Migration Environment currently operates every Monday. 
 
 ## How to Access Reports
 
-Access all weekly migration reports through this [repository](https://github.com/onflow/cadence/tree/master/migrations_data).
+Access all past weekly migration reports through this [repository](https://github.com/onflow/cadence/tree/master/migrations_data).
 
-## Accessing the Migration Environment
+## Accessing the Mainnet Migration Environment
 
-The Migration Environment is useful for developers to test their updated transactions against to verify that they will work as expected with Crescendo. To live-test during its operation connect to the Testnet Migration Environment using this endpoint:
+The Migration Environment can be useful for developers to test their updated transactions against to verify that they will work as expected after Crescendo. 
 
-```
-access-001.migrationtestnet1.nodes.onflow.org:9000 
-```
+For security reasons, the Mainnet Migration Environment can only be accessed by whitelisted egress IPs, to request access kindly email ali.serag@flowfoundation.org and send an email with the following:
+- The name and description of project you're requesting access for and link to relevant contracts.
+- Share the egress IPs you would like whitelisted.
+- What you plan to test.
 
-Operation times for the Migration Environment can be found [here](https://discord.com/channels/613813861610684416/811693600403357706).
+We will get back to you as soon as possible!
+
+Some important notes about the Mainnet Migration Environment:
+1. The environment does not come with uptime gurantees as it is used for internal testing.
+2. Does not have a REST endpoint configured.
+3. Is not as performant as the real Mainnet, so please only consider it for limited testing - the majority of testing should be happening locally as well as on Testnet. 

@@ -189,7 +189,7 @@ To test the migration, first you would need an emulator state, created with an e
 2. **Migrate**
    1. Download and install the latest CLI, that runs Cadence 1.0.
    2. Run `flow-c1 migrate` against the previously created state. The state file (emulator.sqlite) can be provided using the `--db-path` flag.
-   3. If there are any contracts that also need to be upgraded, those can be specified using the `--contracts` flag. Note that, the paths to these updated contracts and their deployed addresses must be specified in the flow.json file. (see (Flow CLI documentation about contract deployments)[https://developers.flow.com/tools/flow-cli/deployment/project-contracts#define-contract-deployment-targets] for more info)
+   3. If there are any contracts that also need to be upgraded, those can be specified using the `--contracts` flag. Note that, the paths to these updated contracts and their deployed addresses must be specified in the flow.json file. (see [Flow CLI documentation about contract deployments](https://developers.flow.com/tools/flow-cli/deployment/project-contracts#define-contract-deployment-targets) for more info)
    4. A sample migrate command would look like:
       `flow-c1 migrate state --db-path=/path/to/emulator.sqlite --save-report=./reports --contracts="Test"`
 3. **Testing the Migrated State**

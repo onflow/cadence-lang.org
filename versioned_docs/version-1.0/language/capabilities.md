@@ -34,6 +34,9 @@ The ID is unique **per account/address**.
 
 Capabilities are created and managed through [capability controllers](./accounts/capabilities.mdx).
 
+Capabilities are structs, so they are copyable. 
+They can be used (e.g. borrowed) arbitrarily many times, as long as the target capability controller has not been deleted.
+
 ## `Capability`
 
 ```cadence

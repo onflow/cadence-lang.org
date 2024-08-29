@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 5.1 Non-Fungible Token Tutorial Part 1
 description: An introduction to NFTs on Cadence
-date: 2022-05-10
+date: 2024-06-05
 meta:
   keywords:
     - tutorial
@@ -35,13 +35,16 @@ Open the starter code for this tutorial in the Flow Playground:
   target="_blank">
   https://play.onflow.org/a21087ad-b22c-4981-b49e-17297e916fa6
 </a>
-<br/>
 The tutorial will ask you to take various actions to interact with this code.
 </Callout>
 
 <Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+  The playground code that is linked uses Cadence 0.42, but the examples
+  use Cadence 1.0 to show how each contract, transaction and script
+  is implemented in Cadence 1.0. 
+  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
+  The project link will still work with the current version of the playground,
+  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -54,11 +57,12 @@ The NFT is an integral part of blockchain technology.
 An NFT is a digital asset that represents ownership of a unique asset.
 NFTs are also indivisible, you can't trade part of an NFT.
 Possible examples of NFTs include:
-CryptoKitties, Top Shot Moments, and tickets to a really fun concert.
+CryptoKitties, Top Shot Moments, tickets to a really fun concert, or a horse.
 
 Instead of being represented in a central ledger, like in most smart contract languages,
-Cadence represents each NFT as a [resource object](../language/composite-types.mdx)
+Cadence represents each NFT as a [resource object](../language/resources)
 that users store in their accounts.
+
 This allows NFTs to benefit from the resource ownership rules
 that are enforced by the [type system](../language/values-and-types.mdx) -
 resources can only have a single owner, they cannot be duplicated,
@@ -68,13 +72,15 @@ These protections ensure that owners know that their NFT is safe and can represe
 NFTs in a real-world context make it possible to trade assets and
 prove who the owner of an asset is.
 On Flow, NFTs are interoperable -
-so the NFTs in an account can be used in different smart contracts
-and app contexts.
-All NFTs on Flow implement the [NFT Token Standard](https://github.com/onflow/flow-nft)
+so the NFTs in an account can be used in different smart contracts and app contexts.
+All NFTs on Flow implement the [Flow NFT Standard](https://github.com/onflow/flow-nft)
 which defines a basic set of properties for NFTs on Flow.
-This tutorial, will teach you a basic method of creating an NFT
-to illustrate important language concepts.
+This tutorial, will teach you a basic method of creating NFTs
+to illustrate important language concepts, but will not use the NFT Standard
+for the sake of simplicity and learning.
+
 After completing the NFT tutorials, readers should visit
+[the NFT Guide](https://developers.flow.com/build/guides/nft) and
 [the NFT standard github repository](https://github.com/onflow/flow-nft)
 to learn how full, production-ready NFTs are created.
 
@@ -84,7 +90,7 @@ To get you comfortable using NFTs, this tutorial will teach you to:
 2. Create an NFT object and store it in your account storage.
 3. Create an NFT collection object to store multiple NFTs in your account.
 4. Create an `NFTMinter` and use it to mint an NFT.
-5. Create references to your collection that others can use to send you tokens.
+5. Create capabilities to your collection that others can use to send you tokens.
 6. Set up another account the same way.
 7. Transfer an NFT from one account to another.
 8. Use a script to see what NFTs are stored in each account's collection.
@@ -109,7 +115,21 @@ This tutorial will build on the concepts introduced in those tutorials.
 
 ---
 
-In Cadence, each NFT is represented by a resource with an integer ID.
+In Cadence, each NFT is represented by a resource with an integer ID:
+```cadence
+// The most basic representation of an NFT
+access(all) resource NFT {
+    // The unique ID that differentiates each NFT
+    access(all)
+    let id: UInt64
+
+    // Initialize both fields in the initializer
+    init(initID: UInt64) {
+        self.id = initID
+    }
+}
+```
+
 Resources are a perfect type to represent NFTs
 because resources have important ownership rules that are enforced by the type system.
 They can only have one owner, cannot be copied, and cannot be accidentally or maliciously lost or duplicated.
@@ -122,7 +142,7 @@ and the on-chain token only contains a URL or something similar that points to t
 In Flow, this is possible, but the goal is to make it possible for all the metadata associated with a token to be stored on-chain.
 This is out of the scope of this tutorial though.
 This paradigm has been defined by the Flow community and the details are contained in
-[the NFT metadata proposal.](https://github.com/onflow/flow/pull/636/files)
+[the NFT metadata guide](https://developers.flow.com/build/advanced-concepts/metadata-views).
 
 When users on Flow want to transact with each other,
 they can do so peer-to-peer and without having to interact with a central NFT contract
@@ -130,14 +150,14 @@ by calling resource-defined methods in both users' accounts.
 
 ## Adding an NFT Your Account
 
-We'll start by looking at a basic NFT contract, that adds an NFT to an account.
+We'll start by looking at a basic NFT contract that adds an NFT to an account.
 The contract will:
 
 1. Create a smart contract with the NFT resource type.
 2. Declare an ID field, a metadata field and an initializer in the NFT resource.
 3. Create an initializer for the contract that saves an NFT to an account.
 
-This contract relies on the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
+This contract relies on the [account storage API](../language/accounts/storage.mdx)
 to save NFTs in the account.
 
 <Callout type="info">
@@ -159,19 +179,15 @@ Open Account `0x01` to see `BasicNFT.cdc`.
 </Callout>
 
 ```cadence BasicNFT.cdc
-access(all)
-contract BasicNFT {
+access(all) contract BasicNFT {
 
     // Declare the NFT resource type
-    access(all)
-    resource NFT {
+    access(all) resource NFT {
         // The unique ID that differentiates each NFT
-        access(all)
-        let id: UInt64
+        access(all) let id: UInt64
 
         // String mapping to hold metadata
-        access(all)
-        var metadata: {String: String}
+        access(all) var metadata: {String: String}
 
         // Initialize both fields in the initializer
         init(initID: UInt64) {
@@ -181,8 +197,7 @@ contract BasicNFT {
     }
 
     // Function to create a new NFT
-    access(all)
-    fun createNFT(id: UInt64): @NFT {
+    access(all) fun createNFT(id: UInt64): @NFT {
         return <-create NFT(initID: id)
     }
 
@@ -195,14 +210,33 @@ contract BasicNFT {
 
 In the above contract, the NFT is a resource with an integer ID and a field for metadata.
 
-Each NFT resource has a unique ID, so they cannot be combined or duplicated, unless the smart contract allows it.
+Each NFT resource should have a unique ID, so they cannot be combined or duplicated
+unless the smart contract allows it.
 
 Another unique feature of this design is that each NFT can contain its own metadata.
 In this example, we use a simple `String`-to-`String` mapping, but you could imagine a [much more rich
 version](https://github.com/onflow/flow-nft#nft-metadata)
 that can allow the storage of complex file formats and other such data.
 
-An NFT could even own other NFTs! This functionality is shown in the next tutorial.
+An NFT could even own other NFTs! This functionality is shown in a later tutorial.
+
+### Initializers
+
+```cadence
+init() {
+// ...
+```
+
+All composite types like contracts, resources,
+and structs can have an optional initializer that only runs when the object is initially created.
+Cadence requires that all fields in a composite type must be explicitly initialized, 
+so if the object has any fields, this function has to be used to initialize them.
+
+Contracts also have read and write access to the storage of the account that they are deployed to
+by using the built-in [`self.account`](../language/contracts.mdx) field.
+This is an [account reference](../language/accounts/index.mdx) (`&Account`),
+authorized and entitled to access and manage all aspects of the account,
+such as account storage, capabilities, keys, and contracts.
 
 In the contract's initializer, we create a new NFT object and move it into the account storage.
 
@@ -213,11 +247,11 @@ self.account.storage.save(<-create NFT(initID: 1), to: /storage/BasicNFTPath)
 
 Here we access the storage object of the account that the contract is deployed to and call its `save` method.
 We also create the NFT in the same line and pass it as the first argument to `save`.
-We save it to the `/storage` domain, where objects are meant to be stored.
+We save it to the `/storage/` domain, where objects are meant to be stored.
 
 <Callout type="info">
 
-Deploy `NFTv1` by clicking the Deploy button in the top right of the editor.
+Deploy `BasicNFT` by clicking the Deploy button in the top right of the editor.
 
 </Callout>
 
@@ -329,7 +363,7 @@ transaction {
 
         // Load the NFT from signer1's account
         let nft <- signer1.storage.load<@BasicNFT.NFT>(from: /storage/BasicNFTPath)
-            ?? panic("Could not load NFT")
+            ?? panic("Could not load NFT from the first signer's storage")
 
         // Save the NFT to signer2's account
         signer2.storage.save(<-nft, to: /storage/BasicNFTPath)
@@ -340,7 +374,8 @@ transaction {
 
 <Callout type="info">
 
-Select both Account `0x01` and Account `0x02` as the signers.<br/>
+Select both Account `0x01` and Account `0x02` as the signers.
+Make sure account `0x01` is the first signer.<br/>
 Click the "Send" button to send the transaction.
 
 </Callout>

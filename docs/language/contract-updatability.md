@@ -445,3 +445,29 @@ struct or resource types defined in contract interfaces to be converted to struc
     access(contract) let minters: @{String: {Minter}}
   }
   ```
+
+  Any contract that implements the above contract interface, for example `FTMinterImpl` in `v0.42` below:
+
+  ```cadence
+  pub contract FTMinterImpl: FTMinter {
+
+    // Type-requirement
+    pub resource Minter {}
+
+    access(contract) let minters: @{String: FTMinter.Minter}
+  }
+  ```
+
+  also now need to be updated to:
+
+  ```cadence
+  access(all) contract FTMinterImpl: FTMinter {
+
+    // This is now a concrete resource that implements the `FTMinter.Minter` interface.
+    access(all) resource Minter: FTMinter.Minter {}
+
+    // Usages of the type would also needs to be updated to use an interface-set.
+    // i.e: `FTMinter.Minter` is replaced with `{FTMinter.Minter}`.
+    access(contract) let minters: @{String: {FTMinter.Minter}}
+  }
+  ```

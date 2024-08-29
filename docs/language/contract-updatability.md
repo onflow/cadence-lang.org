@@ -423,15 +423,51 @@ but those curious can read in depth about the update rules for these cases [here
 struct or resource types defined in contract interfaces to be converted to struct or resource interfaces. E.g. a contract interface originally written as:
 
   ```cadence
-  access(all) contract interface C {
-    access(all) resource R {}
+  pub contract interface FTMinter {
+
+    // Type-requirement
+    pub resource Minter {}
+
+    access(contract) let minters: @{String: Minter}
   }
   ```
 
-  can be updated to 
+  can be updated to
 
   ```cadence
-  access(all) contract interface C {
-    access(all) resource interface R {}
+  access(all) contract interface FTMinter {
+
+    // Note that this is now an interface.
+    access(all) resource interface Minter {}
+
+    // Usages of the type would also needs to be updated to use an interface-set.
+    // i.e: `Minter` is replaced with `{Minter}`.
+    access(contract) let minters: @{String: {Minter}}
+  }
+  ```
+
+  Any contract that implements the above contract interface, for example `FTMinterImpl` in `v0.42` below:
+
+  ```cadence
+  pub contract FTMinterImpl: FTMinter {
+
+    // Type-requirement
+    pub resource Minter {}
+
+    access(contract) let minters: @{String: FTMinter.Minter}
+  }
+  ```
+
+  also now need to be updated to:
+
+  ```cadence
+  access(all) contract FTMinterImpl: FTMinter {
+
+    // This is now a concrete resource that implements the `FTMinter.Minter` interface.
+    access(all) resource Minter: FTMinter.Minter {}
+
+    // Usages of the type would also needs to be updated to use an interface-set.
+    // i.e: `FTMinter.Minter` is replaced with `{FTMinter.Minter}`.
+    access(contract) let minters: @{String: {FTMinter.Minter}}
   }
   ```

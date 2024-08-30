@@ -1,0 +1,321 @@
+---
+title: Attachments
+sidebar_position: 21
+---
+
+Attachments are a feature of Cadence designed to allow developers to extend a struct or resource type
+(even one that they did not declare) with new functionality,
+without requiring the original author of the type to plan or account for the intended behavior.
+
+## Declaring Attachments
+
+Attachments are declared with the `attachment` keyword, which would be declared using a new form of composite declaration:
+`attachment <Name> for <Type>: <Conformances> { ... }`, where the attachment functions and fields are declared in the body.
+As such, the following would be examples of legal declarations of attachments:
+
+```cadence
+access(all)
+attachment Foo for MyStruct {
+    // ...
+}
+
+attachment Bar for MyResource: MyResourceInterface {
+    // ...
+}
+
+attachment Baz for MyInterface: MyOtherInterface {
+    // ...
+}
+```
+
+Like all other type declarations, attachments may only be declared with `all` access. 
+
+Specifying the kind (struct or resource) of an attachment is not necessary, as its kind will necessarily be the same as the type it is extending.
+Note that the base type may be either a concrete composite type or an interface.
+In the former case, the attachment is only usable on values specifically of that base type,
+while in the case of an interface the attachment is usable on any type that conforms to that interface.
+
+The body of the attachment follows the same declaration rules as composites.
+In particular, they may have both field and function members,
+and any field members must be initialized in an initializer.
+Only resource-kinded attachments may have resource members.
+
+The `self` keyword is available in attachment bodies, but unlike in a composite,
+`self` is a **reference** type, rather than a composite type:
+In an attachment declaration for `A`, the type of `self` would be a reference to `A`, rather than `A` like in other composite declarations.
+The specific entitlements that this reference has depends on the access modifier associated with the member function in which the `self` reference
+appears, and is explained in more detail below. 
+
+If a resource with attachments on it is `destroy`ed, all its attachments are `destroy`ed in an unspecified order.
+The only guarantee about the order in which attachments are destroyed in this case is that the base resource will be the last thing destroyed.
+
+Within the body of an attachment, there is also a `base` keyword available,
+which contains a reference to the attachment's base value;
+that is, the composite to which the attachment is attached.
+Its type, therefore, is a reference to the attachment's declared base type.
+So, for an attachment declared `access(all) attachment Foo for Bar`, the `base` field of `Foo` would have type `&Bar`.
+
+So, for example, this would be a valid declaration of an attachment:
+
+```
+access(all)
+resource R {
+
+    access(all)
+    let x: Int
+
+    init (_ x: Int) {
+        self.x = x
+    }
+
+    access(all)
+    fun foo() { ... }
+}
+
+access(all)
+attachment A for R {
+    
+    access(all)
+    let derivedX: Int
+
+    init (_ scalar: Int) {
+        self.derivedX = base.x * scalar
+    }
+
+    access(all)
+    fun foo() {
+        base.foo()
+    }
+}
+
+```
+
+For the purposes of external mutation checks or [access control](./access-control.md),
+the attachment is considered a separate declaration from its base type.
+A developer cannot, therefore, access any `access(self)` fields
+(or `access(contract)` fields if the base was defined in a different contract to the attachment)
+on the `base` value, nor can they mutate any array or dictionary typed fields.
+
+```cadence
+access(all)
+resource interface SomeInterface {
+
+    access(all)
+    let b: Bool
+
+    access(self)
+    let i: Int
+
+    access(all)
+    let a: [String]
+}
+access(all)
+attachment SomeAttachment for SomeContract.SomeStruct {
+
+    access(all)
+    let i: Int
+
+    init(i: Int) {
+        if base.b {
+            self.i = base.i // cannot access `i` on the `base` value
+        } else {
+            self.i = i
+        }
+    }
+
+    access(all)
+    fun foo() {
+        base.a.append("hello") // cannot mutate `a` outside of the composite where it was defined
+    }
+}
+```
+
+Within an attachment's member function, the `base` and `self` references are entitled to the same entitlements that the function's access modifier specifies.
+E.g., in an attachment declared as `access(all) attachment A for R`, within a definition of a function `access(E) fun foo()`, 
+the type of `base` would be `auth(E) &R`, and the type of `self` would be `auth(E) &A`. Thus the following definition would work:
+
+```cadence
+resource R {
+    access(E)
+    fun foo() {
+        //...
+    }
+}
+
+access(all)
+attachment A for R {
+    access(E)
+    fun bar() {
+        base.foo() // available because `E` is required above, and thus `base` is type `auth(E) &R`.
+    }
+}
+```
+
+while this would not:
+
+```cadence
+resource R {
+    access(E)
+    fun foo() {
+        //...
+    }
+}
+
+access(all)
+attachment A for R {
+
+    access(self)
+    fun bar() {
+        base.foo() // unavailable because this function has `self` access, and thus `base` only is type `&R`.
+    }
+
+}
+```
+
+Note that as a result of how entitlements are propagated to the `self` and `base` values here, attachment definitions can only support
+the same entitlements that their base values support; i.e. some attachment `A` defined for `R` can only use an entitlement `E` in its definition
+if `R` also uses `E` in its definition (or the definition of any interfaces to which it conforms).
+
+### Attachment Types
+
+An attachment declared with `access(all) attachment A for C { ... }` will have a nominal type `A`.
+
+It is important to note that attachments are not first class values, and as such their usage is limited in certain ways.
+In particular, their types cannot appear outside of a reference type.
+So, for example, given an  attachment declaration `attachment A for X {}`, the types `A`, `A?`, `[A]` and `fun(): A` are not valid type annotations,
+while `&A`, `&A?`, `[&A]` and `fun(): &A` are valid.
+
+## Creating Attachments
+
+An attachment is created using an `attach` expression,
+where the attachment is both initialized and attached to the base value in a single operation.
+Attachments are not first-class values; they cannot exist independently of a base value,
+nor can they be moved around on their own.
+This means that an `attach` expression is the only place in which an attachment constructor can be called.
+Tightly coupling the creation and attaching of attachment values helps to make reasoning about attachments simpler for the user.
+Also for this reason, resource attachments do not need an explicit `<-` move operator when they appear in an `attach` expression.
+
+An attach expression consists of the `attach` keyword, a constructor call for the attachment value,
+the `to` keyword, and an expression that evaluates to the base value for that attachment.
+Any arguments required by the attachment's initializer are provided in its constructor call.
+
+```cadence
+access(all)
+resource R {}
+
+access(all)
+attachment A for R {
+    init(x: Int) {
+        //...
+    }
+}
+
+// ...
+let r <- create R()
+let r2 <- attach A(x: 3) to <-r
+```
+
+The expression on the right-hand side of the `to` keyword must evaluate to a composite value whose type is a subtype of the attachment's base,
+and is evaluated before the call to the constructor on the left side of `to`.
+This means that the `base` value is available inside of the attachment's initializer,
+but it is important to note that the attachment being created will not be accessible on the `base`
+(see the accessing attachments section below) until after the constructor finishes executing.
+
+
+```cadence
+access(all)
+resource interface I {}
+
+access(all)
+resource R: I {}
+
+access(all)
+attachment A for I {}
+
+// ...
+let r <- create R() // has type @R
+let r2 <- attach A() to <-r // ok, because `R` is a subtype of `I`, still has type @R
+```
+
+Because attachments are stored on their bases by type, there can only be one attachment of each type present on a value at a time.
+Cadence will raise a runtime error if a user attempts to add an attachment to a value when one it already exists on that value.
+The type returned by the `attach` expression is the same type as the expression on the right-hand side of the `to`;
+attaching an attachment to a value does not change its type.
+
+## Accessing Attachments
+
+Attachments are accessed on composites via type-indexing:
+composite values function like a dictionary where the keys are types and the values are attachments.
+So given a composite value `v`, one can look up the attachment named `A` on `v` using indexing syntax:
+
+```cadence
+let a = v[A] // has type `&A?`
+```
+
+This syntax requires that `A` is a nominal attachment type,
+and that `v` has a composite type that is a subtype of `A`'s declared base type.
+As mentioned above, attachments are not first-class values,
+so this indexing returns a reference to the attachment on `v`, rather than the attachment itself.
+If the attachment with the given type does not exist on `v`, this expression returns `nil`.
+
+The set of entitlements to which the result of an attachment access is authorized is the same as the set of entitlements to which the base 
+value is authorized. So, for example, given the following definition for `A`:
+
+```cadence
+entitlement E 
+entitlement F 
+
+resource R {
+    access(E)
+    fun foo() {
+        // ... 
+    }
+
+    access(F)
+    fun bar() { 
+        // ... 
+    }
+}
+
+attachment A for R {
+    access(E | F)
+    fun qux() { 
+        // ... 
+    }
+}
+
+// ... 
+
+let a = v[A]!
+```
+
+When `v` has type `&R`, the resulting type of `a` will be an unauthorized `&A`. 
+Contrarily, if `v` has type `auth(E) &R`, then the type of `a` will be authorized to the same: `auth(E) &A`.
+Finally, when `v` is not a reference (i.e. an owned value of type `R`), then `a` will be "fully entitled" to `A`; it will be granted 
+all the entitlements mentioned by `A`, i.e. in this case it will have type `auth(E, F) &A`. 
+
+This is roughly equivalent to the behavior of the `Identity` [entitlement mapping](./access-control.md#entitlement-mappings); indeed, attachments can be thought of 
+as being `Identity`-mapped fields on their base value.
+
+## Removing Attachments
+
+Attachments can be removed from a value with a `remove` statement.
+The statement consists of the `remove` keyword, the nominal type for the attachment to be removed,
+the `from` keyword, and the value from which the attachment is meant to be removed.
+
+The value on the right-hand side of `from` must be a composite value whose type is a subtype of the attachment type's declared base.
+
+E.g., to remove an `A` attachment from some resource `r` whose type supports that attachment:
+
+```cadence
+remove A from r
+```
+
+After the statement executes, the composite value on the right-hand side of `from` will no longer contain the attachment.
+If the value does not contain the attachment that appears after the `remove` keyword, this statement has no effect.
+
+Attachments may be removed from a type in any order,
+so users should take care not to design any attachments that rely on specific behaviors of other attachments,
+as there is no to require that an attachment depend on another or to require that a type has a given attachment when another attachment is present.
+
+If a resource containing attachments is `destroy`ed, all its attachments will be `destroy`ed in an arbitrary order.

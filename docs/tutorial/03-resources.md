@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 3. Resource Contract Tutorial
 description: An introduction to resources, capabilities, and account storage in Cadence
-date: 2024-06-05
+date: 2024-02-26
 meta:
   keywords:
     - tutorial
@@ -29,16 +29,14 @@ socialImageDescription: Resource smart contract image.
   >
     https://play.onflow.org/b70199ae-6488-4e58-ae58-9f4ffecbd66a
   </a>
+  <br />
   The tutorial will ask you to take various actions to interact with this code.
 </Callout>
 
 <Callout type="info">
   The playground code that is linked uses Cadence 0.42, but the examples
   use Cadence 1.0 to show how each contract, transaction and script
-  is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
-  The project link will still work with the current version of the playground,
-  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
+  is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -56,13 +54,10 @@ Before beginning this tutorial, you should understand :
 - Signers
 - [Field types](../language/composite-types.mdx)
 
-This tutorial will build on your understanding of accounts and how to interact with them by introducing [resources](../language/resources).
+This tutorial will build on your understanding of accounts and how to interact with them by introducing resources.
+Resources are one of Cadence's defining features.
 
-Resources are one of Cadence's most important features.
-
-In Cadence, resources are a composite type like a struct or a class in other languages,
-but with some special rules.
-
+In Cadence, resources are a composite type like a struct or a class, but with some special rules.
 Here is an example definition of a resource:
 ```cadence
 access(all)
@@ -78,13 +73,9 @@ resource Money {
 
 See, it looks just like a regular `struct` definition! The difference is in the behavior.
 
-Resources are useful when you want to model **direct ownership** of an asset or an object.
-By **direct ownership**, we mean the ability to own an _actual object_ that represents your asset,
-instead of just a password or certificate that allows you to access it.
-Traditional structs or classes from other conventional programming languages
-are not an ideal way to represent direct ownership because they can be _copied_.
-This means a coding error can easily result in creating multiple copies of the same asset,
-which breaks the scarcity requirements needed for these assets to have real value.
+Resources are useful when you want to model direct ownership.
+Traditional structs or classes from other conventional programming languages are not an ideal way to represent ownership because they can be _copied_.
+This means a coding error can easily result in creating multiple copies of the same asset, which breaks the scarcity requirements needed for these assets to have real value.
 We have to consider loss and theft at the scale of a house, a car, or a bank account with millions of dollars, or a horse.
 Resources, in turn, solve this problem by making creation, destruction, and movement of assets explicit.
 
@@ -102,21 +93,16 @@ To interact with resources, you'll learn a few important concepts:
 
 - Using the `create` keyword
 - The move operator `<-`
-- The [Account Storage API](../language/accounts/storage.mdx)
+- The [Account Storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 
 Let's start by looking at how to create a resource with the `create` keyword and the move operator `<-`.
 
 You use the `create` keyword used to initialize a resource.
-Resources can only be created by the contract that defines them and 
-**must** be created before they can be used.
+Resources **must** be created before you can use them.
 
 The move operator `<-` is used to move a resource into a variable.
 You cannot use the assignment operator `=` with resources,
-so when you initialize them or assign then to a new variable,
-you will need to use the move operator `<-`. This indicates that the resource is literally
-being _moved_ from one place to another. The old variable or location that was holding
-it will no longer be valid after the move. This is one of the ways that Cadence ensures
-that any given resource only exists in one place at a time.
+so when you initialize a resource you will need to use the move operator `<-`.
 
 <Callout type="info">
 
@@ -147,6 +133,10 @@ contract HelloWorld {
     fun createHelloAsset(): @HelloAsset {
         return <-create HelloAsset()
     }
+
+    init() {
+        log("Hello Asset")
+    }
 }
 ```
 
@@ -167,7 +157,8 @@ This is another example of what we can do with a contract.
 Cadence can declare type definitions within deployed contracts.
 A type definition is simply a description of how a particular set of data is organized.
 It **is not** a copy or instance of that data on its own.
-Any account can import these definitions to interact with objects of those types.
+Any account can import these definitions and use them to create an object
+that follows the imported definition or to interact with other objects of those types.
 
 This contract that we just deployed declares a definition
 for the `HelloAsset` resource and a function to create the resource.
@@ -187,15 +178,34 @@ resource HelloAsset {
 
 ### Resources
 
-The key difference between a `resource` and a `struct` or `class` is the access scope for resources:
+The key difference between a resource and a struct or class is the access scope for resources:
 
 - Each instance of a resource can only exist in exactly one location and cannot be copied.
   Here, location refers to account storage, a temporary variable in a function, a storage field in a contract, etc.
 - Resources must be explicitly moved from one location to another when accessed.
 - Resources also cannot go out of scope at the end of function execution.
-  They must be explicitly stored somewhere or explicitly destroyed.
+  They must be explicitly stored somewhere or destroyed.
 
 These characteristics make it impossible to accidentally lose a resource from a coding mistake.
+
+```cadence
+init() {
+// ...
+```
+
+All composite types like contracts, resources,
+and structs can have an optional initializer that only runs when the object is initially created.
+Cadence requires that all fields must be explicitly initialized,
+so if the object has any fields,
+this function has to be used to initialize them.
+
+Contracts also have read and write access to the storage of the account that they are deployed to
+by using the built-in [`self.account`](../language/contracts.mdx) field.
+This is an [account reference](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx) (`&Account`),
+authorized to access and manage all aspects of the account,
+such as account storage, keys, and contracts.
+
+This contract's initializer is simple, it logs the phrase `"Hello Asset"` to the console.
 
 **A resource can only be created in the scope that it is defined in.**
 
@@ -258,8 +268,8 @@ Open the transaction named `Create Hello`.
 
 </Callout>
 
-```cadence create_hello.cdc
-// create_hello.cdc
+```cadence CreateHello.cdc
+// Transaction1.cdc
 // This transaction calls the createHelloAsset() function from the contract
 // to create a resource, then saves the resource in account storage using the "save" method.
 import HelloWorld from 0x01
@@ -276,7 +286,7 @@ transaction {
         let newHello <- HelloWorld.createHelloAsset()
 
         acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
-  }
+    }
 
     // In execute, we log a string to confirm that the transaction executed successfully.
 	execute {
@@ -289,34 +299,22 @@ Here's what this transaction does:
 
 1. Import the `HelloWorld` definitions from account `0x01`
 2. Uses the `createHelloAsset()` function to create a resource and move it to `newHello`
-3. `save` the created resource in the account storage of the account
-   that signed the transaction at the path `/storage/HelloAssetTutorial`
-4. `log` the text `Saved Hello Resource to account.` to the console.
+3. `save` the created resource in the account storage of the account that deployed this contract, at the path `/storage/HelloAssetTutorial`
+4. `log` the text `HelloAsset created and stored` to the console.
 
 This is our first transaction using the `prepare` phase!
-The `prepare` phase is the only place that has access to the signing account,
-via [account references (`&Account`)](../language/accounts/index.mdx).
-Account references have access to many different methods that are used
-to interact with and account, e.g., the account's storage.
-In this case, the transaction uses `auth(SaveValue) &Account`.
-This means that it is an account object that has the `SaveValue` authorization entitlement,
-which means that this transaction can't do anything with the `&Account` object
+The `prepare` phase is the only place that has access to the signing accounts,
+via [account references (`&Account`)](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx).
+Account references have access to many different methods that are used to interact with account, e.g., the account's storage.
+In this case, the transaction uses `auth(SaveValue) &Account`. This means
+that it is an account object that has the `SaveValue` authorization entitlement,
+which means that this transaction can't do anything with the &Account object
 besides saving values to storage.
-We'll cover entitlements in more detail in a later tutorial.
-You can go to [the entitlements documentation](../language/access-control#entitlements) to learn more about them though.
-
-You can also see the documentation for all of the possible account entitlements
-in the [account section of the language reference](../language/accounts/#performing-write-operations).
+You can see the documentation for all of these in the [account section of the language reference](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx).
 In this tutorial, we'll be using account functions to save to and load from account storage (`/storage/`).
 
-Accounts store objects at [paths](../language/accounts/paths).
-Paths basically represent a file system for your account, where an object can be stored
-at any user-defined path. Often, contracts will specify for the user where objects
-from that contract should be stored. This enables any code to know
-how to access these objects in a standard way.
-
-By not allowing the execute phase to access account storage and using entitlements,
-we can statically verify which assets and areas/paths of the signers' account a given transaction can modify.
+By not allowing the execute phase to access account storage,
+we can statically verify which assets and areas of the signers' storage a given transaction can modify.
 Browser wallets and applications that submit transactions for users can use this to show what a transaction could alter,
 giving users information about transactions that wallets will be executing for them,
 and confidence that they aren't getting fed a malicious or dangerous transaction from an app or wallet.
@@ -330,9 +328,9 @@ let newHello <- HelloWorld.createHelloAsset()
 ```
 
 Next, we save the resource to the account storage.
-We use the [account storage API](../language/accounts/storage.mdx) to interact with the account storage in Flow.
+We use the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage) to interact with the account storage in Flow.
 To save the resource, we'll be using the
-[`save()`](../language/accounts/storage.mdx)
+[`save()`](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 method from the account storage API to store the resource in the account at the path `/storage/HelloAssetTutorial`.
 
 ```cadence
@@ -340,7 +338,7 @@ acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
 ```
 The first parameter to `save` is the object that is being stored,
 and the `to` parameter is the path that the object is being stored at.
-The path must be a storage path, so only the domain `/storage/` is allowed in the `to` parameter.
+The path must be a storage path, so only the domain `/storage/` is allowed as the `to` parameter.
 
 If there is already an object stored under the given path, the program aborts.
 Remember, the Cadence type system ensures that a resource can never be accidentally lost.
@@ -383,7 +381,7 @@ This means that you are not handling the resource properly.
 If you ever see this error in any of your programs,
 it means there is a resource somewhere that is not being explicitly stored or destroyed, meaning the program is invalid.
 <br />
-Add the line back to make the transaction check properly.
+Add the line back to make the transaction checks properly.
 </Callout>
 
 In this case, this is the first time we have saved anything with the selected account,
@@ -433,8 +431,6 @@ Account Storage:
 }
 ```
 
-You'll also see `FlowToken` objects. Every account is automatically initialized
-with the ability to use FlowToken assets. You don't have to worry about those for now.
 
 ### Load Hello Transaction
 
@@ -450,7 +446,7 @@ Open the transaction named `Load Hello`.
 
 </Callout>
 
-```cadence load_hello.cdc
+```cadence LoadHello.cdc
 import HelloWorld from 0x01
 
 // This transaction calls the "hello" method on the HelloAsset object
@@ -466,13 +462,15 @@ transaction {
         // Load the resource from storage, specifying the type to load it as
         // and the path where it is stored
         let helloResource <- acct.storage.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
-          ?? panic("The signer does not have the HelloAsset resource stored at /storage/HelloAssetTutorial")
 
-        // log the hello world message
-        log(helloResource.hello())
+        // We use optional chaining (?) because the value in storage
+        // may or may not exist, and thus is considered optional.
+        log(helloResource?.hello())
 
         // Put the resource back in storage at the same spot
-        acct.storage.save(<-helloResource, to: /storage/HelloAssetTutorial)
+        // We use the force-unwrap operator `!` to get the value
+        // out of the optional. It aborts if the optional is nil
+        acct.storage.save(<-helloResource!, to: /storage/HelloAssetTutorial)
     }
 }
 ```
@@ -481,33 +479,43 @@ Here's what this transaction does:
 
 1. Import the `HelloWorld` definitions from account `0x01`
 2. Moves the `HelloAsset` object from storage to `helloResource` with the move operator
-  and the `load` function from the [account storage API](../language/accounts/storage.mdx)
+  and the `load` function from the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 3. Calls the `hello()` function of the `HelloAsset` resource stored in `helloResource` and logs the result
 4. Saves the resource in the account that we originally moved it from at the path `/storage/HelloAssetTutorial`
 
 We're going to be using the `prepare` phase again to load the resource
-using the [reference to the account](../language/accounts/index.mdx) that is passed in.
+using the [reference to the account](https://cadence-lang.org/docs/1.0/language/accounts/index.mdx) that is passed in.
 
 Let's go over the transaction in more detail.
-To remove an object from storage, we use the `load` method from the [account storage API](../language/accounts/storage.mdx)
+To remove an object from storage, we use the `load` method from the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 
 ```cadence
 let helloResource <- acct.storage.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
 ```
 
+If no object of the specified type is stored under the given path, the function returns nothing, or `nil`.
+(This is an [Optional](../language/values-and-types.mdx#optionals),
+a special type of data that we will cover later)
+
+If the object at the given path is not of the specified type, Cadence will throw an error and the transaction will fail.
+
 If there is an object of the specified type at the path,
 the function returns that object and the account storage will no longer contain an object under the given path.
 
 The type parameter for the object type to load is contained in `<>`.
-In this case, we're basically saying that we expect to load a `@HelloWorld.HelloAsset` resource object from this path.
+In this case, we're basically saying that we expect to load a `HelloWorld.HelloAsset` resource object from this path.
 A type argument for the parameter must be provided explicitly.
 (Note the `@` symbol to specify that it is a resource)
 
 The path `from` must be a storage path, so only the domain `/storage/` is allowed.
 
-If no object of the specified type is stored under the given path, the function returns nothing, or `nil`.
-(This is an [Optional](../language/values-and-types.mdx#optionals),
+Next, we call the `hello()` function and log the output.
 
+```cadence
+log(helloResource?.hello())
+```
+
+We use `?` because the values in the storage are returned as [optionals](../language/values-and-types.mdx#optionals).
 Optionals are values that are able to represent either the presence or the absence of a value.
 Optionals have two cases: either there is a value of the specified type, or there is nothing (`nil`).
 An optional type is declared using the `?` suffix.
@@ -521,25 +529,26 @@ Optionals allow developers to account for `nil` cases more gracefully.
 Here, we explicitly have to account for the possibility that the `helloResource` object we got with `load` is `nil`
 (because `load` will return `nil` if there is nothing there to load).
 
-We use the nil-coalescing operator (`??`) to "unwrap" the optional.
-This basically means that we are handling the case where the `load` method returns `nil`.
-If it returns `nil`. We `panic`, which will abort execution of the transaction
-with an error message. It is important for developers to always provide detailed error messages
-so that if something goes wrong in the code, it is obvious what needs to be fixed.
+Using `?` "unwraps" the optional, meaning that it gets the value if it is there, before calling `hello`,
+but only if the value isn't `nil`. If the value is nil, the `?` returns `nil`.
 
-Refer to [Optionals In Cadence](../language/values-and-types.mdx#optionals) to learn more about optionals and how they are used.
-
-Next, we call the `hello()` function and log the output.
-
-```cadence
-log(helloResource.hello())
-```
+Because `?` is used when calling the `hello` function, the function call only happens if the stored value is not `nil`.
+In this case, the result of the `hello` function will be returned as an optional.
+However, if the stored value was `nil`, the function call would not occur and the result is `nil`.
 
 Next, we use `save` again to put the object back in storage in the same spot:
 
 ```cadence
-acct.storage.save(<-helloResource, to: /storage/HelloAssetTutorial)
+acct.storage.save(<-helloResource!, to: /storage/HelloAssetTutorial)
 ```
+
+Remember, `helloResource` is still an optional, so we have to handle the possibility that it is `nil`.
+Here, we use the force-unwrap operator (`!`). This operator gets the value in the optional if it contains a value,
+and aborts the entire transaction if the object is `nil`.
+It is a more risky way of dealing with optionals, but if your program is ever in a state where a value being `nil`
+would defeat the purpose of the whole transaction, then the force-unwrap operator might be a good choice to deal with that.
+
+Refer to [Optionals In Cadence](../language/values-and-types.mdx#optionals) to learn more about optionals and how they are used.
 
 <Callout type="info">
 
@@ -577,7 +586,12 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 - Use the `prepare` phase of a transaction to load resources from account storage
 
 Feel free to modify the smart contract to create different resources,
-experiment with the available [account storage API](../language/accounts/storage.mdx),
-and write new transactions that execute different functions from your smart contract.
+experiment with the available [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage),
+and write new transactions and scripts that execute different functions from your smart contract.
 Have a look at the [resource reference page](../language/resources.mdx)
 to find out more about what you can do with resources.
+
+You're on the right track to building more complex applications with Cadence,
+now is a great time to check out the [Cadence Best Practices document](../design-patterns.md)
+and [Anti-patterns document](../anti-patterns.md)
+as your applications become more complex.

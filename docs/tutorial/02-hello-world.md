@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 2. Hello World
 description: A smart contract tutorial for Cadence.
-date: 2024-06-05
+date: 2024-02-26
 meta:
   keywords:
     - tutorial
@@ -28,16 +28,14 @@ In this tutorial, we'll write and deploy our first smart contract!
   >
     https://play.onflow.org/af7aba31-dee9-4477-9e1d-7b46e958468e
   </a>
+  <br />
   The tutorial will ask you to take various actions to interact with this code.
 </Callout>
 
 <Callout type="info">
   The playground code that is linked uses Cadence 0.42, but the examples
   use Cadence 1.0 to show how each contract, transaction and script
-  is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
-  The project link will still work with the current version of the playground,
-  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
+  is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -46,6 +44,22 @@ In this tutorial, we'll write and deploy our first smart contract!
   get your code running, but reading the rest is necessary to understand the
   language's design.
 </Callout>
+
+## What is a smart contract?
+
+In regular terms, a contract is an agreement between two parties for some exchange of information or assets.
+Normally, the terms of a contract are supervised and enforced by a trusted third party, such as a bank or a lawyer.
+
+A smart contract is a computer program stored in a network like a blockchain
+that verifies and executes the performance of a contract (like a lawyer does)
+without the need for any trusted third party anywhere in the process, because the code itself is trusted.
+
+Programs that run on blockchains are commonly referred to as smart contracts
+because they mediate important functionality (such as currency)
+without having to rely on a central authority (like a bank).
+
+[Cadence is the resource-oriented programming language](../index.md)
+for developing smart contracts on the Flow Blockchain.
 
 This tutorial will walk you through an example of a smart contract that implements basic Cadence features,
 including accounts, transactions, and signers.
@@ -125,7 +139,7 @@ Open the Account `0x01` tab with the file called
 access(all)
 contract HelloWorld {
 
-    // Declare a public (access(all)) field of type String.
+    // Declare a public field of type String.
     //
     // All fields must be initialized in the initializer.
     access(all)
@@ -137,6 +151,7 @@ contract HelloWorld {
     }
 
     // Public function that returns our friendly greeting!
+    // Specified as `view` to declare that it does not change any state
     access(all) view
     fun hello(): String {
         return self.greeting
@@ -149,9 +164,9 @@ that is accessible in all scopes (`access(all)`, typically known as public).
 It's followed by `access(all) let greeting: String` which declares a state constant (`let`) of type `String` that is accessible in all scopes(`access(all)`).
 
 You would have used `var` to declare a variable, which means that the value
-can be changed later on by code in the contract instead of remaining constant like with `let`.
+can be changed later on instead of remaining constant like with `let`.
 
-They are both examples of an access control specification that means an interface can be accessed in all scopes, but not written to in all scopes.
+It is an access control specification that means an interface can be accessed in all scopes, but not written to in all scopes.
 For more information about the different levels of access control permitted in Cadence, refer to the [Access Control section of the language reference](../language/access-control.md).
 
 The `init()` section is called the initializer. It is a special function that only runs when the contract is first created.
@@ -161,8 +176,10 @@ In the above example, the initializer sets the `greeting` field to `"Hello, Worl
 
 The last part of our `HelloWorld` contract is a public function called `hello()`.
 This declaration returns a value of type `String`.
+The `view` keyword means that it is a function that only reads state and does not modify anything.
 Anyone who imports this contract in their transaction or script can read the public fields,
-use the public types, and call the public contract functions; i.e. the ones that have `access(all)` or `access(all)` specified.
+use the public types, and call the public contract functions; i.e. the ones that have `access(all)`
+specified.
 
 Soon you'll deploy this contract to your account and run a transaction that calls its function, but first, let's look at what accounts and transactions are.
 
@@ -178,23 +195,24 @@ is built into the protocol by default.
 
 An account is divided into two main areas:
 
-1. The first area is the [contract area](../language/accounts/contracts).
+1. The first area is the [contract area](../language/accounts).
    This is the area that stores smart contracts containing type definitions, fields, and functions that relate to common functionality.
    There is no limit to the number of smart contracts an account can store.
    This area cannot be directly accessed in a transaction unless the transaction is just returning (reading) a copy of the code deployed to an account.
-   The owner of an account can directly add or update contracts that are deployed to it.
+   The owner of an account can directly add, remove, or update/overwrite contracts that are stored in it.
 
-2. The second area is the [account storage](../language/accounts/storage).
+2. The second area is the account storage.
    This area is where an account stores the objects that they own.
    This is an important differentiator between Cadence and other languages,
-   because in other languages, assets that accounts own are always stored in the centralized
+   because in other languages, assets that accounts own is always stored in the centralized
    smart contract that defines the assets. In Cadence, each account stores its assets
    as objects directly in its own account storage.
    The account storage section also stores code that declares the capabilities
    for controlling how these stored objects can be accessed.
-   We'll cover account storage and capabilities in more detail in a later tutorial.
+   We'll cover account storage in more detail in a later tutorial.
 
 In this tutorial, we use the account with the address `0x01` to store our `HelloWorld` contract.
+Outside the Playground context, account addresses on Flow are completely unique.
 
 ### Deploying Code
 
@@ -230,9 +248,9 @@ button next to the contracts section in the playground.
 A [Transaction](../language/transactions.md) in Flow is defined as an arbitrary-sized block of Cadence code that is authorized by one or more accounts.
 When an account authorizes a transaction, the code in that transaction has access to the authorizers' private storage.
 An account authorizes a transaction by performing a cryptographic signature on the transaction with the account's private key,
-which should only be accessible to the account owner.
+which should only be accessible to the account owner. Therefore, authorizers are also known as signers.
 In addition to being able to access the authorizer's private assets,
-transactions can also read and call functions in public contracts, and access public functions in other users' accounts.
+transactions can also read and call functions in public contracts, and access public domains in other users' accounts.
 For this tutorial, we use a transaction to call our `hello()` function.
 
 <Callout type="info">
@@ -275,9 +293,7 @@ Transactions are divided into two main phases, `prepare` and `execute`.
    We'll cover this phase in a later tutorial.
 2. The `execute` phase is the main body of a transaction.
    It can call functions on external contracts and objects and perform operations on data that was initialized in the transaction.
-   In this example, the `execute` phase calls `HelloWorld.hello()`.
-   This executes the `hello()` function in the `HelloWorld` contract
-   and logs the result(`log(HelloWorld.hello())`) to the console.
+   In this example, the `execute` phase calls `HelloWorld.hello()` which calls the `hello()` function in the `HelloWorld` contract and logs the result(`log(HelloWorld.hello())`) to the console.
 
 <Callout type="info">
 

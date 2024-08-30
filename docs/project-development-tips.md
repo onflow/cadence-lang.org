@@ -1,7 +1,7 @@
 ---
 title: Flow Smart Contract Project Development Standards
 sidebar_label: Development Standards
-sidebar_position: 7
+sidebar_position: 8
 description: "Learn how to effectively organize and manage a Cadence project"
 ---
 
@@ -38,7 +38,8 @@ and more vibrant community.
 
 Ensuring appropriate levels of testing results in better smart contracts which have
 pro-actively modeled threats and engineered against them. Ensuring appropriate levels 
-of standards adoption ([FungibleToken](https://github.com/onflow/flow-ft), [NFT StoreFront](https://github.com/onflow/nft-storefront), etc) by dapp 
+of standards adoption ([FungibleToken](https://github.com/onflow/flow-ft),
+[NFT Catalog](https://www.flow-nft-catalog.com/), [NFT StoreFront](https://github.com/onflow/nft-storefront), etc) by dapp 
 builders amplifies the network effects for all in the ecosystem. NFTs in one dapp can be 
 readily consumed by other dapps through on-chain events with no new integration 
 required. With your help and participation we can further accelerate healthy and vibrant 
@@ -105,13 +106,13 @@ is not available or leaves the project. It is important that there are others wh
 can fill in who have a clear understanding of the code and requirements so they can give good feedback,
 perform effective reviews, and make changes where needed.
 
-### Projects should maintain a well-organized open source repository for their smart contracts
+### Projects should maintain a well-organized open source Repo for their smart contracts
 
 As projects like NBA Topshot have shown, when a blockchain product becomes successful
 others can and do to build on top of what you are doing.
 Whether that is analytics, tools, or other value adds that could help grow your project ecosystem,
 composability is key and that depends on open source development.
-If there isn’t already an open source repo, builders should strongly consider creating one.
+If there isn’t already an open source repo, builders should consider creating one.
 
 Builders can start from the [the Flow open source template](https://github.com/onflow/open-source-template)
 and make sure all of their repo is set up with some initial documentation for what the repo is for
@@ -171,20 +172,24 @@ Summarized below is a list of testing related recommendations
 which are noteworthy to mention for a typical smart contract project.
 
 Popular testing frameworks to use for cadence are listed here:
-Cadence: [Cadence Testing Framework](./testing-framework.mdx)
 Javascript: [Flow JS Testing](https://developers.flow.com/tools/flow-js-testing/index.md)
 Go: [Overflow](https://github.com/bjartek/overflow)
+Cadence: [Cadence Testing Framework](https://github.com/onflow/cadence/blob/ac05b6a0d6005cde468573f0a7a2e3a67f49bd90/docs/testing-framework.mdx)
+Tests written in Cadence!
 
 The same person who writes the code should also write the tests.
 They have the clearest understanding of the code paths and edge cases.
+
 
 Tests should be **mandatory**, not optional, even if the contract is copied from somewhere else.
 There should be thorough emulator unit tests in the public repo.
 [See the flow fungible token repo](https://github.com/onflow/flow-ft/tree/master/tests)
 for an example of unit tests in cadence.
 
+
 Every time there is a new Cadence version or emulator version,
 the dependencies of the repo should be updated to make sure the tests are all still passing.
+
 
 Tests should avoid being monolithic;
 Individual test cases should be set up for each part of the contract to test them in isolation. 
@@ -240,7 +245,7 @@ with detailed and useful comments within contracts, transactions, and scripts.
 The more that a project can be understood, that it adheres to standards,
 and can be built upon with ease, the more likely others will build against it in turn. 
 
-Each project should have a detailed `README.md` with these sections:
+Each project should have a detailed README.md with these sections:
     - Explanation of the project itself with links to the app
     - Addresses on various networks
     - High-level technical description of the contracts with emphasis on important types and functionality
@@ -293,4 +298,5 @@ Composability and extensibility should also be priorities while designing, devel
 and documenting their projects. (Documentation for these topics coming soon)
 
 
-If you have any feedback about these guidelines, please create an issue in the `cadence-lang.org` repo or make a PR updating the guidelines so we can start a discussion.
+
+If you have any feedback about these guidelines, please create an issue in the onflow/cadence-style-guide repo or make a PR updating the guidelines so we can start a discussion.

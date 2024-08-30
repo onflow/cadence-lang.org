@@ -1,12 +1,12 @@
 ---
 title: Core Events
-sidebar_position: 26
+sidebar_position: 25
 ---
 
 Core events are events emitted directly from the FVM (Flow Virtual Machine).
 The events have the same name on all networks and do not follow the standard naming (they have no address).
 
-Refer to the [public key section](./crypto.mdx#public-keys) for more details on the information provided for account key events.
+Refer to the [`PublicKey` section](./crypto.mdx#publickey) for more details on the information provided for account key events.
 
 ### Account Created
 
@@ -14,9 +14,9 @@ Event that is emitted when a new account gets created.
 
 Event name: `flow.AccountCreated`
 
+
 ```cadence
-access(all)
-event AccountCreated(address: Address)
+pub event AccountCreated(address: Address)
 ```
 
 | Field             | Type      | Description                              |
@@ -31,23 +31,17 @@ Event that is emitted when a key gets added to an account.
 Event name: `flow.AccountKeyAdded`
 
 ```cadence
-access(all)
-event AccountKeyAdded(
+pub event AccountKeyAdded(
     address: Address,
-    publicKey: PublicKey,
-    weight: UFix64,
-    hashAlgorithm: HashAlgorithm,
-    keyIndex: Int
+    publicKey: PublicKey
 )
 ```
 
-| Field           | Type            | Description                                    |
-|-----------------|-----------------|------------------------------------------------|
-| `address`       | `Address`       | The address of the account the key is added to |
-| `publicKey`     | `PublicKey`     | The public key added to the account            |
-| `weight`        | `UFix64`        | Weight of the new account key                  |
-| `hashAlgorithm` | `HashAlgorithm` | HashAlgorithm of the new account key           |
-| `keyIndex`      | `Int`           | Index of the new account key                   |
+| Field         | Type        | Description                                     |
+| ------------- | ----------- | ----------------------------------------------- |
+| `address`     | `Address`   | The address of the account the key is added to  |
+| `publicKey`   | `PublicKey` | The public key added to the account             |
+
 
 ### Account Key Removed
 
@@ -56,17 +50,17 @@ Event that is emitted when a key gets removed from an account.
 Event name: `flow.AccountKeyRemoved`
 
 ```cadence
-access(all)
-event AccountKeyRemoved(
+pub event AccountKeyRemoved(
     address: Address,
     publicKey: PublicKey
 )
 ```
 
-| Field       | Type      | Description                                        |
-|-------------|-----------|----------------------------------------------------|
-| `address`   | `Address` | The address of the account the key is removed from |
-| `publicKey` | `Int`     | Index of public key removed from the account       |
+| Field       | Type        | Description                                         |
+| ----------- | ----------- | --------------------------------------------------- |
+| `address`   | `Address`   | The address of the account the key is removed from  |
+| `publicKey` | `PublicKey` | Public key removed from the account                 |
+
 
 ### Account Contract Added
 
@@ -75,8 +69,7 @@ Event that is emitted when a contract gets deployed to an account.
 Event name: `flow.AccountContractAdded`
 
 ```cadence
-access(all)
-event AccountContractAdded(
+pub event AccountContractAdded(
     address: Address,
     codeHash: [UInt8],
     contract: String
@@ -96,8 +89,7 @@ Event that is emitted when a contract gets updated on an account.
 Event name: `flow.AccountContractUpdated`
 
 ```cadence
-access(all)
-event AccountContractUpdated(
+pub event AccountContractUpdated(
     address: Address,
     codeHash: [UInt8],
     contract: String
@@ -118,8 +110,7 @@ Event that is emitted when a contract gets removed from an account.
 Event name: `flow.AccountContractRemoved`
 
 ```cadence
-access(all)
-event AccountContractRemoved(
+pub event AccountContractRemoved(
     address: Address,
     codeHash: [UInt8],
     contract: String
@@ -139,8 +130,7 @@ Event that is emitted when a Capability is published from an account.
 Event name: `flow.InboxValuePublished`
 
 ```cadence
-access(all)
-event InboxValuePublished(provider: Address, recipient: Address, name: String, type: Type)
+pub event InboxValuePublished(provider: Address, recipient: Address, name: String, type: Type)
 ```
 
 | Field             | Type      | Description                                  |
@@ -161,8 +151,7 @@ Event that is emitted when a Capability is unpublished from an account.
 Event name: `flow.InboxValueUnpublished`
 
 ```cadence
-access(all)
-event InboxValueUnpublished(provider: Address, name: String)
+pub event InboxValueUnpublished(provider: Address, name: String)
 ```
 
 | Field           | Type      | Description                                  |
@@ -181,8 +170,7 @@ Event that is emitted when a Capability is claimed by an account.
 Event name: `flow.InboxValueClaimed`
 
 ```cadence
-access(all)
-event InboxValueClaimed(provider: Address, recipient: Address, name: String)
+pub event InboxValueClaimed(provider: Address, recipient: Address, name: String)
 ```
 
 | Field           | Type      | Description                                  |

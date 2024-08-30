@@ -3,48 +3,40 @@ title: Built-in Functions
 sidebar_position: 28
 ---
 
-## `panic`
+## panic
 #
 
 ```cadence
-view fun panic(_ message: String): Never
+fun panic(_ message: String): Never
 ```
 
-Terminates the program unconditionally
-and reports a message which explains why the unrecoverable error occurred.
+  Terminates the program unconditionally
+  and reports a message which explains why the unrecoverable error occurred.
+
+  ```cadence
+  let optionalAccount: AuthAccount? = // ...
+  let account = optionalAccount ?? panic("missing account")
+  ```
+
+## assert
 
 ```cadence
-panic("something went wrong: ...")
+fun assert(_ condition: Bool, message: String)
 ```
 
-## `assert`
+  Terminates the program if the given condition is false,
+  and reports a message which explains how the condition is false.
+  Use this function for internal sanity checks.
 
-```cadence
-view fun assert(_ condition: Bool, message: String)
-```
-
-Terminates the program if the given condition is false,
-and reports a message which explains how the condition is false.
-Use this function for internal sanity checks.
-
-The message argument is optional.
+  The message argument is optional.
 
 ## `revertibleRandom`
 
 ```cadence
-view fun revertibleRandom<T: FixedSizeUnsignedInteger>(modulo: T): T
+fun revertibleRandom(): UInt64
 ```
-Returns a pseudo-random integer.
 
-`T` can be any fixed-size unsigned integer type (`FixedSizeUnsignedInteger`, i.e.
-(`UInt8`, `UInt16`, `UInt32`, `UInt64`, `UInt128`, `UInt256`, 
-`Word8`, `Word16`, `Word32`, `Word64`, `Word128`, `Word256`).
-
-The modulo argument is optional. 
-If provided, the returned integer is between `0` and `modulo -1`.
-If not provided, the returned integer is between `0` and the maximum value of `T`.
-The function errors if `modulo` is equal to 0.
-
+Returns a pseudo-random number.
 
 The sequence of returned random numbers is independent for
 every transaction in each block.
@@ -74,37 +66,49 @@ perform post-selection on the returned random numbers.
 
 This limitation is inherent to any smart contract platform that allows transactions to roll back atomically
 and cannot be solved through safe randomness alone.
+
+This limitation is inherent to any smart contract platform that allows transactions to roll back atomically
+and cannot be solved through safe randomness alone.
 In cases where a non-trusted party can interact through their own transactions
 with smart contracts generating random numbers,
 it is recommended to use [commit-reveal schemes](https://github.com/onflow/flips/pull/123)
 as outlined in this [tentative example](https://github.com/onflow/flips/blob/main/protocol/20230728-commit-reveal.md#tutorials-and-examples) (full tutorial coming soon).
 
-## `RLP`
+## `unsafeRandom`
 
-Recursive Length Prefix (RLP) serialization allows the encoding of arbitrarily nested arrays of binary data.
+This function is superseded by `revertibleRandom()`.
+`unsafeRandom` has the same interface and implementation as `revertibleRandom()` although
+it is called unsafe. The name is retained for downwards compatibility
+despite it technically being no longer unsafe (see `revertibleRandom()` for details). 
+
+<Callout type="info">
+`unsafeRandom` is deprecated and will be removed in an upcoming release of Cadence.
+Use `revertibleRandom()` instead.
+</Callout>
+
+
+## RLP
+
+RLP (Recursive Length Prefix) serialization allows the encoding of arbitrarily nested arrays of binary data.
 
 Cadence provides RLP decoding functions in the built-in `RLP` contract, which does not need to be imported.
 
-### `decodeString`
+-
+    ```cadence
+    fun decodeString(_ input: [UInt8]): [UInt8]
+    ```
 
-```cadence
-view fun decodeString(_ input: [UInt8]): [UInt8]
-```
+    Decodes an RLP-encoded byte array (called string in the context of RLP).
+    The byte array should only contain of a single encoded value for a string; if the encoded value type does not match, or it has trailing unnecessary bytes, the program aborts.
+    If any error is encountered while decoding, the program aborts.
 
-Decodes an RLP-encoded byte array. RLP calls this a "string."
-The byte array should only contain of a single encoded value for a string.
-If the encoded value type does not match, or it has trailing unnecessary bytes, the program aborts.
-If the function encounters any error while decoding, the program aborts.
 
-### `decodeList`
 
-```cadence
-view fun decodeList(_ input: [UInt8]): [[UInt8]]`
-```
+    ```cadence
+    fun decodeList(_ input: [UInt8]): [[UInt8]]`
+    ```
 
-Decodes an RLP-encoded list into an array of RLP-encoded items.
-
-Note that this function does not recursively decode, so each element of the resulting array is RLP-encoded data.
-The byte array should only contain of a single encoded value for a list.
-If the encoded value type does not match, or it has trailing unnecessary bytes, the program aborts.
-If the function encounters any error while decoding, the program aborts.
+    Decodes an RLP-encoded list into an array of RLP-encoded items.
+    Note that this function does not recursively decode, so each element of the resulting array is RLP-encoded data.
+    The byte array should only contain of a single encoded value for a list; if the encoded value type does not match, or it has trailing unnecessary bytes, the program aborts.
+    If any error is encountered while decoding, the program aborts.

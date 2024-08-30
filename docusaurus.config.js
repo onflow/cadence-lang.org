@@ -47,11 +47,10 @@ const config = {
           lastVersion: 'current',
           versions: {
             current: {
-              label: '0.42',
-            },
-            '1.0': {
               label: '1.0',
-              banner: "none"
+            },
+            '0.42': {
+              label: '0.42',
             }
           },
           beforeDefaultRemarkPlugins: [
@@ -66,7 +65,7 @@ const config = {
           editUrl:
             'https://github.com/onflow/cadence-lang.org/tree/main',
         },
-        
+
         //TODO
         //blog: {
         //  showReadingTime: true,
@@ -75,7 +74,7 @@ const config = {
         //  editUrl:
         //    'https://github.com/onflow/cadence-lang.org',
         //},
-        
+
         theme: {
           customCss: [
             require.resolve('@code-hike/mdx/styles.css'),
@@ -94,7 +93,7 @@ const config = {
       announcementBar: {
         id: 'stable_cadence_upgrade',
         content: `🔧 Upgrade to Cadence 1.0 🔧<br />
-          <a href="https://flow.com/upgrade/crescendo/migration" target="_blank">Upgrade</a> your Cadence contracts! All contracts must be updated to avoid breaking. <a href="https://flow.com/post/update-on-testnet-crescendo-network-upgrade" target="_blank">Learn More</a>. 
+          <a href="https://flow.com/upgrade/crescendo/migration" target="_blank">Upgrade</a> your Cadence contracts! All contracts must be updated to avoid breaking. <a href="https://flow.com/post/update-on-testnet-crescendo-network-upgrade" target="_blank">Learn More</a>.
          `,
         backgroundColor: '#007BFF',
         textColor: '#FFFFFF',
@@ -176,7 +175,7 @@ const config = {
               },
             ],
           },
-          
+
         ],
         copyright: `The source code of this site is licensed under the Apache License, Version 2.0.
         Content is licensed under the Creative Commons Attribution 4.0 International License.`,

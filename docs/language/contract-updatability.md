@@ -4,7 +4,7 @@ sidebar_position: 23
 ---
 
 ## Introduction
-A [contract](./contracts.mdx) in Cadence is a collection of data (its state) and
+A [contract](./contracts.mdx) is a collection of data (its state) and
 code (its functions) that lives in the contract storage area of an account.
 When a contract is updated, it is important to make sure that the changes introduced do not lead to runtime
 inconsistencies for already stored data.
@@ -74,16 +74,23 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  pub contract Foo {
-      pub var a: String
-      pub var b: Int
+  access(all)
+  contract Foo {
+    
+      access(all)
+      var a: String
+
+      access(all)
+      var b: Int
   }
 
 
   // Updated contract
 
-  pub contract Foo {
-      pub var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
   }
   ```
   - It leaves data for the removed field unused at the storage, as it is no longer accessible.
@@ -93,17 +100,27 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  pub contract Foo {
-      pub var a: String
-      pub var b: Int
+  access(all)
+  contract Foo {
+
+      access(all)
+      var a: String
+
+      access(all)
+      var b: Int
   }
 
 
   // Updated contract
 
-  pub contract Foo {
-      pub var b: Int
-      pub var a: String
+  access(all)
+  contract Foo {
+
+      access(all)
+      var b: Int
+
+      access(all)
+      var a: String
   }
   ```
 
@@ -111,15 +128,19 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  pub contract Foo {
-      pub var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
   }
 
 
   // Updated contract
 
-  pub contract Foo {
-      priv var a: String   // access modifier changed to 'priv'
+  access(all)
+  contract Foo {
+      access(self)
+      var a: String   // access modifier changed to 'access(self)'
   }
   ```
 
@@ -128,16 +149,23 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  pub contract Foo {
-      pub var a: String
+  access(all)
+  contract Foo {
+      access(all)
+      var a: String
   }
 
 
   // Updated contract
 
-  pub contract Foo {
-      pub var a: String
-      pub var b: Int      // Invalid new field
+  access(all)
+  contract Foo {
+    
+      access(all)
+      var a: String
+
+      access(all)
+      var b: Int      // Invalid new field
   }
   ```
     - Initializer of a contract only run once, when the contract is deployed for the first time. It does not rerun
@@ -150,15 +178,21 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing contract
 
-  pub contract Foo {
-      pub var a: String
+  access(all)
+  contract Foo {
+
+      access(all)
+      var a: String
   }
 
 
   // Updated contract
 
-  pub contract Foo {
-      pub var a: Int      // Invalid type change
+  access(all)
+  contract Foo {
+
+      access(all)
+      var a: Int      // Invalid type change
   }
   ```
     - In an already stored contract, the field `a` would have a value of type `String`.
@@ -180,13 +214,15 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing struct
 
-  pub struct Foo {
+  access(all)
+  struct Foo {
   }
 
 
   // Upated struct
 
-  pub struct Foo: T {
+  access(all)
+  struct Foo: T {
   }
   ```
   - However, if adding a conformance also requires changing the existing structure (e.g: adding a new field that is
@@ -194,7 +230,7 @@ A field may belong to a contract, struct, resource, or interface.
     prevent performing such an update.
 
 #### Invalid Changes:
-- Removing an existing declaration is not valid.
+- Removing an existing declaration is not valid without using the `#removedType` pragma
   - Removing a declaration allows adding a new declaration with the same name, but with a different structure.
   - Any program that uses that declaration would face inconsistencies in the stored data.
 - Renaming a declaration is not valid. It can have the same effect as removing an existing declaration and adding
@@ -203,31 +239,32 @@ A field may belong to a contract, struct, resource, or interface.
   ```cadence
   // Existing struct
 
-  pub struct Foo {
+  access(all)
+  struct Foo {
   }
 
 
   // Changed to a struct interface
 
-  pub struct interface Foo {    // Invalid type declaration change
+  access(all)
+  struct interface Foo {    // Invalid type declaration change
   }
   ```
 - Removing an interface conformance of a struct/resource is not valid.
   ```cadence
   // Existing struct
 
-  pub struct Foo: T {
+  access(all)
+  struct Foo: T {
   }
 
 
   // Upated struct
 
-  pub struct Foo {
+  access(all)
+  struct Foo {
   }
   ```
-  This is because if there was a container of type `T` (e.g., an array `[T]` or dictionary `{R:T}`, etc.), or a field of type `T`,
-  and if a `Foo` value had been stored in that container or field, then that container value will become invalid,
-  as it will now hold a value that does not conform to `T`.
 
 ### Updating Members
 Similar to contracts, these composite declarations: structs, resources, and interfaces also can have fields and
@@ -256,17 +293,27 @@ Below sections describes the restrictions imposed on updating the members of a s
   ```cadence
   // Existing enum with `Int` raw type
 
-  pub enum Color: Int {
-    pub case RED
-    pub case BLUE
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum with `UInt8` raw type
 
-  pub enum Color: UInt8 {    // Invalid change of raw type
-    pub case RED
-    pub case BLUE
+  access(all)
+  enum Color: UInt8 {    // Invalid change of raw type
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
   }
   ```
   - When the enum value is stored, the raw value associated with the enum-case gets stored.
@@ -285,18 +332,30 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case BLUE
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case BLUE
-    pub case GREEN    // valid new enum-case at the bottom
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
+
+    access(all)
+    case GREEN    // valid new enum-case at the bottom
   }
   ```
 #### Invalid Changes
@@ -304,35 +363,57 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case BLUE
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case GREEN    // invalid new enum-case in the middle
-    pub case BLUE
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case GREEN    // invalid new enum-case in the middle
+
+    access(all)
+    case BLUE
   }
   ```
 - Changing the name of an enum-case is invalid.
   ```cadence
   // Existing enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case BLUE
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case GREEN    // invalid change of names
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case GREEN    // invalid change of names
   }
   ```
   - Previously stored raw values for `Color.BLUE` now represents `Color.GREEN`. i.e: The stored values have changed
@@ -345,16 +426,24 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case BLUE
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  pub enum Color: Int {
-    pub case RED
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
 
     // invalid removal of `case BLUE`
   }
@@ -363,17 +452,27 @@ it originally was (type confusion).
   ```cadence
   // Existing enum
 
-  pub enum Color: Int {
-    pub case RED
-    pub case BLUE
+  access(all)
+  enum Color: Int {
+
+    access(all)
+    case RED
+
+    access(all)
+    case BLUE
   }
 
 
   // Updated enum
 
-  pub enum Color: UInt8 {
-    pub case BLUE   // invalid change of order
-    pub case RED
+  access(all)
+  enum Color: UInt8 {
+
+    access(all)
+    case BLUE   // invalid change of order
+    
+    access(all)
+    case RED
   }
   ```
   - Raw value of an enum is implicit, and corresponds to the defined order.
@@ -403,71 +502,43 @@ A contract may import declarations (types, functions, variables, etc.) from othe
 already validated at the time of their deployment. Hence, there is no need for validating any declaration every time
 they are imported.
 
-## Cadence 1.0 Contract Updates
+## The `#removedType` Pragma
 
-For the upcoming network upgrade that will update the Cadence version to 1.0, all contracts will need to be upgraded to Cadence 1.0.
-Numerous changes have been made to the language, and many types and patterns that were previously valid are no longer permitted, or behave differently.
-In particulary, reference types work very differently after the introduction of [entitlements](https://cadence-lang.org/docs/1.0/language/access-control#entitlements), 
-and restricted types have been replaced with the similar but different [intersection types](https://cadence-lang.org/docs/1.0/language/intersection-types).
+Under normal circumstances, it is not valid to remove a type declaration, whether a composite or an interface. 
+However, a special pragma can be used when this is necessary to enable composite declarations to be "tombstoned", 
+removing them from a contract and preventing any declarations from being re-added with the same name. 
+This pragma cannot be used with interfaces.
 
-In order to allow contracts to be upgraded in anticipation of these changes, 
-numerous migrations will be run on the network in order to transform data created in v0.42 of Cadence (the current version) into data that is compatible with version 1.0.
-The fact that these migrations are being run also allows for certain relaxations of the contract update rules outlined above. 
-In general, all the previously described restrictions still apply to v0.42 -> v1.0 contract updates, with the exceptions enabled by the data migrations outlined below:
+To use this pragma, simply add a `#removedType(T)` line to the contract containing the type `T` you want to remove,
+at the same scope as the declaration of `T`. So, for example, to remove a resource definition `R` defined like so:
 
-* Composite (struct, resource, and contract) field types can be changed according to specific rules. Specifically, reference-typed fields (or fields whose types contain references, like a `Capability`) can be updated to have the appropriate entitlements, while restricted-typed fields can be updated to be the appropriate intersection types.
-The update validator that will run when scheduling a 1.0 contract upgrade will enforce that these types are correct, 
-but those curious can read in depth about the update rules for these cases [here](https://cadence-lang.org/docs/cadence_migration_guide/type-annotations-guide). 
+```cadence
+access(all) contract Foo {
 
-* Given that [type requirements](./interfaces.mdx#nested-type-requirements) have been removed in Cadence 1.0, the update rules have been relaxed to allow 
-struct or resource types defined in contract interfaces to be converted to struct or resource interfaces. E.g. a contract interface originally written as:
-
-  ```cadence
-  pub contract interface FTMinter {
-
-    // Type-requirement
-    pub resource Minter {}
-
-    access(contract) let minters: @{String: Minter}
+  access(all) resource R {
+     // definition of R ...
   }
-  ```
 
-  can be updated to
+  // other stuff ... 
+}
+```
 
-  ```cadence
-  access(all) contract interface FTMinter {
+change the contract to:
 
-    // Note that this is now an interface.
-    access(all) resource interface Minter {}
+```cadence
+access(all) contract Foo {
 
-    // Usages of the type would also needs to be updated to use an interface-set.
-    // i.e: `Minter` is replaced with `{Minter}`.
-    access(contract) let minters: @{String: {Minter}}
-  }
-  ```
+  #removedType(R)
 
-  Any contract that implements the above contract interface, for example `FTMinterImpl` in `v0.42` below:
+  // other stuff ... 
+}
+```
 
-  ```cadence
-  pub contract FTMinterImpl: FTMinter {
+This will prevent any type named `R` from ever being declared again as a nested declaration in `Foo`, 
+preventing the security issues normally posed by removing a type. 
+Specifically, when a `#removedType(T)` pragma is present at a certain scope level in a contract, 
+no new type named `T` can be added at that scope. 
+Additionally, once added, a `#removedType` pragma can never be removed, 
+as this would allow circumventing the above restriction. 
 
-    // Type-requirement
-    pub resource Minter {}
-
-    access(contract) let minters: @{String: FTMinter.Minter}
-  }
-  ```
-
-  also now need to be updated to:
-
-  ```cadence
-  access(all) contract FTMinterImpl: FTMinter {
-
-    // This is now a concrete resource that implements the `FTMinter.Minter` interface.
-    access(all) resource Minter: FTMinter.Minter {}
-
-    // Usages of the type would also needs to be updated to use an interface-set.
-    // i.e: `FTMinter.Minter` is replaced with `{FTMinter.Minter}`.
-    access(contract) let minters: @{String: {FTMinter.Minter}}
-  }
-  ```
+Please note that this pragma's behavior is not necessarily final and is subject to change.

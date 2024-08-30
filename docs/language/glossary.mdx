@@ -14,7 +14,7 @@ The `&` (ampersand) symbol has several uses.
 
 ### Reference
 
-If an expression starts with the `&` (ampersand) symbol, it creates a [reference](./references.md).
+If an expression starts with the `&` (ampersand) symbol, it creates a [reference](./references.mdx).
 
 ```cadence
 let a: String = "hello"
@@ -23,12 +23,12 @@ let refOfA: &String = &a as &String
 
 References may also be authorized if the `&` symbol is preceded by `auth` (otherwise the reference is unauthorized).
 
-Authorized references have the `auth` modifier, i.e. the full syntax is `auth &T`,
-whereas unauthorized references do not have a modifier.
+Authorized references have the `auth` modifier, along with the set of entitlements to which the reference is authorized,
+i.e. the full syntax is `auth(E, F) &T`, whereas unauthorized references do not have a modifier.
 
 ```cadence
 let a: String = "hello"
-let refOfA: &String = &a as auth &String
+let refOfA: auth(X) &String = &a as auth(X) &String
 ```
 
 ### Logical Operator
@@ -53,8 +53,11 @@ This emphasizes the whole type acts like a resource.
 
 ```cadence
 // Declare a resource named `SomeResource`
-pub resource SomeResource {
-    pub var value: Int
+access(all)
+resource SomeResource {
+    
+    access(all)
+    var value: Int
 
     init(value: Int) {
         self.value = value
@@ -65,7 +68,8 @@ pub resource SomeResource {
 let a: @SomeResource <- create SomeResource(value: 0)
 
 // also in functions declarations
-pub fun use(resource: @SomeResource) {
+access(all)
+fun use(resource: @SomeResource) {
     destroy resource
 }
 ```
@@ -156,7 +160,7 @@ let result = 4 / 2
 
 ### Path separator
 
-In a [Path](./accounts.mdx#paths), the forward slash separates the domain (e.g. `storage`, `private`, `public`) and the identifier.
+In a [path](./accounts/paths.mdx), the forward slash separates the domain, `storage` or `public`, and the identifier.
 
 ```cadence
 let storagePath = /storage/path
@@ -187,7 +191,8 @@ If the variable is `nil`, the move succeeds.
 If it is not nil, the program aborts.
 
 ```cadence
-pub resource R {}
+access(all)
+resource R {}
 
 var a: @R? <- nil
 a <-! create R()

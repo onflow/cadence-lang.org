@@ -3,8 +3,6 @@ title: JSON-Cadence Data Interchange Format
 sidebar_label: JSON-Cadence format
 ---
 
-# JSON-Cadence Data Interchange Format
-
 > Version 0.3.1
 
 JSON-Cadence is a data interchange format used to represent Cadence values as language-independent JSON objects.
@@ -19,7 +17,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ---
 
-### Void
+## Void
 
 ```json
 {
@@ -27,7 +25,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -37,7 +35,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ---
 
-### Optional
+## Optional
 
 ```json
 {
@@ -46,7 +44,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 }
 ```
 
-#### Example
+### Example
 
 ```json
 // Non-nil
@@ -69,7 +67,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ---
 
-### Bool
+## Bool
 
 ```json
 {
@@ -78,7 +76,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -89,17 +87,16 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ---
 
-### String
+## String
 
 ```json
 {
   "type": "String",
   "value": "..."
 }
-
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -110,7 +107,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ---
 
-### Address
+## Address
 
 ```json
 {
@@ -119,7 +116,7 @@ This format includes less type information than a complete [ABI](https://en.wiki
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -130,9 +127,9 @@ This format includes less type information than a complete [ABI](https://en.wiki
 
 ---
 
-### Integers
+## Integers
 
-`[U]Int`, `[U]Int8`, `[U]Int16`, `[U]Int32`,`[U]Int64`,`[U]Int128`, `[U]Int256`,  `Word8`, `Word16`, `Word32`, or `Word64`
+`[U]Int`, `[U]Int8`, `[U]Int16`, `[U]Int32`,`[U]Int64`,`[U]Int128`, `[U]Int256`, `Word8`, `Word16`, `Word32`, `Word64`, `Word128` or `Word256`
 
 Although JSON supports integer literals up to 64 bits, all integer types are encoded as strings for consistency.
 
@@ -145,7 +142,7 @@ While the static type is not strictly required for decoding, it is provided to i
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -156,7 +153,7 @@ While the static type is not strictly required for decoding, it is provided to i
 
 ---
 
-### Fixed Point Numbers
+## Fixed Point Numbers
 
 `[U]Fix64`
 
@@ -164,23 +161,23 @@ Although fixed point numbers are implemented as integers, JSON-Cadence uses a de
 
 ```json
 {
-    "type": "[U]Fix64",
-    "value": "<integer>.<fractional>"
+  "type": "[U]Fix64",
+  "value": "<integer>.<fractional>"
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
-    "type": "Fix64",
-    "value": "12.3"
+  "type": "Fix64",
+  "value": "12.3"
 }
 ```
 
 ---
 
-### Array
+## Array
 
 ```json
 {
@@ -193,7 +190,7 @@ Although fixed point numbers are implemented as integers, JSON-Cadence uses a de
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -217,7 +214,7 @@ Although fixed point numbers are implemented as integers, JSON-Cadence uses a de
 
 ---
 
-### Dictionary
+## Dictionary
 
 Dictionaries are encoded as a list of key-value pairs to preserve the deterministic ordering implemented by Cadence.
 
@@ -234,7 +231,7 @@ Dictionaries are encoded as a list of key-value pairs to preserve the determinis
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -250,14 +247,14 @@ Dictionaries are encoded as a list of key-value pairs to preserve the determinis
         "value": "test"
       }
     }
-  ],
+  ]
   // ...
 }
 ```
 
 ---
 
-### Composites (Struct, Resource, Event, Contract, Enum)
+## Composites (Struct, Resource, Event, Contract, Enum)
 
 Composite fields are encoded as a list of name-value pairs in the order in which they appear in the composite type declaration.
 
@@ -277,7 +274,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -287,7 +284,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
     "fields": [
       {
         "name": "power",
-        "value": {"type": "Int", "value": "1"}
+        "value": { "type": "Int", "value": "1" }
       }
     ]
   }
@@ -296,7 +293,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 
 ---
 
-### Path
+## Path
 
 ```json
 {
@@ -308,7 +305,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -322,7 +319,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 
 ---
 
-### Type Value
+## Type Value
 
 ```json
 {
@@ -333,14 +330,14 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
   "type": "Type",
   "value": {
     "staticType": {
-      "kind": "Int",
+      "kind": "Int"
     }
   }
 }
@@ -348,32 +345,63 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 
 ---
 
-### Capability
+## InclusiveRange
+
+```json
+{
+  "type": "InclusiveRange",
+  "value": {
+    "start": <start_value>,
+    "end": <end_value>,
+    "step": <step_value>
+  }
+}
+```
+
+### Example
+
+```json
+{
+  "type": "InclusiveRange",
+  "value": {
+    "start": {
+      "type": "Int256",
+      "value": "10"
+    },
+    "end": {
+      "type": "Int256",
+      "value": "20"
+    },
+    "step": {
+      "type": "Int256",
+      "value": "5"
+    }
+  }
+}
+```
+
+---
+
+## Capability
 
 ```json
 {
   "type": "Capability",
   "value": {
-    "path": <path>,
+    "id": <Number>,
     "address": "0x0",  // as hex-encoded string with 0x prefix
     "borrowType": <type>,
   }
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
   "type": "Capability",
   "value": {
-    "path": {
-      "type": "Path",
-      "value": {
-        "domain": "public",
-        "identifier": "someInteger"
-      }
-    },
+    "id": "1",
     "address": "0x1",
     "borrowType": {
       "kind": "Int"
@@ -384,7 +412,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 
 ---
 
-### Functions
+## Functions
 
 ```json
 {
@@ -397,7 +425,7 @@ Composite fields are encoded as a list of name-value pairs in the order in which
 
 Function values can only be exported, they cannot be imported.
 
-#### Example
+### Example
 
 ```json
 {
@@ -405,7 +433,7 @@ Function values can only be exported, they cannot be imported.
   "value": {
     "functionType": {
       "kind": "Function",
-      "typeID": "(():Void)",
+      "typeID": "fun():Void",
       "parameters": [],
       "return": {
         "kind": "Void"
@@ -419,7 +447,7 @@ Function values can only be exported, they cannot be imported.
 
 # Types
 
-### Simple Types
+## Simple Types
 
 These are basic types like `Int`, `String`, or `StoragePath`.
 
@@ -440,7 +468,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -450,7 +478,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 
 ---
 
-### Optional Types
+## Optional Types
 
 ```json
 {
@@ -459,7 +487,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -472,7 +500,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 
 ---
 
-### Variable Sized Array Types
+## Variable Sized Array Types
 
 ```json
 {
@@ -481,7 +509,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -494,7 +522,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 
 ---
 
-### Constant Sized Array Types
+## Constant Sized Array Types
 
 ```json
 {
@@ -504,7 +532,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -512,13 +540,13 @@ These are basic types like `Int`, `String`, or `StoragePath`.
   "type": {
     "kind": "String"
   },
-  "size":3
+  "size": 3
 }
 ```
 
 ---
 
-### Dictionary Types
+## Dictionary Types
 
 ```json
 {
@@ -528,7 +556,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -538,13 +566,13 @@ These are basic types like `Int`, `String`, or `StoragePath`.
   },
   "value": {
     "kind": "UInt16"
-  },
+  }
 }
 ```
 
 ---
 
-### Composite Types
+## Composite Types
 
 ```json
 {
@@ -564,14 +592,14 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
   "kind": "Resource",
   "type": "",
   "typeID": "0x3.GreatContract.GreatNFT",
-  "initializers":[
+  "initializers": [
     [
       {
         "label": "foo",
@@ -595,7 +623,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 
 ---
 
-### Field Types
+## Field Types
 
 ```json
 {
@@ -604,7 +632,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -617,7 +645,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 
 ---
 
-### Parameter Types
+## Parameter Types
 
 ```json
 {
@@ -627,7 +655,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -641,7 +669,7 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 
 ---
 
-### Initializer Types
+## Initializer Types
 
 Initializer types are encoded a list of parameters to the initializer.
 
@@ -653,7 +681,7 @@ Initializer types are encoded a list of parameters to the initializer.
 ]
 ```
 
-#### Example
+### Example
 
 ```json
 [
@@ -669,7 +697,7 @@ Initializer types are encoded a list of parameters to the initializer.
 
 ---
 
-### Function Types
+## Function Types
 
 ```json
 {
@@ -680,11 +708,12 @@ Initializer types are encoded a list of parameters to the initializer.
     <parameter at index 1>,
     // ...
   ],
+  "purity: "view" | undefined,
   "return": <type>
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -699,6 +728,7 @@ Initializer types are encoded a list of parameters to the initializer.
       }
     }
   ],
+  "purity": "view",
   "return": {
     "kind": "String"
   }
@@ -707,22 +737,39 @@ Initializer types are encoded a list of parameters to the initializer.
 
 ---
 
-### Reference Types
+## Reference Types
 
 ```json
 {
   "kind": "Reference",
-  "authorized": true | false,
+  "authorization": {
+    "kind": "Unauthorized" | "EntitlementMapAuthorization" | "EntitlementConjunctionSet" | "EntitlementDisjunctionSet",
+    "entitlements": [
+    <entitlement at index 0>,
+    <entitlement at index 1>
+    // ...
+    ]
+    },
   "type": <type>
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
   "kind": "Reference",
-  "authorized": true,
+  "authorization": {
+    {
+      "kind": "EntitlementMapAuthorization",
+      "entitlements": [
+        {
+          "kind": "EntitlementMap",
+          "typeID": "foo"
+        }
+      ]
+    }
+  },
   "type": {
     "kind": "String"
   }
@@ -731,14 +778,13 @@ Initializer types are encoded a list of parameters to the initializer.
 
 ---
 
-### Restricted Types
+## Intersection Types
 
 ```json
 {
-  "kind": "Restriction",
+  "kind": "Intersection",
   "typeID": "<fully qualified type ID>",
-  "type": <type>,
-  "restrictions": [
+  "types": [
     <type at index 0>,
     <type at index 1>,
     //...
@@ -746,29 +792,26 @@ Initializer types are encoded a list of parameters to the initializer.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
-  "kind": "Restriction",
-  "typeID": "0x3.GreatContract.GreatNFT",
-  "type": {
-    "kind": "AnyResource",
-  },
-  "restrictions": [
+  "kind": "Intersection",
+  "typeID": "{0x1.FungibleToken.Receiver}",
+  "types": [
     {
-        "kind": "ResourceInterface",
-        "typeID": "0x1.FungibleToken.Receiver",
-        "fields": [
-            {
-                "id": "uuid",
-                "type": {
-                    "kind": "UInt64"
-                }
-            }
-        ],
-        "initializers": [],
-        "type": ""
+      "kind": "ResourceInterface",
+      "typeID": "0x1.FungibleToken.Receiver",
+      "fields": [
+        {
+          "id": "uuid",
+          "type": {
+            "kind": "UInt64"
+          }
+        }
+      ],
+      "initializers": [],
+      "type": ""
     }
   ]
 }
@@ -776,7 +819,7 @@ Initializer types are encoded a list of parameters to the initializer.
 
 ---
 
-### Capability Types
+## Capability Types
 
 ```json
 {
@@ -785,14 +828,17 @@ Initializer types are encoded a list of parameters to the initializer.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
   "kind": "Capability",
   "type": {
     "kind": "Reference",
-    "authorized": true,
+    "authorization": {
+      "kind": "Unauthorized",
+      "entitlements": null
+    },
     "type": {
       "kind": "String"
     }
@@ -802,7 +848,7 @@ Initializer types are encoded a list of parameters to the initializer.
 
 ---
 
-### Enum Types
+## Enum Types
 
 ```json
 {
@@ -819,7 +865,7 @@ Initializer types are encoded a list of parameters to the initializer.
 }
 ```
 
-#### Example
+### Example
 
 ```json
 {
@@ -828,7 +874,7 @@ Initializer types are encoded a list of parameters to the initializer.
     "kind": "String"
   },
   "typeID": "0x3.GreatContract.GreatEnum",
-  "initializers":[],
+  "initializers": [],
   "fields": [
     {
       "id": "rawValue",
@@ -840,32 +886,53 @@ Initializer types are encoded a list of parameters to the initializer.
 }
 ```
 
-### Repeated Types
+## Repeated Types
 
 When a composite type appears more than once within the same JSON type encoding, either because it is
 recursive or because it is repeated (e.g. in a composite field), the composite is instead
 represented by its type ID.
 
-#### Example
+### Example
 
 ```json
 {
-  "type":"Type",
+  "type": "Type",
   "value": {
     "staticType": {
-      "kind":"Resource",
-      "typeID":"0x3.GreatContract.NFT",
-      "fields":[
-        {"id":"foo",
-        "type": {
-          "kind":"Optional",
-          "type":"0x3.GreatContract.NFT" // recursive NFT resource type is instead encoded as an ID
+      "kind": "Resource",
+      "typeID": "0x3.GreatContract.NFT",
+      "fields": [
+        {
+          "id": "foo",
+          "type": {
+            "kind": "Optional",
+            "type": "0x3.GreatContract.NFT" // recursive NFT resource type is instead encoded as an ID
           }
         }
       ],
-      "initializers":[],
-      "type":""
+      "initializers": [],
+      "type": ""
     }
+  }
+}
+```
+
+## Inclusive Range Type
+
+```json
+{
+  "kind": "InclusiveRange",
+  "element":  <integer_type>
+}
+```
+
+### Example
+
+```json
+{
+  "kind": "InclusiveRange",
+  "element": {
+    "kind": "Int"
   }
 }
 ```

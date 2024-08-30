@@ -7,7 +7,7 @@ The Cadence testing framework provides a convenient way to write tests for Caden
 This functionality is provided by the built-in `Test` contract.
 
 <Callout type="info">
-The testing framework can only be used off-chain, e.g. by using the [Flow CLI](https://developers.flow.com/tools/flow-cli/tests/run-tests).
+The testing framework can only be used off-chain, e.g. by using the [Flow CLI](https://developers.flow.com/tools/flow-cli).
 </Callout>
 
 Tests must be written in the form of a Cadence script.
@@ -22,36 +22,44 @@ All the above four functions are optional.
 // A `setup` function that always runs before the rest of the test cases.
 // Can be used to initialize things that would be used across the test cases.
 // e.g: initialling a blockchain backend, initializing a contract, etc.
-access(all) fun setup() {
+access(all)
+fun setup() {
 }
 
 // The `beforeEach` function runs before each test case. Can be used to perform
 // some state cleanup before each test case, among other things.
-access(all) fun beforeEach() {
+access(all)
+fun beforeEach() {
 }
 
 // The `afterEach` function runs after each test case.  Can be used to perform
 // some state cleanup after each test case, among other things.
-access(all) fun afterEach() {
+access(all)
+fun afterEach() {
 }
 
 // Valid test functions start with the 'test' prefix.
-access(all) fun testSomething() {
+access(all)
+fun testSomething() {
 }
 
-access(all) fun testAnotherThing() {
+access(all)
+fun testAnotherThing() {
 }
 
-access(all) fun testMoreThings() {
+access(all)
+fun testMoreThings() {
 }
 
 // Test functions cannot have any arguments or return values.
-access(all) fun testInvalidSignature(message: String): Bool {
+access(all)
+fun testInvalidSignature(message: String): Bool {
 }
 
 // A `tearDown` function that always runs at the end of all test cases.
 // e.g: Can be used to stop the blockchain back-end used for tests, etc. or any cleanup.
-access(all) fun tearDown() {
+access(all)
+fun tearDown() {
 }
 ```
 ## Test Standard Library
@@ -67,7 +75,7 @@ import Test
 ### Test.assert
 
 ```cadence
-fun assert(_ condition: Bool, message: String)
+view fun assert(_ condition: Bool, message: String)
 ```
 
 Fails a test-case if the given condition is false, and reports a message which explains why the condition is false.
@@ -77,7 +85,8 @@ The message argument is optional.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     Test.assert(2 == 2)
     Test.assert([1, 2, 3].length == 0, message: "Array length is not 0")
 }
@@ -86,7 +95,7 @@ access(all) fun testExample() {
 ### Test.fail
 
 ```cadence
-fun fail(message: String)
+view fun fail(message: String)
 ```
 
 Immediately fails a test-case, with a message explaining the reason to fail the test.
@@ -96,7 +105,8 @@ The message argument is optional.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let array = [1, 2, 3]
 
     if array.length != 0 {
@@ -116,7 +126,8 @@ The `expect` function tests a value against a matcher (see [matchers](#matchers)
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let array = [1, 2, 3]
 
     Test.expect(array.length, Test.equal(3))
@@ -135,15 +146,19 @@ reports a message which explains how the two values differ.
 ```cadence
 import Test
 
-access(all) struct Foo {
-    access(all) let answer: Int
+access(all)
+struct Foo {
+
+    access(all)
+    let answer: Int
 
     init(answer: Int) {
         self.answer = answer
     }
 }
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     Test.assertEqual("this string", "this string")
     Test.assertEqual(21, 21)
     Test.assertEqual(true, true)
@@ -183,14 +198,17 @@ an error message that contains the given error message portion.
 ```cadence
 import Test
 
-access(all) struct Foo {
-    access(self) let answer: UInt8
+access(all)
+struct Foo {
+    access(self)
+    let answer: UInt8
 
     init(answer: UInt8) {
         self.answer = answer
     }
 
-    access(all) fun correctAnswer(_ input: UInt8): Bool {
+    access(all)
+    fun correctAnswer(_ input: UInt8): Bool {
         if self.answer != input {
             panic("wrong answer!")
         }
@@ -198,7 +216,8 @@ access(all) struct Foo {
     }
 }
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let foo = Foo(answer: 42)
 
     Test.expectFailure(fun(): Void {
@@ -212,18 +231,22 @@ access(all) fun testExample() {
 A matcher is an object that consists of a test function and associated utility functionality.
 
 ```cadence
-access(all) struct Matcher {
+access(all)
+struct Matcher {
 
-    access(all) let test: fun(AnyStruct): Bool
+    access(all)
+    let test: fun(AnyStruct): Bool
 
-    access(all) init(test: fun(AnyStruct): Bool) {
+    access(all)
+    init(test: fun(AnyStruct): Bool) {
         self.test = test
     }
 
     /// Combine this matcher with the given matcher.
     /// Returns a new matcher that succeeds if this and the given matcher succeed.
     ///
-    access(all) fun and(_ other: Matcher): Matcher {
+    access(all)
+    fun and(_ other: Matcher): Matcher {
         return Matcher(test: fun (value: AnyStruct): Bool {
             return self.test(value) && other.test(value)
         })
@@ -232,7 +255,8 @@ access(all) struct Matcher {
     /// Combine this matcher with the given matcher.
     /// Returns a new matcher that succeeds if this or the given matcher succeeds.
     ///
-    access(all) fun or(_ other: Matcher): Matcher {
+    access(all)
+    fun or(_ other: Matcher): Matcher {
         return Matcher(test: fun (value: AnyStruct): Bool {
             return self.test(value) || other.test(value)
         })
@@ -251,7 +275,7 @@ The `or` method returns a new matcher that succeeds if at-least this or the give
 A matcher that accepts a generic-typed test function can be constructed using the `newMatcher` function.
 
 ```cadence
-fun newMatcher<T: AnyStruct>(_ test: fun(T): Bool): Test.Matcher
+view fun newMatcher<T: AnyStruct>(_ test: fun(T): Bool): Test.Matcher
 ```
 
 The type parameter `T` is bound to `AnyStruct` type. It is also optional.
@@ -261,7 +285,8 @@ For example, a matcher that checks whether a given integer value is negative can
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let isNegative = Test.newMatcher(fun (_ value: Int): Bool {
         return value < 0
     })
@@ -271,7 +296,8 @@ access(all) fun testExample() {
     Test.assert(isNegative.test(-15), message: "number is not negative")
 }
 
-access(all) fun testCustomMatcherUntyped() {
+access(all)
+fun testCustomMatcherUntyped() {
     let matcher = Test.newMatcher(fun (_ value: AnyStruct): Bool {
         if !value.getType().isSubtype(of: Type<Int>()) {
             return false
@@ -283,7 +309,8 @@ access(all) fun testCustomMatcherUntyped() {
     Test.expect(8, matcher)
 }
 
-access(all) fun testCustomMatcherTyped() {
+access(all)
+fun testCustomMatcherTyped() {
     let matcher = Test.newMatcher<Int>(fun (_ value: Int): Bool {
         return value == 7
     })
@@ -297,7 +324,7 @@ The `Test` contract provides some built-in matcher functions for convenience.
 ### Test.equal
 
 ```cadence
-fun equal(_ value: AnyStruct): Matcher
+view fun equal(_ value: AnyStruct): Matcher
 ```
 
 The `equal` function returns a matcher that succeeds if the tested value is equal to the given value.
@@ -306,7 +333,8 @@ Accepts an `AnyStruct` value.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let array = [1, 2, 3]
 
     Test.expect([1, 2, 3], Test.equal(array))
@@ -316,7 +344,7 @@ access(all) fun testExample() {
 ### Test.beGreaterThan
 
 ```cadence
-fun beGreaterThan(_ value: Number): Matcher
+view fun beGreaterThan(_ value: Number): Matcher
 ```
 
 The `beGreaterThan` function returns a matcher that succeeds if the tested value is a number and
@@ -325,7 +353,8 @@ greater than the given number.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let str = "Hello, there"
 
     Test.expect(str.length, Test.beGreaterThan(5))
@@ -335,7 +364,7 @@ access(all) fun testExample() {
 ### Test.beLessThan
 
 ```cadence
-fun beLessThan(_ value: Number): Matcher
+view fun beLessThan(_ value: Number): Matcher
 ```
 
 The `beLessThan` function returns a matcher that succeeds if the tested value is a number and
@@ -344,7 +373,8 @@ less than the given number.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let str = "Hello, there"
 
     Test.expect(str.length, Test.beLessThan(15))
@@ -354,7 +384,7 @@ access(all) fun testExample() {
 ### Test.beNil
 
 ```cadence
-fun beNil(): Matcher
+view fun beNil(): Matcher
 ```
 
 The `beNil` function returns a new matcher that checks if the given test value is nil.
@@ -362,7 +392,8 @@ The `beNil` function returns a new matcher that checks if the given test value i
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let message: String? = nil
 
     Test.expect(message, Test.beNil())
@@ -372,7 +403,7 @@ access(all) fun testExample() {
 ### Test.beEmpty
 
 ```cadence
-fun beEmpty(): Matcher
+view fun beEmpty(): Matcher
 ```
 
 The `beEmpty` function returns a matcher that succeeds if the tested value is an array or dictionary,
@@ -381,7 +412,8 @@ and the tested value contains no elements.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let array: [String] = []
 
     Test.expect(array, Test.beEmpty())
@@ -395,7 +427,7 @@ access(all) fun testExample() {
 ### Test.haveElementCount
 
 ```cadence
-fun haveElementCount(_ count: Int): Matcher
+view fun haveElementCount(_ count: Int): Matcher
 ```
 
 The `haveElementCount` function returns a matcher that succeeds if the tested value is an array or dictionary,
@@ -404,7 +436,8 @@ and has the given number of elements.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let array: [String] = ["one", "two", "three"]
 
     Test.expect(array, Test.haveElementCount(3))
@@ -418,7 +451,7 @@ access(all) fun testExample() {
 ### Test.contain
 
 ```cadence
-fun contain(_ element: AnyStruct): Matcher
+view fun contain(_ element: AnyStruct): Matcher
 ```
 
 The `contain` function returns a matcher that succeeds if the tested value is an array that contains
@@ -426,7 +459,8 @@ a value that is equal to the given value, or the tested value is a dictionary
 that contains an entry where the key is equal to the given value.
 
 ```cadence
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let array: [String] = ["one", "two", "three"]
 
     Test.expect(array, Test.contain("one"))
@@ -450,7 +484,8 @@ Returns false in any other case.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let blockchain = Test.newEmulatorBlockchain()
     let result = blockchain.executeScript(
         "access(all) fun main(): Int {  return 2 + 3 }",
@@ -475,7 +510,8 @@ Returns false in any other case.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let blockchain = Test.newEmulatorBlockchain()
     let account = blockchain.createAccount()
 
@@ -513,7 +549,8 @@ The `not` function returns a new matcher that negates the test of the given matc
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let isEven = Test.newMatcher<Int>(fun (_ value: Int): Bool {
         return value % 2 == 0
     })
@@ -540,7 +577,8 @@ If this matcher succeeds, then the other matcher would not be tested.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let one = Test.equal(1)
     let two = Test.equal(2)
 
@@ -562,7 +600,8 @@ Returns a new matcher that succeeds if this and the given matcher succeed.
 ```cadence
 import Test
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let sevenOrMore = Test.newMatcher<Int>(fun (_ value: Int): Bool {
         return value >= 7
     })
@@ -584,9 +623,11 @@ It imitates the behavior of a real network, for testing.
 ```cadence
 /// Blockchain emulates a real network.
 ///
-access(all) struct Blockchain {
+access(all)
+struct Blockchain {
 
-    access(all) let backend: AnyStruct{BlockchainBackend}
+    access(all)
+    let backend: AnyStruct{BlockchainBackend}
 
     init(backend: AnyStruct{BlockchainBackend}) {
         self.backend = backend
@@ -595,7 +636,8 @@ access(all) struct Blockchain {
     /// Executes a script and returns the script return value and the status.
     /// `returnValue` field of the result will be `nil` if the script failed.
     ///
-    access(all) fun executeScript(_ script: String, _ arguments: [AnyStruct]): ScriptResult {
+    access(all)
+    fun executeScript(_ script: String, _ arguments: [AnyStruct]): ScriptResult {
         return self.backend.executeScript(script, arguments)
     }
 
@@ -603,33 +645,38 @@ access(all) struct Blockchain {
     /// The transaction is paid by the service account.
     /// The returned account can be used to sign and authorize transactions.
     ///
-    access(all) fun createAccount(): Account {
+    access(all)
+    fun createAccount(): Account {
         return self.backend.createAccount()
     }
 
     /// Add a transaction to the current block.
     ///
-    access(all) fun addTransaction(_ tx: Transaction) {
+    access(all)
+    fun addTransaction(_ tx: Transaction) {
         self.backend.addTransaction(tx)
     }
 
     /// Executes the next transaction in the block, if any.
     /// Returns the result of the transaction, or nil if no transaction was scheduled.
     ///
-    access(all) fun executeNextTransaction(): TransactionResult? {
+    access(all)
+    fun executeNextTransaction(): TransactionResult? {
         return self.backend.executeNextTransaction()
     }
 
     /// Commit the current block.
     /// Committing will fail if there are un-executed transactions in the block.
     ///
-    access(all) fun commitBlock() {
+    access(all)
+    fun commitBlock() {
         self.backend.commitBlock()
     }
 
     /// Executes a given transaction and commits the current block.
     ///
-    access(all) fun executeTransaction(_ tx: Transaction): TransactionResult {
+    access(all)
+    fun executeTransaction(_ tx: Transaction): TransactionResult {
         self.addTransaction(tx)
         let txResult = self.executeNextTransaction()!
         self.commitBlock()
@@ -638,7 +685,8 @@ access(all) struct Blockchain {
 
     /// Executes a given set of transactions and commits the current block.
     ///
-    access(all) fun executeTransactions(_ transactions: [Transaction]): [TransactionResult] {
+    access(all)
+    fun executeTransactions(_ transactions: [Transaction]): [TransactionResult] {
         for tx in transactions {
             self.addTransaction(tx)
         }
@@ -655,7 +703,8 @@ access(all) struct Blockchain {
 
     /// Deploys a given contract, and initializes it with the arguments.
     ///
-    access(all) fun deployContract(
+    access(all)
+    fun deployContract(
         name: String,
         code: String,
         account: Account,
@@ -672,46 +721,53 @@ access(all) struct Blockchain {
     /// Set the configuration to be used by the blockchain.
     /// Overrides any existing configuration.
     ///
-    access(all) fun useConfiguration(_ configuration: Configuration) {
+    access(all)
+    fun useConfiguration(_ configuration: Configuration) {
         self.backend.useConfiguration(configuration)
     }
 
     /// Returns all the logs from the blockchain, up to the calling point.
     ///
-    access(all) fun logs(): [String] {
+    access(all)
+    fun logs(): [String] {
         return self.backend.logs()
     }
 
     /// Returns the service account of the blockchain. Can be used to sign
     /// transactions with this account.
     ///
-    access(all) fun serviceAccount(): Account {
+    access(all)
+    fun serviceAccount(): Account {
         return self.backend.serviceAccount()
     }
 
     /// Returns all events emitted from the blockchain.
     ///
-    access(all) fun events(): [AnyStruct] {
+    access(all)
+    fun events(): [AnyStruct] {
         return self.backend.events(nil)
     }
 
     /// Returns all events emitted from the blockchain,
     /// filtered by type.
     ///
-    access(all) fun eventsOfType(_ type: Type): [AnyStruct] {
+    access(all)
+    fun eventsOfType(_ type: Type): [AnyStruct] {
         return self.backend.events(type)
     }
 
     /// Resets the state of the blockchain to the given height.
     ///
-    access(all) fun reset(to height: UInt64) {
+    access(all)
+    fun reset(to height: UInt64) {
         self.backend.reset(to: height)
     }
 
     /// Moves the time of the blockchain by the given delta,
     /// which should be passed in the form of seconds.
     ///
-    access(all) fun moveTime(by delta: Fix64) {
+    access(all)
+    fun moveTime(by delta: Fix64) {
         self.backend.moveTime(by: delta)
     }
 }
@@ -722,36 +778,49 @@ The `BlockchainBackend` provides the actual functionality of the blockchain.
 ```cadence
 /// BlockchainBackend is the interface to be implemented by the backend providers.
 ///
-access(all) struct interface BlockchainBackend {
+access(all)
+struct interface BlockchainBackend {
 
-    access(all) fun executeScript(_ script: String, _ arguments: [AnyStruct]): ScriptResult
+    access(all)
+    fun executeScript(_ script: String, _ arguments: [AnyStruct]): ScriptResult
 
-    access(all) fun createAccount(): Account
+    access(all)
+    fun createAccount(): Account
 
-    access(all) fun addTransaction(_ tx: Transaction)
+    access(all)
+    fun addTransaction(_ tx: Transaction)
 
-    access(all) fun executeNextTransaction(): TransactionResult?
+    access(all)
+    fun executeNextTransaction(): TransactionResult?
 
-    access(all) fun commitBlock()
+    access(all)
+    fun commitBlock()
 
-    access(all) fun deployContract(
+    access(all)
+    fun deployContract(
         name: String,
         code: String,
         account: Account,
         arguments: [AnyStruct]
     ): Error?
 
-    access(all) fun useConfiguration(_ configuration: Configuration)
+    access(all)
+    fun useConfiguration(_ configuration: Configuration)
 
-    access(all) fun logs(): [String]
+    access(all)
+    fun logs(): [String]
 
-    access(all) fun serviceAccount(): Account
+    access(all)
+    fun serviceAccount(): Account
 
-    access(all) fun events(_ type: Type?): [AnyStruct]
+    access(all)
+    fun events(_ type: Type?): [AnyStruct]
 
-    access(all) fun reset(to height: UInt64)
+    access(all)
+    fun reset(to height: UInt64)
 
-    access(all) fun moveTime(by delta: Fix64)
+    access(all)
+    fun moveTime(by delta: Fix64)
 }
 
 ```
@@ -764,7 +833,8 @@ It returns a `Blockchain` which is backed by a new [Flow Emulator](https://devel
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 ```
 
 ### Creating accounts
@@ -775,10 +845,14 @@ An account can be created using the `createAccount` function.
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun testExample() {
+access(all)
+let account = blockchain.createAccount()
+
+access(all)
+fun testExample() {
     log(account.address)
 }
 ```
@@ -798,9 +872,14 @@ The returned account consists of the `address` of the account, and a `publicKey`
 ```cadence
 /// Account represents info about the account created on the blockchain.
 ///
-access(all) struct Account {
-    access(all) let address: Address
-    access(all) let publicKey: PublicKey
+access(all)
+struct Account {
+
+    access(all)
+    let address: Address
+
+    access(all)
+    let publicKey: PublicKey
 
     init(address: Address, publicKey: PublicKey) {
         self.address = address
@@ -817,9 +896,11 @@ The function takes script-code as the first argument, and the script-arguments a
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let code = "access(all) fun main(name: String): String { return \"Hello, \".concat(name) }"
     let args = ["Peter"]
 
@@ -842,10 +923,17 @@ successful, or an `error` otherwise (see [errors](#errors) section for more deta
 ```cadence
 /// The result of a script execution.
 ///
-access(all) struct ScriptResult {
-    access(all) let status: ResultStatus
-    access(all) let returnValue: AnyStruct?
-    access(all) let error: Error?
+access(all)
+struct ScriptResult {
+
+    access(all)
+    let status: ResultStatus
+
+    access(all)
+    let returnValue: AnyStruct?
+
+    access(all)
+    let error: Error?
 
     init(status: ResultStatus, returnValue: AnyStruct?, error: Error?) {
         self.status = status
@@ -863,11 +951,20 @@ a list of signers that would sign the transaction, and the transaction arguments
 ```cadence
 /// Transaction that can be submitted and executed on the blockchain.
 ///
-access(all) struct Transaction {
-    access(all) let code: String
-    access(all) let authorizers: [Address]
-    access(all) let signers: [Account]
-    access(all) let arguments: [AnyStruct]
+access(all)
+struct Transaction {
+
+    access(all)
+    let code: String
+
+    access(all)
+    let authorizers: [Address]
+
+    access(all)
+    let signers: [Account]
+
+    access(all)
+    let arguments: [AnyStruct]
 
     init(code: String, authorizers: [Address], signers: [Account], arguments: [AnyStruct]) {
         self.code = code
@@ -878,19 +975,23 @@ access(all) struct Transaction {
 }
 ```
 
-The number of authorizers must match the number of `AuthAccount` arguments in the `prepare` block of the transaction.
+The number of authorizers must match the number of `&Account` parameters in the `prepare` block of the transaction.
 
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
+
+access(all)
+let account = blockchain.createAccount()
 
 // There are two ways to execute the created transaction.
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
+        code: "transaction { prepare(acct: &Account) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -904,9 +1005,10 @@ access(all) fun testExample() {
     Test.expect(txResult, Test.beSucceeded())
 }
 
-access(all) fun testExampleTwo() {
+access(all)
+fun testExampleTwo() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
+        code: "transaction { prepare(acct: &Account) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -927,9 +1029,14 @@ The result of a transaction consists of the status of the execution, and an `Err
 ```cadence
 /// The result of a transaction execution.
 ///
-access(all) struct TransactionResult {
-    access(all) let status: ResultStatus
-    access(all) let error: Error?
+access(all)
+struct TransactionResult {
+
+    access(all)
+    let status: ResultStatus
+
+    access(all)
+    let error: Error?
 
     init(status: ResultStatus, error: Error?) {
         self.status = status
@@ -945,12 +1052,16 @@ access(all) struct TransactionResult {
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun testExample() {
+access(all)
+let account = blockchain.createAccount()
+
+access(all)
+fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
+        code: "transaction { prepare(acct: &Account) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -972,14 +1083,18 @@ A contract can be deployed using the `deployContract` function of the `Blockchai
 
 Suppose we have this contract (`Foo.cdc`):
 ```cadence
-access(all) contract Foo {
-    access(all) let msg: String
+access(all)
+contract Foo {
+
+    access(all)
+    let msg: String
 
     init(_ msg: String) {
         self.msg = msg
     }
 
-    access(all) fun sayHello(): String {
+    access(all)
+    fun sayHello(): String {
         return self.msg
     }
 }
@@ -988,10 +1103,14 @@ access(all) contract Foo {
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun testExample() {
+access(all)
+let account = blockchain.createAccount()
+
+access(all)
+fun testExample() {
     let contractCode = Test.readFile("Foo.cdc")
     let err = blockchain.deployContract(
         name: "Foo",
@@ -1023,8 +1142,11 @@ The `Configuration` struct consists of a mapping of import locations to their ad
 /// Configuration to be used by the blockchain.
 /// Can be used to set the address mapping.
 ///
-access(all) struct Configuration {
-    access(all) let addresses: {String: Address}
+access(all)
+struct Configuration {
+
+    access(all)
+    let addresses: {String: Address}
 
     init(addresses: {String: Address}) {
         self.addresses = addresses
@@ -1047,7 +1169,8 @@ Suppose this script is saved in `say_hello.cdc`.
 ```cadence
 import "Foo"
 
-access(all) fun main(): String {
+access(all)
+fun main(): String {
     return Foo.sayHello()
 }
 ```
@@ -1057,10 +1180,14 @@ Then, before executing the script, the address mapping can be specified as follo
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun setup() {
+access(all)
+let account = blockchain.createAccount()
+
+access(all)
+fun setup() {
     blockchain.useConfiguration(Test.Configuration({
         "Foo": account.address
     }))
@@ -1076,7 +1203,8 @@ access(all) fun setup() {
     Test.expect(err, Test.beNil())
 }
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let script = Test.readFile("say_hello.cdc")
     let scriptResult = blockchain.executeScript(script, [])
 
@@ -1099,8 +1227,11 @@ It contains a message indicating why the operation failed.
 ```cadence
 // Error is returned if something has gone wrong.
 //
-access(all) struct Error {
-    access(all) let message: String
+access(all)
+struct Error {
+
+    access(all)
+    let message: String
 
     init(_ message: String) {
         self.message = message
@@ -1113,10 +1244,14 @@ An `Error` can be asserted against its presence or absence.
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun testExample() {
+access(all)
+let account = blockchain.createAccount()
+
+access(all)
+fun testExample() {
     let script = Test.readFile("say_hello.cdc")
     let scriptResult = blockchain.executeScript(script, [])
 
@@ -1124,7 +1259,7 @@ access(all) fun testExample() {
     Test.expect(scriptResult, Test.beSucceeded())
 
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: AuthAccount) {} execute{} }",
+        code: "transaction { prepare(acct: &Account) {} execute{} }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],
@@ -1148,17 +1283,22 @@ We can also assert that certain events were emitted from the blockchain, up to t
 
 Suppose we have this contract (`Foo.cdc`):
 ```cadence
-access(all) contract Foo {
-    access(all) let msg: String
+access(all)
+contract Foo {
+    
+    access(all)
+    let msg: String
 
-    access(all) event ContractInitialized(msg: String)
+    access(all)
+    event ContractInitialized(msg: String)
 
     init(_ msg: String) {
         self.msg = msg
         emit ContractInitialized(msg: self.msg)
     }
 
-    access(all) fun sayHello(): String {
+    access(all)
+    fun sayHello(): String {
         return self.msg
     }
 }
@@ -1167,10 +1307,14 @@ access(all) contract Foo {
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun setup() {
+access(all)
+let account = blockchain.createAccount()
+
+access(all)
+fun setup() {
     blockchain.useConfiguration(Test.Configuration({
         "Foo": account.address
     }))
@@ -1214,7 +1358,8 @@ import "ExampleNFT"
 import "NFTStorefrontV2"
 import "NFTStorefront"
 
-access(all) fun main(): [String] {
+access(all)
+fun main(): [String] {
     return [
         Type<FlowToken>().identifier,
         Type<NonFungibleToken>().identifier,
@@ -1226,9 +1371,11 @@ access(all) fun main(): [String] {
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun testExample() {
+access(all)
+fun testExample() {
     let script = Test.readFile("get_type_ids.cdc")
     let scriptResult = blockchain.executeScript(script, [])
 
@@ -1267,12 +1414,16 @@ The `Blockchain.logs()` method aggregates all logs from contracts/scripts/transa
 ```cadence
 import Test
 
-access(all) let blockchain = Test.newEmulatorBlockchain()
-access(all) let account = blockchain.createAccount()
+access(all)
+let blockchain = Test.newEmulatorBlockchain()
 
-access(all) fun testExample() {
+access(all)
+let account = blockchain.createAccount()
+
+access(all)
+fun testExample() {
     let tx = Test.Transaction(
-        code: "transaction { prepare(acct: AuthAccount) {} execute{ log(\"in a transaction\") } }",
+        code: "transaction { prepare(acct: &Account) {} execute{ log(\"in a transaction\") } }",
         authorizers: [account.address],
         signers: [account],
         arguments: [],

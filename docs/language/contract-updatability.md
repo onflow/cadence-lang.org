@@ -64,6 +64,7 @@ Changes that can be done to the nested declarations, and the update restrictions
  - [Structs, resources and interface](#structs-resources-and-interfaces)
  - [Enums](#enums)
  - [Functions](#functions)
+ - [Events](#events)
  - [Constructors](#constructors)
 
 ## Fields
@@ -494,10 +495,17 @@ However, changing a *function type* may or may not be valid, depending on where 
 If a function type is used in the type annotation of a composite type field (direct or indirect),
 then changing the function type signature is the same as changing the type annotation of that field (which is invalid).
 
+## Events
+
+Events are not stored on chain. Any changes made to events have no impact on the stored data.
+Hence, adding, removing, and modifying events in a contract is valid.
+
 ## Constructors
+
 Similar to functions, constructors are also not stored. Hence, any changes to constructors are valid.
 
 ## Imports
+
 A contract may import declarations (types, functions, variables, etc.) from other programs. These imported programs are
 already validated at the time of their deployment. Hence, there is no need for validating any declaration every time
 they are imported.

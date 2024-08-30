@@ -1,6 +1,6 @@
 ---
 title: Events
-sidebar_position: 25
+sidebar_position: 24
 ---
 
 Events are special values that can be emitted during the execution of a program.
@@ -28,8 +28,7 @@ Events cannot be declared globally or within resource or struct types.
 //
 event GlobalEvent(field: Int)
 
-access(all)
-contract Events {
+pub contract Events {
     // Event with explicit argument labels
     //
     event BarEvent(labelA fieldA: Int, labelB fieldB: Int)
@@ -47,8 +46,7 @@ contract Events {
 To emit an event from a program, use the `emit` statement:
 
 ```cadence
-access(all)
-contract Events {
+pub contract Events {
     event FooEvent(x: Int, y: Int)
 
     // Event with argument labels

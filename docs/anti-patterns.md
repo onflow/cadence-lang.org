@@ -1,22 +1,23 @@
 ---
 title: Cadence Anti-Patterns
-sidebar_position: 6
+sidebar_position: 7
 sidebar_label: Anti-Patterns
 ---
 
 This is an opinionated list of issues that can be improved if they are found in Cadence code intended for production.
 
-## Avoid using fully authorized account references as a function parameter
+# Security and Robustness
+
+## Avoid using `AuthAccount` as a function parameter
 
 ### Problem
 
-A developer may choose to authenticate or perform operations for their users by using the users' account reference or addresses.
-In order to do this, they might add a parameter to a function which has an authorized account reference type (`auth(...) &Account`),
-as an authorized account reference can only be obtained by signing a transaction.
-
-If it is a fully authorized account reference, this is problematic,
-as the fully-authorized account reference allows access to some sensitive operations on the account,
-for example, to write to storage, which provides the opportunity for bad actors to take advantage of.
+Some may choose to authenticate or perform operations for their users by using the users' account addresses.
+In order to do this, a commonly seen case would be to pass the user's `AuthAccount` object
+as a parameter to a contract function to use for querying the account or storing objects directly.
+This is problematic, as the `AuthAccount` object allows access to ALL private areas of the account,
+for example, all of the user's storage, authorized keys, etc.,
+which provides the opportunity for bad actors to take advantage of.
 
 ### Example:
 
@@ -25,13 +26,12 @@ for example, to write to storage, which provides the opportunity for bad actors 
 // BAD CODE
 // DO NOT COPY
 
-// Imagine this code is in a contract that uses a `auth(Storage) &Account` parameter
-// to authenticate users to transfer NFTs
+// Imagine this code is in a contract that uses AuthAccount to authenticate users
+// To transfer NFTs
 
 // They could deploy the contract with an Ethereum-style access control list functionality
 
-access(all)
-fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
+pub fun transferNFT(id: UInt64, owner: AuthAccount) {
     assert(owner(id) == owner.address)
 
     transfer(id)
@@ -43,8 +43,7 @@ fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
 // should not be accessible in this function
 // BAD
 
-access(all)
-fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
+pub fun transferNFT(id: UInt64, owner: AuthAccount) {
     assert(owner(id) == owner.address)
 
     transfer(id)
@@ -68,10 +67,92 @@ Projects should find other ways to authenticate users, such as using resources a
 They should also expect to perform most storage and linking operations within transaction bodies
 rather than inside contract utility functions.
 
-There are some scenarios where using an authorized account reference (`auth(...) &Account`) is necessary,
-such as a cold storage multi-sig,
-but those cases are rare and should only be used if it is a very restricted subset
-of account functionality that is required.
+There are some scenarios where using an `AuthAccount` object is necessary, such as a cold storage multi-sig,
+but those cases are extremely rare and `AuthAccount` usage should still be avoided unless absolutely necessary.
+
+## Auth references and capabilities should be avoided
+
+### Problem
+
+[Authorized references](./language/references.md) allow downcasting restricted
+types to their unrestricted type and should be avoided unless necessary.
+The type that is being restricted could expose functionality that was not intended to be exposed.
+If the `auth` keyword is used on local variables they will be references.
+References are ephemeral and cannot be stored.
+This prevents any reference casting to be stored under account storage.
+Additionally, if the `auth` keyword is used to store a public capability, serious harm
+could happen since the value could be downcasted to a type
+that has functionality and values altered.
+
+### Example
+
+A commonly seen pattern in NFT smart contracts is including a public borrow function
+that borrows an auth reference to an NFT (eg. [NBA Top Shot](https://github.com/dapperlabs/nba-smart-contracts/blob/95fe72b7e94f43c9eff28412ce3642b69dcd8cd5/contracts/TopShot.cdc#L889-L906)).
+This allows anyone to access the stored metadata or extra fields that weren't part
+of the NFT standard. While generally safe in most scenarios, not all NFTs are built the same.
+Some NFTs may have privileged functions that shouldn't be exposed by this method,
+so please be cautious and mindful when imitating NFT projects that use this pattern.
+
+### Another Example
+
+When we create a public capability for our `FungibleToken.Vault` we do not use an auth capability:
+
+```cadence
+// GOOD: Create a public capability to the Vault that only exposes
+// the balance field through the Balance interface
+signer.link<&FlowToken.Vault{FungibleToken.Balance}>(
+    /public/flowTokenBalance,
+    target: /storage/flowTokenVault
+)
+```
+
+If we were to use an authorized type for the capability, like so:
+
+```cadence
+// BAD: Create an Authorized public capability to the Vault that only exposes
+// the balance field through the Balance interface
+// Authorized referenced can be downcasted to their unrestricted types, which is dangerous
+signer.link<auth &FlowToken.Vault{FungibleToken.Balance}>(
+    /public/flowTokenBalance,
+    target: /storage/flowTokenVault
+)
+```
+
+Then anyone in the network could take that restricted reference
+that is only supposed to expose the balance field and downcast it to expose the withdraw field
+and steal all our money!
+
+```cadence
+// Exploit of the auth capability to expose withdraw
+let balanceRef = getAccount(account)
+    .getCapability<auth &FlowToken.Vault{FungibleToken.Balance}>(/public/flowTokenBalance)
+    .borrow()!
+
+let fullVaultRef = balanceRef as! &FlowToken.Vault
+
+// Withdraw the newly exposed funds
+let stolenFunds <- fullVaultRef.withdraw(amount: 1000000)
+```
+
+## Events from resources may not be unique
+
+### Problem
+
+Public functions in a contract can be called by anyone, e.g. any other contract or any transaction.
+If that function creates a resource, and that resource has functions that emit events,
+that means any account can create an instance of that resource and emit those events.
+If those events are meant to indicate actions taken using a single instance of that resource
+(eg. admin object, registry), or instances created through a particular workflow,
+it's possible that events from other instances may be mixed in with the ones you're querying for -
+making the event log search and management more cumbersome.
+
+### Solution
+
+To fix this, if there should be only a single instance of the resource,
+it should be created and `link()`ed to a public path in an admin account's storage
+during the contracts's initializer.
+
+# Access Control
 
 ## Public functions and fields should be avoided
 
@@ -83,9 +164,7 @@ Accidentally exposed fields can be a security hole.
 ### Solution
 
 When writing your smart contract, look at every field and function and make sure
-that require access through an [entitlement](./language/access-control.md#entitlements) (`access(E)`),
-or use a non-public [access modifier](./language/access-control.md) like `access(self)`, `access(contract)`, or `access(account)`,
-unless otherwise needed.
+that they are all `access(self)`, `access(contract)`, or `access(account)`, unless otherwise needed.
 
 ## Capability-Typed public fields are a security hole
 
@@ -103,6 +182,55 @@ has been stored as a field on a contract or resource in this way.
 
 For public access to a capability, place it in an accounts public area so this expectation is explicit.
 
+## Array or dictionary fields should be private
+
+<Callout type="info">
+
+This anti-pattern has been addressed with [FLIP #703](https://github.com/onflow/flips/blob/main/cadence/20211129-cadence-mutability-restrictions.md)
+
+</Callout>
+
+### Problem
+
+This is a specific case of "Public Functions And Fields Should Be Avoided", above.
+Public array or dictionary fields are not directly over-writable,
+but their members can be accessed and overwritten if the field is public.
+This could potentially result in security vulnerabilities for the contract
+if these fields are mistakenly made public.
+
+Ex:
+
+```cadence
+pub contract Array {
+    // array is intended to be initialized to something constant
+    pub let shouldBeConstantArray: [Int]
+}
+```
+
+Anyone could use a transaction like this to modify it:
+
+```cadence
+import Array from 0x01
+
+transaction {
+    execute {
+        Array.shouldbeConstantArray[0] = 1000
+    }
+}
+```
+
+### Solution
+
+Make sure that any array or dictionary fields in contracts, structs, or resources
+are `access(contract)` or `access(self)` unless they need to be intentionally made public.
+
+```cadence
+pub contract Array {
+    // array is inteded to be initialized to something constant
+    access(self) let shouldBeConstantArray: [Int]
+}
+```
+
 ## Public admin resource creation functions are unsafe
 
 This is a specific case of "Public Functions And Fields Should Be Avoided", above.
@@ -114,8 +242,9 @@ If that resource provides access to admin functions then the creation function s
 
 ### Solution
 
-To fix this, a single instance of that resource should be created in the contract's initializer,
+To fix this, a single instance of that resource should be created in the contract's `init()` method,
 and then a new creation function can be potentially included within the admin resource, if necessary.
+The admin resource can then be `link()`ed to a private path in an admin's account storage during the contract's initializer.
 
 ### Example
 
@@ -123,20 +252,14 @@ and then a new creation function can be potentially included within the admin re
 // Pseudo-code
 
 // BAD
-access(all)
-contract Currency {
-
-    access(all)
-    resource Admin {
-
-        access(all)
-        fun mintTokens()
+pub contract Currency {
+    pub resource Admin {
+        pub fun mintTokens()
     }
 
     // Anyone in the network can call this function
     // And use the Admin resource to mint tokens
-    access(all)
-    fun createAdmin(): @Admin {
+    pub fun createAdmin(): @Admin {
         return <-create Admin()
     }
 }
@@ -144,18 +267,12 @@ contract Currency {
 // This contract makes the admin creation private and in the initializer
 // so that only the one who controls the account can mint tokens
 // GOOD
-access(all)
-contract Currency {
-
-    access(all)
-    resource Admin {
-
-        access(all)
-        fun mintTokens()
+pub contract Currency {
+    pub resource Admin {
+        pub fun mintTokens()
 
         // Only an admin can create new Admins
-        access(all)
-        fun createAdmin(): @Admin {
+        pub fun createAdmin(): @Admin {
             return <-create Admin()
         }
     }
@@ -164,8 +281,8 @@ contract Currency {
         // Create a single admin resource
         let firstAdmin <- create Admin()
 
-        // Store it in private account storage, so only the admin can use it
-        self.account.storage.save(<-firstAdmin, to: /storage/currencyAdmin)
+        // Store it in private account storage in `init` so only the admin can use it
+        self.account.save(<-firstAdmin, to: /storage/currencyAdmin)
     }
 }
 ```
@@ -183,7 +300,7 @@ which means that anyone can create a new instance of a struct without going thro
 ### Solution
 
 Any contract state-modifying operations related to the creation of structs
-should be contained in resources instead of the initializers of structs.
+should be contained in restricted resources instead of the initializers of structs.
 
 ### Example
 
@@ -196,18 +313,14 @@ which increments the number that tracks the play IDs and emits an event:
 // Simplified Code
 // BAD
 //
-access(all)
-contract TopShot {
+pub contract TopShot {
 
     // The Record that is used to track every unique play ID
-    access(all)
-    var nextPlayID: UInt32
+    pub var nextPlayID: UInt32
 
-    access(all)
-    struct Play {
+    pub struct Play {
 
-        access(all)
-        let playID: UInt32
+        pub let playID: UInt32
 
         init() {
 
@@ -235,30 +348,24 @@ that creates the plays.
 // Update contract state in admin resource functions
 // GOOD
 //
-access(all)
-contract TopShot {
+pub contract TopShot {
 
     // The Record that is used to track every unique play ID
-    access(all)
-    var nextPlayID: UInt32
+    pub var nextPlayID: UInt32
 
-    access(all)
-    struct Play {
+    pub struct Play {
 
-        access(all)
-        let playID: UInt32
+        pub let playID: UInt32
 
         init() {
             self.playID = TopShot.nextPlayID
         }
     }
 
-    access(all)
-    resource Admin {
+    pub resource Admin {
 
         // Protected within the private admin resource
-        access(all)
-        fun createPlay() {
+        pub fun createPlay() {
             // Create the new Play
             var newPlay = Play()
 

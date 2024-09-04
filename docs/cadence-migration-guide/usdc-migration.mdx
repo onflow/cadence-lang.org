@@ -1,0 +1,349 @@
+---
+title: USDC Migration Guide
+sidebar_position: 8
+sidebar_label: USDC Migration Guide
+---
+
+# USDC in Cadence 1.0
+
+As part of the upcoming Flow Crescendo network upgrade, all ERC-20 compatible tokens on Flow
+can be used in Cadence smart contracts without special handling
+and all Cadence fungible tokens on Flow will be ERC-20 compatible.
+This will ensure that all Flow applications—whether they are built with
+Solidity, Cadence, or some mix of both—are fully interoperable with the wider web3 ecosystem.
+
+Effective September 3, 2024, at 3 a.m. ET ahead of the Crescendo network upgrade,
+[Circle will cease support for USDC on Cadence](https://www.flow.com/post/stablecoins-on-flow-evolving-for-interoperability),
+as EVM-based ERC-20 USDC will become naturally compatible across the entire Flow ecosystem.
+
+As a result, the existing USDC contract, known as `FiatToken`,
+will not be upgraded to Cadence 1.0 as part of the Crescendo migration.
+While [balances can still be queried](https://github.com/onflow/flips/pull/283),
+some existing functionality, such as `withdraw()` and `deposit()`, will no longer work.
+
+To facilitate a smoother transition away from the old `FiatToken` contract,
+a new fungible token contract called `USDCFlow` is deployed on [testnet](https://testnet.flowdiver.io/contract/A.4516677f8083d680.USDCFlow?tab=deployments)
+and [mainnet](COMING SOON).
+You can see the Github repo with the contract code and transactions to use it [here](https://github.com/onflow/bridged-usdc).
+The `USDCFlow` contract allows anyone with an old USDC (`FiatToken`) balance
+to deposit into the `USDCFlow` contract and mint the exact same amount of `USDCFlow`
+using the public `USDCFlow.wrapFiatToken()` function
+
+During the Crescendo migration, the `USDCFlow` contract will become part of the
+Flow VM bridge protocol and become the bridged version of USDC on Flow EVM.
+This USDC will be backed 1:1 by `USDC` on Ethereum mainnet, ensuring that 
+`USDCFlow` retains its US $1.00 value and remains redeemable
+with Circle through network bridging to Ethereum mainnet.
+
+This document focuses on what developers who rely on `FiatToken`
+can do to migrate to `USDCFlow` with minimal disruption.
+`USDC` users can refer to the guide below for simple migration instructions, but it's also important to 
+consult the [Flow Blog](https://www.flow.com/authors/flow) and any communication
+from relevant ecosystem apps for more detail about `USDCFlow` migration.
+
+# What can regular USDC holders do?
+
+If you are a user with USDC in your account, the recommended path is to directly 
+swap your `USDC` with `USDCFlow` using [this transaction](https://github.com/onflow/bridged-usdc/blob/main/transactions/wrap_fiatToken.cdc)
+that calls the `USDCFlow.wrapFiatToken()` function. This functionality
+is available on [Flow Port](https://port.flow.com/) with any Flow-compatible wallet (not including ledger).
+
+**Ledger wallets** do not currently support this transactions, 
+so if you are using a Ledger wallet to store your USDC, you will first need
+to transfer this USDC to another wallet like [Flow Core Wallet](https://wallet.flow.com/).
+Then you can sign in to Flow Port with your Flow Wallet and swap your USDC.
+
+As described in the blog post linked in the previous section, USDC holders
+can also swap to FLOW on [increment.fi](https://app.increment.fi/),
+deposit to [Dapper Wallet](https://meetdapper.com/) as Dapper balance, 
+or wait until after September 3rd and manually redeem with Circle.
+
+If you hold `USDC` on Flow and use any apps that transact in `USDC`,
+refer to the app's communication and use the app's support channels
+to inquire about specific migration procedures for the new USDCFlow token.
+Be aware that the Flow Foundation is collaborating with most apps
+who are using `USDC` to facilitate their migration to `USDCFlow`.
+Rest assured that there will be a way for you
+to retain your assets after the Crescendo migration,
+regardless of the specific migration path.
+
+If you cannot get in touch with the support channels of whatever app you use,
+please reach out in the [Flow Discord](https://discord.com/invite/J6fFnh2xx6)
+with your issues and the Flow team will definitely help you get it resolved.
+
+## Flow Users with Marketplace listings for USDC
+
+If you have NFT listings on a marketplace that accepts `USDC`
+as the payment currency, your existing listings
+will no longer work after the Crescendo upgrade.
+
+To ensure your listings remain active,
+you will need to create new listings that accept the new `USDCFlow` currency.
+This will likely require the marketplace app you used
+for your listings to support the transaction
+for listing with `USDCFlow` instead of `FiatToken`.
+If this functionality is not immediately available,
+please contact the app's support team to inquire about
+their plans to add support for `USDCFlow` listings.
+
+Fortunately, this migration process is not time-sensitive.
+You can complete the transition to `USDCFlow` listings
+at any point after the Crescendo upgrade.
+The only downside is that your old listings using `USDC`
+will not be purchasable until you create new ones with `USDCFlow`.
+
+## Flow Users with USDC in Defi
+
+If you are a user of USDC in a defi application, please reach out
+to the support channel for any application that you use to see if there
+is anything that you are able to do to migrate to the new `USDCFlow` token
+without needing to swap manually. Some projects, such as Increment.fi, are designing
+ways to migrate their users to the new `USDCFlow` token without users needing 
+to take any actions on their own, but these solutions will likely be announced
+by their respective projects.
+
+If you are using these projects and want to take the safest action,
+unless you hear otherwise from the project, your best bet is to try
+to unwind all your existing `FiatToken` and swap it to `USDCFlow` 
+so you can be ready when they eventually support `USDCFlow`.
+
+# USDC Migration Developer Guide
+
+If you are a developer who currently uses `FiatToken` in some way, you will likely
+have to do some work to remove the dependency and/or migrate
+your code and state to the new `USDCFlow` token contract.
+
+The various changes required will depend on your exact implementation
+and your level of integration  with the `FiatToken` contract.
+
+It's necessary to complete the following steps **before** the Crescendo milestone:
+1. To allow users to pull their USDC out of your contracts, swap to the new `USDCFlow` token,
+and then rejoin your updated contract's functionality with their new tokens.
+2. Update these changes in your Cadence 1.0 contract versions and stage
+the updated contract code so that they continue to work after Crescendo.
+
+There are several different categories of `FiatToken` dependence that
+any given project might fall into, and some may fall into multiple categories.
+This document describes each different category and how the `FiatToken`
+breakage affects the projects in each category.
+It also provides suggestions and examples for how each case can be switched
+and migrated to use the new `USDCFlow` smart contract and token.
+
+Some of the changes required are understandably difficult, so the Flow Foundation
+and its developers will always be available to assist in whatever capacity is needed
+to make this transition as technically, operationally, and financially easy as possible.
+Please reach out to a Flow team member in Discord or wherever you can communicate with
+Flow to ask for assistance with this upgrade.
+
+## Direct Import of FiatToken
+
+Some smart contracts import `FiatToken` directly with `import FiatToken from 0xb19436aae4d94622`.
+With [the FLIP](https://github.com/onflow/flips/pull/283)
+to be able to import and use broken types and values, a simple import
+of the broken `FiatToken` contract will not cause a contract to fail type checking,
+so if all your contract does with `FiatToken` is import it to use
+types from it as function arguments or return values, you can simply update
+those types to the corresponding `USDCFlow` types.
+
+This also applies to arguments and return values that are Capabilities
+that point to `FiatToken` vaults. These will also need to be updated
+to the new types.
+
+If your users are expecting to use the old `FiatToken` values with your contract,
+it is important for you to notify them that in order to keep using your contract,
+they need to convert their old `FiatToken` to `USDCFlow`
+via the public `USDCFlow.wrapFiatToken()` function before interacting anymore.
+It might also be useful to provide helpful error messages in functions and transactions
+that direct users to how they can swap their `FiatToken.Vault` for a `USDCFlow.Vault`.
+
+Example:
+```cadence
+// Old Code
+import FiatToken from 0xb19436aae4d94622
+
+pub fun sendFiatTokenToAddress(to: Address, vault: @FiatToken.Vault) {
+    // Get the recipient's public account object
+    let recipient = getAccount(to)
+
+    // Get a reference to the recipient's Receiver
+    let receiverRef = recipient.getCapability(FiatToken.VaultReceiverPubPath)
+        .borrow<&{FungibleToken.Receiver}>()
+        ?? panic("Could not borrow receiver reference to the recipient's USDC Vault")
+
+    // Deposit the withdrawn tokens in the recipient's receiver
+    receiverRef.deposit(from: <-vault)
+}
+
+// New Code
+import USDCFlow from 0x{USDCFlowAddress}
+
+pub fun sendUSDCFlowToAddress(to: Address, vault: @USDCFlow.Vault) {
+    // Get the recipient's public account object
+    let recipient = getAccount(to)
+
+    // Get a reference to the recipient's Receiver
+    let receiverRef = recipient.capabilities.borrow<&{FungibleToken.Receiver}>(USDCFlow.ReceiverPublicPath)
+        ?? panic("Could not borrow receiver reference to the recipient's USDCFlow Vault")
+
+    // Deposit the withdrawn tokens in the recipient's receiver
+    receiverRef.deposit(from: <-vault)
+}
+```
+This does not apply to any contract with stored `FiatToken` values such as vaults though!
+If you store any `FiatToken` values, see the next section.
+
+## Stored `@FiatToken.Vault` Field
+
+If your contract stores **ANY** values defined in `FiatToken` contract, 
+**you have state that will not work properly after the Crescendo upgrade.**
+
+The only type from `FiatToken` that non-admins can store is `Vault`,
+so we will focus on that for now.
+
+### Contract-level Vault Field
+
+A contract-level field is a field that is stored in the contract state.
+For example, `FiatToken.totalSupply` is a contract field, but `FiatToken.Vault.balance`
+is not a contract field since it is defined on a resource that can live in other accounts.
+
+Here are some examples of `FiatToken.Vault` contract fields:
+```cadence
+pub contract VaultStorer {
+    // A Vault contract field
+    access(self) let vault: @FiatToken.Vault
+
+    // A Dictionary of Vaults contract field
+    access(self) let vaultDict: @{UInt64: FiatToken.Vault}
+
+    // An array of Vaults contract field
+    access(self) let vaults: @[FiatToken.Vault]
+}
+```
+
+After the Crescendo upgrade, you'll still be able to access the balance of these,
+but you won't be able to call any functions on them, including `deposit()` and `withdraw()`.
+This means that if your contract relies on any of that functionality,
+you'll need to do some extra work to migrate to the new token.
+
+The first thing to consider is if you are able to withdraw the `USDC` from these fields
+in any way. Ideally, you could withdraw the USDC from these `FiatToken` fields
+and swap it for `USDCFlow`,
+upgrade the contract to create new fields that store `USDCFlow` instead,
+and deposit the new `USDCFlow` into those fields.
+
+Cadence doesn't allow adding new fields to a contract directly, but you can
+get around this restriction by adding new psuedo-fields in the form
+of functions that access paths in the private account storage.
+
+For the `vault` field above, it would look like this:
+```cadence
+import "USDCFlow"
+
+pub contract VaultStorer {
+
+    // Old Vault contract field that will break in the migration
+    access(self) let vault: @FiatToken.Vault
+
+    // Function to get the balance of the new USDCFlow Vault
+    pub fun getUSDCFlowVaultBalance(): UFix64 {
+        let vaultRef = self.account.borrow<&USDCFlow.Vault>(from: /storage/usdcFlowContractVault)
+        return vaultRef.balance
+    }
+
+    // Function that moves tokens from the old field to the new field
+    pub fun wrapAndMoveTokens() {
+        // withdraw the old tokens and convert them to new USDC
+        let oldTokensToWrap <- self.vault.withdraw(amount: self.vault.balance)
+        let wrappedTokens <- USDCFlow.wrapFiatToken(<-oldTokensToWrap)
+
+        // Store the new USDC in account storage
+        if let wrappedVaultRef = self.account.borrow<&{FungibleToken.Receiver}>(from: USDCFlow.VaultStoragePath) {
+            wrappedVaultRef.deposit(from: <-wrappedTokens)
+        } else {
+            // The account has not set up a USDCFlow Vault yet
+            // so store it in their storage
+            signer.save(
+                <-wrappedTokens,
+                to: USDCFlow.VaultStoragePath
+            )
+
+            // Set up the correct capabilities
+            signer.link<&USDCFlow.Vault{FungibleToken.Receiver}>(
+                USDCFlow.ReceiverPublicPath,
+                target: USDCFlow.VaultStoragePath
+            )
+            signer.link<&USDCFlow.Vault{FungibleToken.Balance, MetadataViews.Resolver}>(
+                USDCFlow.VaultPublicPath,
+                target: USDCFlow.VaultStoragePath
+            )
+        }
+    }
+}
+```
+
+You could have similar, but slightly more complex,
+code to migrate Vaults stored in a dictionary or an array.
+
+### Vault Field Stored in a Composite Type
+
+A `FiatToken.Vault` field stored in a composite type like a resource is a bit more complex.
+Example:
+```cadence
+pub contract VaultInResource {
+
+    pub resource ResourceWithVault {
+        pub let vault: @FiatToken.Vault
+    }
+}
+```
+
+It is more challenging to deal with vaults that are stored in a composite type
+because those can live in any account. Fixing them will be more difficult because
+you have to work with users to change it. 
+
+The expectation is that this is a rare pattern and perhaps is not even in use in production,
+but is worth addressing in the event this applies to your use case.
+
+In case it is an issue for someone, please reach out to the Flow team for assistance
+and the team can likely find a way to help you resolve this.
+
+### Capability to a `FiatToken.Vault`
+
+Any contracts with capability fields that point to `FiatToken` vaults
+will need to add a way to redirect that capability to the `USDCFlow` vault in
+the same account as the `FiatToken` capability.
+
+This could be done by checking the owner address of the vault that capability points to
+and getting the `USDCFlow` vault capability from that address
+instead of using the existing `FiatToken` capability.
+
+If the capability is a `FungibleToken.Provider` capability, then you may have to
+create a new type that stores the `USDCFlow` capability since you can't
+recreate the provider capability without the owner creating a new one themselves.
+
+Either way, again you'll need to communicate with your users as much as possible
+to convince them to swap their `FiatToken` to `USDCFlow`
+to be compatible with the new tokens and capabilities.
+
+## NFTStorefront with `FiatToken` Listings
+
+As described above in the user section, all `NFTStorefront` listings that
+expect `FiatToken` to be used as the form of payment will break after the Crescendo upgrade.
+
+Any app or project using `NFTStorefront` or a similar `USDC`-based marketplace
+should anticipate that all `FiatToken` listings will cease to function.
+Users will need to create new listings using `USDCFlow` instead.
+It's important to note that while these broken listings won't cause any assets
+to be lost or compromised, it will require some effort to re-list
+all previously listed assets.
+
+Apps that display these listings on their website should also remove them because
+if a user tries to click and purchase, the transaction will fail.
+
+## Conclusion
+
+This overview covers the primary ways Cadence code can interact
+with the `FiatToken` contract. However, if your project uses `FiatToken`
+in a different manner or you require further assistance with migrating
+to the new `USDCFlow token`, please reach out in the [Flow Discord](https://discord.com/invite/J6fFnh2xx6).
+The Flow team will be happy to provide guidance and help you navigate the upgrade process.

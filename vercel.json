@@ -3,9 +3,28 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/docs/cadence-migration-guide",
-      "destination": "/docs/cadence_migration_guide",
+      "source": "/docs/cadence_migration_guide/:path*",
+      "destination": "/docs/cadence-migration-guide/:path*",
       "permanent": true
+    },
+    {
+      "source": "/docs/1.0/cadence_migration_guide/:path*",
+      "destination": "/docs/1.0/cadence-migration-guide/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/docs/tutorial/:number(\\d+)-:path",
+      "destination": "/docs/tutorial/:path",
+      "permanent": true
+    },
+    {
+      "source": "/docs/1.0/tutorial/:number(\\d+)-:path",
+      "destination": "/docs/1.0/tutorial/:path",
+      "permanent": true
+    },
+    {
+      "source": "/docs/1.0/:path*",
+      "destination": "/docs/:path*"
     }
   ]
 }

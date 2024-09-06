@@ -19,18 +19,22 @@ import learnAnimation from "./learn.json";
 import styles from './index.module.css';
 
 
-const example = `pub resource NFT {
-  pub fun greet(): String {
-    return "I'm NFT #"
-      .concat(self.uuid.toString())
-  }
+const example = `access(all)
+resource NFT {
+
+    access(all)
+    fun greet(): String {
+        return "I'm NFT #"
+            .concat(self.uuid.toString())
+    }
 }
 
-pub fun main(): String {
-  let nft <- create NFT()
-  let greeting = nft.greet()
-  destroy nft
-  return greeting
+access(all)
+fun main(): String {
+    let nft <- create NFT()
+    let greeting = nft.greet()
+    destroy nft
+    return greeting
 }`
 
 function cadence(Prism) {
@@ -58,7 +62,7 @@ function HomepageHeader() {
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          
+
         </div>
       </div>
     </header>
@@ -72,7 +76,7 @@ export default function Home() {
       title={`Hello from ${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
       <main>
-        
+
       <div className="content-wrapper">
           <div className="feature">
             <div>

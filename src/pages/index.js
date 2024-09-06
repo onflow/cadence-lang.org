@@ -44,7 +44,7 @@ function cadence(Prism) {
       greedy: true
     },
     keyword:
-      /\b(?:pub|fun|resource|create|let|destroy|return|self)\b/,
+      /\b(?:access|all|fun|resource|create|let|destroy|return|self)\b/,
     'class-name': /\b[A-Z][A-Za-z_\d]*\b/,
     function: /\b[a-z_]\w*(?=\s*\()/i,
   }

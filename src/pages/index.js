@@ -17,7 +17,7 @@ import powerAnimation from "./power.json";
 import learnAnimation from "./learn.json";
 
 import styles from './index.module.css';
-
+import Logo from '@site/static/img/logo.svg';
 
 const example = `access(all)
 resource NFT {
@@ -83,7 +83,7 @@ export default function Home() {
             <Head>
               <title>Cadence</title>
             </Head>
-              <h1>Cadence</h1>
+              <Logo title="Cadence" className="logo" width="18em" height="4em" />
               <h2>
                 Forge the future of decentralized apps.
                 <br/>

@@ -89,18 +89,12 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // TODO Replace with your project's social card
-      //image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: "Cadence",
-        /* TODO
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Cadence',
           src: 'img/logo.svg',
         },
-        */
         items: [
-          //{to: '/blog', label: 'Blog', position: 'left'},
           {
             label: "Learn",
             to: "/learn",

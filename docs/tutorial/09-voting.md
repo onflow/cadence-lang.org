@@ -34,7 +34,7 @@ This tutorial will provide a trivial example for how this might be achieved by u
 
 We'll take you through these steps to get comfortable with the Voting contract.
 
-1. Deploy the contract to account `0x01`
+1. Deploy the contract to account `0x06`
 2. Create proposals for users to vote on
 3. Use a transaction with multiple signers to directly transfer the `Ballot` resource to another account.
 4. Record and cast your vote in the central Voting contract
@@ -61,12 +61,12 @@ Time to deploy the contract we'll be working with:
 <Callout type="info">
 
 1. Open Contract 1 - the `ApprovalVoting` contract.<br/>
-2. In the bottom right deployment modal, press the arrow to expand and make sure account `0x01` is selected as the signer.<br/>
-3. Click the Deploy button to deploy it to account `0x01`
+2. In the bottom right deployment modal, press the arrow to expand and make sure account `0x06` is selected as the signer.<br/>
+3. Click the Deploy button to deploy it to account `0x06`
 
 </Callout>
 
-![Deploy ApprovalVoting to account 0x01](deploy_approval_voting.png)
+![Deploy ApprovalVoting to account 0x06](deploy_approval_voting.png)
 
 The deployed contract should have the following contents:
 
@@ -265,17 +265,17 @@ Performing the common actions in this voting contract only takes three types of 
 2. Send `Ballot` to a voter
 3. Cast Vote
 
-We have a transaction for each step that we provide for you. With the `ApprovalVoting` contract to account `0x01`:
+We have a transaction for each step that we provide for you. With the `ApprovalVoting` contract to account `0x06`:
 
 <Callout type="info">
 
 1. Open Transaction 1 which should have `Transaction1.cdc`<br/>
-2. Submit the transaction with account `0x01` selected as the only signer.
+2. Submit the transaction with account `0x06` selected as the only signer.
 
 </Callout>
 
 ```cadence Transaction1.cdc
-import ApprovalVoting from 0x01
+import ApprovalVoting from 0x06
 
 // This transaction allows the administrator of the Voting contract
 // to create new proposals for voting and save them to the smart contract
@@ -324,14 +324,14 @@ The playground will give you an error if the number of selected signers is diffe
 <Callout type="info">
 
 1. Open Transaction 2 which should have `Transaction2.cdc`.<br/>
-2. Select account `0x01` as a signer first, then also select account `0x02`.<br/>
+2. Select account `0x06` as a signer first, then also select account `0x07`.<br/>
 3. Submit the transaction by clicking the `Send` button
 
 </Callout>
 
 ```cadence Transaction2.cdc
 
-import ApprovalVoting from 0x01
+import ApprovalVoting from 0x06
 
 // This transaction allows the administrator of the Voting contract
 // to create a new ballot and store it in a voter's account
@@ -361,22 +361,22 @@ This transaction has two signers as `prepare` parameters, so it is able to acces
 
 Because of this, we can perform a direct transfer of the `Ballot` by creating it with the admin's `issueBallot` function and then directly store it in the voter's storage by using the `save` function.
 
-Account `0x02` should now have a `Ballot` resource object in its account storage. You can confirm this by selecting `0x02` from the lower-left sidebar and seeing `Ballot` resource listed under the `Storage` field.
+Account `0x07` should now have a `Ballot` resource object in its account storage. You can confirm this by selecting `0x07` from the lower-left sidebar and seeing `Ballot` resource listed under the `Storage` field.
 
 ## Casting a Vote
 
-Now that account `0x02` has a `Ballot` in their storage, they can cast their vote. To do this, they will call the `vote` method on their stored resource, then cast that `Ballot` by passing it to the `cast` function in the main smart contract.
+Now that account `0x07` has a `Ballot` in their storage, they can cast their vote. To do this, they will call the `vote` method on their stored resource, then cast that `Ballot` by passing it to the `cast` function in the main smart contract.
 
 <Callout type="info">
 
 1. Open Transaction 3 which should contain `Transaction3.cdc`.<br/>
-2. Select account `0x02` as the only transaction signer.<br/>
+2. Select account `0x07` as the only transaction signer.<br/>
 3. Click the `send` button to submit the transaction.
 
 </Callout>
 
 ```cadence Transaction3.cdc
-import ApprovalVoting from 0x01
+import ApprovalVoting from 0x06
 
 // This transaction allows a voter to select the votes they would like to make
 // and cast that vote by using the castVote function
@@ -413,7 +413,7 @@ At any time, anyone could read the current tally of votes by directly reading th
 </Callout>
 
 ```cadence Script1.cdc
-import ApprovalVoting from 0x01
+import ApprovalVoting from 0x06
 
 // This script allows anyone to read the tallied votes for each proposal
 //

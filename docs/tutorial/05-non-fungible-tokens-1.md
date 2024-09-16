@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 5.1 Non-Fungible Token Tutorial Part 1
 description: An introduction to NFTs on Cadence
-date: 2024-06-05
+date: 2024-09-17
 meta:
   keywords:
     - tutorial
@@ -31,20 +31,11 @@ In this tutorial, we're going to deploy, store, and transfer **Non-Fungible Toke
 
 Open the starter code for this tutorial in the Flow Playground:
 
-<a href="https://play.onflow.org/a21087ad-b22c-4981-b49e-17297e916fa6"
+<a href="https://play.flow.com/dde1e2a4-aae6-4eda-86fd-f0b0b3f53f7e"
   target="_blank">
-  https://play.onflow.org/a21087ad-b22c-4981-b49e-17297e916fa6
+  https://play.flow.com/dde1e2a4-aae6-4eda-86fd-f0b0b3f53f7e
 </a>
 The tutorial will ask you to take various actions to interact with this code.
-</Callout>
-
-<Callout type="info">
-  The playground code that is linked uses Cadence 0.42, but the examples
-  use Cadence 1.0 to show how each contract, transaction and script
-  is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
-  The project link will still work with the current version of the playground,
-  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -165,15 +156,15 @@ to save NFTs in the account.
 First, you'll need to follow this link to open a playground session
 with the Non-Fungible Token contracts, transactions, and scripts pre-loaded:
 
-<a href="https://play.onflow.org/ae2f2a83-6698-4e03-93cf-70d35627e28e" target="_blank">
-  https://play.onflow.org/ae2f2a83-6698-4e03-93cf-70d35627e28e
+<a href="https://play.flow.com/dde1e2a4-aae6-4eda-86fd-f0b0b3f53f7e" target="_blank">
+  https://play.flow.com/dde1e2a4-aae6-4eda-86fd-f0b0b3f53f7e
 </a>
 
 </Callout>
 
 <Callout type="info">
 
-Open Account `0x01` to see `BasicNFT.cdc`.
+Open Account `0x06` to see `BasicNFT.cdc`.
 `BasicNFT.cdc` should contain the following code:
 
 </Callout>
@@ -259,13 +250,13 @@ You should now have an NFT in your account. Let's run a transaction to check.
 
 <Callout type="info">
 
-Open the `NFT Exists` transaction, select account `0x01` as the only signer, and send the transaction.<br/>
+Open the `NFT Exists` transaction, select account `0x06` as the only signer, and send the transaction.<br/>
 `NFT Exists` should look like this:
 
 </Callout>
 
 ```cadence NFTExists.cdc
-import BasicNFT from 0x01
+import BasicNFT from 0x06
 
 // This transaction checks if an NFT exists in the storage of the given account
 // by trying to borrow from it. If the borrow succeeds (returns a non-nil value), the token exists!
@@ -304,7 +295,7 @@ Open the `Basic Transfer` transaction.<br/>
 </Callout>
 
 ```cadence
-import BasicNFT from 0x01
+import BasicNFT from 0x06
 
 /// Basic transaction for two accounts to authorize
 /// to transfer an NFT
@@ -350,7 +341,7 @@ You can also scroll down a bit to see the correct code:
 Here is the correct code to load the NFT from one account and save it to another account.
 
 ```cadence
-import BasicNFT from 0x01
+import BasicNFT from 0x06
 
 /// Basic transaction for two accounts to authorize
 /// to transfer an NFT
@@ -374,14 +365,14 @@ transaction {
 
 <Callout type="info">
 
-Select both Account `0x01` and Account `0x02` as the signers.
-Make sure account `0x01` is the first signer.<br/>
+Select both Account `0x06` and Account `0x07` as the signers.
+Make sure account `0x06` is the first signer.<br/>
 Click the "Send" button to send the transaction.
 
 </Callout>
 
-Now, the NFT should be stored in the storage of Account `0x02`!
-You should be able to run the "NFT Exists" transaction again with `0x02` as the signer
+Now, the NFT should be stored in the storage of Account `0x07`!
+You should be able to run the "NFT Exists" transaction again with `0x07` as the signer
 to confirm that it is in their account.
 
 ## Enhancing the NFT Experience

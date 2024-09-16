@@ -31,7 +31,7 @@ but reading the rest is necessary to understand the language's design.
 Resources owning other resources is a powerful feature in the world of blockchain and smart contracts.
 To showcase how this feature works on Flow, this tutorial will take you through these steps with a composable NFT:
 
-1. Deploy the `Kitty` and `KittyHat` definitions to account `0x01`
+1. Deploy the `Kitty` and `KittyHat` definitions to account `0x06`
 2. Create a `Kitty` and two `KittyHat`s and store them in your account
 3. Move the Kitties and Hats around to see how composable NFTs function on Flow
 
@@ -72,12 +72,12 @@ Here is a basic example of how we can replicate this feature in Cadence:
 <Callout type="info">
 
 1. Open Contract 1, the `KittyVerse.cdc` contract<br/>
-2. In the bottom right deployment modal, press the arrow to expand and make sure account `0x01` is selected as the signer.<br/>
-3. Click the Deploy button to deploy the contract to account `0x01`
+2. In the bottom right deployment modal, press the arrow to expand and make sure account `0x06` is selected as the signer.<br/>
+3. Click the Deploy button to deploy the contract to account `0x06`
 
 </Callout>
 
-![Deploy KittyVerse to account 0x01](deploy_kittyverse.png)
+![Deploy KittyVerse to account 0x06](deploy_kittyverse.png)
 
 The deployed contract should have the following contents:
 
@@ -193,13 +193,13 @@ A Kitty owner can take the hats off the Kitty and transfer them individually. Or
 Here is a transaction to create a `Kitty` and a `KittyHat`, store the hat in the Kitty, then store it in your account storage.
 
 1. Open `Transaction1.cdc`.
-1. Select account `0x01` as the only signer.
+1. Select account `0x06` as the only signer.
 1. Send the transaction by clicking the Send button.
 
 The transaction you sent just executed the following code:
 
 ```cadence Transaction1.cdc
-import KittyVerse from 0x01
+import KittyVerse from 0x06
 
 // This transaction creates a new kitty, creates two new hats and
 // puts the hats on the cat. Then it stores the kitty in account storage.
@@ -243,7 +243,7 @@ Now we can run a transaction to move the Kitty along with its hat, remove the co
 <Callout type="info">
 
 1. Open `Transaction2.cdc`.<br/>
-2. Select account `0x01` as the only signer.<br/>
+2. Select account `0x06` as the only signer.<br/>
 3. Send the transaction.
 
 </Callout>
@@ -251,7 +251,7 @@ Now we can run a transaction to move the Kitty along with its hat, remove the co
 In this transaction, we executed the following code:
 
 ```cadence Transaction2.cdc
-import KittyVerse from 0x01
+import KittyVerse from 0x06
 
 // This transaction moves a kitty out of storage, takes the cowboy hat off of the kitty,
 // calls its tip hat function, and then moves it back into storage.

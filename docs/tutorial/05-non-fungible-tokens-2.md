@@ -111,7 +111,7 @@ Instead, we can use a powerful feature of Cadence, resources owning other resour
 We'll define a new `Collection` resource as our NFT storage place
 to enable more-sophisticated ways to interact with our NFTs.
 
-The next contract we look at is called `ExampleNFT`, it's stored in Contract 1 in account `0x01`.
+The next contract we look at is called `ExampleNFT`, it's stored in Contract 1 in account `0x06`.
 
 This contract expands on the `BasicNFT` we looked at by adding:
 1. An `idCount` contract field that tracks unique NFT ids.
@@ -131,7 +131,7 @@ concepts this contract introduces.
 
 <Callout type="info">
 
-Open Account `0x01` to see `ExampleNFT.cdc`.<br/>
+Open Account `0x06` to see `ExampleNFT.cdc`.<br/>
 Deploy the contract by clicking the Deploy button in the bottom right of the editor.<br/>
 `ExampleNFT.cdc` should contain the code below.
 It contains what was already in `BasicNFT.cdc` plus additional resource declarations in the contract body.
@@ -420,18 +420,18 @@ Scripts in Cadence are simple transactions that run without any account permissi
 
 <Callout type="info">
 
-Open the script file named `Print 0x01 NFTs`.
-`Print 0x01 NFTs` should contain the following code:
+Open the script file named `Print 0x06 NFTs`.
+`Print 0x06 NFTs` should contain the following code:
 
 </Callout>
 
 ```cadence
-import ExampleNFT from 0x01
+import ExampleNFT from 0x06
 
-// Print the NFTs owned by account 0x01.
+// Print the NFTs owned by account 0x06.
 access(all) fun main(): [UInt64] {
-    // Get the public account object for account 0x01
-    let nftOwner = getAccount(0x01)
+    // Get the public account object for account 0x06
+    let nftOwner = getAccount(0x06)
 
     // Find the public Receiver capability for their Collection and borrow it
     let receiverRef = nftOwner.capabilities
@@ -446,20 +446,20 @@ access(all) fun main(): [UInt64] {
 
 <Callout type="info">
 
-Execute `Print 0x01 NFTs` by clicking the Execute button in the top right of the editor box.<br/>
-This script returns a list of the NFTs that account `0x01` owns.
+Execute `Print 0x06 NFTs` by clicking the Execute button in the top right of the editor box.<br/>
+This script returns a list of the NFTs that account `0x06` owns.
 
 </Callout>
 
-Because account `0x01` currently doesn't own any in its collection, it will just print an empty array:
+Because account `0x06` currently doesn't own any in its collection, it will just print an empty array:
 
 ```
 "Account 1 NFTs"
 Result > []
 ```
 
-If the script cannot be executed, it probably means that the NFT collection hasn't been stored correctly in account `0x01`.
-If you run into issues, make sure that you deployed the contract in account `0x01` and that you followed the previous steps correctly.
+If the script cannot be executed, it probably means that the NFT collection hasn't been stored correctly in account `0x06`.
+If you run into issues, make sure that you deployed the contract in account `0x06` and that you followed the previous steps correctly.
 
 ## Using Entitlements
 
@@ -559,13 +559,13 @@ You can see an example of this in the [Marketplace tutorial](./08-marketplace-co
 <Callout type="info">
 
 Open the file named `Mint NFT`.
-Select account `0x01` as the only signer and send the transaction.<br/>
+Select account `0x06` as the only signer and send the transaction.<br/>
 This transaction deposits the minted NFT into the account owner's NFT collection:
 
 </Callout>
 
 ```cadence mint_nft.cdc
-import ExampleNFT from 0x01
+import ExampleNFT from 0x06
 
 // This transaction allows the Minter account to mint an NFT
 // and deposit it into its own collection.
@@ -596,25 +596,25 @@ transaction {
 
 <Callout type="info">
 
-Reopen `Print 0x01 NFTs` and execute the script.
-This prints a list of the NFTs that account `0x01` owns.
+Reopen `Print 0x06 NFTs` and execute the script.
+This prints a list of the NFTs that account `0x06` owns.
 
 </Callout>
 
 ```cadence print_01_nfts.cdc
-import ExampleNFT from 0x01
+import ExampleNFT from 0x06
 
-// Print the NFTs owned by account 0x01.
+// Print the NFTs owned by account 0x06.
 access(all) fun main(): [UInt64] {
-    // Get the public account object for account 0x01
-    let nftOwner = getAccount(0x01)
+    // Get the public account object for account 0x06
+    let nftOwner = getAccount(0x06)
 
     // Find the public Receiver capability for their Collection
     let capability = nftOwner.capabilities.get<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
 
     // borrow a reference from the capability
     let receiverRef = capability.borrow()
-            ?? panic("Could not borrow receiver reference to 0x01's ExampleNFT.Collection")
+            ?? panic("Could not borrow receiver reference to 0x06's ExampleNFT.Collection")
 
     // Log the NFTs that they own as an array of IDs
     log("Account 1 NFTs")
@@ -622,7 +622,7 @@ access(all) fun main(): [UInt64] {
 }
 ```
 
-You should see that account `0x01` owns the NFT with `id = 1`
+You should see that account `0x06` owns the NFT with `id = 1`
 
 ```
 "Account 1 NFTs"
@@ -636,12 +636,12 @@ with an NFTCollection of their own so they are able to receive NFTs.
 
 <Callout type="info">
 
-Open the file named `Setup Account` and submit the transaction, using account `0x02` as the only signer.
+Open the file named `Setup Account` and submit the transaction, using account `0x07` as the only signer.
 
 </Callout>
 
 ```cadence SetupAccount.cdc
-import ExampleNFT from 0x01
+import ExampleNFT from 0x06
 
 // This transaction configures a user's account
 // to use the NFT contract by creating a new empty collection,
@@ -666,18 +666,18 @@ transaction {
 }
 ```
 
-Account `0x02` should now have an empty `Collection` resource stored in its account storage.
+Account `0x07` should now have an empty `Collection` resource stored in its account storage.
 It has also created and stored a capability to the collection in its `/public/` domain.
 
 <Callout type="info">
 
-Open the file named `Transfer`, select account `0x01` as the only signer, and send the transaction.<br/>
-This transaction transfers a token from account `0x01` to account `0x02`.
+Open the file named `Transfer`, select account `0x06` as the only signer, and send the transaction.<br/>
+This transaction transfers a token from account `0x06` to account `0x07`.
 
 </Callout>
 
 ```cadence transfer_nft.cdc
-import ExampleNFT from 0x01
+import ExampleNFT from 0x06
 
 // This transaction transfers an NFT from one user's collection
 // to another user's collection.
@@ -701,7 +701,7 @@ transaction {
 
     execute {
         // Get the recipient's public account object
-        let recipient = getAccount(0x02)
+        let recipient = getAccount(0x07)
 
         // Get the Collection reference for the receiver
         // getting the public capability and borrowing a reference from it
@@ -719,7 +719,7 @@ transaction {
 See, with the use of Collections and capabilities, now the only account
 that needs to sign a transaction to transfer a token is the one who is sending the token.
 
-Now we can check both accounts' collections to make sure that account `0x02` owns the token and account `0x01` has nothing.
+Now we can check both accounts' collections to make sure that account `0x07` owns the token and account `0x06` has nothing.
 
 <Callout type="info">
 
@@ -728,14 +728,14 @@ Execute the script `Print all NFTs` to see the tokens in each account:
 </Callout>
 
 ```cadence print_all_owned_nfts.cdc
-import ExampleNFT from 0x01
+import ExampleNFT from 0x06
 
-// Print the NFTs owned by accounts 0x01 and 0x02.
+// Print the NFTs owned by accounts 0x06 and 0x07.
 access(all) fun main() {
 
     // Get both public account objects
-    let account1 = getAccount(0x01)
-	let account2 = getAccount(0x02)
+    let account1 = getAccount(0x06)
+	let account2 = getAccount(0x07)
 
     // Find the public Receiver capability for their Collections
     let acct1Capability = account1.capabilities.get(ExampleNFT.CollectionPublicPath)
@@ -765,8 +765,8 @@ You should see something like this in the output:
 [1]
 ```
 
-Account `0x02` has one NFT with ID=1 and account `0x01` has none.
-This shows that the NFT was transferred from account `0x01` to account `0x02`.
+Account `0x07` has one NFT with ID=1 and account `0x06` has none.
+This shows that the NFT was transferred from account `0x06` to account `0x07`.
 
 <img src="https://storage.googleapis.com/flow-resources/documentation-assets/cadence-tuts/accounts-nft-storage.png" />
 

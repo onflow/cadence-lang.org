@@ -67,7 +67,7 @@ and non-fungible tokens into a single contract that gives users control over the
 To accomplish this, we're going to take you through these steps to create a composable smart contract and get comfortable with the marketplace:
 
 1. Ensure that your fungible token and non-fungible token contracts are deployed and set up correctly.
-2. Deploy the marketplace type declarations to account `0x03`.
+2. Deploy the marketplace type declarations to account `0x08`.
 3. Create a marketplace object and store it in your account storage, putting an NFT up for sale and publishing a public capability for your sale.
 4. Use a different account to purchase the NFT from the sale.
 5. Run a script to verify that the NFT was purchased.
@@ -110,8 +110,8 @@ You can run the `1. CheckSetupScript.cdc` script to ensure that your accounts ar
 
 ```cadence CheckSetupScript.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
 
 /// Allows the script to return the ownership info
 /// of all the accounts
@@ -132,12 +132,12 @@ access(all) struct OwnerInfo {
 
 // This script checks that the accounts are set up correctly for the marketplace tutorial.
 //
-// Account 0x01: Vault Balance = 40, NFT.id = 1
-// Account 0x02: Vault Balance = 20, No NFTs
+// Account 0x06: Vault Balance = 40, NFT.id = 1
+// Account 0x07: Vault Balance = 20, No NFTs
 access(all) fun main(): OwnerInfo {
     // Get the accounts' public account objects
-    let acct1 = getAccount(0x01)
-    let acct2 = getAccount(0x02)
+    let acct1 = getAccount(0x06)
+    let acct2 = getAccount(0x07)
 
     // Get references to the account's receivers
     // by getting their public capability
@@ -212,15 +212,15 @@ Time to deploy the marketplace contract:
 <Callout type="info">
 
 1. Switch to the ExampleMarketplace contract (Contract 3).<br/>
-2. With `ExampleMarketplace.cdc` open, select account `0x03` from the deployment modal in the bottom right and deploy.
+2. With `ExampleMarketplace.cdc` open, select account `0x08` from the deployment modal in the bottom right and deploy.
 
 </Callout>
 
 `ExampleMarketplace.cdc` should contain the following contract definition:
 
 ```cadence ExampleMarketplace.cdc
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
 
 // ExampleMarketplace.cdc
 //
@@ -464,8 +464,8 @@ Then, users can get that capability from [the public path](../language/accounts/
 borrow it, and access the functionality that the owner specified.
 
 ```cadence
-// Get account 0x01's PublicAccount object
-let publicAccount = getAccount(0x01)
+// Get account 0x06's PublicAccount object
+let publicAccount = getAccount(0x06)
 
 // Retrieve a Vault Receiver Capability from the account's public storage
 let acct1Capability = acct.capabilities.get<&{ExampleToken.Receiver}>(
@@ -553,23 +553,23 @@ Enough explaining! Lets execute some code!
 ## Using the Marketplace
 
 At this point, we should have an `ExampleToken.Vault` and an `Example.NFT.Collection` in both accounts' storage.
-Account `0x01` should have an NFT in their collection and the `ExampleMarketplace` contract should be deployed to `0x03`.
+Account `0x06` should have an NFT in their collection and the `ExampleMarketplace` contract should be deployed to `0x08`.
 
-You can create a `SaleCollection` and list account `0x01`'s token for sale by following these steps:
+You can create a `SaleCollection` and list account `0x06`'s token for sale by following these steps:
 
 <Callout type="info">
 
 1. Open Transaction 4, `CreateSale.cdc` <br/>
-2. Select account `0x01` as the only signer and click the `Send` button to submit the transaction.
+2. Select account `0x06` as the only signer and click the `Send` button to submit the transaction.
 
 </Callout>
 
 ```cadence Transaction4.cdc
 // CreateSale.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
-import ExampleMarketplace from 0x03
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
+import ExampleMarketplace from 0x08
 
 // This transaction creates a new Sale Collection object,
 // lists an NFT for sale, puts it in account storage,
@@ -615,20 +615,20 @@ This transaction:
 Let's run a script to ensure that the sale was created correctly.
 
 1. Open Script 2: `GetSaleIDs.cdc`
-1. Click the `Execute` button to print the ID and price of the NFT that account `0x01` has for sale.
+1. Click the `Execute` button to print the ID and price of the NFT that account `0x06` has for sale.
 
 ```cadence GetSaleIDs.cdc
 // GetSaleIDs.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
-import ExampleMarketplace from 0x03
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
+import ExampleMarketplace from 0x08
 
-// This script returns the NFTs that account 0x01 has for sale.
+// This script returns the NFTs that account 0x06 has for sale.
 access(all)
 fun main(): [UInt64] {
-    // Get the public account object for account 0x01
-    let account1 = getAccount(0x01)
+    // Get the public account object for account 0x06
+    let account1 = getAccount(0x06)
 
     // Find the public Sale reference to their Collection
     let acct1saleRef = account1.capabilities.get<&{ExampleMarketplace.SalePublic}(/public/NFTSale)>
@@ -655,19 +655,19 @@ The buyer can now purchase the seller's NFT by using the transaction in `Transac
 <Callout type="info">
 
 1. Open Transaction 5: `PurchaseSale.cdc` file<br/>
-2. Select account `0x02` as the only signer and click the `Send` button
+2. Select account `0x07` as the only signer and click the `Send` button
 
 </Callout>
 
 ```cadence PurchaseSale.cdc
 // PurchaseSale.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
-import ExampleMarketplace from 0x03
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
+import ExampleMarketplace from 0x08
 
 // This transaction uses the signers Vault tokens to purchase an NFT
-// from the Sale collection of account 0x01.
+// from the Sale collection of account 0x06.
 transaction {
 
     // Capability to the buyer's NFT collection where they
@@ -692,7 +692,7 @@ transaction {
 
     execute {
         // get the read-only account storage of the seller
-        let seller = getAccount(0x01)
+        let seller = getAccount(0x06)
 
         // get the reference to the seller's sale
         let saleRef = seller.capabilities.get<&{ExampleMarketplace.SalePublic}>(/public/NFTSale)
@@ -710,7 +710,7 @@ This transaction:
 
 1. Gets the capability to the buyer's NFT receiver
 1. Get a reference to their token vault and withdraws the sale purchase amount
-1. Gets the public account object for account `0x01`
+1. Gets the public account object for account `0x06`
 1. Gets the reference to the seller's public sale
 1. Calls the `purchase` function, passing in the tokens and the `Collection` reference. Then `purchase` deposits the bought NFT directly into the buyer's collection.
 
@@ -720,8 +720,8 @@ This transaction:
 
 You can run now run a script to verify that the NFT was purchased correctly because:
 
-- account `0x01` has 50 tokens and does not have any NFTs for sale or in their collection and account
-- account `0x02` has 10 tokens and an NFT with id=1
+- account `0x06` has 50 tokens and does not have any NFTs for sale or in their collection and account
+- account `0x07` has 10 tokens and an NFT with id=1
 
 To run a script that verifies the NFT was purchased correctly, follow these steps:
 
@@ -736,8 +736,8 @@ To run a script that verifies the NFT was purchased correctly, follow these step
 
 ```cadence Script3.cdc
 // VerifyAfterPurchase
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
 
 /// Allows the script to return the ownership info
 /// of all the accounts
@@ -758,12 +758,12 @@ access(all) struct OwnerInfo {
 
 // This script checks that the accounts are in the correct state after purchasing a listing.
 //
-// Account 0x01: Vault Balance = 50, No NFTs
-// Account 0x02: Vault Balance = 10, NFT.id = 1
+// Account 0x06: Vault Balance = 50, No NFTs
+// Account 0x07: Vault Balance = 10, NFT.id = 1
 access(all) fun main(): OwnerInfo {
     // Get the accounts' public account objects
-    let acct1 = getAccount(0x01)
-    let acct2 = getAccount(0x02)
+    let acct1 = getAccount(0x06)
+    let acct2 = getAccount(0x07)
 
     // Get references to the account's receivers
     // by getting their public capability

@@ -44,21 +44,21 @@ Having your playground in this state is necessary to follow the [Composable Smar
 
 ---
 
-1. Open account `0x01`. Make sure the Fungible Token definitions in `ExampleToken.cdc` from the fungible token tutorial are in this account.
-2. Deploy the `ExampleToken` code to account `0x01`.
+1. Open account `0x06`. Make sure the Fungible Token definitions in `ExampleToken.cdc` from the fungible token tutorial are in this account.
+2. Deploy the `ExampleToken` code to account `0x06`.
 3. Switch to the `ExampleNFT` contract (Contract 2)
-4. Make sure you have the NFT definitions in `ExampleNFT.cdc` from the Non-fungible token tutorial in account `0x02`.
-5. Deploy the NFT code to account `0x02` by selecting it as the deploying signer.
+4. Make sure you have the NFT definitions in `ExampleNFT.cdc` from the Non-fungible token tutorial in account `0x07`.
+5. Deploy the NFT code to account `0x07` by selecting it as the deploying signer.
 6. Run the transaction in Transaction 1. This is the `SetupAccount1Transaction.cdc` file.
-   Use account `0x01` as the only signer to set up account `0x01`'s storage.
+   Use account `0x06` as the only signer to set up account `0x06`'s storage.
 
 ```cadence SetupAccount1Transaction.cdc
 // SetupAccount1Transaction.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
 
-// This transaction sets up account 0x01 for the marketplace tutorial
+// This transaction sets up account 0x06 for the marketplace tutorial
 // by publishing a Vault reference and creating an empty NFT Collection.
 transaction {
   prepare(acct: auth(SaveValue, StorageCapabilities) &Account) {
@@ -81,17 +81,17 @@ transaction {
 ```
 
 7. Run the transaction in Transaction 2. This is the `SetupAccount2Transaction.cdc` file.
-Use account `0x02` as the only signer to set up account `0x02`'s storage.
+Use account `0x07` as the only signer to set up account `0x07`'s storage.
 
 ```cadence SetupAccount2Transaction.cdc
 // SetupAccount2Transaction.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
 
-// This transaction adds an empty Vault to account 0x02
+// This transaction adds an empty Vault to account 0x07
 // and mints an NFT with id=1 that is deposited into
-// the NFT collection on account 0x01.
+// the NFT collection on account 0x06.
 transaction {
 
   // Private reference to this account's minter resource
@@ -116,7 +116,7 @@ transaction {
   }
   execute {
     // Get the recipient's public account object
-    let recipient = getAccount(0x01)
+    let recipient = getAccount(0x06)
 
     // Get the Collection reference for the receiver
     // getting the public capability and borrowing a reference from it
@@ -124,23 +124,23 @@ transaction {
         .borrow<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
         ?? panic("Could not borrow receiver reference")
 
-    // Mint an NFT and deposit it into account 0x01's collection
+    // Mint an NFT and deposit it into account 0x06's collection
     receiverRef.deposit(token: <-self.minterRef.mintNFT())
   }
 }
 ```
 
 8. Run the transaction in Transaction 3. This is the `SetupAccount1TransactionMinting.cdc` file.
-   Use account `0x01` as the only signer to mint fungible tokens for account 1 and 2.
+   Use account `0x06` as the only signer to mint fungible tokens for account 1 and 2.
 
 ```cadence SetupAccount1TransactionMinting.cdc
 // SetupAccount1TransactionMinting.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
 
 // This transaction mints tokens for both accounts using
-// the minter stored on account 0x01.
+// the minter stored on account 0x06.
 transaction {
 
   // Public Vault Receiver References for both accounts
@@ -151,14 +151,14 @@ transaction {
   let minterRef: &ExampleToken.VaultMinter
 
   prepare(acct: auth(SaveValue, StorageCapabilities, BorrowValue) &Account) {
-    // Get the public object for account 0x02
-    let account2 = getAccount(0x02)
+    // Get the public object for account 0x07
+    let account2 = getAccount(0x07)
 
     // Retrieve public Vault Receiver references for both accounts
     self.acct1Capability = acct.capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
     self.acct2Capability = account2.capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
 
-    // Get the stored Minter reference for account 0x01
+    // Get the stored Minter reference for account 0x06
     self.minterRef = acct.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
         ?? panic("Could not borrow owner's vault minter reference")
   }
@@ -176,8 +176,8 @@ transaction {
 ```cadence CheckSetupScript.cdc
 // CheckSetupScript.cdc
 
-import ExampleToken from 0x01
-import ExampleNFT from 0x02
+import ExampleToken from 0x06
+import ExampleNFT from 0x07
 
 /// Allows the script to return the ownership info
 /// of all the accounts
@@ -198,12 +198,12 @@ access(all) struct OwnerInfo {
 
 // This script checks that the accounts are set up correctly for the marketplace tutorial.
 //
-// Account 0x01: Vault Balance = 40, NFT.id = 1
-// Account 0x02: Vault Balance = 20, No NFTs
+// Account 0x06: Vault Balance = 40, NFT.id = 1
+// Account 0x07: Vault Balance = 20, No NFTs
 access(all) fun main(): OwnerInfo {
     // Get the accounts' public account objects
-    let acct1 = getAccount(0x01)
-    let acct2 = getAccount(0x02)
+    let acct1 = getAccount(0x06)
+    let acct2 = getAccount(0x07)
 
     // Get references to the account's receivers
     // by getting their public capability

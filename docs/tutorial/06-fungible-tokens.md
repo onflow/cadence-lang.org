@@ -101,7 +101,7 @@ but besides that, developers and users are able to treat it and use it just like
 
 We're going to take you through these steps to get comfortable with the fungible token:
 
-1. Deploy the fungible token contract to account `0x01`
+1. Deploy the fungible token contract to account `0x06`
 2. Create a fungible token object and store it in your account storage.
 3. Create a reference to your tokens that others can use to send you tokens.
 4. Set up another account the same way.
@@ -128,7 +128,7 @@ and [Hello, World!](./02-hello-world.md) to learn the basics of the language and
 
 <Callout type="info">
 
-Open the account `0x01` tab to see the file named
+Open the account `0x06` tab to see the file named
 `BasicToken.cdc`. `BasicToken.cdc` should contain the full code for the
 fungible token, which provides the core functionality to store fungible tokens
 in your account and transfer to and accept tokens from other users.
@@ -356,7 +356,7 @@ we can deploy a basic version of it to your account and send some transactions t
 <Callout type="info">
 
 Make sure that you have opened the Fungible Token templates in the playground
-by following the link at the top of this page. You should have Account `0x01`
+by following the link at the top of this page. You should have Account `0x06`
 open and should see the code below.
 
 </Callout>
@@ -459,10 +459,10 @@ Click the `Deploy` button at the top right of the editor to deploy the code.
 
 </Callout>
 
-![Deploy BasicToken on 0x01](./deploy_basic_token.png)
+![Deploy BasicToken on 0x06](./deploy_basic_token.png)
 
 This deployment stores the contract for the basic fungible token
-in the selected account (account `0x01`) so that it can be imported into transactions.
+in the selected account (account `0x06`) so that it can be imported into transactions.
 
 A contract's `init` function runs at contract creation, and never again afterwards.
 In our example, this function stores an instance of the `Vault` object with an initial balance of 30.
@@ -512,7 +512,7 @@ Open the transaction named `Basic Transfer`. <br/>
 ```cadence BasicTransfer.cdc
 // Basic Transfer
 
-import BasicToken from 0x01
+import BasicToken from 0x06
 
 // This transaction is used to withdraw and deposit tokens with a Vault
 
@@ -537,7 +537,7 @@ transaction(amount: UFix64) {
 ```
 
 <Callout type="info">
-  Select account `0x01` as the only signer. <br />
+  Select account `0x06` as the only signer. <br />
   You can enter any number less than 30.0 for the amount of tokens to transfer. <br />
   Click the `Send` button to submit the transaction. <br />
   This transaction withdraws tokens from the main vault and deposits them back
@@ -650,7 +650,7 @@ so that these requirements are enforced by an immutable source of truth that is 
 
 Now, we are going to add these interfaces to our Fungible token along with a minter resource.
 
-Open account `0x02` in the playground. You should see the `ExampleToken` contract.
+Open account `0x07` in the playground. You should see the `ExampleToken` contract.
 In addition to everything that is in the `BasicToken` contract,
 we have also added the `Provider`, `Receiver`, and `Balance` interfaces described above.
 
@@ -732,14 +732,14 @@ Let's create capabilities to your `Vault` so that a separate account can send to
 
 <Callout type="info">
 
-Before we submit a transaction interacting with ExampleToken resources, we'll need to deploy the contract to account `0x02`:<br/>
+Before we submit a transaction interacting with ExampleToken resources, we'll need to deploy the contract to account `0x07`:<br/>
 1. Select Contract 2 in the playground sidebar (the ExampleToken contract)<br/>
-2. Make sure that signer `0x02` is selected as the deploying address<br/>
+2. Make sure that signer `0x07` is selected as the deploying address<br/>
 3. Click "Deploy"
 
 </Callout>
 
-![Deploy ExampleToken to 0x02](./deploy_example_token.png)
+![Deploy ExampleToken to 0x07](./deploy_example_token.png)
 
 Now we can continue on to configure Capabilities on the ExampleToken Vault.
 
@@ -752,7 +752,7 @@ Open the transaction named `Create Link`. <br/>
 
 ```cadence issue_capability.cdc
 
-import ExampleToken from 0x02
+import ExampleToken from 0x07
 
 // This transaction creates a capability
 // that is linked to the account's token vault.
@@ -778,7 +778,7 @@ transaction {
     // by getting the public capability and checking
     // that it points to a valid `Vault` object
     // that implements the `Receiver` interface
-    getAccount(0x02).capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
+    getAccount(0x07).capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
                     .check():
                     "Vault Receiver Reference was not created correctly"
     }
@@ -822,7 +822,7 @@ post {
 // by getting the public capability and checking
 // that it points to a valid `Vault` object
 // that implements the `Receiver` interface
-getAccount(0x02).capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
+getAccount(0x07).capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
                     .check():
                     "Vault Receiver Reference was not created correctly"
 }
@@ -836,7 +836,7 @@ that the capability contains a valid link to a valid object in storage that is t
 
 Now that we understand the transaction, time to submit it:<br/>
 
-1. Select account `0x02` as the only signer.<br/>
+1. Select account `0x07` as the only signer.<br/>
 2. Click the `Send` button to submit the transaction.<br/>
 3. This transaction creates a new public capability to your `Vault`
    and checks that it was created correctly.
@@ -847,25 +847,25 @@ Now that we understand the transaction, time to submit it:<br/>
 
 ---
 
-Now, we are going to run a transaction that sends 10 tokens to account `0x03`.
-We will do this by calling the `withdraw` function on account `0x02`'s Vault,
+Now, we are going to run a transaction that sends 10 tokens to account `0x08`.
+We will do this by calling the `withdraw` function on account `0x07`'s Vault,
 which creates a temporary Vault object for moving the tokens,
-then deposits those tokens into account `0x03`'s vault by calling the `deposit` function on their vault.
+then deposits those tokens into account `0x08`'s vault by calling the `deposit` function on their vault.
 
 <Callout type="info">
 
-Account `0x03` has not been set up to receive tokens, so we will do that now:
+Account `0x08` has not been set up to receive tokens, so we will do that now:
 
 1. Open the transaction `Setup Account`.<br/>
-2. Select account `0x03` as the only signer.<br/>
-3. Click the `Send` button to set up account `0x03` so that it can receive tokens.
+2. Select account `0x08` as the only signer.<br/>
+3. Click the `Send` button to set up account `0x08` so that it can receive tokens.
 
 </Callout>
 
 ```cadence SetupAccount.cdc
 // Setup Account
 
-import ExampleToken from 0x02
+import ExampleToken from 0x07
 
 // This transaction configures an account to store and receive tokens defined by
 // the ExampleToken contract.
@@ -889,7 +889,7 @@ transaction {
     }
 
     post {
-        getAccount(0x03).capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
+        getAccount(0x08).capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
                             .check():
                             "Vault Receiver Reference was not created correctly"
     }
@@ -897,15 +897,15 @@ transaction {
 }
 ```
 
-Here we perform the same actions that account `0x02` did to set up its `Vault`, but all in one transaction.
-Account `0x03` is ready to start building its fortune! As you can see, when we created the Vault for account `0x03`,
+Here we perform the same actions that account `0x07` did to set up its `Vault`, but all in one transaction.
+Account `0x08` is ready to start building its fortune! As you can see, when we created the Vault for account `0x08`,
 we had to create one with a balance of zero by calling the `createEmptyVault()` function.
 Resource creation is restricted to the contract where it is defined, so in this way, the Fungible Token smart contract can ensure that
 nobody is able to create new tokens out of thin air.
 
-As part of the initial deployment process for the ExampleToken contract, account `0x02` created a `VaultMinter` object.
+As part of the initial deployment process for the ExampleToken contract, account `0x07` created a `VaultMinter` object.
 By using this object, the account that owns it can mint new tokens.
-Right now, account `0x02` owns it, so it has sole power to mint new tokens.
+Right now, account `0x07` owns it, so it has sole power to mint new tokens.
 We could have had a `mintTokens` function defined in the contract,
 but then we would have to check the sender of the function call to make sure that they are authorized,
 which is not the recommended way to perform access control.
@@ -913,19 +913,19 @@ which is not the recommended way to perform access control.
 As we explained before, the resource model plus capability security
 handles this access control for us as a built in language construct
 instead of having to be defined in the code.
-If account `0x02` wanted to authorize another account to mint tokens,
+If account `0x07` wanted to authorize another account to mint tokens,
 they could either move the `VaultMinter` object to the other account,
 or give the other account a private capability to the single `VaultMinter`.
 Or, if they didn't want minting to be possible after deployment,
 they would simply mint all the tokens at contract initialization
 and not even include the `VaultMinter` in the contract.
 
-In the next transaction, account `0x02` will mint 30 new tokens and deposit them into account `0x03`'s newly created Vault.
+In the next transaction, account `0x07` will mint 30 new tokens and deposit them into account `0x08`'s newly created Vault.
 
 <Callout type="info">
 
 1. Open the `Mint Tokens` transaction.<br/>
-2. Select only account `0x02` as a signer and send `Mint Tokens` to mint 30 tokens for account `0x03`.
+2. Select only account `0x07` as a signer and send `Mint Tokens` to mint 30 tokens for account `0x08`.
 
 </Callout>
 
@@ -934,7 +934,7 @@ In the next transaction, account `0x02` will mint 30 new tokens and deposit them
 ```cadence mint_tokens.cdc
 // Mint Tokens
 
-import ExampleToken from 0x02
+import ExampleToken from 0x07
 
 // This transaction mints tokens and deposits them into account 3's vault
 transaction {
@@ -951,8 +951,8 @@ transaction {
         self.mintingRef = acct.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
             ?? panic("Could not borrow a reference to the minter")
 
-        // Get the public account object for account 0x03
-        let recipient = getAccount(0x03)
+        // Get the public account object for account 0x08
+        let recipient = getAccount(0x08)
 
         // Get their public receiver capability
         self.receiver = recipient.capabilities.get<&ExampleToken.Vault{ExampleToken.Receiver}>
@@ -964,7 +964,7 @@ transaction {
         // Mint 30 tokens and deposit them into the recipient's Vault
         self.mintingRef.mintTokens(amount: 30.0, recipient: self.receiver)
 
-        log("30 tokens minted and deposited to account 0x03")
+        log("30 tokens minted and deposited to account 0x08")
     }
 }
 ```
@@ -997,11 +997,11 @@ self.receiverRef = cap.borrow<&{ExampleToken.Receiver}>()
         ?? panic("Could not borrow a reference to the receiver")
 ```
 
-In the execute phase, we simply use the reference to mint 30 tokens and deposit them into the `Vault` of account `0x03`.
+In the execute phase, we simply use the reference to mint 30 tokens and deposit them into the `Vault` of account `0x08`.
 
 ## Check Account Balances
 
-Now, both account `0x02` and account `0x03` should have a `Vault` object in their storage that has a balance of 30 tokens.
+Now, both account `0x07` and account `0x08` should have a `Vault` object in their storage that has a balance of 30 tokens.
 They both should also have a `Receiver` capability stored in their `/public/` domains that links to their stored `Vault`.
 
 <img src="https://storage.googleapis.com/flow-resources/documentation-assets/cadence-tuts/account-balances.png" />
@@ -1027,14 +1027,14 @@ Open the script named `Get Balances` in the scripts pane.
 ```cadence get_balances.cdc
 // Get Balances
 
-import FungibleToken from 0x02
+import FungibleToken from 0x07
 
 // This script reads the Vault balances of two accounts.
 access(all)
 fun main() {
     // Get the accounts' public account objects
-    let acct2 = getAccount(0x02)
-    let acct3 = getAccount(0x03)
+    let acct2 = getAccount(0x07)
+    let acct3 = getAccount(0x08)
 
     // Get references to the account's receivers
     // by getting their public capability
@@ -1063,8 +1063,8 @@ Execute `Get Balances` by clicking the Execute button.
 
 This should ensure the following:
 
-- Account `0x02`'s balance is 30
-- Account `0x03`'s balance is 30
+- Account `0x07`'s balance is 30
+- Account `0x08`'s balance is 30
 
 If correct, you should see the following lines:
 
@@ -1086,7 +1086,7 @@ Now that we have two accounts, each with a `Vault`, we can see how they transfer
 <Callout type="info">
 
 1. Open the transaction named `Transfer Tokens`. <br/>
-2. Select account `0x03` as a signer and send the transaction. <br/>
+2. Select account `0x08` as a signer and send the transaction. <br/>
 3. `Transfer Tokens` should contain the following code for sending tokens to another user:
 
 </Callout>
@@ -1094,7 +1094,7 @@ Now that we have two accounts, each with a `Vault`, we can see how they transfer
 ```cadence transfer_tokens.cdc
 // Transfer Tokens
 
-import ExampleToken from 0x02
+import ExampleToken from 0x07
 
 // This transaction is a template for a transaction that
 // could be used by anyone to send tokens to another account
@@ -1115,7 +1115,7 @@ transaction {
 
   execute {
     // get the recipient's public account object
-    let recipient = getAccount(0x02)
+    let recipient = getAccount(0x07)
 
     // get the recipient's Receiver reference to their Vault
     // by borrowing the reference from the public capability
@@ -1158,7 +1158,7 @@ Execute `Get Balances` again.
 
 </Callout>
 
-If correct, you should see the following lines indicating that account `0x02`'s balance is 40 and account `0x03`'s balance is 20:
+If correct, you should see the following lines indicating that account `0x07`'s balance is 40 and account `0x08`'s balance is 20:
 
 ```
 "Account 2 Balance"

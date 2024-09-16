@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 2. Hello World
 description: A smart contract tutorial for Cadence.
-date: 2024-06-05
+date: 2024-09-05
 meta:
   keywords:
     - tutorial
@@ -23,21 +23,12 @@ In this tutorial, we'll write and deploy our first smart contract!
 <Callout type="success">
   Open the starter code for this tutorial in the Flow Playground: <br />
   <a
-    href="https://play.onflow.org/af7aba31-dee9-4477-9e1d-7b46e958468e"
+    href="https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa"
     target="_blank"
   >
-    https://play.onflow.org/af7aba31-dee9-4477-9e1d-7b46e958468e
+    https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa
   </a>
   The tutorial will ask you to take various actions to interact with this code.
-</Callout>
-
-<Callout type="info">
-  The playground code that is linked uses Cadence 0.42, but the examples
-  use Cadence 1.0 to show how each contract, transaction and script
-  is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
-  The project link will still work with the current version of the playground,
-  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 <Callout type="info">
@@ -71,7 +62,7 @@ which will open up the contracts that are saved for that account.
 The `HelloWorld` contracts are loaded by default for each account
 unless you load an existing playground project with other saved contracts.
 
-For this tutorial, you'll be working with only the first account `0x01`
+For this tutorial, you'll be working with only the first account `0x06`
 
 ## Implementing Hello World
 
@@ -101,10 +92,10 @@ If you haven't already, you'll need to follow this link to open a playground ses
 
 {' '}
 <a
-  href="https://play.onflow.org/dbc06b40-d0b1-42da-9e0d-686bc9972e65"
+  href="https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa"
   target="_blank"
 >
-  https://play.onflow.org/dbc06b40-d0b1-42da-9e0d-686bc9972e65
+  https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa
 </a>
 
 </Callout>
@@ -113,7 +104,7 @@ If you haven't already, you'll need to follow this link to open a playground ses
 
 <Callout type="info">
 
-Open the Account `0x01` tab with the file called
+Open the Account `0x06` tab with the file called
 `HelloWorld.cdc` in the Contract 1 space. <br />
 `HelloWorld.cdc` should contain this code:
 
@@ -122,14 +113,12 @@ Open the Account `0x01` tab with the file called
 ```cadence HelloWorld.cdc
 // HelloWorld.cdc
 //
-access(all)
-contract HelloWorld {
+access(all) contract HelloWorld {
 
     // Declare a public (access(all)) field of type String.
     //
     // All fields must be initialized in the initializer.
-    access(all)
-    let greeting: String
+    access(all) let greeting: String
 
     // The initializer is required if the contract contains any fields.
     init() {
@@ -137,8 +126,7 @@ contract HelloWorld {
     }
 
     // Public function that returns our friendly greeting!
-    access(all) view
-    fun hello(): String {
+    access(all) view fun hello(): String {
         return self.greeting
     }
 }
@@ -194,7 +182,7 @@ An account is divided into two main areas:
    for controlling how these stored objects can be accessed.
    We'll cover account storage and capabilities in more detail in a later tutorial.
 
-In this tutorial, we use the account with the address `0x01` to store our `HelloWorld` contract.
+In this tutorial, we use the account with the address `0x06` to store our `HelloWorld` contract.
 
 ### Deploying Code
 
@@ -204,9 +192,9 @@ Now that you know what an account is in a Cadence context, you can deploy the `H
 
 <Callout type="info">
 
-Make sure that the account `0x01` tab is selected and that the
+Make sure that the account `0x06` tab is selected and that the
 `HelloWorld.cdc` file is in the editor. <br />
-Click the deploy button to deploy the contents of the editor to account `0x01`.
+Click the deploy button to deploy the contents of the editor to account `0x06`.
 
 </Callout>
 
@@ -214,7 +202,7 @@ Click the deploy button to deploy the contents of the editor to account `0x01`.
 
 You should see a log in the output area indicating that the deployment succeeded.
 
-    `Deployed Contract To: 0x01`
+    `Deployed Contract To: 0x06`
 
 You'll also see the name of the contract show up in the selected account tab underneath the number for the account.
 This indicates that the `HelloWorld` contract has been deployed to the account.
@@ -243,7 +231,7 @@ Open the transaction named `Simple Transaction` <br />
 </Callout>
 
 ```cadence SayHello.cdc
-import HelloWorld from 0x01
+import HelloWorld from 0x06
 
 transaction {
 
@@ -253,13 +241,12 @@ transaction {
     log(HelloWorld.hello())
   }
 }
-
 ```
 
-This transaction first imports our `HelloWorld` smart contract from the account `0x01`.
+This transaction first imports our `HelloWorld` smart contract from the account `0x06`.
 If you haven't deployed the smart contract from the account, the transaction won't have access to it and the import will fail.
 This imports the entire contract code from `HelloWorld`, including type definitions and public functions,
-so that the transaction can use them to interact with the `HelloWorld` contract in account `0x01`.
+so that the transaction can use them to interact with the `HelloWorld` contract in account `0x06`.
 
 To import a smart contract from any other account, type this line at the top of your transaction:
 
@@ -281,7 +268,7 @@ Transactions are divided into two main phases, `prepare` and `execute`.
 
 <Callout type="info">
 
-In the box at the bottom right of the editor, select Account `0x01` as the transaction signer. <br />
+In the box at the bottom right of the editor, select Account `0x06` as the transaction signer. <br />
 Click the `Send` button to submit the transaction
 
 </Callout>
@@ -292,7 +279,7 @@ You should see something like this in the transaction results at the bottom of t
 Simple Transaction "Hello, World!"
 ```
 
-Congratulations, you just executed your first Cadence transaction with the account `0x01` as the signer.
+Congratulations, you just executed your first Cadence transaction with the account `0x06` as the signer.
 
 In this tutorial, you'll get the same result if you use different signers for the transaction
 but later tutorials will use more complex examples that have different results depending on the signer.
@@ -303,7 +290,7 @@ This tutorial covered an introduction to Cadence, including terms like accounts,
 We implemented a smart contract that is accessible in all scopes.
 The smart contract had a `String` field initialized with the value `Hello, World!` and a function to return (read) this value.
 Next, we deployed this contract in an account and implemented a transaction to call the function in the smart contract and log the result to the console.
-Finally, we used the account `0x01` as the signer for this transaction.
+Finally, we used the account `0x06` as the signer for this transaction.
 
 Now that you have completed the tutorial, you have the basic knowledge to write a simple Cadence program that can:
 

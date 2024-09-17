@@ -33,11 +33,6 @@ deploy them to a local Flow emulated blockchain, and submit transactions.
 The Flow Playground should work with any standard web browser.
 However, we recommend using Google Chrome, as it has been primarily tested and optimized for this browser.
 
-The [Flow Crescendo (Cadence 1.0) upgrade](https://flow.com/upgrade/crescendo)
-introduces new and powerful features to Cadence. Currently, the playground uses an older version
-of Cadence, but you can interact with a Cadence 1.0 playground by going to
-https://v1.play.flow.com/.
-
 ## Getting to know the Playground
 
 The Playground contains everything you need to get familiar

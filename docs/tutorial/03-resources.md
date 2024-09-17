@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 3. Resource Contract Tutorial
 description: An introduction to resources, capabilities, and account storage in Cadence
-date: 2024-09-05
+date: 2024-09-17
 meta:
   keywords:
     - tutorial

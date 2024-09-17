@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 2. Hello World
 description: A smart contract tutorial for Cadence.
-date: 2024-09-05
+date: 2024-09-17
 meta:
   keywords:
     - tutorial

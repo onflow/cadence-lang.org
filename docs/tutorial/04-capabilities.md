@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 4. Capability Tutorial
 description: An introduction to capabilities and how they interact with resources in Cadence
-date: 2024-09-05
+date: 2024-09-17
 meta:
   keywords:
     - tutorial

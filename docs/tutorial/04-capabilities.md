@@ -188,9 +188,9 @@ transaction {
     // If the optional is nil,
     // the panic will happen with a descriptive error message
     let helloReference = capability.borrow()
-      ?? panic("Could not borrow a reference to the HelloAsset capability. This could be
-                because the resource is not stored or the capability wasn't published.
-                Run the Create Hello transaction again to store the resource")
+      ?? panic("Could not borrow a reference to the HelloAsset capability. This could be"
+                .concat("because the resource is not stored or the capability wasn't published.")
+                .concat("Run the Create Hello transaction again to store the resource"))
 
     // Call the hello function using the reference
     // to the HelloAsset resource.

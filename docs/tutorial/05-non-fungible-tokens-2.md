@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 5.2 Non-Fungible Token Tutorial Part 2
 description: An introduction to NFTs in Cadence
-date: 2024-06-05
+date: 2024-09-18
 meta:
   keywords:
     - tutorial
@@ -31,10 +31,10 @@ a full implementation for **Non-Fungible Tokens (NFTs)**.
 <Callout type="success">
   Open the starter code for this tutorial in the Flow Playground:
   <a
-    href="https://play.onflow.org/f08e8e0d-d28e-4cbe-8d72-3afe2349c629"
+    href="https://play.flow.com/63d827b3-0b49-48d5-91ba-4b222c23e217"
     target="_blank"
   >
-    https://play.onflow.org/f08e8e0d-d28e-4cbe-8d72-3afe2349c629
+    https://play.flow.com/63d827b3-0b49-48d5-91ba-4b222c23e217
   </a>
   The tutorial will ask you to take various actions to interact with this code.
 </Callout>
@@ -403,7 +403,11 @@ access(all) fun main(): [UInt64] {
     // Find the public Receiver capability for their Collection and borrow it
     let receiverRef = nftOwner.capabilities
         .borrow<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
-        ?? panic("Could not borrow receiver reference to the ExampleNFT.Collection")
+        ?? panic("Could not borrow a receiver reference to 0x06's ExampleNFT.Collection"
+                 .concat(" from the path ")
+                 .concat(ExampleNFT.CollectionPublicPath.toString())
+                 .concat(". Make sure account 0x06 has set up its account ")
+                 .concat("with an ExampleNFT Collection."))
 
     // Log the NFTs that they own as an array of IDs
     log("Account 1 NFTs")
@@ -541,11 +545,15 @@ transaction {
     // The reference to the collection that will be receiving the NFT
     let receiverRef: &ExampleNFT.Collection
 
-    prepare(acct: AuthAccount) {
+    prepare(acct: auth(BorrowValue) &Account) {
         // Get the owner's collection capability and borrow a reference
         self.receiverRef = acct.capabilities
             .borrow<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
-            ?? panic("Could not borrow receiver reference to ExampleNFT.Collection")
+            ?? panic("Could not borrow a collection reference to 0x06's ExampleNFT.Collection"
+                     .concat(" from the path ")
+                     .concat(ExampleNFT.CollectionPublicPath.toString())
+                     .concat(". Make sure account 0x06 has set up its account ")
+                     .concat("with an ExampleNFT Collection."))
     }
 
     execute {
@@ -555,7 +563,7 @@ transaction {
 
         self.receiverRef.deposit(token: <-newNFT)
 
-        log("NFT Minted and deposited to Account 1's Collection")
+        log("NFT Minted and deposited to Account 0x06's Collection")
     }
 }
 ```
@@ -567,7 +575,7 @@ This prints a list of the NFTs that account `0x06` owns.
 
 </Callout>
 
-```cadence print_01_nfts.cdc
+```cadence print_06_nfts.cdc
 import ExampleNFT from 0x06
 
 // Print the NFTs owned by account 0x06.
@@ -580,10 +588,14 @@ access(all) fun main(): [UInt64] {
 
     // borrow a reference from the capability
     let receiverRef = capability.borrow()
-            ?? panic("Could not borrow receiver reference to 0x06's ExampleNFT.Collection")
+        ?? panic("Could not borrow a receiver reference to 0x06's ExampleNFT.Collection"
+                 .concat(" from the path ")
+                 .concat(ExampleNFT.CollectionPublicPath.toString())
+                 .concat(". Make sure account 0x06 has set up its account ")
+                 .concat("with an ExampleNFT Collection."))
 
     // Log the NFTs that they own as an array of IDs
-    log("Account 1 NFTs")
+    log("Account 0x06 NFTs")
     return receiverRef.getIDs()
 }
 ```
@@ -591,7 +603,7 @@ access(all) fun main(): [UInt64] {
 You should see that account `0x06` owns the NFT with `id = 1`
 
 ```
-"Account 1 NFTs"
+"Account 0x06 NFTs"
 [1]
 ```
 
@@ -613,7 +625,7 @@ import ExampleNFT from 0x06
 // to use the NFT contract by creating a new empty collection,
 // storing it in their account storage, and publishing a capability
 transaction {
-    prepare(acct: auth(SaveValue, StorageCapabilities) &Account) {
+    prepare(acct: auth(SaveValue, Capabilities) &Account) {
 
         // Create a new empty collection
         let collection <- ExampleNFT.createEmptyCollection()
@@ -621,7 +633,7 @@ transaction {
         // store the empty NFT Collection in account storage
         acct.storage.save(<-collection, to: ExampleNFT.CollectionStoragePath)
 
-        log("Collection created for account 2")
+        log("Collection created for account 0x07")
 
         // create a public capability for the Collection
         let cap = acct.capabilities.storage.issue<&ExampleNFT.Collection>(ExampleNFT.CollectionStoragePath)
@@ -658,7 +670,11 @@ transaction {
         // Borrow a reference from the stored collection
         let collectionRef = acct.storage
             .borrow<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>(from: ExampleNFT.CollectionStoragePath)
-            ?? panic("Could not borrow a reference to the owner's collection")
+            ?? panic("Could not borrow a collection reference to 0x06's ExampleNFT.Collection"
+                     .concat(" from the path ")
+                     .concat(ExampleNFT.CollectionPublicPath.toString())
+                     .concat(". Make sure account 0x06 has set up its account ")
+                     .concat("with an ExampleNFT Collection."))
 
         // Call the withdraw function on the sender's Collection
         // to move the NFT out of the collection
@@ -673,12 +689,16 @@ transaction {
         // getting the public capability and borrowing a reference from it
         let receiverRef = recipient.capabilities
             .borrow<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
-            ?? panic("Could not borrow receiver reference")
+            ?? panic("Could not borrow a collection reference to 0x07's ExampleNFT.Collection"
+                     .concat(" from the path ")
+                     .concat(ExampleNFT.CollectionPublicPath.toString())
+                     .concat(". Make sure account 0x07 has set up its account ")
+                     .concat("with an ExampleNFT Collection."))
 
         // Deposit the NFT in the receivers collection
         receiverRef.deposit(token: <-self.transferToken)
 
-        log("NFT ID 1 transferred from account 1 to account 2")
+        log("NFT ID 1 transferred from account 0x06 to account 0x07")
     }
 }
 ```
@@ -700,34 +720,43 @@ import ExampleNFT from 0x06
 access(all) fun main() {
 
     // Get both public account objects
-    let account1 = getAccount(0x06)
-	let account2 = getAccount(0x07)
+    let account6 = getAccount(0x06)
+	let account7 = getAccount(0x07)
 
     // Find the public Receiver capability for their Collections
-    let acct1Capability = account1.capabilities.get(ExampleNFT.CollectionPublicPath)
-    let acct2Capability = account2.capabilities.get(ExampleNFT.CollectionPublicPath)
+    let acct6Capability = account6.capabilities.get<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
+    let acct7Capability = account7.capabilities.get<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
 
     // borrow references from the capabilities
-    let receiver1Ref = acct1Capability.borrow<&ExampleNFT.Collection>()
-        ?? panic("Could not borrow account 1 receiver reference")
-    let receiver2Ref = acct2Capability.borrow<&ExampleNFT.Collection>()
-        ?? panic("Could not borrow account 2 receiver reference")
+    let receiver6Ref = acct6Capability.borrow()
+        ?? panic("Could not borrow a collection reference to 0x06's ExampleNFT.Collection"
+                 .concat(" from the path ")
+                 .concat(ExampleNFT.CollectionPublicPath.toString())
+                 .concat(". Make sure account 0x06 has set up its account ")
+                 .concat("with an ExampleNFT Collection."))
+
+    let receiver7Ref = acct7Capability.borrow()
+        ?? panic("Could not borrow a collection reference to 0x07's ExampleNFT.Collection"
+                 .concat(" from the path ")
+                 .concat(ExampleNFT.CollectionPublicPath.toString())
+                 .concat(". Make sure account 0x07 has set up its account ")
+                 .concat("with an ExampleNFT Collection."))
 
     // Print both collections as arrays of IDs
-    log("Account 1 NFTs")
-    log(receiver1Ref.getIDs())
+    log("Account 0x06 NFTs")
+    log(receiver6Ref.getIDs())
 
-    log("Account 2 NFTs")
-    log(receiver2Ref.getIDs())
+    log("Account 0x07 NFTs")
+    log(receiver7Ref.getIDs())
 }
 ```
 
 You should see something like this in the output:
 
 ```
-"Account 1 NFTs"
+"Account 0x06 NFTs"
 []
-"Account 2 NFTs"
+"Account 0x07 NFTs"
 [1]
 ```
 

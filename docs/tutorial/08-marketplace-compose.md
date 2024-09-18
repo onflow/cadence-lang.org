@@ -26,7 +26,7 @@ This contract is already deployed to testnet and mainnet and can be used by anyo
   The playground code that is linked uses Cadence 0.42, but the examples
   use Cadence 1.0 to show how each contract, transaction and script
   is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
+  You can access a Cadence 1.0-compatible playground by going to https://play.flow.com/.
   The project link will still work with the current version of the playground,
   but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>

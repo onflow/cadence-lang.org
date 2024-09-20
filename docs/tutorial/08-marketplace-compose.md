@@ -654,7 +654,10 @@ fun main(): [UInt64] {
     // Find the public Sale reference to their Collection
     let acct6saleRef = account1.capabilities.get<&ExampleMarketplace.SaleCollection>(/public/NFTSale)>
                        .borrow()
-                       ?? panic("Could not borrow acct7 nft sale reference")
+        ?? panic("Could not borrow a reference to the SaleCollection capability for account 0x06 ")
+            .concat("at path /public/NFTSale. ")
+            .concat("Make sure the owner has set up the SaleCollection ")
+            .concat("in their account with the Create Sale transaction")
 
     // Return the NFT IDs that are for sale
     return acct6saleRef.getIDs()
@@ -815,7 +818,7 @@ access(all) fun main(): OwnerInfo {
 
     // verify that the balances are correct
     if acct6ReceiverRef.balance != 50.0 || acct7ReceiverRef.balance != 10.0 {
-        panic("Wrong balances!")
+        panic("Wrong balances! Account 6 Balance should be 50 and Account 7 balance should be 10.")
     }
 
     // Find the public Receiver capability for their Collections
@@ -839,7 +842,7 @@ access(all) fun main(): OwnerInfo {
 
     // verify that the collections are correct
     if nft2Ref.getIDs()[0] != 1 || nft1Ref.getIDs().length != 0 {
-        panic("Wrong Collections!")
+        panic("Wrong Collections! Account 6 should own zero NFTs and account 7 should own one.")
     }
 
     // Return the struct that shows the account ownership info
@@ -885,7 +888,9 @@ access(all) contract Marketplace {
     // how to remove it from the marketplace
     access(all) fun listSaleCollection(collection: Capability<&SaleCollection>) {
         let saleRef = collection.borrow()
-            ?? panic("Invalid sale collection capability")
+        ?? panic("Could not borrow a reference to the SaleCollection capability ")
+            .concat("Make sure the owner has set up the SaleCollection ")
+            .concat("in their account and provided a valid capability")
 
         self.tokensForSale[saleRef.owner!.address] = collection
     }

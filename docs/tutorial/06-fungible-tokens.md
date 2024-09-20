@@ -972,7 +972,7 @@ transaction {
 	prepare(signer: auth(BorrowValue) &Account) {
         // Borrow a reference to the stored, private minter resource
         self.mintingRef = signer.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
-            ?? panic("Could not borrow a reference to the signer's BasicToken.VaultMinter"
+            ?? panic("Could not borrow a reference to the signer's ExampleToken.VaultMinter"
                      .concat(" from the path /storage/CadenceFungibleTokenTutorialMinter")
                      .concat(". Make sure you have deployed ExampleToken to 0x07 ")
                      .concat("and are signing with account 0x07."))

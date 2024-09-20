@@ -15,21 +15,12 @@ for an example of a production ready marketplace that you can use right now on t
 <Callout type="success">
   Open the starter code for this tutorial in the Flow Playground:
   <a
-    href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
+    href="https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645"
     target="_blank"
   >
-    https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929
+    https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645
   </a>
   The tutorial will be asking you to take various actions to interact with this code.
-</Callout>
-
-<Callout type="info">
-  The playground code that is linked uses Cadence 0.42, but the examples
-  use Cadence 1.0 to show how each contract, transaction and script
-  is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://play.flow.com/.
-  The project link will still work with the current version of the playground,
-  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
 </Callout>
 
 If you have already completed the Marketplace tutorial, please move on to [Composable Resources: Kitty Hats](./10-resources-compose.md).
@@ -38,22 +29,23 @@ This guide will help you quickly get the playground to the state you need to com
 The marketplace tutorial uses the Fungible Token and Non-Fungible token contracts
 to allow users to buy and sell NFTs with fungible tokens.
 
-The state of the accounts is the same as if you had completed the Fungible Token
-and Non-Fungible Token tutorials in the same playground session.
-Having your playground in this state is necessary to follow the [Composable Smart Contracts: Marketplace](./08-marketplace-compose.md) tutorial.
-
 ---
 
-1. Open account `0x06`. Make sure the Fungible Token definitions in `ExampleToken.cdc` from the fungible token tutorial are in this account.
+<Callout type="info">
+  Some of the code in these setup instructions has intentional errors built into it.
+  You should understand enough about Cadence to be able to fix these tutorials on your own.
+  All of the errors involve concepts that you have learned in previous tutorials
+</Callout>
+
+1. Open the `ExampleToken` contract. This is the same contract from the fungible token tutorial.
 2. Deploy the `ExampleToken` code to account `0x06`.
 3. Switch to the `ExampleNFT` contract (Contract 2)
-4. Make sure you have the NFT definitions in `ExampleNFT.cdc` from the Non-fungible token tutorial in account `0x07`.
-5. Deploy the NFT code to account `0x07` by selecting it as the deploying signer.
-6. Run the transaction in Transaction 1. This is the `SetupAccount1Transaction.cdc` file.
+4. Deploy the NFT code to account `0x07` by selecting it as the deploying signer.
+5. Run the transaction in "Setup 6". This is the `SetupAccount6Transaction.cdc` file.
    Use account `0x06` as the only signer to set up account `0x06`'s storage.
 
-```cadence SetupAccount1Transaction.cdc
-// SetupAccount1Transaction.cdc
+```cadence SetupAccount6Transaction.cdc
+// SetupAccount6Transaction.cdc
 
 import ExampleToken from 0x06
 import ExampleNFT from 0x07
@@ -61,7 +53,7 @@ import ExampleNFT from 0x07
 // This transaction sets up account 0x06 for the marketplace tutorial
 // by publishing a Vault reference and creating an empty NFT Collection.
 transaction {
-  prepare(acct: auth(SaveValue, StorageCapabilities) &Account) {
+  prepare(acct: auth(SaveValue) &Account) {
         // Create a public Receiver capability to the Vault
     let receiverCap = acct.capabilities.storage.issue<&{ExampleToken.Receiver}>(
         /storage/CadenceFungibleTokenTutorialVault
@@ -74,17 +66,17 @@ transaction {
     log("Collection created for account 2")
 
     // create a public capability for the Collection
-    let cap = acct.capabilities.storage.issue<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionStoragePath)
-    acct.capabilities.publish(cap, at: ExampleNFT.CollectionPublicPath)
+    let cap = acct.capabilities.storage.issue<&ExampleNFT.Collection>(ExampleNFT.CollectionStoragePath)
+    acct.capabilities.publish(cap, at: ExampleNFT.CollectionStoragePath)
   }
 }
 ```
 
-7. Run the transaction in Transaction 2. This is the `SetupAccount2Transaction.cdc` file.
+7. Run the second transaction, "Setup 7". This is the `SetupAccount7Transaction.cdc` file.
 Use account `0x07` as the only signer to set up account `0x07`'s storage.
 
-```cadence SetupAccount2Transaction.cdc
-// SetupAccount2Transaction.cdc
+```cadence SetupAccount7Transaction.cdc
+// SetupAccount7Transaction.cdc
 
 import ExampleToken from 0x06
 import ExampleNFT from 0x07
@@ -97,22 +89,18 @@ transaction {
   // Private reference to this account's minter resource
   let minterRef: &ExampleNFT.NFTMinter
 
-  prepare(acct: auth(SaveValue, StorageCapabilities, BorrowValue) &Account) {
-    // create a new vault instance with an initial balance of 30
+  prepare(acct: auth(SaveValue, Capabilities, BorrowValue) &Account) {
+    // create a new vault instance
     let vaultA <- ExampleToken.createEmptyVault()
 
     // Store the vault in the account storage
-    acct.storage.save(<-vaultA, to: /storage/CadenceFungibleTokenTutorialVault)
+    acct.storage.save(<-vaultA, to: ExampleToken.VaultStoragePath)
 
     // Create a public Receiver capability to the Vault
-    let receiverCap = acct.capabilities.storage.issue<&{ExampleToken.Receiver}>(
-        /storage/CadenceFungibleTokenTutorialVault
+    let receiverCap = acct.capabilities.storage.issue<&ExampleToken.Vault>(
+        ExampleToken.VaultStoragePath
     )
-    acct.capabilities.publish(receiverCap, at: /public/CadenceFungibleTokenTutorialReceiver)
-
-    // Borrow a reference for the NFTMinter in storage
-    self.minterRef = acct.storage.borrow<&ExampleNFT.NFTMinter>(from: ExampleNFT.MinterStoragePath)
-        ?? panic("Could not borrow owner's NFT minter reference")
+    acct.capabilities.publish(receiverCap, at: ExampleToken.VaultPublicPath)
   }
   execute {
     // Get the recipient's public account object
@@ -121,20 +109,24 @@ transaction {
     // Get the Collection reference for the receiver
     // getting the public capability and borrowing a reference from it
     let receiverRef = recipient.capabilities
-        .borrow<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
-        ?? panic("Could not borrow receiver reference")
+        .borrow<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)
+        ?? panic("Could not borrow a collection reference to 0x06's ExampleNFT.Collection"
+                 .concat(" from the path ")
+                 .concat(ExampleNFT.CollectionPublicPath.toString())
+                 .concat(". Make sure account 0x06 has set up its account ")
+                 .concat("with an ExampleNFT Collection."))
 
     // Mint an NFT and deposit it into account 0x06's collection
-    receiverRef.deposit(token: <-self.minterRef.mintNFT())
+    receiverRef.deposit(token: <-ExampleNFT.mintNFT())
   }
 }
 ```
 
-8. Run the transaction in Transaction 3. This is the `SetupAccount1TransactionMinting.cdc` file.
-   Use account `0x06` as the only signer to mint fungible tokens for account 1 and 2.
+8. Run the transaction in "Setup 6". This is the `SetupAccount6TransactionMinting.cdc` file.
+   Use account `0x06` as the only signer to mint fungible tokens for account 6 and 7.
 
-```cadence SetupAccount1TransactionMinting.cdc
-// SetupAccount1TransactionMinting.cdc
+```cadence SetupAccount6TransactionMinting.cdc
+// SetupAccount6TransactionMinting.cdc
 
 import ExampleToken from 0x06
 import ExampleNFT from 0x07
@@ -144,19 +136,19 @@ import ExampleNFT from 0x07
 transaction {
 
   // Public Vault Receiver References for both accounts
-  let acct1Capability: Capability<&AnyResource{ExampleToken.Receiver}>
-  let acct2Capability: Capability<&AnyResource{ExampleToken.Receiver}>
+  let acct6Capability: Capability<&{ExampleToken.Receiver}>
+  let acct7Capability: Capability<&{ExampleToken.Receiver}>
 
   // Private minter references for this account to mint tokens
   let minterRef: &ExampleToken.VaultMinter
 
   prepare(acct: auth(SaveValue, StorageCapabilities, BorrowValue) &Account) {
     // Get the public object for account 0x07
-    let account2 = getAccount(0x07)
+    let account7 = getAccount(0x07)
 
     // Retrieve public Vault Receiver references for both accounts
-    self.acct1Capability = acct.capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
-    self.acct2Capability = account2.capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
+    self.acct6Capability = acct.capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
+    self.acct7Capability = account7.capabilities.get<&{ExampleToken.Receiver}>(/public/CadenceFungibleTokenTutorialReceiver)
 
     // Get the stored Minter reference for account 0x06
     self.minterRef = acct.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
@@ -165,8 +157,8 @@ transaction {
 
   execute {
     // Mint tokens for both accounts
-    self.minterRef.mintTokens(amount: 20.0, recipient: self.acct2Capability)
-    self.minterRef.mintTokens(amount: 10.0, recipient: self.acct1Capability)
+    self.minterRef.mintTokens(amount: 20.0, recipient: self.acct7Capability)
+    self.minterRef.mintTokens(amount: 10.0, recipient: self.acct6Capability)
   }
 }
 ```
@@ -182,17 +174,17 @@ import ExampleNFT from 0x07
 /// Allows the script to return the ownership info
 /// of all the accounts
 access(all) struct OwnerInfo {
-  access(all) let acct1Balance: UFix64
-  access(all) let acct2Balance: UFix64
+  access(all) let acct6Balance: UFix64
+  access(all) let acct7Balance: UFix64
 
-  access(all) let acct1IDs: [UInt64]
-  access(all) let acct2IDs: [UInt64]
+  access(all) let acct6IDs: [UInt64]
+  access(all) let acct7IDs: [UInt64]
 
-  init(balance1: UFix64, balance2: UFix64, acct1IDs: [UInt64], acct2IDs: [UInt64]) {
-    self.acct1Balance = balance1
-    self.acct2Balance = balance2
-    self.acct1IDs = acct1IDs
-    self.acct2IDs = acct2IDs
+  init(balance1: UFix64, balance2: UFix64, acct6IDs: [UInt64], acct7IDs: [UInt64]) {
+    self.acct6Balance = balance1
+    self.acct7Balance = balance2
+    self.acct6IDs = acct6IDs
+    self.acct7IDs = acct7IDs
   }
 }
 
@@ -202,39 +194,53 @@ access(all) struct OwnerInfo {
 // Account 0x07: Vault Balance = 20, No NFTs
 access(all) fun main(): OwnerInfo {
     // Get the accounts' public account objects
-    let acct1 = getAccount(0x06)
-    let acct2 = getAccount(0x07)
+    let acct6 = getAccount(0x06)
+    let acct7 = getAccount(0x07)
 
     // Get references to the account's receivers
     // by getting their public capability
     // and borrowing a reference from the capability
-    let acct1ReceiverRef = acct1.capabilities.get<&{ExampleToken.Balance}>
+    let acct6ReceiverRef = acct6.capabilities.get<&{ExampleToken.Balance}>
                           (/public/CadenceFungibleTokenTutorialReceiver)
                           .borrow()
-                          ?? panic("Could not borrow acct1 vault reference")
+            ?? panic("Could not borrow a balance reference to "
+                     .concat("0x06's ExampleToken.Vault")
+                     .concat(". Make sure 0x06 has set up its account ")
+                     .concat("with an ExampleToken Vault and valid capability."))
 
-    let acct2ReceiverRef = acct2.capabilities.get<&{ExampleToken.Balance}>
+    let acct7ReceiverRef = acct7.capabilities.get<&{ExampleToken.Balance}>
                           (/public/CadenceFungibleTokenTutorialReceiver)
                           .borrow()
-                          ?? panic("Could not borrow acct2 vault reference")
+            ?? panic("Could not borrow a balance reference to "
+                     .concat("0x07's ExampleToken.Vault")
+                     .concat(". Make sure 0x07 has set up its account ")
+                     .concat("with an ExampleToken Vault and valid capability."))
 
     let returnArray: [UFix64] = []
 
     // verify that the balances are correct
-    if acct1ReceiverRef.balance != 40.0 || acct2ReceiverRef.balance != 20.0 {
+    if acct6ReceiverRef.balance != 40.0 || acct7ReceiverRef.balance != 20.0 {
         panic("Wrong balances!")
     }
 
     // Find the public Receiver capability for their Collections
-    let acct1Capability = acct1.capabilities.get<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
-    let acct2Capability = acct2.capabilities.get<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
+    let acct6Capability = acct6.capabilities.get<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
+    let acct7Capability = acct7.capabilities.get<&{ExampleNFT.NFTReceiver}>(ExampleNFT.CollectionPublicPath)
 
     // borrow references from the capabilities
-    let nft1Ref = acct1Capability.borrow()
-        ?? panic("Could not borrow acct1 nft collection reference")
+    let nft1Ref = acct6Capability.borrow()
+        ?? panic("Could not borrow a collection reference to 0x06's ExampleNFT.Collection"
+                 .concat(" from the path ")
+                 .concat(ExampleNFT.CollectionPublicPath.toString())
+                 .concat(". Make sure account 0x06 has set up its account ")
+                 .concat("with an ExampleNFT Collection."))
 
-    let nft2Ref = acct2Capability.borrow()
-        ?? panic("Could not borrow acct2 nft collection reference")
+    let nft2Ref = acct7Capability.borrow()
+        ?? panic("Could not borrow a collection reference to 0x07's ExampleNFT.Collection"
+                 .concat(" from the path ")
+                 .concat(ExampleNFT.CollectionPublicPath.toString())
+                 .concat(". Make sure account 0x07 has set up its account ")
+                 .concat("with an ExampleNFT Collection."))
 
     // verify that the collections are correct
     if nft1Ref.getIDs()[0] != 1 || nft2Ref.getIDs().length != 0 {
@@ -242,23 +248,23 @@ access(all) fun main(): OwnerInfo {
     }
 
     // Return the struct that shows the account ownership info
-    return OwnerInfo(balance1: acct1ReceiverRef.balance,
-                     balance2: acct2ReceiverRef.balance,
-                     acct1IDs: nft1Ref.getIDs(),
-                     acct2IDs: nft2Ref.getIDs())
+    return OwnerInfo(balance1: acct6ReceiverRef.balance,
+                     balance2: acct7ReceiverRef.balance,
+                     acct6IDs: nft1Ref.getIDs(),
+                     acct7IDs: nft2Ref.getIDs())
 }
 ```
 
 10. The script should not panic and you should see something like this output
 
 ```
-"Account 1 Balance"
+"Account 6 Balance"
 40.00000000
-"Account 2 Balance"
+"Account 7 Balance"
 20.00000000
-"Account 1 NFTs"
+"Account 6 NFTs"
 [1]
-"Account 2 NFTs"
+"Account 7 NFTs"
 []
 ```
 

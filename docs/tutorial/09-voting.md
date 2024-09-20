@@ -9,17 +9,12 @@ In this tutorial, we're going to deploy a contract that allows users to vote on 
 <Callout type="success">
   Open the starter code for this tutorial in the Flow Playground:
   <a
-    href="https://play.onflow.org/d120f0a7-d411-4243-bc59-5125a84f99b3"
+    href="https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff"
     target="_blank"
   >
-    https://play.onflow.org/d120f0a7-d411-4243-bc59-5125a84f99b3
+    https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff
   </a>
   The tutorial will be asking you to take various actions to interact with this code.
-</Callout>
-
-<Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
 </Callout>
 
 <Callout type="info">
@@ -54,21 +49,17 @@ Using a [resource](../language/resources.mdx) type is logical for this applicati
 they can send that Ballot to another account, and the use case of voting ballots benefits from the uniqueness and existence guarantees
 inherent to resources.
 
-## Deploy the Contract
+## Write the Contract
 
-Time to deploy the contract we'll be working with:
+Time to see the contract we'll be working with:
 
 <Callout type="info">
 
 1. Open Contract 1 - the `ApprovalVoting` contract.<br/>
-2. In the bottom right deployment modal, press the arrow to expand and make sure account `0x06` is selected as the signer.<br/>
-3. Click the Deploy button to deploy it to account `0x06`
 
 </Callout>
 
-![Deploy ApprovalVoting to account 0x06](deploy_approval_voting.png)
-
-The deployed contract should have the following contents:
+The contract should have the following contents:
 
 ```cadence ApprovalVoting.cdc
 /*
@@ -88,174 +79,66 @@ The deployed contract should have the following contents:
 *   A user can choose their votes and cast them
 *   with the cast_vote.cdc transaction.
 *
+*.  See if you can code it yourself!
+*
 */
 
 access(all)
 contract ApprovalVoting {
 
-    //list of proposals to be approved
-    access(all)
-    var proposals: [String]
+    // Field: An array of strings representing proposals to be approved
 
-    // number of votes per proposal
-    access(all)
-    let votes: {Int: Int}
+    // Field: A dictionary mapping the proposal index to the number of votes per proposal
 
-    // This is the resource that is issued to users.
+    // Entitlement: Admin entitlement that restricts the privileged fields
+    // of the Admin resource
+
+    // Resource: Ballot resource that is issued to users.
     // When a user gets a Ballot object, they call the `vote` function
-    // to include their votes, and then cast it in the smart contract
+    // to include their votes for each proposal, and then cast it in the smart contract
     // using the `cast` function to have their vote included in the polling
-    access(all)
-    resource Ballot {
+    // Remember to track which proposals a user has voted yes for in the Ballot resource
+    // and remember to include proper pre and post conditions to ensure that no mistakes are made
+    // when a user submits their vote
+    access(all) resource Ballot {
 
-        // array of all the proposals
-        access(all)
-        let proposals: [String]
-
-        // corresponds to an array index in proposals after a vote
-        access(all)
-        var choices: {Int: Bool}
-
-        init() {
-            self.proposals = ApprovalVoting.proposals
-            self.choices = {}
-
-            // Set each choice to false
-            var i = 0
-            while i < self.proposals.length {
-                self.choices[i] = false
-                i = i + 1
-            }
-        }
-
-        // modifies the ballot
-        // to indicate which proposals it is voting for
-        access(all)
-        fun vote(proposal: Int) {
-            pre {
-                self.proposals[proposal] != nil: "Cannot vote for a proposal that doesn't exist"
-            }
-            self.choices[proposal] = true
-        }
     }
 
-    // Resource that the Administrator of the vote controls to
-    // initialize the proposals and to pass out ballot resources to voters
-    access(all)
-    resource Administrator {
-
-        // function to initialize all the proposals for the voting
-        access(all)
-        fun initializeProposals(_ proposals: [String]) {
-            pre {
-                ApprovalVoting.proposals.length == 0: "Proposals can only be initialized once"
-                proposals.length > 0: "Cannot initialize with no proposals"
-            }
-            ApprovalVoting.proposals = proposals
-
-            // Set each tally of votes to zero
-            var i = 0
-            while i < proposals.length {
-                ApprovalVoting.votes[i] = 0
-                i = i + 1
-            }
-        }
-
-        // The admin calls this function to create a new Ballot
-        // that can be transferred to another user
-        access(all)
-        fun issueBallot(): @Ballot {
-            return <-create Ballot()
-        }
+    // Resource: Administrator of the voting process
+    // initialize the proposals and to provide a function for voters
+    // to get a ballot resource
+    // Remember to include proper conditions for each function!
+    // Also make sure that the privileged fields are secured with entitlements!
+    access(all) resource Administrator {
+        
     }
 
-    // A user moves their ballot to this function in the contract where
-    // its votes are tallied and the ballot is destroyed
-    access(all)
-    fun cast(ballot: @Ballot) {
-        var index = 0
-        // look through the ballot
-        while index < self.proposals.length {
-            if ballot.choices[index]! {
-                // tally the vote if it is approved
-                self.votes[index] = self.votes[index]! + 1
-            }
-            index = index + 1;
-        }
-        // Destroy the ballot because it has been tallied
-        destroy ballot
-    }
+    // Public function: A user can create a capability to their ballot resource
+    // and send it to this function so its votes are tallied
+    // Remember to include a provision so that a ballot can only be cast once!
 
-    // initializes the contract by setting the proposals and votes to empty
-    // and creating a new Admin resource to put in storage
+    // initialize the contract fields by setting the proposals and votes to empty
+    // and create a new Admin resource to put in storage
     init() {
-        self.proposals = []
-        self.votes = {}
-
-        self.account.storage.save(
-            <-create Administrator(),
-            to: /storage/VotingAdmin
-        )
+        
     }
 }
 
 ```
 
-This contract implements a simple voting mechanism where an `Administrator` can initialize a vote with an array of proposals to vote on by using the `initializeProposals` function.
+Now is your chance to write some of your own Cadence code!
+See if you can follow the instructions in the comments of the contract
+to write your own approval voting contract.
+Instructions for transactions are also included in the sample transactions.
+Once you're done, share your project with the Flow community in the Flow discord! :)
 
-```cadence
-// function to initialize all the proposals for the voting
-access(all)
-fun initializeProposals(_ proposals: [String]) {
-    pre {
-        ApprovalVoting.proposals.length == 0: "Proposals can only be initialized once"
-        proposals.length > 0: "Cannot initialize with no proposals"
-    }
-    ApprovalVoting.proposals = proposals
+## Deploy the Contract
 
-    // Set each tally of votes to zero
-    var i = 0
-    while i < proposals.length {
-        ApprovalVoting.votes[i] = 0
-        i = i + 1
-    }
-}
-```
+<Callout type="info">
+1. In the bottom right deployment modal, press the arrow to expand and make sure account `0x06` is selected as the signer.<br/>
+2. Click the Deploy button to deploy it to account `0x06`
 
-Then they can give `Ballot` resources to other accounts. The other accounts can record their votes on their `Ballot` resource by calling the `vote` function.
-
-```cadence
-access(all)
-fun vote(proposal: Int) {
-    pre {
-        self.proposals[proposal] != nil: "Cannot vote for a proposal that doesn't exist"
-    }
-    self.choices[proposal] = true
-}
-```
-
-After a user has voted, they submit their vote to the central smart contract by calling the `cast` function, which records the votes in the `Ballot` and destroys the used `Ballot`.
-
-```cadence
-// A user moves their ballot to this function in the contract where
-// its votes are tallied and the ballot is destroyed
-access(all)
-fun cast(ballot: @Ballot) {
-    var index = 0
-    // look through the ballot
-    while index < self.proposals.length {
-        if ballot.choices[index]! {
-            // tally the vote if it is approved
-            self.votes[index] = self.votes[index]! + 1
-        }
-        index = index + 1;
-    }
-    // Destroy the ballot because it has been tallied
-    destroy ballot
-}
-```
-
-When the voting time ends, the administrator can read the tallies for each proposal to see if a proposal has received the right number of votes.
+</Callout>
 
 ## Perform Voting
 
@@ -265,38 +148,40 @@ Performing the common actions in this voting contract only takes three types of 
 2. Send `Ballot` to a voter
 3. Cast Vote
 
-We have a transaction for each step that we provide for you. With the `ApprovalVoting` contract to account `0x06`:
+We have a transaction for each step that we provide a skeleton of for you.
+With the `ApprovalVoting` contract deployed to account `0x06`:
 
 <Callout type="info">
 
-1. Open Transaction 1 which should have `Transaction1.cdc`<br/>
+1. Open Transaction 1 which should have `Create Proposals`<br/>
 2. Submit the transaction with account `0x06` selected as the only signer.
 
 </Callout>
 
-```cadence Transaction1.cdc
+```cadence CreateProposals.cdc
 import ApprovalVoting from 0x06
 
 // This transaction allows the administrator of the Voting contract
 // to create new proposals for voting and save them to the smart contract
 
 transaction {
-    prepare(admin: AuthAccount) {
+    // Fill in auth() with the correct entitlements you need!
+    prepare(admin: auth()) {
 
         // borrow a reference to the admin Resource
-        let adminRef = admin.storage.borrow<&ApprovalVoting.Administrator>(from: /storage/VotingAdmin)!
+        // remember to use descriptive error messages!
 
         // Call the initializeProposals function
         // to create the proposals array as an array of strings
-        adminRef.initializeProposals(
-            ["Longer Shot Clock", "Trampolines instead of hardwood floors"]
-        )
+        // Maybe we could create two proposals for the local basketball league:
+        // ["Longer Shot Clock", "Trampolines instead of hardwood floors"]
 
-        log("Proposals Initialized!")
+        // Issue and public a public capability to the Administrator resource
+        // so that voters can get their ballots!
     }
 
     post {
-        ApprovalVoting.proposals.length == 2
+        // Verify that the proposals were initialized properly
     }
 
 }
@@ -307,99 +192,97 @@ We use the `post` block to ensure that there were two proposals created, like we
 
 Next, the `Administrator` needs to hand out `Ballot`s to the voters. There isn't an easy `deposit` function this time for them to send a `Ballot` to another account, so how would they do it?
 
-This is where multi-signed transactions can come in handy!
+## Putting Resource Creation in public capabilities
 
-## Selecting multiple Accounts as Signers
+Unlike our other tutorial contracts, the Approval Voting contract
+puts its Ballot creation function in a resource instead of as a public function in a contract.
+This way, the admin can control who can and cannot create a Ballot resource.
+There are also ways to consolidate all of the voting logic into the Admin resource
+so that there can be multiple sets of proposals being voted on at the same time
+without having to deploy a new contract for each one!
 
-A transaction has access to the private account objects of every account that signed it, so if both the admin and the voter sign a transaction, the admin can directly move a `Ballot` resource object to the other account's storage.
-
-In the Flow playground, you can select multiple accounts to sign a transaction to be able to access the private account objects of both accounts.
-
-To select multiple signers, you first need to include two arguments in the `prepare` block of your transaction:
-
-`prepare(acct1: AuthAccount, acct2: AuthAccount)`
-
-The playground will give you an error if the number of selected signers is different than the number of arguments to the prepare block. The playground also maps the accounts you select as signers to the arguments in the order that you select them. The first account you select will be the first argument, and the second account you select is the second argument.
+Here, we're just exposing the create ballot function through a public capability
+for simplicity, so lets use the transaction for a voter to create a ballot.
 
 <Callout type="info">
 
-1. Open Transaction 2 which should have `Transaction2.cdc`.<br/>
-2. Select account `0x06` as a signer first, then also select account `0x07`.<br/>
+1. Open the `Create Ballot` transaction.<br/>
+2. Select account `0x07` as a signer.<br/>
 3. Submit the transaction by clicking the `Send` button
 
 </Callout>
 
-```cadence Transaction2.cdc
+```cadence CreateBallot.cdc
 
 import ApprovalVoting from 0x06
 
-// This transaction allows the administrator of the Voting contract
-// to create a new ballot and store it in a voter's account
-// The voter and the administrator have to both sign the transaction
-// so it can access their storage
+// This transaction allows a user
+// to create a new ballot and store it in their account
+// by calling the public function on the Admin resource
+// through its public capability
 
 transaction {
-    prepare(admin: AuthAccount, voter: AuthAccount) {
+    // fill in the correct entitlements!
+    prepare(voter: auth() &Account) {
 
-        // borrow a reference to the admin Resource
-        let adminRef = admin.storage.borrow<&ApprovalVoting.Administrator>(from: /storage/VotingAdmin)!
+        // Get the administrator's public account object
+        // and borrow a reference to their Administrator resource
 
         // create a new Ballot by calling the issueBallot
         // function of the admin Reference
-        let ballot <- adminRef.issueBallot()
 
         // store that ballot in the voter's account storage
-        voter.storage.save(<-ballot, to: /storage/Ballot)
-
-        log("Ballot transferred to voter")
     }
 }
 
 ```
 
-This transaction has two signers as `prepare` parameters, so it is able to access both of their private `AuthAccount` objects, and therefore their private account storage.
-
-Because of this, we can perform a direct transfer of the `Ballot` by creating it with the admin's `issueBallot` function and then directly store it in the voter's storage by using the `save` function.
-
-Account `0x07` should now have a `Ballot` resource object in its account storage. You can confirm this by selecting `0x07` from the lower-left sidebar and seeing `Ballot` resource listed under the `Storage` field.
+After this transaction, account `0x07` should now have a `Ballot` resource
+object in its account storage. You can confirm this by selecting `0x07`
+from the lower-left sidebar and seeing `Ballot` resource listed under the `Storage` field.
 
 ## Casting a Vote
 
-Now that account `0x07` has a `Ballot` in their storage, they can cast their vote. To do this, they will call the `vote` method on their stored resource, then cast that `Ballot` by passing it to the `cast` function in the main smart contract.
+Now that account `0x07` has a `Ballot` in their storage, they can cast their vote.
+To do this, they will call the `vote` method on their stored resource,
+then cast that `Ballot` by passing it to the `cast` function in the main smart contract.
 
 <Callout type="info">
 
-1. Open Transaction 3 which should contain `Transaction3.cdc`.<br/>
+1. Open the `Cast Ballot` transaction.<br/>
 2. Select account `0x07` as the only transaction signer.<br/>
 3. Click the `send` button to submit the transaction.
 
 </Callout>
 
-```cadence Transaction3.cdc
+```cadence CastBallot.cdc
 import ApprovalVoting from 0x06
 
 // This transaction allows a voter to select the votes they would like to make
-// and cast that vote by using the castVote function
+// and cast that vote by using the cast vote function
 // of the ApprovalVoting smart contract
 
 transaction {
-    prepare(voter: AuthAccount) {
+    // fill in the correct entitlements!
+    prepare(voter: auth() &Account) {
 
-        // take the voter's ballot our of storage
-        let ballot <- voter.storage.load<@ApprovalVoting.Ballot>(from: /storage/Ballot)!
-
+        // Borrow a reference to the Ballot resource in the Voter's storage
+        
         // Vote on the proposal
-        ballot.vote(proposal: 1)
+
+        // Issue a capability to the Ballot resource in the voter's storage
 
         // Cast the vote by submitting it to the smart contract
-        ApprovalVoting.cast(ballot: <-ballot)
+    }
 
-        log("Vote cast and tallied")
+    post {
+        // verify that the votes were cast properly
     }
 }
 ```
 
-In this transaction, the user votes for one of the proposals, and then moves their Ballot back to the smart contract via the `cast()` method where the vote is tallied.
+In this transaction, the user votes for one of the proposals by submitting
+their votes on their own ballot and then sending the capability.
 
 ## Reading the result of the vote
 
@@ -407,47 +290,35 @@ At any time, anyone could read the current tally of votes by directly reading th
 
 <Callout type="info">
 
-1. Open a Script 1 which should contain the code below.<br/>
+1. Open the `Get Votes` script.<br/>
 2. Click the `execute` button to run the script.
 
 </Callout>
 
-```cadence Script1.cdc
+```cadence GetVotes.cdc
 import ApprovalVoting from 0x06
 
 // This script allows anyone to read the tallied votes for each proposal
 //
 
-access(all)
-fun main() {
+// Fill in a return type that can properly represent the number of votes
+// for each proposal
+// This might need a custom struct to represent the data
+access(all) fun main(): {
 
-    // Access the public fields of the contract to log
+    // Access the public fields of the contract to get
     // the proposal names and vote counts
 
-    log("Number of Votes for Proposal 1:")
-    log(ApprovalVoting.proposals[0])
-    log(ApprovalVoting.votes[0])
-
-    log("Number of Votes for Proposal 2:")
-    log(ApprovalVoting.proposals[1])
-    log(ApprovalVoting.votes[1])
+    // return them to the calling context
 
 }
 ```
 
-You should see something like this print:
-
-```
-"Number of Votes for Proposal 1:"
-"Longer Shot Clock"
-0
-"Number of Votes for Proposal 2:"
-"Trampolines instead of hardwood floors"
-1
-```
-
-This shows that one vote was cast for proposal 1 and no votes were cast for proposal 2.
+The return type should reflect the number of votes that were cast for each proposal
+with the `Cast Vote` transaction.
 
 ## Other Voting possibilities
 
-This contract was a very simple example of voting in Cadence. It clearly couldn't be used for a real-world voting situation, but hopefully you can see what kind of features could be added to it to ensure practicality and security.
+This contract was a very simple example of voting in Cadence.
+It clearly couldn't be used for a real-world voting situation,
+but hopefully you can see what kind of features could be added to it to ensure practicality and security.

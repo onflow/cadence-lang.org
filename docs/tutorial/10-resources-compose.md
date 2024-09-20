@@ -6,37 +6,16 @@ In this tutorial, we're going to walk through how resources can own other resour
 
 ---
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <a
-    href="https://play.onflow.org/01f812d7-799a-42fd-b9cb-9ffe556e02ad"
-    target="_blank"
-  >
-    https://play.onflow.org/01f812d7-799a-42fd-b9cb-9ffe556e02ad
-  </a>
-  The tutorial will be asking you do take various actions to interact with this code.
-</Callout>
-
 <Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
-</Callout>
-
-<Callout type="info">
-Instructions that require you to take action are always included in a callout box like this one.
-These highlighted actions are all that you need to do to get your code running,
-but reading the rest is necessary to understand the language's design.
+This tutorial just includes example code. It does not have an associated playground project.
+You are still welcome to copy this code and paste it to the playground to test it out though!
 </Callout>
 
 Resources owning other resources is a powerful feature in the world of blockchain and smart contracts.
-To showcase how this feature works on Flow, this tutorial will take you through these steps with a composable NFT:
 
-1. Deploy the `Kitty` and `KittyHat` definitions to account `0x06`
-2. Create a `Kitty` and two `KittyHat`s and store them in your account
-3. Move the Kitties and Hats around to see how composable NFTs function on Flow
-
-**Before proceeding with this tutorial**, we recommend following the instructions in [Getting Started](./01-first-steps.md)
-and [Hello, World!](./02-hello-world.md) to learn about the Playground and Cadence.
+**Before proceeding with this tutorial**, we recommend following the instructions in [Getting Started](./01-first-steps.md), 
+[Hello, World!](./02-hello-world.md),
+and [Resources](./03-resources.md) to learn about the Playground and Cadence.
 
 
 ## Resources Owning Resources
@@ -68,19 +47,6 @@ Even though the original contract didn't include specific support for CryptoKitt
 
 Here is a basic example of how we can replicate this feature in Cadence:
 
-
-<Callout type="info">
-
-1. Open Contract 1, the `KittyVerse.cdc` contract<br/>
-2. In the bottom right deployment modal, press the arrow to expand and make sure account `0x06` is selected as the signer.<br/>
-3. Click the Deploy button to deploy the contract to account `0x06`
-
-</Callout>
-
-![Deploy KittyVerse to account 0x06](deploy_kittyverse.png)
-
-The deployed contract should have the following contents:
-
 ```cadence KittyVerse.cdc
 // KittyVerse.cdc
 //
@@ -96,18 +62,14 @@ The deployed contract should have the following contents:
 // support even more powerful versions of this.
 //
 
-access(all)
-contract KittyVerse {
+access(all) contract KittyVerse {
 
     // KittyHat is a special resource type that represents a hat
-    access(all)
-    resource KittyHat {
+    access(all) resource KittyHat {
 
-        access(all)
-        let id: Int
+        access(all) let id: Int
         
-        access(all)
-        let name: String
+        access(all) let name: String
 
         init(id: Int, name: String) {
             self.id = id
@@ -115,8 +77,7 @@ contract KittyVerse {
         }
 
         // An example of a function someone might put in their hat resource
-        access(all)
-        fun tipHat(): String {
+        access(all) fun tipHat(): String {
             if self.name == "Cowboy Hat" {
                 return "Howdy Y'all"
             } else if self.name == "Top Hat" {
@@ -128,54 +89,44 @@ contract KittyVerse {
     }
 
     // Create a new hat
-    access(all)
-    fun createHat(id: Int, name: String): @KittyHat {
+    access(all) fun createHat(id: Int, name: String): @KittyHat {
         return <-create KittyHat(id: id, name: name)
     }
 
-    access(all)
-    resource Kitty {
+    access(all) resource Kitty {
 
-        access(all)
-        let id: Int
+        access(all) let id: Int
 
         // place where the Kitty hats are stored
-        access(all)
-        var items: @{String: KittyHat}
+        access(all) var items: @{String: KittyHat}
 
         init(newID: Int) {
             self.id = newID
             self.items <- {}
         }
 
-        access(all)
-        fun getKittyItems(): @{String: KittyHat} {
+        access(all) fun getKittyItems(): @{String: KittyHat} {
             var other: @{String:KittyHat} <- {}
             self.items <-> other
             return <- other
         }
 
-        access(all)
-        fun setKittyItems(items: @{String: KittyHat}) {
+        access(all) fun setKittyItems(items: @{String: KittyHat}) {
             var other <- items
             self.items <-> other
             destroy other
         }
 
-        access(all)
-        fun removeKittyItem(key: String): @KittyHat? {
+        access(all) fun removeKittyItem(key: String): @KittyHat? {
             var removed <- self.items.remove(key: key)
             return <- removed
         }
     }
 
-    access(all)
-    fun createKitty(): @Kitty {
+    access(all) fun createKitty(): @Kitty {
         return <-create Kitty(newID: 1)
     }
-
 }
-
 ```
 
 These definitions show how a Kitty resource could own hats.
@@ -184,27 +135,20 @@ The hats are stored in a variable in the Kitty resource.
 
 ```cadence
     // place where the Kitty hats are stored
-    access(all)
-    var items: <-{String: KittyHat}
+    access(all) var items: @{String: KittyHat}
 ```
 
 A Kitty owner can take the hats off the Kitty and transfer them individually. Or the owner can transfer a Kitty that owns a hat, and the hat will go along with the Kitty.
 
 Here is a transaction to create a `Kitty` and a `KittyHat`, store the hat in the Kitty, then store it in your account storage.
 
-1. Open `Transaction1.cdc`.
-1. Select account `0x06` as the only signer.
-1. Send the transaction by clicking the Send button.
-
-The transaction you sent just executed the following code:
-
-```cadence Transaction1.cdc
+```cadence create_kitty.cdc
 import KittyVerse from 0x06
 
 // This transaction creates a new kitty, creates two new hats and
 // puts the hats on the cat. Then it stores the kitty in account storage.
 transaction {
-    prepare(acct: AuthAccount) {
+    prepare(acct: auth(Storage) &Account) {
 
         // Create the Kitty object
         let kitty <- KittyVerse.createKitty()
@@ -231,32 +175,15 @@ transaction {
 }
 ```
 
-You should see an output that looks something like this:
-
-```
-> "The Cat has the Hats"
-```
-
 Now we can run a transaction to move the Kitty along with its hat, remove the cowboy hat from the Kitty, then make the Kitty tip its hat.
 
-
-<Callout type="info">
-
-1. Open `Transaction2.cdc`.<br/>
-2. Select account `0x06` as the only signer.<br/>
-3. Send the transaction.
-
-</Callout>
-
-In this transaction, we executed the following code:
-
-```cadence Transaction2.cdc
+```cadence tip_hat.cdc
 import KittyVerse from 0x06
 
 // This transaction moves a kitty out of storage, takes the cowboy hat off of the kitty,
 // calls its tip hat function, and then moves it back into storage.
 transaction {
-    prepare(acct: AuthAccount) {
+    prepare(acct: auth(Storage) &Account) {
 
         // Move the Kitty out of storage, which also moves its hat along with it
         let kitty <- acct.storage.load<@KittyVerse.Kitty>(from: /storage/kitty)
@@ -280,7 +207,7 @@ transaction {
 }
 ```
 
-You should see something like this output:
+If you were to run this transaction, you should see something like this output:
 
 ```
 > "Howdy Y'all"
@@ -293,6 +220,13 @@ Whenever the Kitty is moved, its hats are implicitly moved along with it. This i
 
 ---
 
-The above is a simple example of composable resources. We had to explicitly say that a Kitty could own a Hat in this example, but in the near future, Cadence will support more powerful ways of achieving resource extensibility where developers can declare types that separate resources can own even if the owning resource never specified the ownership possibility in the first place. This is a very complex problem to solve in a safe way, and the Flow community is working very hard to design a solution for this, but it is coming.
+The above is a simple example of composable resources.
+We had to explicitly say that a Kitty could own a Hat in this example,
+but Cadence now supports more powerful ways of achieving resource extensibility
+where developers can declare types that separate resources can own
+even if the owning resource never specified the ownership possibility in the first place.
+
+This feature is called [Attachments](https://cadence-lang.org/docs/language/attachments)
+and you should check out the documentation to learn about this powerful feature!
 
 Practice what you're learned in the Flow Playground!

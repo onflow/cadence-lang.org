@@ -1688,7 +1688,7 @@ resource SubResource {
 
 resource R {
   let subR: @SubResource
-  
+
   init(id: Int) {
     self.subR <- create SubResource(id: id)
   }
@@ -1713,7 +1713,7 @@ resource SubResource {
 
 resource R {
   let subR: @SubResource
-  
+
   init(id: Int) {
     self.subR <- create SubResource(id: id)
   }

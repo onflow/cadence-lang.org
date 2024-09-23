@@ -6,30 +6,24 @@ sidebar_label: Core Contracts Guide
 
 ## Protocol Smart Contracts in Cadence 1.0
 
-In 2024, the network will be upgrading to Cadence 1.0.
+On September 4th, 2024 the Flow Mainnet upgraded to Cadence 1.0.
 In addition to many changes to the Cadence programming language and
 the Cadence token standards, the Flow Protocol smart contracts
-are also being updated to be compatible with the changes.
+also updated to be compatible with the changes.
 
-All applications and smart contracts that interact with these contracts
-will need to update their transactions and scripts in order to be compatible with the changes.
+All applications that interact with these contracts need to update their transactions and scripts
+in order to be compatible with the changes.
 
 ## Important Info
 
-This document assumes you have a basic understanding of the [Cadence 1.0 updates](https://forum.flow.com/t/update-on-cadence-1-0/5197) and modifications to the Fungible Token Standard. We encourage you to consult those guides for more details on these changes if you are interested.
+This document assumes you have a basic understanding of the
+[Cadence 1.0 improvements](./improvements.md) and modifications to the Fungible Token Standard.
+We encourage you to consult those guides for more details on these changes if you are interested.
 
-The updated code for the Cadence 1.0 versions of the protocol smart contracts
-is located in the [`stable-cadence` branch of the flow-core-contracts repo](https://github.com/onflow/flow-core-contracts/pull/319).
-Please look at the changes there to understand how the contracts have changed.
-Every contract in the repo is changing.
-
-Please see the latest post in [this forum thread](https://forum.flow.com/t/update-on-cadence-1-0/5197/8)
-to find the latest version of the CLI and emulator that you should be testing with.
-
-It is also important to remember that after you've made your changes to your contracts,
-you will have to stage the upgrades on testnet and mainnet in order for them
-to be upgraded and migrated properly. You can find informaion about how to do that
-here: https://github.com/onflow/contract-updater
+The updated code for the Cadence 1.0 versions of the protocol smart contracts is located in the
+[`master` branch of the flow-core-contracts repo](https://github.com/onflow/flow-core-contracts).
+Please look at the [PR that made the changes](https://github.com/onflow/flow-core-contracts/pull/319)
+to understand how the contracts have changed. Every contract in the repo changed.
 
 Additionally, here are the import addresses
 for all of the important contracts related to the protocol:
@@ -66,5 +60,5 @@ useful to read even if you don't have an NFT contract.
 
 The core contracts do not have any meaningful changes outside of what is required
 to be compatible with Cadence 1.0 and the token standard changes.
-If you have questions about the core contracts changes for Cadence 1.0, please
-reach out to the flow team in discord and we will be happy to help.
+If you have questions about the core contracts changes for Cadence 1.0,
+please reach out to the Flow team in Discord and we will be happy to help.

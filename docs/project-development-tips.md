@@ -16,7 +16,7 @@ They are also the most visible technical parts of any project,
 since users will be querying them for data, building other smart contracts that interact with them,
 and using them as learning materials and templates for future projects.
 Furthermore, when deployed they are publicly available code on the blockchain
-and often also in public Github repos.
+and often also in public GitHub repos.
 
 Therefore, the process around designing, building, testing, documenting,
 and managing these projects needs to reflect the critical importance they hold in the ecosystem.
@@ -37,11 +37,11 @@ encouraging other projects in the ecosystem to do the same which creates a healt
 and more vibrant community.
 
 Ensuring appropriate levels of testing results in better smart contracts which have
-pro-actively modeled threats and engineered against them. Ensuring appropriate levels 
-of standards adoption ([FungibleToken](https://github.com/onflow/flow-ft), [NFT StoreFront](https://github.com/onflow/nft-storefront), etc) by dapp 
-builders amplifies the network effects for all in the ecosystem. NFTs in one dapp can be 
-readily consumed by other dapps through on-chain events with no new integration 
-required. With your help and participation we can further accelerate healthy and vibrant 
+pro-actively modeled threats and engineered against them. Ensuring appropriate levels
+of standards adoption ([FungibleToken](https://github.com/onflow/flow-ft), [NFT StoreFront](https://github.com/onflow/nft-storefront), etc) by dapp
+builders amplifies the network effects for all in the ecosystem. NFTs in one dapp can be
+readily consumed by other dapps through on-chain events with no new integration
+required. With your help and participation we can further accelerate healthy and vibrant
 network effects across the Flow ecosystem!
 
 Some of these suggestions might seem somewhat unnecessary,
@@ -100,7 +100,7 @@ that needs to be handled with a bespoke transaction, it is important that the ow
 knows how to build and run transactions and scripts safely to address the issues
 and/or upgrade the smart contracts.
 
-The project should also have a clear plan of succession in case the original owner 
+The project should also have a clear plan of succession in case the original owner
 is not available or leaves the project. It is important that there are others who
 can fill in who have a clear understanding of the code and requirements so they can give good feedback,
 perform effective reviews, and make changes where needed.
@@ -131,7 +131,7 @@ and any questions that still need to be answered about it.
 A high level design is a key opportunity to model threats
 and understand the risks of the system. The process of collaborating
 and reviewing designs together helps ensure that more edge-cases are captured and addressed.
-It's also a lot less effort to iterate on a design than on hundreds of lines of Cadence.    
+It's also a lot less effort to iterate on a design than on hundreds of lines of Cadence.
 
 ## Development Process Recommendations
 
@@ -144,12 +144,12 @@ one at a time instead of being overwhelmed by a huge block of code.
 
 ### Comments and field/function descriptions are essential!
 
-Our experience writing many Cadence smart contracts has taught us how important documentation 
-is. It especially matters what is documented and for whom, and in that way we are no different from 
-any software language. The Why is super important, if for example something - an event - that 
-happens in one contract leads to outcomes in a different contract. The What helps give context, 
-the reason for the code turning out the way it is. The How, you don't document - you've written 
-the code. Comments should be directed to those who will follow after you in changing the code. 
+Our experience writing many Cadence smart contracts has taught us how important documentation
+is. It especially matters what is documented and for whom, and in that way we are no different from
+any software language. The Why is super important, if for example something - an event - that
+happens in one contract leads to outcomes in a different contract. The What helps give context,
+the reason for the code turning out the way it is. The How, you don't document - you've written
+the code. Comments should be directed to those who will follow after you in changing the code.
 
 Comments should be written at the same time (or even before) the code is written.
 This helps the developer and reviewers understand the work-in-progress code better,
@@ -167,7 +167,7 @@ Regular comments within functions should only use two slashes (`//`)
 
 ## Testing Recommendations
 
-Summarized below is a list of testing related recommendations 
+Summarized below is a list of testing related recommendations
 which are noteworthy to mention for a typical smart contract project.
 
 Popular testing frameworks to use for cadence are listed here:
@@ -187,7 +187,7 @@ Every time there is a new Cadence version or emulator version,
 the dependencies of the repo should be updated to make sure the tests are all still passing.
 
 Tests should avoid being monolithic;
-Individual test cases should be set up for each part of the contract to test them in isolation. 
+Individual test cases should be set up for each part of the contract to test them in isolation.
 See the [`FlowEpoch` smart contract tests](https://github.com/onflow/flow-core-contracts/blob/master/lib/go/test/flow_epoch_test.go)
 for examples written in Go where test cases are split
 into separate blocks for different features.
@@ -238,7 +238,7 @@ Encouraging adoption of project contracts to the broader ecosystem
 raises the bar around code providing clear high-level descriptions,
 with detailed and useful comments within contracts, transactions, and scripts.
 The more that a project can be understood, that it adheres to standards,
-and can be built upon with ease, the more likely others will build against it in turn. 
+and can be built upon with ease, the more likely others will build against it in turn.
 
 Each project should have a detailed `README.md` with these sections:
     - Explanation of the project itself with links to the app
@@ -249,7 +249,7 @@ Each project should have a detailed `README.md` with these sections:
     - Flow smart contract standards that a project implements
 
 Additionally, each contract, transaction, and script should have high-level descriptions
-at the top of their files. This way, anyone in the community can easily 
+at the top of their files. This way, anyone in the community can easily
 come in and understand what each one is doing without having to parse confusing code.
 
 ### Projects should engage with and respond to their own Community

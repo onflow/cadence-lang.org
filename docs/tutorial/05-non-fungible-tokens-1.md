@@ -72,7 +72,7 @@ for the sake of simplicity and learning.
 
 After completing the NFT tutorials, readers should visit
 [the NFT Guide](https://developers.flow.com/build/guides/nft) and
-[the NFT standard github repository](https://github.com/onflow/flow-nft)
+[the NFT standard GitHub repository](https://github.com/onflow/flow-nft)
 to learn how full, production-ready NFTs are created.
 
 To get you comfortable using NFTs, this tutorial will teach you to:
@@ -220,7 +220,7 @@ init() {
 
 All composite types like contracts, resources,
 and structs can have an optional initializer that only runs when the object is initially created.
-Cadence requires that all fields in a composite type must be explicitly initialized, 
+Cadence requires that all fields in a composite type must be explicitly initialized,
 so if the object has any fields, this function has to be used to initialize them.
 
 Contracts also have read and write access to the storage of the account that they are deployed to

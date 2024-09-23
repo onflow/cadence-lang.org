@@ -57,7 +57,7 @@ but with some special rules.
 Here is an example definition of a resource:
 ```cadence
 access(all) resource Money {
-  
+
   access(all) let balance: Int
 
   init() {
@@ -97,7 +97,7 @@ To interact with resources, you'll learn a few important concepts:
 Let's start by looking at how to create a resource with the `create` keyword and the move operator `<-`.
 
 You use the `create` keyword used to initialize a resource.
-Resources can only be created by the contract that defines them and 
+Resources can only be created by the contract that defines them and
 **must** be created before they can be used.
 
 The move operator `<-` is used to move a resource into a variable.
@@ -449,7 +449,7 @@ transaction {
 
     /// In this prepare block, we have to load a value from storage
     /// in addition to saving it, so we also need the `LoadValue` entitlement
-    /// which additionally allows loading values from storage 
+    /// which additionally allows loading values from storage
     prepare(acct: auth(LoadValue, SaveValue) &Account) {
 
         // Load the resource from storage, specifying the type to load it as
@@ -517,7 +517,7 @@ We use the nil-coalescing operator (`??`) to "unwrap" the optional.
 This basically means that we are handling the case where the `load` method returns `nil`.
 If it returns `nil`, the block of code after `??` executes.
 Here, we `panic`, which will abort execution of the transaction
-with an error message. 
+with an error message.
 
 Refer to [Optionals In Cadence](../language/values-and-types.mdx#optionals) to learn more about optionals and how they are used.
 
@@ -539,7 +539,7 @@ transaction to store the resource.
 
 Check out the error messages in the [contracts](https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121)
 and [transactions](https://github.com/onflow/flow-nft/blob/master/transactions/generic_transfer_with_address_and_type.cdc#L46-L50)
-in the Flow NFT github repo for examples of thorough and helpful error messages.
+in the Flow NFT GitHub repo for examples of thorough and helpful error messages.
 
 #### Calls the `hello()` function
 

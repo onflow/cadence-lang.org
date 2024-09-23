@@ -75,7 +75,7 @@ which defines a basic set of properties for NFTs on Flow.
 This tutorial, will teach you a basic method of creating an NFT
 to illustrate important language concepts.
 After completing the NFT tutorials, readers should visit
-[the NFT standard github repository](https://github.com/onflow/flow-nft)
+[the NFT standard GitHub repository](https://github.com/onflow/flow-nft)
 to learn how full, production-ready NFTs are created.
 
 To get you comfortable using NFTs, this tutorial will teach you to:

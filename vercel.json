@@ -25,11 +25,6 @@
     {
       "source": "/docs/1.0/:path*",
       "destination": "/docs/:path*"
-    },
-    {
-      "source": "/docs/cadence-migration-guide/:path*",
-      "destination": "https://flow.com/upgrade/crescendo",
-      "permanent": true
     }
   ]
 }

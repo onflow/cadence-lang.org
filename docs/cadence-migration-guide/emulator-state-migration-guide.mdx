@@ -1,0 +1,105 @@
+---
+title: Migrate Emulator State To Cadence 1.0
+sidebar_label: Emulator State Migration Guide
+description: How to locally test storage migration and staged contract upgrades on Emulator
+sidebar_position: 7
+---
+
+Flow CLI provides a command `flow migrate state` to migrate your local emulator
+state to Cadence 1.0, and to deploy upgraded contracts to the emulator.
+This is useful for locally testing the staged contract upgrades, and to see how the
+new network and the upgraded contracts would behave with the migrated data.
+
+## Migration Guide
+
+To test the migration, first you would need an emulator state, created with an emulator/CLI release
+that uses a pre-1.0 Cadence version.
+
+### Getting the old state
+
+It is recommended to use the latest pre-1.0 CLI version (e.g: `v1.14.*`) for creating the old state.
+This is because the emulator shipped with older CLI versions may not include some of the system contracts
+(e.g: `RandomBeaconHistory` contract) that are included by default in the newer versions of the emulator/CLI.
+Such contracts are required for the migration.
+
+**To get an emulator state with Flow CLI `1.14.0`:**
+
+- Start the emulator with the `--persist` flag.
+
+  ```shell
+  flow emulator --persist
+  ```
+
+- Deploy the pre-1.0 project/contracts to the emulator
+- Run transactions if there are any.
+- Stop the emulator (Ctrl-C on \*nix platforms, and Ctrl-Break or Ctrl-Pause on Windows).
+  **It is important to make sure the emulator is stopped before taking the snapshot,
+  so that any pending in-memory data would be written to the persisted state properly.**
+- Locate the persisted state `./flowdb/emulator.sqlite` file, from the project root.
+
+### Migrating the state
+
+#### Download and install CLI
+
+Download and install the latest CLI, that runs Cadence 1.0, by running the below command.
+
+- Linux/macOS
+
+  ```shell
+  sudo sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
+  ```
+
+- Windows (in PowerShell):
+  ```shell
+  iex "& { $(irm 'https://raw.githubusercontent.com/onflow/flow-cli/master/install.ps1') }"
+  ```
+
+The Cadence 1.0 CLI will now be available on your system as `flow-c1`.
+You can interact with this CLI using this command, i.e.
+
+```shell
+flow-c1 help
+```
+
+_Note: Any existing previous Flow CLI installation will still remain available via the `flow` command._
+
+#### Run migration
+
+- Run `flow-c1 migrate` against the previously created state.
+
+- The state file (`emulator.sqlite`) can be provided using the `--db-path` flag.
+
+- If there are any contracts that also need to be upgraded, those can be specified using the `--contracts` flag.
+  **Note that, the paths to these updated contracts and their deployed addresses must be specified in the `flow.json` file.**
+  For example, assuming the contract was deployed in the `test` account in the emulator,
+  and assuming the updated contract is in the `./updated_test_contract.cdc` file, the `flow.json` should include:
+
+  ```json
+  {
+    "contracts": {
+      "Test": "./updated_test_contract.cdc"
+    },
+    "deployments": {
+      "emulator": {
+        "test": ["Test"]
+      }
+    }
+  }
+  ```
+
+- The migration will produce a report consisting of the migration status.
+  This can be enabled by setting the `--save-report` flag.
+
+A sample `migrate` command would look like:
+
+```shell
+flow-c1 migrate state --db-path=/path/to/emulator.sqlite --save-report=./reports --contracts="Test"
+```
+
+### Testing the migrated state
+
+Once the migration completes successfully, the emulator can be started with the migrated state.
+For that, ensure the emulator is started again using the new CLI version (that runs Cadence 1.0),
+with the `--persist` flag.
+Now the emulator should be up and running using the migrated state and the updated contracts.
+Run any transactions to verify the correctness of the existing data.

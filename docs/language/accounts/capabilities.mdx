@@ -81,15 +81,15 @@ that was [published](#publishing-capabilities) before.
 
 ```cadence
 access(all)
-view fun get<T: &Any>(_ path: PublicPath): Capability<T>?
+view fun get<T: &Any>(_ path: PublicPath): Capability<T>
 ```
 
 If the account has a capability with the given type published under the given path,
-the function returns it as an optional.
+the function returns it.
 
 If the account has no capability published under the given path,
-or the requested type, via the type parameter `T`, does not match the published capability,
-the function returns `nil`.
+or if the given type is not a supertype of the capability's borrow type,
+the function returns an "invalid" capability with ID 0 that will always fail to `check` or `borrow`.
 
 The convenience function `capabilities.borrow` obtains and borrows a public capability
 that was [published](#publishing-capabilities) before, in one step.

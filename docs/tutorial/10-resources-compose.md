@@ -148,7 +148,7 @@ import KittyVerse from 0x06
 // This transaction creates a new kitty, creates two new hats and
 // puts the hats on the cat. Then it stores the kitty in account storage.
 transaction {
-    prepare(acct: auth(Storage) &Account) {
+    prepare(acct: auth(SaveValue) &Account) {
 
         // Create the Kitty object
         let kitty <- KittyVerse.createKitty()

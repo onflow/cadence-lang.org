@@ -89,7 +89,7 @@ transaction {
   // Private reference to this account's minter resource
   let minterRef: &ExampleNFT.NFTMinter
 
-  prepare(acct: auth(SaveValue, Capabilities, BorrowValue) &Account) {
+  prepare(acct: auth(BorrowValue, SaveValue, StorageCapabilities, PublishCapability) &Account) {
     // create a new vault instance
     let vaultA <- ExampleToken.createEmptyVault()
 

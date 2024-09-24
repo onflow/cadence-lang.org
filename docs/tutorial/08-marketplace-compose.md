@@ -702,7 +702,7 @@ transaction {
     // but the NFT
     let temporaryVault: @ExampleToken.Vault
 
-    prepare(acct: auth(Capabilities, BorrowValue) &Account) {
+    prepare(acct: auth(BorrowValue) &Account) {
 
         // get the references to the buyer's fungible token Vault and NFT Collection Receiver
         self.collectionCapability = acct.capabilities.get<&ExampleNFT.Collection>(ExampleNFT.CollectionPublicPath)

@@ -6,7 +6,7 @@ sidebar_position: 29
 ## Transaction Information
 
 To get the addresses of the signers of a transaction,
-use the `address` field of each signing `AuthAccount`
+use the `address` field of each signing `Account`
 that is passed to the transaction's `prepare` phase.
 
 There is currently no API that allows getting other transaction information.

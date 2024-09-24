@@ -453,20 +453,69 @@ These are basic types like `Int`, `String`, or `StoragePath`.
 
 ```json
 {
-  "kind": "Any" | "AnyStruct" | "AnyResource" | "AnyStructAttachment" | "AnyResourceAttachment" | "Type" |
-    "Void" | "Never" | "Bool" | "String" | "Character" |
-    "Bytes" | "Address" | "Number" | "SignedNumber" |
-    "Integer" | "SignedInteger" | "FixedPoint" |
-    "SignedFixedPoint" | "Int" | "Int8" | "Int16" |
-    "Int32" | "Int64" | "Int128" | "Int256" | "UInt" |
-    "UInt8" | "UInt16" | "UInt32" | "UInt64" | "UInt128" |
-    "UInt256" | "Word8" | "Word16" | "Word32" | "Word64" |
-    "Fix64" | "UFix64" | "Path" | "CapabilityPath" | "StoragePath" |
-    "PublicPath" | "PrivatePath" | "AuthAccount" | "PublicAccount" |
-    "AuthAccount.Keys" | "PublicAccount.Keys" | "AuthAccount.Contracts" |
-    "PublicAccount.Contracts" | "DeployedContract" | "AccountKey" | "Block"
+  "kind": <kind>
 }
 ```
+
+Where `kind` is one of:
+
+- `Account`
+- `AccountCapabilityController`
+- `AccountKey`
+- `Address`
+- `AnyResource`
+- `AnyResourceAttachment`
+- `AnyStruct`
+- `AnyStructAttachment`
+- `Block`
+- `Bool`
+- `Capability`
+- `CapabilityPath`
+- `Character`
+- `DeployedContract`
+- `DeploymentResult`
+- `Fix64`
+- `FixedPoint`
+- `FixedSizeUnsignedInteger`
+- `HashAlgorithm`
+- `HashableStruct`
+- `Int`
+- `Int128`
+- `Int16`
+- `Int256`
+- `Int32`
+- `Int64`
+- `Int8`
+- `Integer`
+- `Never`
+- `Number`
+- `Path`
+- `PrivatePath`
+- `PublicKey`
+- `PublicPath`
+- `SignatureAlgorithm`
+- `SignedFixedPoint`
+- `SignedInteger`
+- `SignedNumber`
+- `StorageCapabilityController`
+- `StoragePath`
+- `String`
+- `Type`
+- `UFix64`
+- `UInt`
+- `UInt128`
+- `UInt16`
+- `UInt256`
+- `UInt32`
+- `UInt64`
+- `UInt8`
+- `Void`
+- `Word128`
+- `Word16`
+- `Word256`
+- `Word32`
+- `Word64`
+- `Word8`
 
 ### Example
 

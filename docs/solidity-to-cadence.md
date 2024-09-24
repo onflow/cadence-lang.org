@@ -317,7 +317,7 @@ transaction(addressAmountMap: {Address: UFix64}) {
     // The Vault resource that holds the tokens that are being transferred
     let vaultRef: &ExampleToken.Vault
 
-    prepare(signer: AuthAccount) {
+    prepare(signer: auth(Storage) &Account) {
 
         // Get a reference to the signer's stored vault
         self.vaultRef = signer.storage.borrow<&ExampleToken.Vault>(from: ExampleToken.VaultStoragePath)

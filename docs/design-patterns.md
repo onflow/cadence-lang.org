@@ -474,3 +474,38 @@ transaction {
     }
 }
 ```
+
+## Capability Revocation
+
+### Problem
+
+A capability provided by one account to a second account must able to be revoked
+by the first account without the co-operation of the second.
+
+### Solution
+
+If the capability is a storage capability:
+
+```cadence
+transaction(capabilityID: UInt64) {
+    prepare(signer: auth(StorageCapabilities) &Account) {
+        let controller = signer.capabilities.storage
+            .getController(byCapabilityID: capabilityID)
+            ?? panic("missing controller")
+        controller.delete()
+    }
+}
+```
+
+If the capability is an account capability:
+
+```cadence
+transaction(capabilityID: UInt64) {
+    prepare(signer: auth(AccountCapabilities) &Account) {
+        let controller = signer.capabilities.account
+            .getController(byCapabilityID: capabilityID)
+            ?? panic("missing controller")
+        controller.delete()
+    }
+}
+```

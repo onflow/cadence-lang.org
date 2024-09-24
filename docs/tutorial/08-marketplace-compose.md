@@ -333,7 +333,7 @@ access(all) contract ExampleMarketplace {
         }
 
         // purchase lets a user send tokens to purchase an NFT that is for sale
-        access(all) fun purchase(tokenID: UInt64, 
+        access(all) fun purchase(tokenID: UInt64,
                                  recipient: Capability<&ExampleNFT.Collection>, buyTokens: @ExampleToken.Vault) {
             pre {
                 self.prices[tokenID] != nil:
@@ -395,7 +395,7 @@ access(all) contract ExampleMarketplace {
     access(all) fun createSaleCollection(
         ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>,
         ownerVault: Capability<&{ExampleToken.Receiver}>
-    ): @SaleCollection 
+    ): @SaleCollection
     {
         return <- create SaleCollection(ownerCollection: ownerCollection, ownerVault: ownerVault)
     }
@@ -485,7 +485,7 @@ Then, users can get that capability from [the public path](../language/accounts/
 borrow it, and access the functionality that the owner specified.
 
 ```cadence
-// Get account 0x06's PublicAccount object
+// Get the account object for address 0x06
 let publicAccount = getAccount(0x06)
 
 // Retrieve a Vault Receiver Capability from the account's public storage

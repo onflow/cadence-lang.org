@@ -54,24 +54,24 @@ contract NamedFields {
 //
 access(all)
 contract NamedFields {
-    
+
     access(all)
     resource Test {}
 
     // GOOD: field storage path
     access(all)
-    let TestStoragePath: StoragePath
+    let testStoragePath: StoragePath
 
     init() {
         // assign and access the field here and in transactions
-        self.TestStoragePath = /storage/testStorage
+        self.testStoragePath = /storage/testStorage
         self.account.storage.save(<-create Test(), to: self.TestStoragePath)
     }
 }
 
 ```
 
-[Example Code](https://github.com/onflow/flow-core-contracts/blob/master/contracts/LockedTokens.cdc#L718)
+[Example Code](https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L779)
 
 ## Script-Accessible public field/function
 
@@ -221,7 +221,7 @@ and deliver them to an address or `&Account` specified as an argument.
 
 See how this is done in the LockedTokens contract initializer:
 
-[LockedTokens.cdc](https://github.com/onflow/flow-core-contracts/blob/master/contracts/LockedTokens.cdc#L718)
+[LockedTokens.cdc](https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L765-L780)
 
 and in the transaction that is used to deploy it:
 
@@ -253,7 +253,7 @@ All fields, functions, types, variables, etc., need to have names that clearly d
 //
 access(all)
 contract Tax {
-    
+
     // Do not use abbreviations unless absolutely necessary
     access(all)
     var pcnt: UFix64

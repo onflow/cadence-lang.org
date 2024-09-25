@@ -112,7 +112,7 @@ The following identifiers are reserved, as they are keywords of the language:
 - `auth`, `access`
 - `self`, `init`
 - `contract`, `event`, `struct`, `resource`, `interface`,
-  `entitlement`, `enum`, `mapping`, `attachment`
+  `entitlement`, `enum`, `mapping`, `attachment`, `result`
 - `transaction`, `prepare`, `execute`
 - `switch`, `case`, `default`
 - `import`, `include`

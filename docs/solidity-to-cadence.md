@@ -169,10 +169,11 @@ protected objects and then making that linked capability available to other acco
 
 Any account can get access to an account's public Capabilities. Public capabilities are created using public paths, i.e.
 they have the domain `public`. For example, all accounts have a default public capability linked to the
-`FlowToken.Vault` Resource. This vault is exposed as a public unentitled capability allowing any account to `borrow()` a
+`FlowToken.Vault` Resource. This vault is exposed as a public [unentitled](../docs/language/access-control.md#entitlements)
+capability allowing any account to `borrow()` a
 reference to the Vault to make a `deposit()`. Since only the unentitled functions defined under the
 [`FungibleToken.Vault`](https://github.com/onflow/flow-ft/blob/master/contracts/FungibleToken.cdc#L167) interface are
-exposed, the borrower of the vault reference cannot call `withdraw()` since the method requires a `Withdraw` entitled
+interface are exposed, the borrower of the vault reference cannot call `withdraw()` since the method requires a `Withdraw` entitled
 reference on the underlying vault.
 
 Accounts can share private capabilities but must be specifically issued by the authorizing account. After
@@ -335,7 +336,9 @@ transaction(addressAmountMap: {Address: UFix64}) {
         // Get a reference to the signer's stored ExampleToken vault
         self.vaultRef = signer.storage.borrow<auth(FungibleToken.Withdraw) &ExampleToken.Vault>(
             from: ExampleToken.VaultStoragePath
-        ) ?? panic("Could not borrow reference to the owner's Vault!")
+       )     ?? panic("The signer does not store an ExampleToken.Vault object at the path "
+                    .concat(ExampleToken.VaultStoragePath.toString())
+                    .concat(". The signer must initialize their account with this vault first!"))
     }
 
     execute {

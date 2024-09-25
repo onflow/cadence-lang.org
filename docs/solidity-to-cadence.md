@@ -436,7 +436,7 @@ To enforce immutability once a contract is tested and ready to deploy, account o
 the account containing the contract.
 
 Detailed information about the cadence upgradeability is available in [Contract
-updatability](./language/contract-updatability.md).
+updatability](./language/contract-updatability).
 
 ## Account key formulation
 

@@ -469,7 +469,10 @@ transaction(receiver: Address, name: String) {
         let capability = signer.capabilities.storage.issue<&BasicNFT.Minter>(BasicNFT.minterPath)
 
         // Set the name as tag so it is easy for us to remember its purpose
-        let controller = signer.capabilities.storage.getController(byCapabilityID: capability.id)!
+        let controller = signer.capabilities.storage.getController(byCapabilityID: capability.id)
+                ?? panic("Cannot get the storage capability controller with ID "
+                    .concat(capabilityID.toString())
+                    .concat(" from the signer's account! Make sure the ID belongs to a capability that the owner controls and that it is a storage capability.")
         controller.setTag(name)
 
         // Publish the capability, so it can be later claimed by the receiver
@@ -486,7 +489,11 @@ transaction(provider: Address, name: String) {
     prepare(signer: auth(ClaimInboxCapability, SaveValue) &Account) {
 
         // Claim the capability from our inbox
-        let capability = signer.inbox.claim<&BasicNFT.Minter>(name, provider: provider)!
+        let capability = signer.inbox.claim<&BasicNFT.Minter>(name, provider: provider)
+                ?? panic("Cannot claim the storage capability controller with name "
+                    .concat(name).concat(" from the provider account (").concat(provider.toString())
+                    .concat("! Make sure the provider address is correct and that they have published "
+                    .concat(" a capability with the desired name.")
 
         // Save the capability to our storage so we can later retrieve and use it
         signer.storage.save(capability, to: BasicNFT.minterPath)

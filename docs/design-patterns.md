@@ -491,7 +491,9 @@ transaction(capabilityID: UInt64) {
     prepare(signer: auth(StorageCapabilities) &Account) {
         let controller = signer.capabilities.storage
             .getController(byCapabilityID: capabilityID)
-            ?? panic("missing controller")
+            ?? panic("Cannot get the storage capability controller with ID "
+                    .concat(capabilityID.toString())
+                    .concat(" from the signer's account! Make sure the ID belongs to a capability that the owner controls and that it is a storage capability.")
         controller.delete()
     }
 }
@@ -504,7 +506,9 @@ transaction(capabilityID: UInt64) {
     prepare(signer: auth(AccountCapabilities) &Account) {
         let controller = signer.capabilities.account
             .getController(byCapabilityID: capabilityID)
-            ?? panic("missing controller")
+            ?? panic("Cannot get the account capability controller with ID "
+                    .concat(capabilityID.toString())
+                    .concat(" from the signer's account! Make sure the ID belongs to a capability that the owner controls and that it is an account capability.")
         controller.delete()
     }
 }

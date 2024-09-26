@@ -280,9 +280,9 @@ Instead, use a swap statement to replace the resource with another resource.
 
 ```cadence
 let child <- create Child(name: "Child 1")
-let parent <- create Parent(name: "Parent", child: <-child)
-
 child.name  // is "Child 1"
+
+let parent <- create Parent(name: "Parent", child: <-child)
 parent.child.name  // is "Child 1"
 
 // Invalid: Cannot move resource out of variable resource field.

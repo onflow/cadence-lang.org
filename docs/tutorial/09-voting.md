@@ -6,22 +6,26 @@ In this tutorial, we're going to deploy a contract that allows users to vote on 
 
 ---
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <a
-    href="https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff"
-    target="_blank"
-  >
-    https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff
-  </a>
-  The tutorial will be asking you to take various actions to interact with this code.
-</Callout>
+:::info
 
-<Callout type="info">
+Open the starter code for this tutorial in the Flow Playground:
+<a
+href="https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff"
+target="_blank"
+>
+https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff
+</a>
+The tutorial will be asking you to take various actions to interact with this code.
+
+:::
+
+:::info[Action]
+
 Instructions that require you to take action are always included in a callout box like this one.
 These highlighted actions are all that you need to do to get your code running,
 but reading the rest is necessary to understand the language's design.
-</Callout>
+
+:::
 
 With the advent of blockchain technology and smart contracts,
 it has become popular to try to create decentralized voting mechanisms that allow large groups of users to vote completely on chain.
@@ -53,11 +57,11 @@ inherent to resources.
 
 Time to see the contract we'll be working with:
 
-<Callout type="info">
+:::info[Action]
 
-1. Open Contract 1 - the `ApprovalVoting` contract.<br/>
+1. Open Contract 1 - the `ApprovalVoting` contract.
 
-</Callout>
+:::
 
 The contract should have the following contents:
 
@@ -134,11 +138,12 @@ Once you're done, share your project with the Flow community in the Flow discord
 
 ## Deploy the Contract
 
-<Callout type="info">
-1. In the bottom right deployment modal, press the arrow to expand and make sure account `0x06` is selected as the signer.<br/>
+:::info[Action]
+
+1. In the bottom right deployment modal, press the arrow to expand and make sure account `0x06` is selected as the signer.
 2. Click the Deploy button to deploy it to account `0x06`
 
-</Callout>
+:::
 
 ## Perform Voting
 
@@ -151,12 +156,12 @@ Performing the common actions in this voting contract only takes three types of 
 We have a transaction for each step that we provide a skeleton of for you.
 With the `ApprovalVoting` contract deployed to account `0x06`:
 
-<Callout type="info">
+:::info[Action]
 
-1. Open Transaction 1 which should have `Create Proposals`<br/>
+1. Open Transaction 1 which should have `Create Proposals`
 2. Submit the transaction with account `0x06` selected as the only signer.
 
-</Callout>
+:::
 
 ```cadence CreateProposals.cdc
 import ApprovalVoting from 0x06
@@ -204,13 +209,13 @@ without having to deploy a new contract for each one!
 Here, we're just exposing the create ballot function through a public capability
 for simplicity, so lets use the transaction for a voter to create a ballot.
 
-<Callout type="info">
+:::info[Action]
 
-1. Open the `Create Ballot` transaction.<br/>
-2. Select account `0x07` as a signer.<br/>
+1. Open the `Create Ballot` transaction.
+2. Select account `0x07` as a signer.
 3. Submit the transaction by clicking the `Send` button
 
-</Callout>
+:::
 
 ```cadence CreateBallot.cdc
 
@@ -247,13 +252,13 @@ Now that account `0x07` has a `Ballot` in their storage, they can cast their vot
 To do this, they will call the `vote` method on their stored resource,
 then cast that `Ballot` by passing it to the `cast` function in the main smart contract.
 
-<Callout type="info">
+:::info[Action]
 
-1. Open the `Cast Ballot` transaction.<br/>
-2. Select account `0x07` as the only transaction signer.<br/>
+1. Open the `Cast Ballot` transaction.
+2. Select account `0x07` as the only transaction signer.
 3. Click the `send` button to submit the transaction.
 
-</Callout>
+:::
 
 ```cadence CastBallot.cdc
 import ApprovalVoting from 0x06
@@ -288,12 +293,12 @@ their votes on their own ballot and then sending the capability.
 
 At any time, anyone could read the current tally of votes by directly reading the fields of the contract. You can use a script to do that, since it does not need to modify storage.
 
-<Callout type="info">
+:::info[Action]
 
-1. Open the `Get Votes` script.<br/>
+1. Open the `Get Votes` script.
 2. Click the `execute` button to run the script.
 
-</Callout>
+:::
 
 ```cadence GetVotes.cdc
 import ApprovalVoting from 0x06

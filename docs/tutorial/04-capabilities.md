@@ -19,23 +19,28 @@ socialImageTitle: Cadence Resources
 socialImageDescription: Capability smart contract image.
 ---
 ## Overview
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground. It is the same code that was in the previous tutorial: <br />
-  <a
-    href="https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f"
-    target="_blank"
-  >
-    https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f
-  </a>
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+:::tip
+
+Open the starter code for this tutorial in the Flow Playground. It is the same code that was in the previous tutorial: <br />
+<a
+  href="https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f"
+  target="_blank"
+>
+  https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f
+</a>
+The tutorial will ask you to take various actions to interact with this code.
+
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 This tutorial builds on the [previous `Resource` tutorial](./03-resources.md).
 Before beginning this tutorial, you should have an idea of
@@ -86,12 +91,12 @@ In this tutorial, you will:
 Before following this tutorial, you should have the `HelloWorld` contract deployed in account `0x06`,
 just like in the [previous `Resource` contract tutorial](./03-resources.md).
 
-<Callout type="info">
+:::info[Action]
 
-Open the Account `0x06` tab with file named `HelloWorldResource.cdc`. <br />
+Open the Account `0x06` tab with file named `HelloWorldResource.cdc`. 
 `HelloWorldResource.cdc` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence HelloWorldResource-2.cdc
 access(all) contract HelloWorld {
@@ -114,17 +119,17 @@ access(all) contract HelloWorld {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Deploy this code to account `0x06` using the `Deploy` button.
 
-</Callout>
+:::
 
-<Callout type="info">
+:::info[Action]
 
 Click on the `Create Hello` transaction and send it with `0x06` as the signer.
 
-</Callout>
+:::
 
 The contract and transaction above creates and stores the resource we'll be using in this tutorial.
 For a more detailed breakdown of the contract and transactions,
@@ -146,15 +151,13 @@ to the underlying object and call the `hello()` function.
 A detailed explanation of what is happening in this transaction
 is below the transaction code so, if you feel lost, keep reading!
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Create Link`.
 
-<br />
-
 `Create Link` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence create_link.cdc
 import HelloWorld from 0x06
@@ -200,12 +203,13 @@ transaction {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
-Ensure account `0x06` is still selected as a transaction signer. <br />
+Ensure account `0x06` is still selected as a transaction signer.
+
 Click the `Send` button to send the transaction.
 
-</Callout>
+:::
 
 In this transaction, we use the prepare phase to:
 1. Create a capability with the `account.capabilities.storage.issue` method to the stored object `HelloWorld.HelloAsset` from the account path `/storage/HelloAssetTutorial`
@@ -330,15 +334,13 @@ To execute a script, write a function called `access(all) fun main()`.
 You can click the execute script button to run the script.
 The result of the script will be printed to the console output.
 
-<Callout type="info">
+:::info[Action]
 
 Open the file `Get Greeting`.
 
-<br />
-
 `Get Greeting` should look like the following:
 
-</Callout>
+:::
 
 ```cadence get_greeting.cdc
 import HelloWorld from 0x06
@@ -393,11 +395,11 @@ Then, the script uses the reference to call the `hello()` function and returns t
 
 Let's execute the script to see it run correctly.
 
-<Callout type="info">
+:::info[Action]
 
 Click the `Execute` button in the playground.
 
-</Callout>
+:::
 
 <img src="https://storage.googleapis.com/flow-resources/documentation-assets/cadence-tuts/playground-execute.png" />
 

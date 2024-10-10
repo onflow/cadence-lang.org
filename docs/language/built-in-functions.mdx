@@ -61,13 +61,13 @@ and [FLIP120](https://github.com/onflow/flips/pull/120) for more details.
 
 Nevertheless, developers need to be mindful to use `revertibleRandom()` correctly:
 
-<Callout type="warning">
+:::warning
 
 A transaction can atomically revert all its action.
 It is possible for a transaction submitted by an untrusted party
 to post-select favorable results and revert the transaction for unfavorable results.
 
-</Callout>
+:::
 
 The function usage remains safe when called by a trusted party that does not
 perform post-selection on the returned random numbers.

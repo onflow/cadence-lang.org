@@ -264,7 +264,8 @@ then the function aborts the program.
 
 When the update succeeded, the function returns the [deployed contract](#deployed-contract).
 
-<Callout type="info">
+:::warning
+
 The `update` function does **not** run the initializer of the contract again.
 
 Updating a contract does **not** change the contract instance and its existing stored data.
@@ -272,7 +273,8 @@ A contract update only changes the code a contract.
 
 Is only possible to update contracts in ways that keep data consistency.
 [Certain restrictions apply](../contract-updatability.md).
-</Callout>
+
+:::
 
 For example, assuming that a contract named `Test` is already deployed to the account,
 and it should be updated with the following contract code:

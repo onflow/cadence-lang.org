@@ -12,16 +12,18 @@ for an example of a production ready marketplace that you can use right now on t
 
 ---
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <a
-    href="https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645"
-    target="_blank"
-  >
-    https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645
-  </a>
-  The tutorial will be asking you to take various actions to interact with this code.
-</Callout>
+:::info[Action]
+
+Open the starter code for this tutorial in the Flow Playground:
+<a
+  href="https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645"
+  target="_blank"
+>
+  https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645
+</a>
+The tutorial will be asking you to take various actions to interact with this code.
+
+:::
 
 If you have already completed the Marketplace tutorial, please move on to [Composable Resources: Kitty Hats](./10-resources-compose.md).
 
@@ -31,11 +33,13 @@ to allow users to buy and sell NFTs with fungible tokens.
 
 ---
 
-<Callout type="info">
-  Some of the code in these setup instructions has intentional errors built into it.
-  You should understand enough about Cadence to be able to fix these tutorials on your own.
-  All of the errors involve concepts that you have learned in previous tutorials
-</Callout>
+:::info[Action]
+
+Some of the code in these setup instructions has intentional errors built into it.
+You should understand enough about Cadence to be able to fix these tutorials on your own.
+All of the errors involve concepts that you have learned in previous tutorials
+
+:::
 
 1. Open the `ExampleToken` contract. This is the same contract from the fungible token tutorial.
 2. Deploy the `ExampleToken` code to account `0x06`.

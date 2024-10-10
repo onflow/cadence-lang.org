@@ -6,10 +6,12 @@ In this tutorial, we're going to walk through how resources can own other resour
 
 ---
 
-<Callout type="info">
+:::info[Action]
+
 This tutorial just includes example code. It does not have an associated playground project.
 You are still welcome to copy this code and paste it to the playground to test it out though!
-</Callout>
+
+:::
 
 Resources owning other resources is a powerful feature in the world of blockchain and smart contracts.
 

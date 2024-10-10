@@ -184,11 +184,11 @@ For public access to a capability, place it in an accounts public area so this e
 
 ## Array or dictionary fields should be private
 
-<Callout type="info">
+:::tip
 
 This anti-pattern has been addressed with [FLIP #703](https://github.com/onflow/flips/blob/main/cadence/20211129-cadence-mutability-restrictions.md)
 
-</Callout>
+:::
 
 ### Problem
 

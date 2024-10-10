@@ -26,24 +26,28 @@ In this tutorial, we're going to deploy, store, and transfer fungible tokens.
 
 ---
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <br />
-  <a
-    href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
-    target="_blank"
-  >
-    https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
-  </a>
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground:
+
+<a
+href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
+target="_blank"
+>
+https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
+</a>
+The tutorial will ask you to take various actions to interact with this code.
+
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 Some of the most popular contract classes on blockchains today are fungible tokens.
 These contracts create homogeneous tokens that can be transferred to other users and spent as currency (e.g., ERC-20 on Ethereum).
@@ -80,15 +84,17 @@ using a smart contract similar to the one in this tutorial.
 There are special transactions and hooks that allow it to be used for transaction execution fees, storage fees, and staking,
 but besides that, developers and users are able to treat it and use it just like any other token in the network!
 
-<Callout type="warning">
-  It is important to remember that while this tutorial implements a working
-  fungible token, it has been simplified for educational purposes and is not
-  what any project should use in production. See the
-  <a href="https://github.com/onflow/flow-ft" target="_blank">Flow Fungible Token standard</a>
-  for the standard interface and example implementation. You can also see the
-  <a href="https://developers.flow.com/build/guides/fungible-token" target="_blank">Fungible Token Developer Guide</a>
-  for a guide for how to create a production ready version of a Fungible Token contract.
-</Callout>
+:::warning
+
+It is important to remember that while this tutorial implements a working
+fungible token, it has been simplified for educational purposes and is not
+what any project should use in production. See the
+<a href="https://github.com/onflow/flow-ft" target="_blank">Flow Fungible Token standard</a>
+for the standard interface and example implementation. You can also see the
+<a href="https://developers.flow.com/build/guides/fungible-token" target="_blank">Fungible Token Developer Guide</a>
+for a guide for how to create a production ready version of a Fungible Token contract.
+
+:::
 
 We're going to take you through these steps to get comfortable with the fungible token:
 
@@ -106,25 +112,27 @@ and [Hello, World!](./02-hello-world.md) to learn the basics of the language and
 
 ---
 
-<Callout type="info">
-  First, you'll need to follow this link to open a playground session with the
-  Fungible Token contracts, transactions, and scripts pre-loaded:{" "}
-  <a
-    href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
-    target="_blank"
-  >
-    https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
-  </a>
-</Callout>
+:::info[Action]
 
-<Callout type="info">
+First, you'll need to follow this link to open a playground session with the
+Fungible Token contracts, transactions, and scripts pre-loaded:{" "}
+<a
+href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
+target="_blank"
+>
+https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
+</a>
+
+:::
+
+:::info[Action]
 
 Open the account `0x06` tab to see the file named
 `BasicToken.cdc`. `BasicToken.cdc` should contain the full code for the
 fungible token, which provides the core functionality to store fungible tokens
 in your account and transfer to and accept tokens from other users.
 
-</Callout>
+:::
 
 The concepts involved in implementing a fungible token in Cadence can be unfamiliar at first.
 If you haven't completed and understood the previous tutorials,
@@ -344,13 +352,13 @@ unless the developer has specifically overridden the requirement in the funtion 
 Now that you have read about how the Fungible Token works,
 we can deploy a basic version of it to your account and send some transactions to interact with it.
 
-<Callout type="info">
+:::info[Action]
 
 Make sure that you have opened the Fungible Token templates in the playground
 by following the link at the top of this page. You should have Account `0x06`
 open and should see the code below.
 
-</Callout>
+:::
 
 ```cadence
 /// BasicToken.cdc
@@ -456,11 +464,11 @@ access(all) contract BasicToken {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Click the `Deploy` button at the top right of the editor to deploy the code.
 
-</Callout>
+:::
 
 ![Deploy BasicToken on 0x06](./deploy_basic_token.png)
 
@@ -505,12 +513,13 @@ In Cadence, you have to first withdraw tokens from your vault, then deposit them
 that you want to transfer to. We'll start a simple transaction that withdraws tokens from a vault
 and deposits them back into the same vault.
 
-<Callout type="info">
+:::info[Action]
 
-Open the transaction named `Basic Transfer`. <br/>
+Open the transaction named `Basic Transfer`.
+
 `Basic Transfer` should contain the following code for withdrawing and depositing with a stored Vault:
 
-</Callout>
+:::
 
 ```cadence BasicTransfer.cdc
 // Basic Transfer
@@ -543,13 +552,18 @@ transaction(amount: UFix64) {
 }
 ```
 
-<Callout type="info">
-  Select account `0x06` as the only signer. <br />
-  You can enter any number less than 30.0 for the amount of tokens to transfer. <br />
-  Click the `Send` button to submit the transaction. <br />
-  This transaction withdraws tokens from the main vault and deposits them back
-  to it.
-</Callout>
+:::info[Action]
+
+Select account `0x06` as the only signer.
+
+You can enter any number less than 30.0 for the amount of tokens to transfer.
+
+Click the `Send` button to submit the transaction.
+
+This transaction withdraws tokens from the main vault and deposits them back
+to it.
+
+:::
 
 This transaction is a basic example of a transfer within an account.
 It withdraws tokens from the main vault and deposits back to the main vault.
@@ -755,25 +769,27 @@ the `deposit` function will be there since it is in the `ExampleToken.Receiver` 
 
 Let's create capabilities to your `Vault` so that a separate account can send tokens to you.
 
-<Callout type="info">
+:::info[Action]
 
-Before we submit a transaction interacting with ExampleToken resources, we'll need to deploy the contract to account `0x07`:<br/>
-1. Select `ExampleToken` in the playground sidebar<br/>
-2. Make sure that signer `0x07` is selected as the deploying address<br/>
+Before we submit a transaction interacting with ExampleToken resources, we'll need to deploy the contract to account `0x07`:
+
+1. Select `ExampleToken` in the playground sidebar
+2. Make sure that signer `0x07` is selected as the deploying address
 3. Click "Deploy"
 
-</Callout>
+:::
 
 ![Deploy ExampleToken to 0x07](./deploy_example_token.png)
 
 Now we can continue on to configure Capabilities on the ExampleToken Vault.
 
-<Callout type="info">
+:::info[Action]
 
-Open the transaction named `Issue Capability`. <br/>
+Open the transaction named `Issue Capability`.
+
 `Issue Capability` should contain the following code for creating a reference to the stored Vault:
 
-</Callout>
+:::
 
 ```cadence issue_capability.cdc
 import ExampleToken from 0x07
@@ -856,16 +872,16 @@ The `post` phase is for ensuring that certain conditions are met after the trans
 Here, we are getting the capability from its public path and calling its `check` function to ensure
 that the capability contains a valid link to a valid object in storage that is the specified type.
 
-<Callout type="info">
+:::info[Action]
 
-Now that we understand the transaction, time to submit it:<br/>
+Now that we understand the transaction, time to submit it:
 
-1. Select account `0x07` as the only signer.<br/>
-2. Click the `Send` button to submit the transaction.<br/>
+1. Select account `0x07` as the only signer.
+2. Click the `Send` button to submit the transaction.
 3. This transaction creates a new public capability to your `Vault`
    and checks that it was created correctly.
 
-</Callout>
+:::
 
 ## Transfer Tokens to Another User
 
@@ -876,15 +892,15 @@ We will do this by calling the `withdraw` function on account `0x07`'s Vault,
 which creates a temporary Vault object for moving the tokens,
 then deposits those tokens into account `0x08`'s vault by calling the `deposit` function on their vault.
 
-<Callout type="info">
+:::info[Action]
 
 Account `0x08` has not been set up to receive tokens, so we will do that now:
 
-1. Open the transaction `Setup Account`.<br/>
-2. Select account `0x08` as the only signer.<br/>
+1. Open the transaction `Setup Account`.
+2. Select account `0x08` as the only signer.
 3. Click the `Send` button to set up account `0x08` so that it can receive tokens.
 
-</Callout>
+:::
 
 ```cadence SetupAccount.cdc
 // Setup Account
@@ -945,12 +961,12 @@ and not even include the `VaultMinter` in the contract.
 
 In the next transaction, account `0x07` will mint 30 new tokens and deposit them into account `0x08`'s newly created Vault.
 
-<Callout type="info">
+:::info[Action]
 
-1. Open the `Mint Tokens` transaction.<br/>
+1. Open the `Mint Tokens` transaction.
 2. Select only account `0x07` as a signer and send `Mint Tokens` to mint 30 tokens for account `0x08`.
 
-</Callout>
+:::
 
 `Mint Tokens` should contain the code below.
 
@@ -1036,11 +1052,11 @@ You can use scripts to access an account's public state. Scripts aren't signed b
 
 In this example, we will query the balance of each account's vault. The following will print out the balance of each account in the emulator.
 
-<Callout type="info">
+:::info[Action]
 
 Open the script named `Get Balances` in the scripts pane.
 
-</Callout>
+:::
 
 `Get Balances` should contain the following code:
 
@@ -1081,11 +1097,11 @@ fun main() {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Execute `Get Balances` by clicking the Execute button.
 
-</Callout>
+:::
 
 This should ensure the following:
 
@@ -1109,13 +1125,13 @@ To restart the playground, close your current session and open the link at the t
 
 Now that we have two accounts, each with a `Vault`, we can see how they transfer tokens to each other!
 
-<Callout type="info">
+:::info[Action]
 
-1. Open the transaction named `Transfer Tokens`. <br/>
-2. Select account `0x08` as a signer and send the transaction. <br/>
+1. Open the transaction named `Transfer Tokens`.
+2. Select account `0x08` as a signer and send the transaction.
 3. `Transfer Tokens` should contain the following code for sending tokens to another user:
 
-</Callout>
+:::
 
 ```cadence transfer_tokens.cdc
 // Transfer Tokens
@@ -1185,11 +1201,11 @@ Separating the two also allows us to take advantage of being able
 to statically verify which parts of accounts can be modified in the `prepare` section of a transaction,
 which will help users have peace of mind when getting fed transactions to sign from an app.
 
-<Callout type="info">
+:::info[Action]
 
 Execute `Get Balances` again.
 
-</Callout>
+:::
 
 If correct, you should see the following lines indicating that account `0x07`'s balance is 40 and account `0x08`'s balance is 20:
 

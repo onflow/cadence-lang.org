@@ -6,7 +6,8 @@ In this tutorial, we're going to deploy a contract that allows users to vote on 
 
 ---
 
-<Callout type="success">
+:::tip
+
   Open the starter code for this tutorial in the Flow Playground:
   <a
     href="https://play.onflow.org/d120f0a7-d411-4243-bc59-5125a84f99b3"
@@ -16,18 +17,23 @@ In this tutorial, we're going to deploy a contract that allows users to vote on 
   </a>
   <br/>
   The tutorial will be asking you to take various actions to interact with this code.
-</Callout>
 
-<Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
-</Callout>
+:::
 
-<Callout type="info">
+:::info[Action]
+
+The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+
+:::
+
+:::info[Action]
+
 Instructions that require you to take action are always included in a callout box like this one.
 These highlighted actions are all that you need to do to get your code running,
 but reading the rest is necessary to understand the language's design.
-</Callout>
+
+:::
 
 With the advent of blockchain technology and smart contracts,
 it has become popular to try to create decentralized voting mechanisms that allow large groups of users to vote completely on chain.
@@ -59,13 +65,13 @@ inherent to resources.
 
 Time to deploy the contract we'll be working with:
 
-<Callout type="info">
+:::info[Action]
 
 1. Open Contract 1 - the `ApprovalVoting` contract.<br/>
 2. In the bottom right deployment modal, press the arrow to expand and make sure account `0x01` is selected as the signer.<br/>
 3. Click the Deploy button to deploy it to account `0x01`
 
-</Callout>
+:::info[Action]
 
 ![Deploy ApprovalVoting to account 0x01](deploy_approval_voting.png)
 
@@ -268,12 +274,12 @@ Performing the common actions in this voting contract only takes three types of 
 
 We have a transaction for each step that we provide for you. With the `ApprovalVoting` contract to account `0x01`:
 
-<Callout type="info">
+:::info[Action]
 
 1. Open Transaction 1 which should have `Transaction1.cdc`<br/>
 2. Submit the transaction with account `0x01` selected as the only signer.
 
-</Callout>
+:::
 
 ```cadence Transaction1.cdc
 import ApprovalVoting from 0x01
@@ -322,13 +328,13 @@ To select multiple signers, you first need to include two arguments in the `prep
 
 The playground will give you an error if the number of selected signers is different than the number of arguments to the prepare block. The playground also maps the accounts you select as signers to the arguments in the order that you select them. The first account you select will be the first argument, and the second account you select is the second argument.
 
-<Callout type="info">
+:::info[Action]
 
 1. Open Transaction 2 which should have `Transaction2.cdc`.<br/>
 2. Select account `0x01` as a signer first, then also select account `0x02`.<br/>
 3. Submit the transaction by clicking the `Send` button
 
-</Callout>
+:::
 
 ```cadence Transaction2.cdc
 
@@ -368,13 +374,13 @@ Account `0x02` should now have a `Ballot` resource object in its account storage
 
 Now that account `0x02` has a `Ballot` in their storage, they can cast their vote. To do this, they will call the `vote` method on their stored resource, then cast that `Ballot` by passing it to the `cast` function in the main smart contract.
 
-<Callout type="info">
+:::info[Action]
 
 1. Open Transaction 3 which should contain `Transaction3.cdc`.<br/>
 2. Select account `0x02` as the only transaction signer.<br/>
 3. Click the `send` button to submit the transaction.
 
-</Callout>
+:::
 
 ```cadence Transaction3.cdc
 import ApprovalVoting from 0x01
@@ -406,12 +412,12 @@ In this transaction, the user votes for one of the proposals, and then moves the
 
 At any time, anyone could read the current tally of votes by directly reading the fields of the contract. You can use a script to do that, since it does not need to modify storage.
 
-<Callout type="info">
+:::info[Action]
 
 1. Open a Script 1 which should contain the code below.<br/>
 2. Click the `execute` button to run the script.
 
-</Callout>
+:::
 
 ```cadence Script1.cdc
 import ApprovalVoting from 0x01

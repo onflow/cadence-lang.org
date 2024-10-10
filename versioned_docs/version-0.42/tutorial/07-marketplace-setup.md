@@ -12,22 +12,26 @@ for an example of a production ready marketplace that you can use right now on t
 
 ---
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <a
-    href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
-    target="_blank"
-  >
-    https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929
-  </a>
-  <br/>
-  The tutorial will be asking you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground:
+<a
+  href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
+  target="_blank"
+>
+  https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929
+</a>
+<br/>
+The tutorial will be asking you to take various actions to interact with this code.
+
+:::
+
+:::info[Action]
+
+The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+
+:::
 
 If you have already completed the Marketplace tutorial, please move on to [Composable Resources: Kitty Hats](./10-resources-compose.md).
 

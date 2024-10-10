@@ -21,23 +21,27 @@ socialImageDescription: Resource smart contract image.
 
 ## Overview
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: <br />
-  <a
-    href="https://play.flow.com/ddf0177e-81c8-4512-ac2e-28036b1a3f89"
-    target="_blank"
-  >
-    https://play.flow.com/ddf0177e-81c8-4512-ac2e-28036b1a3f89
-  </a>
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground: <br />
+<a
+  href="https://play.flow.com/ddf0177e-81c8-4512-ac2e-28036b1a3f89"
+  target="_blank"
+>
+  https://play.flow.com/ddf0177e-81c8-4512-ac2e-28036b1a3f89
+</a>
+The tutorial will ask you to take various actions to interact with this code.
+
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 This tutorial builds on the previous `Hello World` tutorial.
 Before beginning this tutorial, you should understand :
@@ -108,12 +112,12 @@ being _moved_ from one place to another. The old variable or location that was h
 it will no longer be valid after the move. This is one of the ways that Cadence ensures
 that any given resource only exists in one place at a time.
 
-<Callout type="info">
+:::info[Action]
 
 Open the Account `0x06` tab with file named `HelloWorldResource.cdc`. <br />
 `HelloWorldResource.cdc` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence HelloWorldResource.cdc
 access(all) contract HelloWorld {
@@ -136,11 +140,11 @@ access(all) contract HelloWorld {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Deploy this code to account `0x06` using the `Deploy` button.
 
-</Callout>
+:::
 
 We start by declaring a new `HelloWorld` contract in account `0x06`, inside this new `HelloWorld` contract we:
 
@@ -234,15 +238,13 @@ Resources can only exist in one location at a time, so movement must be explicit
 Now we're going to use a transaction to that calls the `createHelloAsset()` function
 and saves a `HelloAsset` resource to the account's storage.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Create Hello`.
 
-<br />
-
 `Create Hello` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence create_hello.cdc
 /// create_hello.cdc
@@ -348,12 +350,12 @@ Finally, in the execute phase we log the phrase `"Saved Hello Resource to accoun
 log("Saved Hello Resource to account.")
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Select account `0x06` as the only signer. Click the `Send` button to submit
 the transaction.
 
-</Callout>
+:::
 
 You should see something like this:
 
@@ -361,18 +363,18 @@ You should see something like this:
 "Saved Hello Resource to account."
 ```
 
-<Callout type="info">
+:::info[Action]
 
 You can also try removing the line of code that saves `newHello` to storage.
 
-<br />
 You should see an error for `newHello` that says `loss of resource`.
 This means that you are not handling the resource properly.
 If you ever see this error in any of your programs,
 it means there is a resource somewhere that is not being explicitly stored or destroyed, meaning the program is invalid.
-<br />
+
 Add the line back to make the transaction check properly.
-</Callout>
+
+:::
 
 In this case, this is the first time we have saved anything with the selected account,
 so we know that the storage spot at `/storage/HelloAssetTutorial` is empty.
@@ -428,15 +430,13 @@ with the ability to use FlowToken assets. You don't have to worry about those fo
 
 Now we're going to use a transaction to call the `hello()` method from the `HelloAsset` resource.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Load Hello`.
 
-<br />
-
 `Load Hello` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence load_hello.cdc
 import HelloWorld from 0x06
@@ -557,12 +557,12 @@ Next, we use `save` again to put the object back in storage in the same spot:
 acct.storage.save(<-helloResource, to: /storage/HelloAssetTutorial)
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Select account `0x06` as the only signer. Click the `Send` button to submit
 the transaction.
 
-</Callout>
+:::
 
 You should see something like this:
 

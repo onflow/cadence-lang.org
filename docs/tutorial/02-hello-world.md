@@ -20,23 +20,27 @@ socialImageDescription: Hello world smart contract image.
 
 In this tutorial, we'll write and deploy our first smart contract!
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: <br />
-  <a
-    href="https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa"
-    target="_blank"
-  >
-    https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa
-  </a>
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground: <br />
+<a
+  href="https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa"
+  target="_blank"
+>
+  https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa
+</a>
+The tutorial will ask you to take various actions to interact with this code.
+
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 This tutorial will walk you through an example of a smart contract that implements basic Cadence features,
 including accounts, transactions, and signers.
@@ -86,7 +90,7 @@ Each account can have zero or more contracts and/or contract interfaces.
 A contract can be freely added, removed, or updated (with some restrictions) by the owner of the account.
 Now let's look at the `HelloWorld` contract that you'll be working through in this tutorial.
 
-<Callout type="info">
+:::info[Action]
 
 If you haven't already, you'll need to follow this link to open a playground session with the Hello World contracts, transactions, and scripts pre-loaded:
 
@@ -98,17 +102,17 @@ If you haven't already, you'll need to follow this link to open a playground ses
   https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa
 </a>
 
-</Callout>
+:::
 
 ![Playground Intro](playground-intro.png)
 
-<Callout type="info">
+:::info[Action]
 
 Open the Account `0x06` tab with the file called
 `HelloWorld.cdc` in the Contract 1 space. <br />
 `HelloWorld.cdc` should contain this code:
 
-</Callout>
+:::
 
 ```cadence HelloWorld.cdc
 // HelloWorld.cdc
@@ -190,13 +194,13 @@ In this tutorial, we use the account with the address `0x06` to store our `Hello
 
 Now that you know what an account is in a Cadence context, you can deploy the `HelloWorld` contract to your account.
 
-<Callout type="info">
+:::info[Action]
 
 Make sure that the account `0x06` tab is selected and that the
 `HelloWorld.cdc` file is in the editor. <br />
 Click the deploy button to deploy the contents of the editor to account `0x06`.
 
-</Callout>
+:::
 
 ![Deploy Contract](deploybox.png)
 
@@ -223,12 +227,12 @@ In addition to being able to access the authorizer's private assets,
 transactions can also read and call functions in public contracts, and access public functions in other users' accounts.
 For this tutorial, we use a transaction to call our `hello()` function.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Simple Transaction` <br />
 `Simple Transaction` should contain this code:
 
-</Callout>
+:::
 
 ```cadence SayHello.cdc
 import HelloWorld from 0x06
@@ -266,12 +270,12 @@ Transactions are divided into two main phases, `prepare` and `execute`.
    This executes the `hello()` function in the `HelloWorld` contract
    and logs the result(`log(HelloWorld.hello())`) to the console.
 
-<Callout type="info">
+:::info[Action]
 
 In the box at the bottom right of the editor, select Account `0x06` as the transaction signer. <br />
 Click the `Send` button to submit the transaction
 
-</Callout>
+:::
 
 You should see something like this in the transaction results at the bottom of the screen:
 

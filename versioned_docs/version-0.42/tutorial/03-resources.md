@@ -21,30 +21,36 @@ socialImageDescription: Resource smart contract image.
 
 ## Overview
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: <br />
-  <a
-    href="https://play.onflow.org/b70199ae-6488-4e58-ae58-9f4ffecbd66a"
-    target="_blank"
-  >
-    https://play.onflow.org/b70199ae-6488-4e58-ae58-9f4ffecbd66a
-  </a>
-  <br />
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  The playground code that is linked uses Cadence 0.42, but the examples
-  use Cadence 1.0 to show how each contract, transaction and script
-  is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground: <br />
+<a
+  href="https://play.onflow.org/b70199ae-6488-4e58-ae58-9f4ffecbd66a"
+  target="_blank"
+>
+  https://play.onflow.org/b70199ae-6488-4e58-ae58-9f4ffecbd66a
+</a>
+<br />
+The tutorial will ask you to take various actions to interact with this code.
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+:::
+
+:::warning
+
+The playground code that is linked uses Cadence 0.42, but the examples
+use Cadence 1.0 to show how each contract, transaction and script
+is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
+
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 This tutorial builds on the previous `Hello World` tutorial.
 Before beginning this tutorial, you should understand :
@@ -104,12 +110,12 @@ The move operator `<-` is used to move a resource into a variable.
 You cannot use the assignment operator `=` with resources,
 so when you initialize a resource you will need to use the move operator `<-`.
 
-<Callout type="info">
+:::info[Action]
 
 Open the Account `0x01` tab with file named `HelloWorldResource.cdc`. <br />
 `HelloWorldResource.cdc` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence HelloWorldResource.cdc
 access(all)
@@ -140,11 +146,11 @@ contract HelloWorld {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Deploy this code to account `0x01` using the `Deploy` button.
 
-</Callout>
+:::
 
 We start by declaring a new `HelloWorld` contract in account `0x01`, inside this new `HelloWorld` contract we:
 
@@ -258,7 +264,7 @@ Resources can only exist in one location at a time, so movement must be explicit
 Now we're going to use a transaction to that calls the `createHelloAsset()` function
 and saves a `HelloAsset` resource to the account's storage.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Create Hello`.
 
@@ -266,7 +272,7 @@ Open the transaction named `Create Hello`.
 
 `Create Hello` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence CreateHello.cdc
 // Transaction1.cdc
@@ -358,12 +364,12 @@ Finally, in the execute phase we log the phrase `"Saved Hello Resource to accoun
 log("Saved Hello Resource to account.")
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Select account `0x01` as the only signer. Click the `Send` button to submit
 the transaction.
 
-</Callout>
+:::
 
 You should see something like this:
 
@@ -371,7 +377,7 @@ You should see something like this:
 "Saved Hello Resource to account."
 ```
 
-<Callout type="info">
+:::info[Action]
 
 You can also try removing the line of code that saves `newHello` to storage.
 
@@ -382,7 +388,8 @@ If you ever see this error in any of your programs,
 it means there is a resource somewhere that is not being explicitly stored or destroyed, meaning the program is invalid.
 <br />
 Add the line back to make the transaction checks properly.
-</Callout>
+
+:::
 
 In this case, this is the first time we have saved anything with the selected account,
 so we know that the storage spot at `/storage/HelloAssetTutorial` is empty.
@@ -436,7 +443,7 @@ Account Storage:
 
 Now we're going to use a transaction to call the `hello()` method from the `HelloAsset` resource.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Load Hello`.
 
@@ -444,7 +451,7 @@ Open the transaction named `Load Hello`.
 
 `Load Hello` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence LoadHello.cdc
 import HelloWorld from 0x01
@@ -550,12 +557,12 @@ would defeat the purpose of the whole transaction, then the force-unwrap operato
 
 Refer to [Optionals In Cadence](../language/values-and-types.mdx#optionals) to learn more about optionals and how they are used.
 
-<Callout type="info">
+:::info[Action]
 
 Select account `0x01` as the only signer. Click the `Send` button to submit
 the transaction.
 
-</Callout>
+:::
 
 You should see something like this:
 

@@ -120,10 +120,12 @@ For each key of the account, the `forEach` function calls the given callback, pa
 When the callback function returns `true` the iteration continues,
 and when it returns `false`, iteration stops.
 
-<Callout type="warning">
-    The `keys.get` and `keys.forEach` functions include revoked keys,
-    which have the `isRevoked` field set to `true`.
-</Callout>
+:::warning
+
+The `keys.get` and `keys.forEach` functions include revoked keys,
+which have the `isRevoked` field set to `true`.
+
+:::
 
 ```cadence
 access(all)

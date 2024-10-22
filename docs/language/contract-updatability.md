@@ -170,7 +170,7 @@ A field may belong to a contract, struct, resource, or interface.
   }
   ```
     - Initializer of a contract only run once, when the contract is deployed for the first time. It does not rerun
-      when the contract is updated. However it is still required to be present in the updated contract to satisfy type checks.
+      when the contract is updated. However, it is still required to be present in the updated contract to satisfy type checks.
     - Thus, the stored data won't have the new field, as the initializations for the newly added fields do not get
       executed.
     - Decoding stored data will result in garbage or missing values for such fields.
@@ -231,9 +231,9 @@ A field may belong to a contract, struct, resource, or interface.
     prevent performing such an update.
 
 #### Invalid Changes:
-- Removing an existing declaration is not valid without using the `#removedType` pragma
+- Removing an existing declaration is not valid.
   - Removing a declaration allows adding a new declaration with the same name, but with a different structure.
-  - Any program that uses that declaration would face inconsistencies in the stored data.
+  - Any program that uses stored data belong to that type would face inconsistencies.
 - Renaming a declaration is not valid. It can have the same effect as removing an existing declaration and adding
   a new one.
 - Changing the type of declaration is not valid. i.e: Changing from a struct to interface, and vise versa.
@@ -266,6 +266,8 @@ A field may belong to a contract, struct, resource, or interface.
   struct Foo {
   }
   ```
+  - Otherwise, types that used to conform to an interface would no longer conform to that interface, which would lead
+    to type safety issues at runtime.
 
 ### Updating Members
 Similar to contracts, these composite declarations: structs, resources, and interfaces also can have fields and

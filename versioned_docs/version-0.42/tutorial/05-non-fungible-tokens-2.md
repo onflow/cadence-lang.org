@@ -28,28 +28,34 @@ a full implementation for **Non-Fungible Tokens (NFTs)**.
 
 ---
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <a
-    href="https://play.onflow.org/f08e8e0d-d28e-4cbe-8d72-3afe2349c629"
-    target="_blank"
-  >
-    https://play.onflow.org/f08e8e0d-d28e-4cbe-8d72-3afe2349c629
-  </a>
-  <br/>
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground:
+<a
+href="https://play.onflow.org/f08e8e0d-d28e-4cbe-8d72-3afe2349c629"
+target="_blank"
+>
+https://play.onflow.org/f08e8e0d-d28e-4cbe-8d72-3afe2349c629
+</a>
+<br/>
+The tutorial will ask you to take various actions to interact with this code.
 
-<Callout type="info">
+:::
+
+:::warning
+
+The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+
+:::
+
+:::info[Action]
+
 Instructions that require you to take action are always included in a callout box like this one.
 These highlighted actions are all that you need to do to get your code running,
 but reading the rest is necessary to understand the language's design.
-</Callout>
+
+:::
 
 
 ## Storing Multiple NFTs in a Collection
@@ -125,14 +131,14 @@ and saves a minter resource to account storage.
 This contract introduces a few new concepts, we'll look at the new contract, then break down all the new
 concepts this contract introduces.
 
-<Callout type="info">
+:::info[Action]
 
 Open Account `0x01` to see `ExampleNFT.cdc`.<br/>
 Deploy the contract by clicking the Deploy button in the bottom right of the editor.<br/>
 `ExampleNFT.cdc` should contain the code below.
 It contains what was already in `BasicNFT.cdc` plus additional resource declarations in the contract body.
 
-</Callout>
+:::
 
 ```cadence ExampleNFT.cdc
 // ExampleNFT.cdc
@@ -430,12 +436,12 @@ Let's confirm this is true by running a script!
 
 Scripts in Cadence are simple transactions that run without any account permissions and only read information from the blockchain.
 
-<Callout type="info">
+:::info[Action]
 
 Open the script file named `Print 0x01 NFTs`.
 `Print 0x01 NFTs` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence
 import ExampleNFT from 0x01
@@ -457,12 +463,12 @@ fun main() {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Execute `Print 0x01 NFTs` by clicking the Execute button in the top right of the editor box.<br/>
 This script prints a list of the NFTs that account `0x01` owns.
 
-</Callout>
+:::
 
 Because account `0x01` currently doesn't own any in its collection, it will just print an empty array:
 
@@ -486,13 +492,13 @@ This would restrict minting, because the owner of this resource is the only one 
 
 You can see an example of this in the [Marketplace tutorial](./08-marketplace-compose.md).
 
-<Callout type="info">
+:::info[Action]
 
 Open the file named `Mint NFT`.
 Select account `0x01` as the only signer and send the transaction.<br/>
 This transaction deposits the minted NFT into the account owner's NFT collection:
 
-</Callout>
+:::
 
 ```cadence MintNFT.cdc
 import ExampleNFT from 0x01
@@ -524,12 +530,12 @@ transaction {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Reopen `Print 0x01 NFTs` and execute the script.
 This prints a list of the NFTs that account `0x01` owns.
 
-</Callout>
+:::
 
 ```cadence Print0x01NFTs.cdc
 import ExampleNFT from 0x01
@@ -566,11 +572,11 @@ You should see that account `0x01` owns the NFT with `id = 1`
 Before we are able to transfer an NFT to another account, we need to set up that account
 with an NFTCollection of their own so they are able to receive NFTs.
 
-<Callout type="info">
+:::info[Action]
 
 Open the file named `Setup Account` and submit the transaction, using account `0x02` as the only signer.
 
-</Callout>
+:::
 
 ```cadence SetupAccount.cdc
 import ExampleNFT from 0x01
@@ -601,12 +607,12 @@ transaction {
 Account `0x02` should now have an empty `Collection` resource stored in its account storage.
 It has also created and stored a capability to the collection in its `/public/` domain.
 
-<Callout type="info">
+:::info[Action]
 
 Open the file named `Transfer`, select account `0x01` as the only signer, and send the transaction.<br/>
 This transaction transfers a token from account `0x01` to account `0x02`.
 
-</Callout>
+:::
 
 ```cadence Transfer.cdc
 import ExampleNFT from 0x01
@@ -651,11 +657,11 @@ transaction {
 
 Now we can check both accounts' collections to make sure that account `0x02` owns the token and account `0x01` has nothing.
 
-<Callout type="info">
+:::info[Action]
 
 Execute the script `Print all NFTs` to see the tokens in each account:
 
-</Callout>
+:::
 
 ```cadence Script2.cdc
 import ExampleNFT from 0x01

@@ -10,29 +10,35 @@ This contract is already deployed to testnet and mainnet and can be used by anyo
 
 ---
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground:
-  <a
-    href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
-    target="_blank"
-  >
-    https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929
-  </a>
-  <br/>
-  The tutorial will be asking you to take various actions to interact with this code.
-  [The marketplace setup guide](./07-marketplace-setup.md) shows you how to get the playground set up to do this tutorial.
-</Callout>
+:::tip
 
-<Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground:
+<a
+href="https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929"
+target="_blank"
+>
+https://play.onflow.org/49ec2856-1258-4675-bac3-850b4bae1929
+</a>
+<br/>
+The tutorial will be asking you to take various actions to interact with this code.
+[The marketplace setup guide](./07-marketplace-setup.md) shows you how to get the playground set up to do this tutorial.
 
-<Callout type="info">
+:::
+
+:::info[Action]
+
+The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+
+:::
+
+:::info[Action]
+
 Instructions that require you to take action are always included in a callout box like this one.
 These highlighted actions are all that you need to do to get your code running,
 but reading the rest is necessary to understand the language's design.
-</Callout>
+
+:::
 
 Marketplaces are a popular application of blockchain technology and smart contracts.
 When there are NFTs in existence, users usually want to be able to buy and sell them with their fungible tokens.
@@ -51,13 +57,13 @@ Flow is designed to enable composability because of the way that interfaces, res
 The combination of these allows developers to do more with less, re-using known safe code and design patterns
 to create new, powerful, and unique interactions!
 
-<Callout type="info">
+:::info[Action]
 
 At some point before or after this tutorial, you should definitely check out the formal documentation
 linked above about interfaces, resources, and capabilities. It will help complete your understanding
 of these complex, but powerful features.
 
-</Callout>
+:::
 
 To create a marketplace, we need to integrate the functionality of both fungible
 and non-fungible tokens into a single contract that gives users control over their money and assets.
@@ -88,22 +94,22 @@ Then, users could either provide a link to their sale to an application that can
 or to a central sale aggregator smart contract if they want the entire transaction to stay on-chain.
 This way, the owner of the token keeps custody of their token while it is on sale.
 
-<Callout type="info">
+:::info[Action]
 
 Before we start, we need to confirm the state of your accounts. <br/>
 If you haven't already, please perform the steps in the [marketplace setup guide](./07-marketplace-setup.md)
 to ensure that the Fungible Token and Non-Fungible Token contracts are deployed to account 1 and 2 and own some tokens.<br/>
 Your accounts should look like this:
 
-</Callout>
+:::
 
 <img src="https://storage.googleapis.com/flow-resources/documentation-assets/cadence-tuts/accounts-nft-storage.png" />
 
-<Callout type="info">
+:::info[Action]
 
 You can run the `1. CheckSetupScript.cdc` script to ensure that your accounts are correctly set up:
 
-</Callout>
+:::
 
 ```cadence CheckSetupScript.cdc
 // CheckSetupScript.cdc
@@ -197,12 +203,12 @@ Every user who wants to sell an NFT will store an instance of a `SaleCollection`
 
 Time to deploy the marketplace contract:
 
-<Callout type="info">
+:::info[Action]
 
 1. Switch to the ExampleMarketplace contract (Contract 3).<br/>
 2. With `ExampleMarketplace.cdc` open, select account `0x03` from the deployment modal in the bottom right and deploy.
 
-</Callout>
+:::
 
 `ExampleMarketplace.cdc` should contain the following contract definition:
 
@@ -556,12 +562,12 @@ Account `0x01` should have an NFT in their collection and the `ExampleMarketplac
 
 You can create a `SaleCollection` and list account `0x01`'s token for sale by following these steps:
 
-<Callout type="info">
+:::info[Action]
 
 1. Open Transaction 4, `CreateSale.cdc` <br/>
 2. Select account `0x01` as the only signer and click the `Send` button to submit the transaction.
 
-</Callout>
+:::
 
 ```cadence Transaction4.cdc
 // CreateSale.cdc
@@ -656,12 +662,12 @@ This script should complete and print something like this:
 
 The buyer can now purchase the seller's NFT by using the transaction in `Transaction2.cdc`:
 
-<Callout type="info">
+:::info[Action]
 
 1. Open Transaction 5: `PurchaseSale.cdc` file<br/>
 2. Select account `0x02` as the only signer and click the `Send` button
 
-</Callout>
+:::
 
 ```cadence PurchaseSale.cdc
 // PurchaseSale.cdc
@@ -731,12 +737,12 @@ You can run now run a script to verify that the NFT was purchased correctly beca
 
 To run a script that verifies the NFT was purchased correctly, follow these steps:
 
-<Callout type="info">
+:::info[Action]
 
 1. Open Script 3: `VerifyAfterPurchase.cdc`<br/>
 2. Click the `Execute` button
 
-</Callout>
+:::
 
 `VerifyAfterPurchase.cdc` should contain the following code:
 

@@ -27,7 +27,7 @@ In this tutorial, we're going to deploy, store, and transfer **Non-Fungible Toke
 
 ---
 
-<Callout type="success">
+:::tip
 
 Open the starter code for this tutorial in the Flow Playground:
 
@@ -37,18 +37,23 @@ Open the starter code for this tutorial in the Flow Playground:
 </a>
 <br/>
 The tutorial will ask you to take various actions to interact with this code.
-</Callout>
 
-<Callout type="info">
-  The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
-  Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
-</Callout>
+:::
 
-<Callout type="info">
+:::warning
+
+The code in this tutorial and in the playground uses Cadence 0.42. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version. It is recommended that since
+Flow is so close to upgrading to Cadence 1.0, that you learn Cadence 1.0 features and syntax.
+
+:::
+
+:::info[Action]
+
 Instructions that require you to take action are always included in a callout box like this one.
 These highlighted actions are all that you need to do to get your code running,
 but reading the rest is necessary to understand the language's design.
-</Callout>
+
+:::
 
 The NFT is an integral part of blockchain technology.
 An NFT is a digital asset that represents ownership of a unique asset.
@@ -75,7 +80,7 @@ which defines a basic set of properties for NFTs on Flow.
 This tutorial, will teach you a basic method of creating an NFT
 to illustrate important language concepts.
 After completing the NFT tutorials, readers should visit
-[the NFT standard github repository](https://github.com/onflow/flow-nft)
+[the NFT standard GitHub repository](https://github.com/onflow/flow-nft)
 to learn how full, production-ready NFTs are created.
 
 To get you comfortable using NFTs, this tutorial will teach you to:
@@ -89,13 +94,15 @@ To get you comfortable using NFTs, this tutorial will teach you to:
 7. Transfer an NFT from one account to another.
 8. Use a script to see what NFTs are stored in each account's collection.
 
-<Callout type="warning">
-  It is important to remember that while this tutorial implements a working
-  non-fungible token, it has been simplified for educational purposes and is not
-  what any project should use in production. See the
-  <a href="https://github.com/onflow/flow-nft" target="_blank">Flow Fungible Token standard</a>
-  for the standard interface and example implementation.
-</Callout>
+:::warning
+
+It is important to remember that while this tutorial implements a working
+non-fungible token, it has been simplified for educational purposes and is not
+what any project should use in production. See the
+<a href="https://github.com/onflow/flow-nft" target="_blank">Flow Fungible Token standard</a>
+for the standard interface and example implementation.
+
+:::
 
 **Before proceeding with this tutorial**, we highly recommend
 following the instructions in [Getting Started](./01-first-steps.md),
@@ -140,7 +147,7 @@ The contract will:
 This contract relies on the [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage)
 to save NFTs in the account.
 
-<Callout type="info">
+:::info[Action]
 
 First, you'll need to follow this link to open a playground session
 with the Non-Fungible Token contracts, transactions, and scripts pre-loaded:
@@ -149,14 +156,14 @@ with the Non-Fungible Token contracts, transactions, and scripts pre-loaded:
   https://play.onflow.org/ae2f2a83-6698-4e03-93cf-70d35627e28e
 </a>
 
-</Callout>
+:::
 
-<Callout type="info">
+:::info[Action]
 
 Open Account `0x01` to see `BasicNFT.cdc`.
 `BasicNFT.cdc` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence BasicNFT.cdc
 access(all)
@@ -215,20 +222,20 @@ Here we access the storage object of the account that the contract is deployed t
 We also create the NFT in the same line and pass it as the first argument to `save`.
 We save it to the `/storage` domain, where objects are meant to be stored.
 
-<Callout type="info">
+:::info[Action]
 
 Deploy `NFTv1` by clicking the Deploy button in the top right of the editor.
 
-</Callout>
+:::
 
 You should now have an NFT in your account. Let's run a transaction to check.
 
-<Callout type="info">
+:::info[Action]
 
 Open the `NFT Exists` transaction, select account `0x01` as the only signer, and send the transaction.<br/>
 `NFT Exists` should look like this:
 
-</Callout>
+:::
 
 ```cadence NFTExists.cdc
 import BasicNFT from 0x01
@@ -262,12 +269,12 @@ but we'll show the simplest one first.
 
 This will also be an opportunity for you to try to write some of your own code!
 
-<Callout type="info">
+:::info[Action]
 
 Open the `Basic Transfer` transaction.<br/>
 `Basic Transfer` should look like this:
 
-</Callout>
+:::
 
 ```cadence
 import BasicNFT from 0x01
@@ -338,12 +345,12 @@ transaction {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
 Select both Account `0x01` and Account `0x02` as the signers.<br/>
 Click the "Send" button to send the transaction.
 
-</Callout>
+:::
 
 Now, the NFT should be stored in the storage of Account `0x02`!
 You should be able to run the "NFT Exists" transaction again with `0x02` as the signer

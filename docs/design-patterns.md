@@ -54,24 +54,24 @@ contract NamedFields {
 //
 access(all)
 contract NamedFields {
-    
+
     access(all)
     resource Test {}
 
     // GOOD: field storage path
     access(all)
-    let TestStoragePath: StoragePath
+    let testStoragePath: StoragePath
 
     init() {
         // assign and access the field here and in transactions
-        self.TestStoragePath = /storage/testStorage
+        self.testStoragePath = /storage/testStorage
         self.account.storage.save(<-create Test(), to: self.TestStoragePath)
     }
 }
 
 ```
 
-[Example Code](https://github.com/onflow/flow-core-contracts/blob/master/contracts/LockedTokens.cdc#L718)
+[Example Code](https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L779)
 
 ## Script-Accessible public field/function
 
@@ -221,7 +221,7 @@ and deliver them to an address or `&Account` specified as an argument.
 
 See how this is done in the LockedTokens contract initializer:
 
-[LockedTokens.cdc](https://github.com/onflow/flow-core-contracts/blob/master/contracts/LockedTokens.cdc#L718)
+[LockedTokens.cdc](https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L765-L780)
 
 and in the transaction that is used to deploy it:
 
@@ -253,7 +253,7 @@ All fields, functions, types, variables, etc., need to have names that clearly d
 //
 access(all)
 contract Tax {
-    
+
     // Do not use abbreviations unless absolutely necessary
     access(all)
     var pcnt: UFix64
@@ -424,28 +424,82 @@ from one account and delivering it to the other.
 
 ### Solution
 
-The solution to the bootstrapping problem in Cadence is provided by the [Inbox API](./language/accounts/inbox.mdx).
+The solution to the bootstrapping problem in Cadence is provided by the
+[Inbox API](./language/accounts/inbox.mdx).
 
-Account A (which we will call the provider) creates the capability they wish to send to B (which we will call the recipient),
-and stores this capability on their account in a place where the recipient can access it using the `Inbox.publish` function on their account.
-They choose a name for the capability that the recipient can later use to identify it, and specify the recipient's address when calling `publish`.
-This call to `publish` will emit an `InboxValuePublished` event that the recipient can listen for off-chain to know that the Capability is ready for them to claim.
+Account A (which we will call the provider) creates the capability they wish to send to account B
+(which we will call the recipient),
+and stores this capability on their account in a place where the recipient can access it
+using the `Inbox.publish` function on their account.
+They choose a name for the capability that the recipient can later use to identify it,
+and specify the recipient's address when calling `publish`.
+This call to `publish` will emit an `InboxValuePublished` event
+that the recipient can listen for off-chain to know that the Capability is ready for them to claim.
 
-The recipient then later can use the `Inbox.claim` function to securely grab the capability from the provider's account.
-They must provide the name and type with which the capability was published, as well as the address of the provider's account
+The recipient then later can use the `Inbox.claim` function to securely claim the capability
+from the provider's account.
+They must provide the name and type with which the capability was published,
+as well as the address of the provider's account
 (all of this information is available in the `InboxValuePublished` event emitted on `publish`).
-This will remove the capability from the provider's account and emit an `InboxValueClaimed` event that the provider can listen for off-chain.
+This will remove the capability from the provider's account and emit an `InboxValueClaimed` event
+that the provider can listen for off-chain.
 
-One important caveat to this is that the published capability is stored on the provider's account until the recipient claims it,
-so the provider can also use the `Inbox.unpublish` function to remove the capability from their account if they no longer wish to pay for storage for it.
+One important caveat to this is that the published capability is stored on the provider's account
+until the recipient claims it,
+so the provider can also use the `Inbox.unpublish` function to remove the capability from their account
+if they no longer wish to pay for storage for it.
 This also requires the name and type which the capability was published,
 and emits an `InboxValueUnpublished` event that the recipient can listen for off-chain.
 
-It is also important to note that the recipient becomes the owner of the capability object once they have claimed it,
-and can thus store it or copy it anywhere they have access to.
+It is also important to note that the recipient becomes the owner of the capability object
+once they have claimed it, and can thus store it or copy it anywhere they have access to.
 This means providers should only publish capabilities to recipients they trust to use them properly,
-or limit the type with which the capability is authorized in order to only give recipients access to the functionality
+or limit the type with which the capability is authorized
+in order to only give recipients access to the functionality
 that the provider is willing to allow them to copy.
+
+```cadence
+import "BasicNFT"
+
+transaction(receiver: Address, name: String) {
+
+    prepare(signer: auth(IssueStorageCapabilityController, PublishInboxCapability) &Account) {
+
+        // Issue a capability controller for the storage path
+        let capability = signer.capabilities.storage.issue<&BasicNFT.Minter>(BasicNFT.minterPath)
+
+        // Set the name as tag so it is easy for us to remember its purpose
+        let controller = signer.capabilities.storage.getController(byCapabilityID: capability.id)
+                ?? panic("Cannot get the storage capability controller with ID "
+                    .concat(capabilityID.toString())
+                    .concat(" from the signer's account! Make sure the ID belongs to a capability that the owner controls and that it is a storage capability.")
+        controller.setTag(name)
+
+        // Publish the capability, so it can be later claimed by the receiver
+        signer.inbox.publish(capability, name: name, recipient: receiver)
+    }
+}
+```
+
+```cadence
+import "BasicNFT"
+
+transaction(provider: Address, name: String) {
+
+    prepare(signer: auth(ClaimInboxCapability, SaveValue) &Account) {
+
+        // Claim the capability from our inbox
+        let capability = signer.inbox.claim<&BasicNFT.Minter>(name, provider: provider)
+                ?? panic("Cannot claim the storage capability controller with name "
+                    .concat(name).concat(" from the provider account (").concat(provider.toString())
+                    .concat("! Make sure the provider address is correct and that they have published "
+                    .concat(" a capability with the desired name.")
+
+        // Save the capability to our storage so we can later retrieve and use it
+        signer.storage.save(capability, to: BasicNFT.minterPath)
+    }
+}
+```
 
 ## Check for existing capability before publishing new one
 
@@ -471,6 +525,45 @@ transaction {
             signer.capabilities.unpublish(publicPath)
         }
         signer.capabilities.publish(capability, at: publicPath)
+    }
+}
+```
+
+## Capability Revocation
+
+### Problem
+
+A capability provided by one account to a second account must able to be revoked
+by the first account without the co-operation of the second.
+
+### Solution
+
+If the capability is a storage capability:
+
+```cadence
+transaction(capabilityID: UInt64) {
+    prepare(signer: auth(StorageCapabilities) &Account) {
+        let controller = signer.capabilities.storage
+            .getController(byCapabilityID: capabilityID)
+            ?? panic("Cannot get the storage capability controller with ID "
+                    .concat(capabilityID.toString())
+                    .concat(" from the signer's account! Make sure the ID belongs to a capability that the owner controls and that it is a storage capability.")
+        controller.delete()
+    }
+}
+```
+
+If the capability is an account capability:
+
+```cadence
+transaction(capabilityID: UInt64) {
+    prepare(signer: auth(AccountCapabilities) &Account) {
+        let controller = signer.capabilities.account
+            .getController(byCapabilityID: capabilityID)
+            ?? panic("Cannot get the account capability controller with ID "
+                    .concat(capabilityID.toString())
+                    .concat(" from the signer's account! Make sure the ID belongs to a capability that the owner controls and that it is an account capability.")
+        controller.delete()
     }
 }
 ```

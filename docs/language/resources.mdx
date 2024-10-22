@@ -280,9 +280,9 @@ Instead, use a swap statement to replace the resource with another resource.
 
 ```cadence
 let child <- create Child(name: "Child 1")
-let parent <- create Parent(name: "Parent", child: <-child)
-
 child.name  // is "Child 1"
+
+let parent <- create Parent(name: "Parent", child: <-child)
 parent.child.name  // is "Child 1"
 
 // Invalid: Cannot move resource out of variable resource field.
@@ -604,11 +604,13 @@ id2 != id3  // true
 id3 != id1  // true
 ```
 
-<Callout type="warning">
+:::warning
+
 The details of how the identifiers are generated is an implementation detail.
 
 Do not rely on or assume any particular behaviour in Cadence programs.
-</Callout>
+
+:::
 
 ## Resource Owner
 

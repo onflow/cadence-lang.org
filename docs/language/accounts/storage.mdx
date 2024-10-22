@@ -419,14 +419,17 @@ If the callback function returns `false`, the iteration function stops.
 The specific order in which the objects are iterated over is undefined,
 as is the behavior when a path is added or removed from storage.
 
-<Callout type="info">
-    The iteration functions skip broken objects.
+:::warning
 
-    An object could be broken due to invalid types associated with the stored value.
-    For example, the contract for the stored object might have syntactic or semantic errors.
-</Callout>
+The iteration functions skip broken objects.
 
-<Callout type="warning">
+An object could be broken due to invalid types associated with the stored value.
+For example, the contract for the stored object might have syntactic or semantic errors.
+
+:::
+
+:::warning
+
 The order of iteration is undefined. Do not rely on any particular behavior.
 
 Saving an object to a path or loading an object from storage during iteration
@@ -458,7 +461,7 @@ account.storage.forEachStored(fun (path: StoragePath, type: Type): Bool {
 })
 ```
 
-</Callout>
+:::
 
 ## Storage limit
 

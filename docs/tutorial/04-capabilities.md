@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 4. Capability Tutorial
 description: An introduction to capabilities and how they interact with resources in Cadence
-date: 2024-02-26
+date: 2024-09-17
 meta:
   keywords:
     - tutorial
@@ -19,32 +19,28 @@ socialImageTitle: Cadence Resources
 socialImageDescription: Capability smart contract image.
 ---
 ## Overview
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground. It is the same code that was in the previous tutorial: <br />
-  <a
-    href="https://play.onflow.org/a7f45bcd-8fda-45f6-b443-4b77302a1687"
-    target="_blank"
-  >
-    https://play.onflow.org/a7f45bcd-8fda-45f6-b443-4b77302a1687
-  </a>
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
 
-<Callout type="info">
-  The playground code that is linked uses Cadence 0.42, but the examples
-  use Cadence 1.0 to show how each contract, transaction and script
-  is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
-  The project link will still work with the current version of the playground,
-  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
-</Callout>
+:::tip
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground. It is the same code that was in the previous tutorial: <br />
+<a
+  href="https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f"
+  target="_blank"
+>
+  https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f
+</a>
+The tutorial will ask you to take various actions to interact with this code.
+
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 This tutorial builds on the [previous `Resource` tutorial](./03-resources.md).
 Before beginning this tutorial, you should have an idea of
@@ -92,52 +88,48 @@ In this tutorial, you will:
 ## Accessing Resources with Capabilities
 
 ---
-Before following this tutorial, you should have the `HelloWorld` contract deployed in account `0x01`,
+Before following this tutorial, you should have the `HelloWorld` contract deployed in account `0x06`,
 just like in the [previous `Resource` contract tutorial](./03-resources.md).
 
-<Callout type="info">
+:::info[Action]
 
-Open the Account `0x01` tab with file named `HelloWorldResource.cdc`. <br />
+Open the Account `0x06` tab with file named `HelloWorldResource.cdc`. 
 `HelloWorldResource.cdc` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence HelloWorldResource-2.cdc
-access(all)
-contract HelloWorld {
+access(all) contract HelloWorld {
 
     // Declare a resource that only includes one function.
-    access(all)
-    resource HelloAsset {
+    access(all) resource HelloAsset {
 
         // A transaction can call this function to get the "Hello, World!"
         // message from the resource.
-        access(all)
-        fun hello(): String {
+        access(all) fun hello(): String {
             return "Hello, World!"
         }
     }
 
     // We're going to use the built-in create function to create a new instance
     // of the HelloAsset resource
-    access(all)
-    fun createHelloAsset(): @HelloAsset {
+    access(all) fun createHelloAsset(): @HelloAsset {
         return <-create HelloAsset()
     }
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
-Deploy this code to account `0x01` using the `Deploy` button.
+Deploy this code to account `0x06` using the `Deploy` button.
 
-</Callout>
+:::
 
-<Callout type="info">
+:::info[Action]
 
-Click on the `Create Hello` transaction and send it with `0x01` as the signer.
+Click on the `Create Hello` transaction and send it with `0x06` as the signer.
 
-</Callout>
+:::
 
 The contract and transaction above creates and stores the resource we'll be using in this tutorial.
 For a more detailed breakdown of the contract and transactions,
@@ -159,26 +151,23 @@ to the underlying object and call the `hello()` function.
 A detailed explanation of what is happening in this transaction
 is below the transaction code so, if you feel lost, keep reading!
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Create Link`.
 
-<br />
-
 `Create Link` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence create_link.cdc
-import HelloWorld from 0x01
+import HelloWorld from 0x06
 
-// This transaction creates a new capability
-// for the HelloAsset resource in storage
-// and adds it to the account's public area.
-//
-// Other accounts and scripts can use this capability
-// to create a reference to the private object to be able to
-// access its fields and call its methods.
+/// This transaction issues a new capability for the HelloAsset resource
+/// in storage and publishes it
+///
+/// Other accounts and scripts can use this public capability
+/// to create a reference to the private object to be able to
+/// access its fields and call its methods.
 
 transaction {
   // We use `auth(IssueStorageCapabilityController, PublishCapability) &Account` to 
@@ -187,11 +176,9 @@ transaction {
   prepare(account: auth(IssueStorageCapabilityController, PublishCapability) &Account) {
 
     // Create a capability by linking the capability to
-    // a `target` object in account storage.
-    // The capability allows access to the object through an
-    // interface defined by the owner.
-    // This does not check if the link is valid or if the target exists.
-    // It just creates the capability.
+    // an object in account storage at the specified path
+    // The capability allows access to the object of the type specified
+    // without needing to actually possess the object
     let capability = account.capabilities.storage.issue<&HelloWorld.HelloAsset>(/storage/HelloAssetTutorial)
 
     // Publish the capability so it is accessible to all
@@ -204,8 +191,9 @@ transaction {
     // If the optional is nil,
     // the panic will happen with a descriptive error message
     let helloReference = capability.borrow()
-      ?? panic("Could not borrow a reference to the HelloAsset capability. This could be
-                because the resource is not stored or the capability wasn't published")
+      ?? panic("Could not borrow a reference to the HelloAsset capability. This could be"
+                .concat("because the resource is not stored or the capability wasn't published.")
+                .concat("Run the Create Hello transaction again to store the resource"))
 
     // Call the hello function using the reference
     // to the HelloAsset resource.
@@ -215,12 +203,13 @@ transaction {
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
-Ensure account `0x01` is still selected as a transaction signer. <br />
+Ensure account `0x06` is still selected as a transaction signer.
+
 Click the `Send` button to send the transaction.
 
-</Callout>
+:::
 
 In this transaction, we use the prepare phase to:
 1. Create a capability with the `account.capabilities.storage.issue` method to the stored object `HelloWorld.HelloAsset` from the account path `/storage/HelloAssetTutorial`
@@ -345,25 +334,22 @@ To execute a script, write a function called `access(all) fun main()`.
 You can click the execute script button to run the script.
 The result of the script will be printed to the console output.
 
-<Callout type="info">
+:::info[Action]
 
 Open the file `Get Greeting`.
 
-<br />
-
 `Get Greeting` should look like the following:
 
-</Callout>
+:::
 
 ```cadence get_greeting.cdc
-import HelloWorld from 0x01
+import HelloWorld from 0x06
 
-access(all)
-fun main(): String {
+access(all) fun main(): String {
 
     // Cadence code can get an account's public account object
     // by using the getAccount() built-in function.
-    let helloAccount = getAccount(0x01)
+    let helloAccount = getAccount(0x06)
 
     // Borrow the public capability from the public path of the owner's account
     let helloReference = helloAccount.capabilities
@@ -372,9 +358,6 @@ fun main(): String {
 
     // The log built-in function logs its argument to stdout.
     //
-    // Here we are using optional chaining to call the "hello"
-    // method on the HelloAsset resource that is referenced
-    // in the published area of the account.
     return helloReference.hello()
 }
 ```
@@ -387,7 +370,7 @@ Here's what this script does:
 3. Returns the result of the `hello()` function from `helloReference` to the caller.
 
 ```cadence
-let helloAccount = getAccount(0x01)
+let helloAccount = getAccount(0x06)
 ```
 
 The `&Account` reference is available to anyone in the network for every account,
@@ -412,11 +395,11 @@ Then, the script uses the reference to call the `hello()` function and returns t
 
 Let's execute the script to see it run correctly.
 
-<Callout type="info">
+:::info[Action]
 
 Click the `Execute` button in the playground.
 
-</Callout>
+:::
 
 <img src="https://storage.googleapis.com/flow-resources/documentation-assets/cadence-tuts/playground-execute.png" />
 

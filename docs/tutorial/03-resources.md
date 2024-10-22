@@ -3,7 +3,7 @@ archived: false
 draft: false
 title: 3. Resource Contract Tutorial
 description: An introduction to resources, capabilities, and account storage in Cadence
-date: 2024-06-05
+date: 2024-09-17
 meta:
   keywords:
     - tutorial
@@ -21,32 +21,27 @@ socialImageDescription: Resource smart contract image.
 
 ## Overview
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: <br />
-  <a
-    href="https://play.onflow.org/b70199ae-6488-4e58-ae58-9f4ffecbd66a"
-    target="_blank"
-  >
-    https://play.onflow.org/b70199ae-6488-4e58-ae58-9f4ffecbd66a
-  </a>
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  The playground code that is linked uses Cadence 0.42, but the examples
-  use Cadence 1.0 to show how each contract, transaction and script
-  is implemented in Cadence 1.0. 
-  You can access a Cadence 1.0-compatible playground by going to https://v1.play.flow.com/.
-  The project link will still work with the current version of the playground,
-  but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground: <br />
+<a
+  href="https://play.flow.com/ddf0177e-81c8-4512-ac2e-28036b1a3f89"
+  target="_blank"
+>
+  https://play.flow.com/ddf0177e-81c8-4512-ac2e-28036b1a3f89
+</a>
+The tutorial will ask you to take various actions to interact with this code.
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 This tutorial builds on the previous `Hello World` tutorial.
 Before beginning this tutorial, you should understand :
@@ -65,9 +60,8 @@ but with some special rules.
 
 Here is an example definition of a resource:
 ```cadence
-access(all)
-resource Money {
-  
+access(all) resource Money {
+
   access(all) let balance: Int
 
   init() {
@@ -107,7 +101,7 @@ To interact with resources, you'll learn a few important concepts:
 Let's start by looking at how to create a resource with the `create` keyword and the move operator `<-`.
 
 You use the `create` keyword used to initialize a resource.
-Resources can only be created by the contract that defines them and 
+Resources can only be created by the contract that defines them and
 **must** be created before they can be used.
 
 The move operator `<-` is used to move a resource into a variable.
@@ -118,45 +112,41 @@ being _moved_ from one place to another. The old variable or location that was h
 it will no longer be valid after the move. This is one of the ways that Cadence ensures
 that any given resource only exists in one place at a time.
 
-<Callout type="info">
+:::info[Action]
 
-Open the Account `0x01` tab with file named `HelloWorldResource.cdc`. <br />
+Open the Account `0x06` tab with file named `HelloWorldResource.cdc`. <br />
 `HelloWorldResource.cdc` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence HelloWorldResource.cdc
-access(all)
-contract HelloWorld {
+access(all) contract HelloWorld {
 
     // Declare a resource that only includes one function.
-    access(all)
-    resource HelloAsset {
+    access(all) resource HelloAsset {
 
         // A transaction can call this function to get the "Hello, World!"
         // message from the resource.
-        access(all)
-        view fun hello(): String {
+        access(all) view fun hello(): String {
             return "Hello, World!"
         }
     }
 
     // We're going to use the built-in create function to create a new instance
     // of the HelloAsset resource
-    access(all)
-    fun createHelloAsset(): @HelloAsset {
+    access(all) fun createHelloAsset(): @HelloAsset {
         return <-create HelloAsset()
     }
 }
 ```
 
-<Callout type="info">
+:::info[Action]
 
-Deploy this code to account `0x01` using the `Deploy` button.
+Deploy this code to account `0x06` using the `Deploy` button.
 
-</Callout>
+:::
 
-We start by declaring a new `HelloWorld` contract in account `0x01`, inside this new `HelloWorld` contract we:
+We start by declaring a new `HelloWorld` contract in account `0x06`, inside this new `HelloWorld` contract we:
 
 1. Declare the resource `HelloAsset` with public scope `access(all)`
 2. Declare the resource function `hello()` inside `HelloAsset` with public scope `access(all)`
@@ -248,31 +238,31 @@ Resources can only exist in one location at a time, so movement must be explicit
 Now we're going to use a transaction to that calls the `createHelloAsset()` function
 and saves a `HelloAsset` resource to the account's storage.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Create Hello`.
 
-<br />
-
 `Create Hello` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence create_hello.cdc
-// create_hello.cdc
-// This transaction calls the createHelloAsset() function from the contract
-// to create a resource, then saves the resource in account storage using the "save" method.
-import HelloWorld from 0x01
+/// create_hello.cdc
+/// This transaction calls the createHelloAsset() function from the contract
+/// to create a resource, then saves the resource
+/// in the signer's account storage using the "save" method.
+import HelloWorld from 0x06
 
 transaction {
 
-  /// `auth(SaveValue) &Account` means that it is an account object
-  /// that has the `SaveValue` authorization entitlement, which means
-  /// that this transaction can't do anything with the &Account object
-  /// besides saving values to storage.
+    /// `auth(SaveValue) &Account` signifies an account object
+    /// that has the `SaveValue` authorization entitlement, which means
+    /// that this transaction can't do anything with the &Account object
+    /// besides saving values to storage.
+    /// You will learn more about entitlements later
 	prepare(acct: auth(SaveValue) &Account) {
         // Here we create a resource and move it to the variable newHello,
-        // then we save it in the account storage
+        // then we save it in the signer's account storage
         let newHello <- HelloWorld.createHelloAsset()
 
         acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
@@ -287,7 +277,7 @@ transaction {
 
 Here's what this transaction does:
 
-1. Import the `HelloWorld` definitions from account `0x01`
+1. Import the `HelloWorld` definitions from account `0x06`
 2. Uses the `createHelloAsset()` function to create a resource and move it to `newHello`
 3. `save` the created resource in the account storage of the account
    that signed the transaction at the path `/storage/HelloAssetTutorial`
@@ -360,12 +350,12 @@ Finally, in the execute phase we log the phrase `"Saved Hello Resource to accoun
 log("Saved Hello Resource to account.")
 ```
 
-<Callout type="info">
+:::info[Action]
 
-Select account `0x01` as the only signer. Click the `Send` button to submit
+Select account `0x06` as the only signer. Click the `Send` button to submit
 the transaction.
 
-</Callout>
+:::
 
 You should see something like this:
 
@@ -373,26 +363,26 @@ You should see something like this:
 "Saved Hello Resource to account."
 ```
 
-<Callout type="info">
+:::info[Action]
 
 You can also try removing the line of code that saves `newHello` to storage.
 
-<br />
 You should see an error for `newHello` that says `loss of resource`.
 This means that you are not handling the resource properly.
 If you ever see this error in any of your programs,
 it means there is a resource somewhere that is not being explicitly stored or destroyed, meaning the program is invalid.
-<br />
+
 Add the line back to make the transaction check properly.
-</Callout>
+
+:::
 
 In this case, this is the first time we have saved anything with the selected account,
 so we know that the storage spot at `/storage/HelloAssetTutorial` is empty.
 In real applications, we would likely perform necessary checks and actions with the location path we are storing in
 to make sure we don't abort a transaction because of an accidental overwrite.
 
-Now that you have executed the transaction, account `0x01` should have the newly created `HelloWorld.HelloAsset`
-resource stored in its storage. You can verify this by clicking on account `0x01` on the bottom left.
+Now that you have executed the transaction, account `0x06` should have the newly created `HelloWorld.HelloAsset`
+resource stored in its storage. You can verify this by clicking on account `0x06` on the bottom left.
 This should open a view of the different contracts and objects in the account.
 You should see this entry for the `HelloWorld` contract and the `HelloAsset` resource:
 
@@ -440,33 +430,32 @@ with the ability to use FlowToken assets. You don't have to worry about those fo
 
 Now we're going to use a transaction to call the `hello()` method from the `HelloAsset` resource.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Load Hello`.
 
-<br />
-
 `Load Hello` should contain the following code:
 
-</Callout>
+:::
 
 ```cadence load_hello.cdc
-import HelloWorld from 0x01
+import HelloWorld from 0x06
 
 // This transaction calls the "hello" method on the HelloAsset object
 // that is stored in the account's storage by removing that object
-// from storage, calling the method, and then putting it back in storage
+// from storage, calling the method, and then saving it back to the same storage path
 
 transaction {
 
     /// In this prepare block, we have to load a value from storage
-    /// in addition to saving it, so we also need the `LoadValue` authorization entitlement
+    /// in addition to saving it, so we also need the `LoadValue` entitlement
+    /// which additionally allows loading values from storage
     prepare(acct: auth(LoadValue, SaveValue) &Account) {
 
         // Load the resource from storage, specifying the type to load it as
         // and the path where it is stored
         let helloResource <- acct.storage.load<@HelloWorld.HelloAsset>(from: /storage/HelloAssetTutorial)
-          ?? panic("The signer does not have the HelloAsset resource stored at /storage/HelloAssetTutorial")
+            ?? panic("The signer does not have the HelloAsset resource stored at /storage/HelloAssetTutorial. Run the `Create Hello` Transaction again to store the resource")
 
         // log the hello world message
         log(helloResource.hello())
@@ -479,7 +468,7 @@ transaction {
 
 Here's what this transaction does:
 
-1. Import the `HelloWorld` definitions from account `0x01`
+1. Import the `HelloWorld` definitions from account `0x06`
 2. Moves the `HelloAsset` object from storage to `helloResource` with the move operator
   and the `load` function from the [account storage API](../language/accounts/storage.mdx)
 3. Calls the `hello()` function of the `HelloAsset` resource stored in `helloResource` and logs the result
@@ -489,6 +478,9 @@ We're going to be using the `prepare` phase again to load the resource
 using the [reference to the account](../language/accounts/index.mdx) that is passed in.
 
 Let's go over the transaction in more detail.
+
+#### Loads the `HelloAsset` resource from storage
+
 To remove an object from storage, we use the `load` method from the [account storage API](../language/accounts/storage.mdx)
 
 ```cadence
@@ -523,11 +515,33 @@ Here, we explicitly have to account for the possibility that the `helloResource`
 
 We use the nil-coalescing operator (`??`) to "unwrap" the optional.
 This basically means that we are handling the case where the `load` method returns `nil`.
-If it returns `nil`. We `panic`, which will abort execution of the transaction
-with an error message. It is important for developers to always provide detailed error messages
-so that if something goes wrong in the code, it is obvious what needs to be fixed.
+If it returns `nil`, the block of code after `??` executes.
+Here, we `panic`, which will abort execution of the transaction
+with an error message.
 
 Refer to [Optionals In Cadence](../language/values-and-types.mdx#optionals) to learn more about optionals and how they are used.
+
+It is **extremely important** for developers to always provide detailed error messages
+so that if something goes wrong in the code, it is obvious to a user and/or developer
+what needs to be fixed.
+
+Error messages should contain these if possible:
+* Contract name and function name if coming from a contract.
+* Description of the literal error that is happening.
+* Description of what high-level reason might be causing the error.
+* Any metadata or variable values that might are relevant to the error.
+* Suggestion for fixing it if possible.
+
+As you can see in our error message, we describe exactly what is wrong,
+that the resource is not stored at the correct storage path (which we mention).
+Then we suggest a solution to remedy the error, that being to run the "Create Hello"
+transaction to store the resource.
+
+Check out the error messages in the [contracts](https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121)
+and [transactions](https://github.com/onflow/flow-nft/blob/master/transactions/generic_transfer_with_address_and_type.cdc#L46-L50)
+in the Flow NFT GitHub repo for examples of thorough and helpful error messages.
+
+#### Calls the `hello()` function
 
 Next, we call the `hello()` function and log the output.
 
@@ -535,18 +549,20 @@ Next, we call the `hello()` function and log the output.
 log(helloResource.hello())
 ```
 
+#### Saves the resource back in the signer's account
+
 Next, we use `save` again to put the object back in storage in the same spot:
 
 ```cadence
 acct.storage.save(<-helloResource, to: /storage/HelloAssetTutorial)
 ```
 
-<Callout type="info">
+:::info[Action]
 
-Select account `0x01` as the only signer. Click the `Send` button to submit
+Select account `0x06` as the only signer. Click the `Send` button to submit
 the transaction.
 
-</Callout>
+:::
 
 You should see something like this:
 
@@ -565,7 +581,7 @@ that returns the string `"Hello, World!"`
 and declared a function that can create a resource.
 
 Next, you deployed this contract in an account and implemented a transaction to create the resource in the smart contract
-and save it in the account `0x01` by using it as the signer for this transaction.
+and save it in the account `0x06` by using it as the signer for this transaction.
 
 Finally, you used a transaction to move the `HelloAsset` resource from account storage, call the `hello` method,
 and return it to the account storage.

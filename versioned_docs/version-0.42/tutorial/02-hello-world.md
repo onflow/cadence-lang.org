@@ -20,30 +20,36 @@ socialImageDescription: Hello world smart contract image.
 
 In this tutorial, we'll write and deploy our first smart contract!
 
-<Callout type="success">
-  Open the starter code for this tutorial in the Flow Playground: <br />
-  <a
-    href="https://play.onflow.org/af7aba31-dee9-4477-9e1d-7b46e958468e"
-    target="_blank"
-  >
-    https://play.onflow.org/af7aba31-dee9-4477-9e1d-7b46e958468e
-  </a>
-  <br />
-  The tutorial will ask you to take various actions to interact with this code.
-</Callout>
+:::tip
 
-<Callout type="info">
-  The playground code that is linked uses Cadence 0.42, but the examples
-  use Cadence 1.0 to show how each contract, transaction and script
-  is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
-</Callout>
+Open the starter code for this tutorial in the Flow Playground: <br />
+<a
+  href="https://play.onflow.org/af7aba31-dee9-4477-9e1d-7b46e958468e"
+  target="_blank"
+>
+  https://play.onflow.org/af7aba31-dee9-4477-9e1d-7b46e958468e
+</a>
+<br />
+The tutorial will ask you to take various actions to interact with this code.
 
-<Callout type="info">
-  Instructions that require you to take action are always included in a callout
-  box like this one. These highlighted actions are all that you need to do to
-  get your code running, but reading the rest is necessary to understand the
-  language's design.
-</Callout>
+:::
+
+:::warning
+
+The playground code that is linked uses Cadence 0.42, but the examples
+use Cadence 1.0 to show how each contract, transaction and script
+is implemented Cadence 1.0. The link will still work with the current version of the playground, but when the playground is updated to Cadence 1.0, the link will be replaced with a 1.0-compatible version.
+
+:::
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a callout
+box like this one. These highlighted actions are all that you need to do to
+get your code running, but reading the rest is necessary to understand the
+language's design.
+
+:::
 
 ## What is a smart contract?
 
@@ -109,7 +115,7 @@ Each account can have zero or more contracts and/or contract interfaces.
 A contract can be freely added, removed, or updated (with some restrictions) by the owner of the account.
 Now let's look at the `HelloWorld` contract that you'll be working through in this tutorial.
 
-<Callout type="info">
+:::info[Action]
 
 If you haven't already, you'll need to follow this link to open a playground session with the Hello World contracts, transactions, and scripts pre-loaded:
 
@@ -121,17 +127,17 @@ If you haven't already, you'll need to follow this link to open a playground ses
   https://play.onflow.org/dbc06b40-d0b1-42da-9e0d-686bc9972e65
 </a>
 
-</Callout>
+:::
 
 ![Playground Intro](playground-intro.png)
 
-<Callout type="info">
+:::info[Action]
 
 Open the Account `0x01` tab with the file called
 `HelloWorld.cdc` in the Contract 1 space. <br />
 `HelloWorld.cdc` should contain this code:
 
-</Callout>
+:::
 
 ```cadence HelloWorld.cdc
 // HelloWorld.cdc
@@ -220,13 +226,13 @@ Outside the Playground context, account addresses on Flow are completely unique.
 
 Now that you know what an account is in a Cadence context, you can deploy the `HelloWorld` contract to your account.
 
-<Callout type="info">
+:::info[Action]
 
 Make sure that the account `0x01` tab is selected and that the
 `HelloWorld.cdc` file is in the editor. <br />
 Click the deploy button to deploy the contents of the editor to account `0x01`.
 
-</Callout>
+:::
 
 ![Deploy Contract](deploybox.png)
 
@@ -253,12 +259,12 @@ In addition to being able to access the authorizer's private assets,
 transactions can also read and call functions in public contracts, and access public domains in other users' accounts.
 For this tutorial, we use a transaction to call our `hello()` function.
 
-<Callout type="info">
+:::info[Action]
 
 Open the transaction named `Simple Transaction` <br />
 `Simple Transaction` should contain this code:
 
-</Callout>
+:::
 
 ```cadence SayHello.cdc
 import HelloWorld from 0x01
@@ -295,12 +301,12 @@ Transactions are divided into two main phases, `prepare` and `execute`.
    It can call functions on external contracts and objects and perform operations on data that was initialized in the transaction.
    In this example, the `execute` phase calls `HelloWorld.hello()` which calls the `hello()` function in the `HelloWorld` contract and logs the result(`log(HelloWorld.hello())`) to the console.
 
-<Callout type="info">
+:::info[Action]
 
 In the box at the bottom right of the editor, select Account `0x01` as the transaction signer. <br />
 Click the `Send` button to submit the transaction
 
-</Callout>
+:::
 
 You should see something like this in the transaction results at the bottom of the screen:
 

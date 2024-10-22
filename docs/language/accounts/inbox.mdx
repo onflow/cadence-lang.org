@@ -94,9 +94,11 @@ the function returns `nil`.
 If the borrow type of the capability is not a subtype of the provided type argument,
 the program aborts.
 
-<Callout type="info">
+:::tip
+
 It is only possible to claim a capability once.
-</Callout>
+
+:::
 
 Calling function `claim` function emits an event, `InboxValueClaimed`,
 that includes the address of both the provider and the recipient,

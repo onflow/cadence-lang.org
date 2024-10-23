@@ -189,6 +189,12 @@ const config = {
         contextualSearch: true,
       },
     }),
+    scripts: [
+      {
+        src: '/hotjar.js',
+        async: true,
+      },
+    ],
 };
 
 module.exports = config;

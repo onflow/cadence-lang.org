@@ -90,12 +90,20 @@ struct AccountKey {
     let isRevoked: Bool
 }
 ```
+A valid account key's `publicKey` field is a `PublicKey` of either the 
+`ECDSA_P256` or `ECDSA_secp256k1` signature algorithm.
+Public keys of other signature algorithms supported by Cadence are 
+not valid account public keys. 
 
 Refer to the [public keys section](../crypto.mdx#public-keys)
 for more details on the creation and validity of public keys.
 
-Refer to the [hash algorithms section](../crypto.mdx#hash-algorithms)
-for more details on supported hash algorithms.
+A valid account key's `hashAlgorithm` field is either `SHA2_256` or `SHA3_256`.  
+All other hash algorithms supported by Cadence are 
+not valid for hashing with an account key.
+
+Refer to the the [hash algorithms section](../crypto.mdx#hash-algorithms)
+for more details on hash algorithms.
 
 ## Getting an account key
 

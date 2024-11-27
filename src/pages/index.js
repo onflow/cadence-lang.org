@@ -140,7 +140,7 @@ export default function Home() {
                 </p>
                 <p>
                   Cadence includes several language features that prevent entire classes of bugs via a strong static type system, <a href="https://developers.flow.com/cadence/language/functions#function-preconditions-and-postconditions">design by contract</a>,
-                  and <a href="https://cadence-lang.org/docs/language/capabilities">capability-based access control</a>.
+                  and <a href="https://developers.flow.com/cadence/language/access-control">capability-based access control</a>.
                 </p>
                 <p>
                   These security and safety features allow smart contract developers to focus on the business logic of their contract,

@@ -135,11 +135,11 @@ export default function Home() {
                   Cadence provides security and safety guarantees that greatly simplify the development of secure smart contracts.
                 </p>
                 <p>
-                  As smart contracts often deal with valuable assets, Cadence provides the <a href="https://developers.flow.com/cadence/language/resources">resource-oriented programming paradigm</a>,
+                  As smart contracts often deal with valuable assets, Cadence provides the <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming paradigm</a>,
                   which guarantees that assets can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted.
                 </p>
                 <p>
-                  Cadence includes several language features that prevent entire classes of bugs via a strong static type system, <a href="https://developers.flow.com/cadence/language/functions#function-preconditions-and-postconditions">design by contract</a>,
+                  Cadence includes several language features that prevent entire classes of bugs via a strong static type system, <a href="https://cadence-lang.org/docs/language/functions#function-preconditions-and-postconditions">design by contract</a>,
                   and <a href="https://cadence-lang.org/docs/language/capabilities">capability-based access control</a>.
                 </p>
                 <p>
@@ -156,16 +156,16 @@ export default function Home() {
               <div>
                 <h3><FcMindMap/>Built for permissionless composability</h3>
                 <p>
-                  <a href="https://developers.flow.com/cadence/language/resources">Resources</a> are stored directly in users' accounts,
+                  <a href="https://cadence-lang.org/docs/language/resources">Resources</a> are stored directly in users' accounts,
                   and can flow freely between contracts. They can be passed as arguments to functions, returned from functions, or even combined in arbitrary data structures.
                   This makes implementing business logic easier and promotes the reuse of existing logic.
                 </p>
                 <p>
-                  <a href="https://developers.flow.com/cadence/language/interfaces">Interfaces</a> enable interoperability of contracts and resources allowing
+                  <a href="https://cadence-lang.org/docs/language/interfaces">Interfaces</a> enable interoperability of contracts and resources allowing
                developers to integrate their applications into existing experiences easily.
                 </p>
                 <p>
-                  In addition, the <a href="https://developers.flow.com/cadence/language/attachments">attachments</a> feature
+                  In addition, the <a href="https://cadence-lang.org/docs/language/attachments">attachments</a> feature
                   of Cadence allows developers to extend existing types with new functionality and data,
                   without requiring the original author of the type to plan or account for the intended behavior.
                 </p>
@@ -181,7 +181,7 @@ export default function Home() {
                 <p>
                   Cadence's syntax is inspired by popular modern general-purpose programming languages like Swift, Kotlin, and Rust,
                   so developers will find the syntax and the semantics familiar.
-                  Practical tooling, <a href="https://developers.flow.com/cadence/language">documentation</a>,
+                  Practical tooling, <a href="https://cadence-lang.org/docs/language">documentation</a>,
                   and examples enable developers to start creating programs quickly and effectively.
                 </p>
               </div>

@@ -19,15 +19,15 @@ jobs:
         with:
           # The secret containing your Typesense API key. Required.
           api-key: ${{ env.TYPESENSE_ADMIN_API_KEY }}
-          
+
           # The hostname or IP address of your Typesense server. Required.
           host: ${{ env.TYPESENSE_NODE }}
-          
+
           # The port on which your Typesense server is listening. Optional. Default: 8108.
           port: 443
-          
+
           # The protocol to use when connecting to your Typesense server. Optional. Default: http.
           protocol: https
-          
+
           # The path to your DocSearch config file. Optional. Default: docsearch.config.json.
           config: docsearch.config.json

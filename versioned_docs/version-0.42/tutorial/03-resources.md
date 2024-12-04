@@ -230,7 +230,7 @@ The `@` symbol specifies that it is a resource of the type `HelloAsset`, which w
 This function uses the move operator to create a resource of type `HelloAsset` and return it.
 To create a new resource object, we use the `create` keyword
 
-Here we use the `<-` symbol. [This is the move operator](../language/resources.mdxx#the-move-operator--).
+Here we use the `<-` symbol. [This is the move operator](../language/resources.mdx#the-move-operator--).
 The move operator `<-` replaces the assignment operator `=` in assignments that involve resources.
 To make the assignment of resources explicit, the move operator `<-` must be used when:
 
@@ -595,7 +595,7 @@ Now that you have completed the tutorial, you have the basic knowledge to write 
 Feel free to modify the smart contract to create different resources,
 experiment with the available [account storage API](https://cadence-lang.org/docs/1.0/language/accounts/storage),
 and write new transactions and scripts that execute different functions from your smart contract.
-Have a look at the [resource reference page](../language/resources.mdxx)
+Have a look at the [resource reference page](../language/resources.mdx)
 to find out more about what you can do with resources.
 
 You're on the right track to building more complex applications with Cadence,

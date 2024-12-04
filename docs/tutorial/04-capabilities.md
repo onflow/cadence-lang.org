@@ -42,7 +42,7 @@ language's design.
 
 :::
 
-This tutorial builds on the [previous `Resource` tutorial](./03-resources.md).
+This tutorial builds on the [previous `Resource` tutorial](./03-resources.mdx).
 Before beginning this tutorial, you should have an idea of
 how accounts, transactions, resources, and signers work with basic field types.
 This tutorial will build on your understanding of accounts and resources.
@@ -89,7 +89,7 @@ In this tutorial, you will:
 
 ---
 Before following this tutorial, you should have the `HelloWorld` contract deployed in account `0x06`,
-just like in the [previous `Resource` contract tutorial](./03-resources.md).
+just like in the [previous `Resource` contract tutorial](./03-resources.mdx).
 
 :::info[Action]
 
@@ -133,7 +133,7 @@ Click on the `Create Hello` transaction and send it with `0x06` as the signer.
 
 The contract and transaction above creates and stores the resource we'll be using in this tutorial.
 For a more detailed breakdown of the contract and transactions,
-have a look at the [previous tutorial](./03-resources.md).
+have a look at the [previous tutorial](./03-resources.mdx).
 
 ### Creating Capabilities and References to Stored Resources
 

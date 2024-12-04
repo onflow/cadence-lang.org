@@ -49,7 +49,7 @@ In this contract, a Ballot is represented as a resource.
 An administrator can give Ballots to other accounts, then those accounts mark which proposals they vote for
 and submit the Ballot to the central smart contract to have their votes recorded.
 
-Using a [resource](../language/resources.md) type is logical for this application, because if a user wants to delegate their vote,
+Using a [resource](../language/resources.mdx) type is logical for this application, because if a user wants to delegate their vote,
 they can send that Ballot to another account, and the use case of voting ballots benefits from the uniqueness and existence guarantees
 inherent to resources.
 

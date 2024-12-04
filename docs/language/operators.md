@@ -90,7 +90,7 @@ dictionaries[false][3] = 0
 
 ## Move Operator (`<-`)
 
-The move operator (`<-`) is unique to Cadence and is used to move [resource types](./resources.md) from one location to another.  It works similar to the assignment operator (`=`) you're used to from most programming languages, except that the data in the location on the right side of the statement is **destroyed** by the operation.
+The move operator (`<-`) is unique to Cadence and is used to move [resource types](./resources.mdx) from one location to another.  It works similar to the assignment operator (`=`) you're used to from most programming languages, except that the data in the location on the right side of the statement is **destroyed** by the operation.
 
 ```cadence
 // Declare a resource named `SomeResource`, with a variable integer field.
@@ -131,7 +131,7 @@ to an optional-typed variable if the variable is nil.
 If the variable being assigned to is non-nil,
 the execution of the program aborts.
 
-The force-assignment operator is only used for [resource types](./resources.md).
+The force-assignment operator is only used for [resource types](./resources.mdx).
 
 ## Swapping Operator (`<->`)
 

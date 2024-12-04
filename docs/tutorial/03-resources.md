@@ -595,8 +595,8 @@ Now that you have completed the tutorial, you can:
 
 <!-- Relative links.  Will not render on the page -->
 
-[resources]: ../language/resources.md
-[Resources]: ../language/resources.md
+[resources]: ../language/resources.mdx
+[Resources]: ../language/resources.mdx
 [move operator]: ../language/operators.md#move-operator--
 [entitlement]: ../language/access-control#entitlements
 [account references (`&Account`)]: ../language/accounts/index.mdx

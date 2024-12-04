@@ -1,5 +1,20 @@
 ---
-title: 1. First Steps
+archived: false
+draft: false
+title: First Steps
+date: 2024-11-26
+meta:
+  keywords:
+    - tutorial
+    - Flow
+    - Cadence
+    - Hello World
+tags:
+  - reference
+  - cadence
+  - tutorial
+socialImageTitle: Cadence First Steps
+socialImageDescription: Take your first steps to learn the Cadence smart contract programming language.
 ---
 
 Welcome to our series of guides that will get you up to speed on [Cadence] as quickly as possible!  In this program, you'll jump right into making meaningful projects.  Don't worry, we'll point you to the important parts of the language reference as each concept is introduced!
@@ -8,7 +23,7 @@ This series makes use of the [Flow Playground] - an online IDE that enables you 
 
 :::tip
 
-If you already know Solidity, you might want to start with the [Cadence Guide for Solidity Developers].  It compares the two languages and points out the most impactful differences from the perspective of a Solidity dev.
+If you already know Solidity, you might want to review the [Cadence Guide for Solidity Developers].  It compares the two languages and points out the most impactful differences from the perspective of a Solidity dev.
 
 :::
 
@@ -115,24 +130,50 @@ You'll see the name of the contract and the block height it was deployed at in t
 
 ![Full Storage View](full-storage.png)
 
-## Transactions
+## Scripts
 
-Cadence transactions are written in Cadence.
-
-In the `Transactions` folder, you'll find a few examples.
+In Cadence, scripts are simple, transaction-like snippets of code that you can use to **read** onchain data that is public.
 
 :::info[Action]
 
-Open the `Create Hello` transaction and `Send` it. 
+Open the `GetGreeting` script and `Execute` it.
+
+:::
+
+You'll see the `result` logged in the console.
+
+## Transactions
+
+Cadence transactions are also written in Cadence.
+
+In the `Transactions` folder, you'll find an example of one.
+
+:::info[Action]
+
+Open the `ChangeGreeting` transaction, enter a new `greeting`, and `Send` it. 
 
 :::
 
 Once the transaction completes, you'll see the output in the `Log` at the bottom of the window.
 
+:::info[Action]
+
+Open the `GetGreeting` script and `Execute` it again.
+
+:::
+
+You'll now see your new greeting returned in the log!
+
 ## Say Hello, World!
 
-Now that you have the Flow Developer Playground running,
-you can [create a smart contract](./02-hello-world.md) for Flow!
+You're now ready to write your own contract and say "Hello World!"
+
+Now that you have completed the tutorial, you can:
+
+* Write, deploy, and interact with Cadence code in the Flow Playground.
+* Select and utilize accounts in the Flow Playground.
+* Run Cadence transactions from the playground.
+* Explore the contracts and storage associated with test accounts.
 
 <!-- Relative links.  Will not render on the page -->
 

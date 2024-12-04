@@ -1,9 +1,9 @@
 ---
 archived: false
 draft: false
-title: 2. Hello World
+title: Hello World
 description: A smart contract tutorial for Cadence.
-date: 2024-09-17
+date: 2024-11-26
 meta:
   keywords:
     - tutorial
@@ -15,10 +15,18 @@ tags:
   - cadence
   - tutorial
 socialImageTitle: Hello World
-socialImageDescription: Hello world smart contract image.
+socialImageDescription: Write your own Hello World smart contract in Cadence.
 ---
 
-In this tutorial, we'll write and deploy our first smart contract!  
+It's time to write your own "Hello World" contract.  In this instance, the contract will:
+
+1. Create and initialize a smart contract with a single field of type `String`
+1. Initialize the field with the phrase "Hello, World!"
+1. Create a function in the contract that returns our greeting
+
+We will deploy this contract in an account, use a transaction to interact with the contract, and finally, explore the role of signers in a transaction.
+
+## Objectives
 
 After completing this tutorial, you'll be able to:
 
@@ -27,28 +35,17 @@ After completing this tutorial, you'll be able to:
 * Write simple transactions in Cadence.
 * Describe the role of signers in a Cadence transaction.
 
-## Overview
-
-It's time to write your own "Hello World" contract.  In this instance, the contract will:
-
-1. Create and initialize a smart contract with a single field of type `String`
-2. Initialize the field with the phrase "Hello, World!"
-3. Create a function in the contract that returns our greeting
-
-We will deploy this contract in an account, use a transaction to interact with the contract, and finally, explore the role of signers in a transaction.
-
 ## Implementing Hello World
 
 :::info[Action]
 
-If you haven't already, you'll need to follow this link to open a playground session with the Hello World contracts, transactions, and scripts pre-loaded:
+Open the starter code for this tutorial in the Flow Playground:
 
-{' '}
 <a
-  href="https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa"
+  href="https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4"
   target="_blank"
 >
-  https://play.flow.com/483b2f33-9e71-40aa-924a-2c5f0ead77aa
+  https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4
 </a>
 
 :::
@@ -87,7 +84,7 @@ access(all) let greeting: String
 
 :::warning
 
-Cadence follows the pattern of Swift where the `let` keyword is used to declare a constant. The `var` keyword is used to declare a variable.
+Cadence follows the same pattern as Swift where the `let` keyword is used to declare a constant. The `var` keyword is used to declare a variable.
 
 :::
 
@@ -149,7 +146,7 @@ The owner of an account can directly add or update contracts that are deployed t
 
 :::warning[Important]
 
-On Flow Cadence, **smart contracts are upgradeable**.  If you make a mistake, you can fix it in a public and transparent manner.
+On Flow Cadence, **smart contracts are upgradeable**.  If you make a mistake, you can often [update] it, constrained by some rules, in a public and transparent manner.
 
 :::
 
@@ -202,7 +199,7 @@ For this tutorial, we'll use a transaction to call our `hello()` function.
 
 :::info[Action]
 
-Click the `+` button by the `Transactions` folder to create a new transaction file.  Name it `CallHello.cdc`.
+Open the `CallHello` file in the `Transactions` folder.
 
 :::
 
@@ -294,7 +291,7 @@ Simple Transaction
 Cadence log: "Hello, World!"
 ```
 
-Congratulations, you just executed your first Cadence transaction with the account `0x06` as the signer.
+Congratulations, you just executed your first Cadence transaction with the account `0x06` as the signer!
 
 In this tutorial, you'll get the same result if you use different signers for the transaction but later tutorials will use more complex examples that have different results depending on the signer.
 
@@ -304,8 +301,12 @@ This tutorial covered an introduction to Cadence, including terms like accounts,
 
 Next, we deployed this contract in an account and implemented a transaction to call the function in the smart contract and log the result to the console. Finally, we used the account `0x06` as the signer for this transaction.
 
-Feel free to modify the smart contract to implement different functions,
-experiment with the available [Cadence types], and write new transactions that execute multiple functions from your `HelloWorld` smart contract.
+Now that you have completed the tutorial, you can:
+
+* Declare a public Cadence smart contract.
+* Initialize a public `String` variable. 
+* Write simple transactions in Cadence.
+* Describe the role of signers in a Cadence transaction.
 
 <!-- Relative links.  Will not render on the page -->
 
@@ -316,6 +317,7 @@ experiment with the available [Cadence types], and write new transactions that e
 [Composite Types]: ../language/composite-types.mdx
 [multiple controllers]: https://www.coindesk.com/what-is-a-multisignature-crypto-wallet
 [contract area]: ../language/accounts/contracts
+[update]: ../language/contract-updatability.md
 [account storage]: ../language/accounts/storage
 [Transaction]: ../language/transactions.md
 [`prepare`]: ../language/transactions.md#prepare-phase

@@ -12,18 +12,13 @@ Resources **must** be created (instantiated) by using the `create` keyword.
 At the end of a function which has resources (variables, constants, parameters) in scope,
 the resources **must** be either **moved** or **destroyed**.
 
-They are **moved** when used as an initial value for a constant or variable,
-when assigned to a different variable,
-when passed as an argument to a function,
-and when returned from a function.
+They are **moved** when used as an initial value for a constant or variable, when assigned to a different variable, when passed as an argument to a function, and when returned from a function.
 
 Resources can be explicitly **destroyed** using the `destroy` keyword.
 
 Accessing a field or calling a function of a resource does not move or destroy it.
 
-When the resource is moved, the constant or variable
-that referred to the resource before the move becomes **invalid**.
-An **invalid** resource cannot be used again.
+When the resource is moved, the constant or variable that referred to the resource before the move becomes **invalid**. An **invalid** resource cannot be used again.
 
 To make the usage and behaviour of resource types explicit,
 the prefix `@` must be used in type annotations
@@ -39,7 +34,7 @@ and when it is returned from a function.
 
 ```cadence
 // Declare a resource named `SomeResource`, with a variable integer field.
-//
+
 access(all)
 resource SomeResource {
     
@@ -52,38 +47,38 @@ resource SomeResource {
 }
 
 // Declare a constant with value of resource type `SomeResource`.
-//
-let a: @SomeResource <- create SomeResource(value: 0)
+
+let a: @SomeResource <- create SomeResource(value: 5)
 
 // *Move* the resource value to a new constant.
-//
+
 let b <- a
 
-// Invalid: Cannot use constant `a` anymore as the resource that it referred to
-// was moved to constant `b`.
-//
+// Invalid Line Below: Cannot use constant `a` anymore as the resource that it
+// referred to was moved to constant `b`.
+
 a.value
 
 // Constant `b` owns the resource.
-//
-b.value // equals 0
+
+b.value // equals 5
 
 // Declare a function which accepts a resource.
-//
+
 // The parameter has a resource type, so the type annotation must be prefixed with `@`.
-//
+
 access(all)
 fun use(resource: @SomeResource) {
     // ...
 }
 
 // Call function `use` and move the resource into it.
-//
+
 use(resource: <-b)
 
-// Invalid: Cannot use constant `b` anymore as the resource
-// it referred to was moved into function `use`.
-//
+// Invalid Line Below: Cannot use constant `b` anymore as the resource it
+// referred to was moved into function `use`.
+
 b.value
 ```
 
@@ -93,7 +88,7 @@ The program must either explicitly destroy it or move it to another context.
 ```cadence
 {
     // Declare another, unrelated value of resource type `SomeResource`.
-    //
+    
     let c <- create SomeResource(value: 10)
 
     // Invalid: `c` is not used before the end of the scope, but must be.

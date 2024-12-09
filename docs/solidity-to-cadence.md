@@ -1,6 +1,6 @@
 ---
-title: Guide for Solidity Developers
-sidebar_label: Guide for Solidity Developers
+title: Cadence Guide for Solidity Developers
+sidebar_label: Cadence Guide for Solidity Developers
 sidebar_position: 8
 ---
 Cadence introduces a different way to approach smart contract development which may feel unfamiliar to Solidity

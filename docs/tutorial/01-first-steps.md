@@ -57,10 +57,10 @@ The playground comes pre-loaded with contract and transaction templates that cor
 
 Open the starter code for this tutorial in the Flow Playground: <br />
 <a
-  href="https://play.flow.com/"
+  href="https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897"
   target="_blank"
 >
-  https://play.flow.com/
+  https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897
 </a>
 
 :::

@@ -270,11 +270,11 @@ execute {
 You should have something similar to:
 
 ```cadence
-import HelloWorldResource from 0x06
+import HelloResource from 0x06
 
 transaction {
         prepare(acct: auth(SaveValue) &Account) {
-        let newHello <- HelloWorldResource.createHelloAsset()
+        let newHello <- HelloResource.createHelloAsset()
         acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
     }
 
@@ -354,7 +354,7 @@ You'll see the resource you created in Account Storage:
             },
             "value": {
                 "value": {
-                    "id": "A.0000000000000006.HelloWorldResource.HelloAsset",
+                    "id": "A.0000000000000006.HelloResource.HelloAsset",
                     "fields": [
                         {
                             "value": {
@@ -374,7 +374,7 @@ You'll see the resource you created in Account Storage:
                 "type": "String"
             },
             "value": {
-                "value": "A.0000000000000006.HelloWorldResource.HelloAsset",
+                "value": "A.0000000000000006.HelloResource.HelloAsset",
                 "type": "String"
             }
         },
@@ -396,7 +396,7 @@ You'll see the resource you created in Account Storage:
 }
 ```
 
-You'll also see `FlowToken` objects, and the `HelloWorldResourceContract`.
+You'll also see `FlowToken` objects, and the `HelloResource` Contract.
 
 :::info[Action]
 

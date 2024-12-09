@@ -20,9 +20,9 @@ socialImageDescription: Write your own Hello World smart contract in Cadence.
 
 It's time to write your own "Hello World" contract.  In this instance, the contract will:
 
-1. Create and initialize a smart contract with a single field of type `String`
-1. Initialize the field with the phrase "Hello, World!"
-1. Create a function in the contract that returns our greeting
+1. Create and initialize a smart contract with a single field of type `String`.
+1. Initialize the field with the phrase "Hello, World!".
+1. Create a function in the contract that returns our greeting.
 
 We will deploy this contract in an account, use a transaction to interact with the contract, and finally, explore the role of signers in a transaction.
 
@@ -132,7 +132,7 @@ The `view` annotation indicates that the function is permitted to view, but not 
 
 Each user has an account controlled by one or more private keys with configurable weight. This means that support for accounts/wallets with [multiple controllers] is built into the protocol by default.
 
-An account is divided into two main areas:
+An account is divided into two main areas - the _Contract Area_ and _Account Storage_.
 
 ### Contract Area
 
@@ -150,7 +150,9 @@ On Flow Cadence, **smart contracts are upgradeable**.  If you make a mistake, yo
 
 :::
 
-The second area is where you'll find [account storage](../language/accounts/storage).  This area is where an account stores the objects that they own. This is an important differentiator between Cadence and other languages, because in other languages, assets that accounts own are usually stored in the centralized smart contract that defines the assets. 
+### Account Storage
+
+The second area is where you'll find [account storage].  This area is where an account stores the objects that they own. This is an important differentiator between Cadence and other languages, because in other languages, assets that accounts own are usually stored in the centralized smart contract that defines the assets. 
 
 :::warning[Important]
 
@@ -162,7 +164,7 @@ The account storage section also stores code that declares the capabilities for 
 
 In this tutorial, we'll use the account with the address `0x06` to store our `HelloWorld` contract.
 
-### Deploying the HelloWorld Contract
+## Deploying the HelloWorld Contract
 
 :::info[Action]
 
@@ -318,7 +320,7 @@ Now that you have completed the tutorial, you can:
 [multiple controllers]: https://www.coindesk.com/what-is-a-multisignature-crypto-wallet
 [contract area]: ../language/accounts/contracts
 [update]: ../language/contract-updatability.md
-[account storage]: ../language/accounts/storage
+[account storage]: ../language/accounts/storage.mdx
 [Transaction]: ../language/transactions.md
 [`prepare`]: ../language/transactions.md#prepare-phase
 [Cadence types]: ../language/values-and-types.mdx

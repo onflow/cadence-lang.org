@@ -83,7 +83,7 @@ Accounts are the primary conduit for user interaction with on-chain code and ass
 
 :::warning
 
-Flow is different from most other blockchains in that contracts, assets, and information owned by a user or associated with their wallet address **are stored in the user's account**.
+Flow is different from most other blockchains in that contracts, assets, and information owned by a user or associated with their wallet address **are stored in the user's account**.  
 
 :::
 
@@ -140,6 +140,8 @@ Open the `GetGreeting` script and `Execute` it.
 
 :::
 
+This script loads the instance of the `HelloWorld` contract you deployed with account `0x06` and returns the result of calling the `hello` function, which is the value stored onchain in the contract's `greeting` field.
+
 You'll see the `result` logged in the console.
 
 ## Transactions
@@ -153,6 +155,8 @@ In the `Transactions` folder, you'll find an example of one.
 Open the `ChangeGreeting` transaction, enter a new `greeting`, and `Send` it. 
 
 :::
+
+Doing so executes a transaction to call `changeGreeting` and update the value in `greeting` for this specific instance of `HelloWorld`, deployed by address `0x06`.
 
 Once the transaction completes, you'll see the output in the `Log` at the bottom of the window.
 

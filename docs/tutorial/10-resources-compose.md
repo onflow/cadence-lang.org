@@ -17,7 +17,7 @@ Resources owning other resources is a powerful feature in the world of blockchai
 
 **Before proceeding with this tutorial**, we recommend following the instructions in [Getting Started](./01-first-steps.md), 
 [Hello, World!](./02-hello-world.md),
-and [Resources](./03-resources.mdx) to learn about the Playground and Cadence.
+and [Resources](./03-resources.md) to learn about the Playground and Cadence.
 
 
 ## Resources Owning Resources

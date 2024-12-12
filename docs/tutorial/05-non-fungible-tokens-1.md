@@ -102,7 +102,7 @@ for the standard interface and example implementation.
 **Before proceeding with this tutorial**, we highly recommend
 following the instructions in [Getting Started](./01-first-steps.md),
 [Hello, World!](./02-hello-world.md),
-[Resources](./03-resources.mdx),
+[Resources](./03-resources.md),
 and [Capabilities](./04-capabilities.md)
 to learn how to use the Playground tools and to learn the fundamentals of Cadence.
 This tutorial will build on the concepts introduced in those tutorials.
@@ -130,7 +130,7 @@ Resources are a perfect type to represent NFTs
 because resources have important ownership rules that are enforced by the type system.
 They can only have one owner, cannot be copied, and cannot be accidentally or maliciously lost or duplicated.
 These protections ensure that owners know that their NFT is safe and can represent an asset that has real value.
-For more information about resources, see the [resources tutorial](./03-resources.mdx)
+For more information about resources, see the [resources tutorial](./03-resources.md)
 
 An NFT is also usually represented by some sort of metadata like a name or a picture.
 Historically, most of this metadata has been stored off-chain,

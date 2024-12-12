@@ -29,7 +29,7 @@ After completing this tutorial, you'll be able to:
 
 * Instantiate a `resource` in a smart contract with the `create` keyword
 * Save, move, and load resources using the [Account Storage API] and the [move operator] (`<-`)
-* Use `borrow` to access and use a function in a resource
+* Use [`borrow`] to access and use a function in a resource
 * Use the `prepare` phase of a transaction to load resources from account storage
 * Set and use variables in both the `prepare` and `execute` phase
 * Use the [nil-coalescing operator (`??`)] to `panic` if a resource is not found
@@ -451,7 +451,7 @@ In Cadence, storage paths are a type.  They are **not** `Strings` and are not en
 
 :::
 
-The best way to check whether or not a storage path has an object in it is to attempt to borrow the object from that path.  If the result is `nil`, then it's empty.  Otherwise, something is present.
+The best way to check whether or not a storage path has an object in it is to attempt to [borrow] the object from that path.  If the result is `nil`, then it's empty.  Otherwise, something is present.
 
 Depending on the needs of your app, you'll use this pattern to decide what to do in each case.  For this example, we'll simply use it to change the log message if the storage is in use or create and save the `HelloAsset` if it is not.
 
@@ -472,7 +472,7 @@ if helloAsset != nil {
 }
 ```
 
-When you `borrow` a resource, you must put the type of the resource to be borrowed inside the `<>` after the call to `borrow`, before the parentheses.  The `from` parameter is the storage path to the object you are borrowing.
+When you [`borrow`] a resource, you must put the type of the resource to be borrowed inside the `<>` after the call to `borrow`, before the parentheses.  The `from` parameter is the storage path to the object you are borrowing.
 
 :::info[Action]
 
@@ -509,7 +509,7 @@ It's empty!
 
 :::info[Action]
 
-On your own, stub out a transaction that imports `HelloWorldResource` and passes in an account reference with the `BorrowValue` authorization entitlement.
+On your own, stub out a transaction that imports `HelloWorldResource` and passes in an account [reference] with the `BorrowValue` authorization entitlement.
 
 :::
 
@@ -526,13 +526,13 @@ transaction {
 }
 ```
 
-You just learned how to `borrow` a reference to a resource.  You could use an `if` statement to handle the possibility that the resource isn't there, but if you want to simply terminate execution, a common practice is to combine a `panic` statement with the [nil-coalescing operator (`??`)].
+You just learned how to [`borrow`] a [reference] to a resource.  You could use an `if` statement to handle the possibility that the resource isn't there, but if you want to simply terminate execution, a common practice is to combine a `panic` statement with the [nil-coalescing operator (`??`)].
 
 This operator executes the statement on the left side.  If that is `nil`, the right side is evaluated and returned.  In this case, the return is irrelevant, because we're going to cause a `panic` and terminate execution.
 
 :::info[Action]
 
-Create a variable with a reference to the `HelloAsset` resource stored in the user's account.  Panic if this resource is not found.
+Create a variable with a [reference] to the `HelloAsset` resource stored in the user's account.  Panic if this resource is not found.
 
 :::
 
@@ -549,7 +549,7 @@ Finally, `log` the return from a call to the `hello()` function.
 
 :::warning
 
-Borrowing a reference does **not** allow you to move or destroy a resource, but it **does allow** you to mutate data inside that resource.
+Borrowing a [reference] does **not** allow you to move or destroy a resource, but it **does allow** you to mutate data inside that resource.
 
 :::
 
@@ -582,13 +582,13 @@ In this tutorial you learned how to `create` [resources] in Cadence. You impleme
 
 Next, you implemented a transaction to create the resource and save it in the account calling it.
 
-Finally, you used a transaction to borrow a reference to the `HelloAsset` resource from account storage and call the `hello` method
+Finally, you used a transaction to [borrow] a [reference] to the `HelloAsset` resource from account storage and call the `hello` method
 
 Now that you have completed the tutorial, you can:
 
 * Instantiate a `resource` in a smart contract with the `create` keyword
 * Save, move, and load resources using the [Account Storage API] and the [move operator] (`<-`)
-* Use `borrow` to access and use a function in a resource
+* Use [`borrow`] to access and use a function in a resource
 * Use the `prepare` phase of a transaction to load resources from account storage
 * Set and use variables in both the `prepare` and `execute` phase
 * Use the [nil-coalescing operator (`??`)] to `panic` if a resource is not found
@@ -598,9 +598,13 @@ Now that you have completed the tutorial, you can:
 [resources]: ../language/resources.mdx
 [Resources]: ../language/resources.mdx
 [move operator]: ../language/operators.md#move-operator--
+[Account Storage API]: ..//language/accounts/storage.mdx
+[`borrow`]: ../language/accounts/storage.mdx#accessing-objects
+[borrow]: ../language/accounts/storage.mdx#accessing-objects
 [entitlement]: ../language/access-control#entitlements
 [account references (`&Account`)]: ../language/accounts/index.mdx
 [paths]: ../language/accounts/paths.mdx
+[reference]: ../language/references.mdx
 [nil-coalescing operator (`??`)]: ../language/operators.md#nil-coalescing-operator-
 [Non-Fungible Token Contract]: https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121)
 [Generic NFT Transfer transaction]: https://github.com/onflow/flow-nft/blob/master/transactions/generic_transfer_with_address_and_type.cdc#L46-L50

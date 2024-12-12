@@ -1,10 +1,8 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 require("dotenv").config();
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const codeThemes = require("prism-react-renderer")
 
-const theme = require("shiki/themes/nord.json");
 const { remarkCodeHike } = require("@code-hike/mdx");
 
 const hasTypesense =
@@ -56,7 +54,7 @@ const config = {
           beforeDefaultRemarkPlugins: [
             [
               remarkCodeHike,
-              { theme, lineNumbers: true, showCopyButton: true },
+              { theme: "nord", lineNumbers: true, showCopyButton: true },
             ],
           ],
           sidebarPath: require.resolve("./sidebars.js"),
@@ -163,8 +161,8 @@ const config = {
         Content is licensed under the Creative Commons Attribution 4.0 International License.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: codeThemes.themes.github,
+        darkTheme: codeThemes.themes.dracula,
       },
       typesense: hasTypesense && {
         // Replace this with the name of your index/collection.

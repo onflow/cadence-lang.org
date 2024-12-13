@@ -80,6 +80,14 @@ const config = {
             require.resolve("./src/css/custom.css"),
           ],
         },
+        ...(process.env.GTAG
+          ? {
+            gtag: {
+              trackingID: process.env.GTAG,
+              anonymizeIP: true,
+            },
+          }
+          : {}),
       }),
     ],
   ],
@@ -189,6 +197,12 @@ const config = {
         contextualSearch: true,
       },
     }),
+    scripts: [
+      {
+        src: '/hotjar.js',
+        async: true,
+      },
+    ],
 };
 
 module.exports = config;

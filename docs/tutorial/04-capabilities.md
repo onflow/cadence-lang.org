@@ -283,7 +283,7 @@ Addresses are **not** strings and thus do **not** have quotes around them.
 
 Next, `borrow` the public capability your `Create Link` transaction saved in `/public/HelloAssetTutoral`.
 
-Your script should `return return helloReference.hello()`.
+Your script should return `return helloReference.hello()`.
 
 :::
 

@@ -1,7 +1,7 @@
 ---
 archived: false
 draft: false
-title: Simple NFT (Part 1)
+title: Basic NFT (Part 1)
 description: An introduction to a simplified version of NFTs on Cadence.
 date: 2024-09-17
 meta:

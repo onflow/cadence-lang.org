@@ -199,7 +199,7 @@ account.capabilities.publish(capability, at: /public/HelloAssetTutorial)
 
 You should end up with a transaction similar to:
 
-```cadenced Create Link.cdc
+```cadence Create Link.cdc
 import HelloWorld from 0x06
 
 transaction {

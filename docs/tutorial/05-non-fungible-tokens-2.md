@@ -374,7 +374,7 @@ Write a script to `PrintNFTs` for the provided address.
 
 You can also pass arguments into the `main` function in a script.
 
-:::cadence
+```cadence
 
 import IntermediateNFT from 0x06
 
@@ -396,7 +396,7 @@ access(all) fun main(address: Address): [UInt64] {
     return receiverRef.getIDs()
 }
 
-:::
+```
 
 ## Transferring NFTs
 

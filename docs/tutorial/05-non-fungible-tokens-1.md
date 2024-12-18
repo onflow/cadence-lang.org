@@ -1,7 +1,7 @@
 ---
 archived: false
 draft: false
-title: Basic NFT (Part 1)
+title: Basic NFT
 description: An introduction to a simplified version of NFTs on Cadence.
 date: 2024-09-17
 meta:
@@ -31,8 +31,7 @@ This tutorial will teach you a basic method of creating simple NFTs to illustrat
 
 :::tip
 
-If you're already comfortable with Cadence and have found this page looking for information on how to build production-ready NFTs, check out the
-[NFT Guide] and [Flow NFT Standard] repository.
+If you're already comfortable with Cadence and have found this page looking for information on how to build production-ready NFTs, check out the [NFT Guide] and [Flow NFT Standard] repository.
 
 :::
 
@@ -45,6 +44,7 @@ After completing this tutorial, you'll be able to:
 * Write a transaction to mint an NFT and create a capability so others can view it.
 * Transfer an NFT from one account to another.
 * Use a script to see if an NFT is stored in an account.
+* Implement and utilize a dictionary in Cadence.
 
 ## NFTs on Cadence
 

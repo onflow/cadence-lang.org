@@ -49,9 +49,6 @@ const config = {
             current: {
               label: "1.0",
             },
-            0.42: {
-              label: "0.42",
-            },
           },
           beforeDefaultRemarkPlugins: [
             [
@@ -197,12 +194,12 @@ const config = {
         contextualSearch: true,
       },
     }),
-    scripts: [
-      {
-        src: '/hotjar.js',
-        async: true,
-      },
-    ],
+  scripts: [
+    {
+      src: '/hotjar.js',
+      async: true,
+    },
+  ],
 };
 
 module.exports = config;

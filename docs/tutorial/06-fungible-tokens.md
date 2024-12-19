@@ -256,15 +256,98 @@ access(all) resource interface Receiver {
 
 ## Implementing the Vault
 
+You're finally ready to implement the vault.
 
+:::info[Action]
 
+Start by declaring a type for a `Vault` that implements `Balance`, `Provider`, and `Receiver`.
 
+:::
 
+```cadence
+access(all) resource Vault: Balance, Provider, Receiver {
+    // TODO
+}
+```
 
+You'll get errors:
 
+```text
+resource `ExampleToken.Vault` does not conform to resource interface `ExampleToken.Balance`. `ExampleToken.Vault` is missing definitions for members: Balance
+```
 
+And similar errors for `Provider` and `Receiver`.  Similar to inheriting from a virtual class in other languages, implementing the interfaces requires you to implement the properties from those interfaces in your resource.
 
+:::info[Action]
 
+Implement `balance`.  You'll also need to initialize it.  Initialize it with the `balance` passed into the `init` for the resource itself.
+
+:::
+
+The pattern we're setting up here let's us create vaults and give them a `balance` in one go.  Doing so is useful for several tasks, as creating a temporary `Vault` to hold a balance during a transaction also creates most of the functionality you need to do complex tasks with that balance.
+
+For example, you might want to set up a conditional transaction that `deposit`s the balance in the vaults in different addresses based on whether or not a part of the transaction is successful.  
+
+```cadence
+access(all) var balance: UFix64
+
+init(balance: UFix64) {
+    self.balance = balance
+}
+```
+
+:::info[Action]
+
+Next, implement `withdraw` function.  It should contain a precondition that validates that the user actually possesses equal to or greater the number of tokens they are withdrawing.
+
+:::
+
+While this functionality is probably something we'd want in every vault, we can't put the requirement in the [interface], because the interface doesn't have access to the `balance`.
+
+```cadence
+access(Withdraw) fun withdraw(amount: UFix64): @Vault {
+    pre {
+        self.balance >= amount:
+            "ExampleToken.Vault.withdraw: Cannot withdraw tokens! "
+            .concat("The amount requested to be withdrawn (").concat(amount.toString())
+            .concat(") is greater than the balance of the Vault (")
+            .concat(self.balance.toString()).concat(").")
+    }
+    self.balance = self.balance - amount
+    return <-create Vault(balance: amount)
+}
+```
+
+:::info[Action]
+
+Finally, implement the `deposit` function.  Depositing should move the entire balance from the provided vault, and then `destroy` it.
+
+:::
+
+```cadence
+access(all) fun deposit(from: @Vault) {
+    self.balance = self.balance + from.balance
+    destroy from
+}
+```
+
+You **must** do something with the `Vault` resource after it's moved into the function.  You can `destroy` it, because it's now empty, and you don't need it anymore.
+
+### Vault Functions
+
+We'll also need some functions to manage the vault itself.  
+
+:::info[Action]
+
+Add a function to `create` an empty `Vault`.
+
+:::
+
+```cadence
+access(all) fun createEmptyVault(): @Vault {
+    return <-create Vault(balance: 0.0)
+}
+```
 
 
 

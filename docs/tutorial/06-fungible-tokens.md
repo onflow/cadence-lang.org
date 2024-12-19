@@ -1,7 +1,7 @@
 ---
 archived: false
 draft: false
-title: 6. Fungible Token Tutorial
+title: Fungible Tokens
 description: An introduction to Fungible Tokens in Cadence
 date: 2024-09-18
 meta:
@@ -21,41 +21,13 @@ socialImageTitle: Fungible Tokens in Cadence
 socialImageDescription: FT social image.
 ---
 
-
-In this tutorial, we're going to deploy, store, and transfer fungible tokens.
-
----
-
-:::tip
-
-Open the starter code for this tutorial in the Flow Playground:
-
-<a
-href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
-target="_blank"
->
-https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
-</a>
-The tutorial will ask you to take various actions to interact with this code.
-
-:::
-
-:::info[Action]
-
-Instructions that require you to take action are always included in a callout
-box like this one. These highlighted actions are all that you need to do to
-get your code running, but reading the rest is necessary to understand the
-language's design.
-
-:::
-
 Some of the most popular contract classes on blockchains today are fungible tokens.
 These contracts create homogeneous tokens that can be transferred to other users and spent as currency (e.g., ERC-20 on Ethereum).
 
 In traditional software and smart contracts, balances for each user are tracked by a central ledger, such as a dictionary:
 
 ```cadence
-// DO NOT USE THIS CODE FOR YOUR PROJECT
+// BAD CODE EXAMPLE. DO NOT USE THIS CODE FOR YOUR PROJECT
 contract LedgerToken {
     // Tracks every user's balance
     access(contract) let balances: {Address: UFix64}
@@ -70,101 +42,50 @@ contract LedgerToken {
 }
 ```
 
-With Cadence, we use the new resource-oriented paradigm
-to implement fungible tokens and avoid using a central ledger
-because there are inherent problems with using a central ledger
-that are detailed in [the Fungible Tokens section below.](#fungible-tokens-an-in-depth-exploration)
-
-### Flow Network Token
-
-In Flow, the native network token
-[(FLOW) is implemented as a normal fungible token smart contract](https://github.com/onflow/flow-core-contracts/blob/master/contracts/FlowToken.cdc)
-using a smart contract similar to the one in this tutorial.
-
-There are special transactions and hooks that allow it to be used for transaction execution fees, storage fees, and staking,
-but besides that, developers and users are able to treat it and use it just like any other token in the network!
+With Cadence, we use the new resource-oriented paradigm to implement fungible tokens and avoid using a central ledger, because there are inherent problems with using a central ledger that are detailed in [the Fungible Tokens section below].
 
 :::warning
 
-It is important to remember that while this tutorial implements a working
-fungible token, it has been simplified for educational purposes and is not
-what any project should use in production. See the
-<a href="https://github.com/onflow/flow-ft" target="_blank">Flow Fungible Token standard</a>
-for the standard interface and example implementation. You can also see the
-<a href="https://developers.flow.com/build/guides/fungible-token" target="_blank">Fungible Token Developer Guide</a>
-for a guide for how to create a production ready version of a Fungible Token contract.
+This tutorial implements a working fungible token, but it has been simplified for educational purposes and is not what you should use in production. 
+
+If you've found this tutorial looking for information on how to implement a real token, see the [Flow Fungible Token standard] for the standard interface and example implementation, and the [Fungible Token Developer Guide] for a details on creating a production ready version of a Fungible Token contract.
 
 :::
 
-We're going to take you through these steps to get comfortable with the fungible token:
+In this tutorial, we're going to deploy, store, and transfer fungible tokens.
 
-1. Deploy the fungible token contract to account `0x06`
-2. Create a fungible token object and store it in your account storage.
-3. Create a reference to your tokens that others can use to send you tokens.
-4. Set up another account the same way.
-5. Transfer tokens from one account to another.
-6. Use a script to read the accounts' balances.
+## Objectives
 
-**Before proceeding with this tutorial**, we recommend following the instructions in [Getting Started](./01-first-steps.md)
-and [Hello, World!](./02-hello-world.md) to learn the basics of the language and the playground.
+After completing this tutorial, you'll be able to:
 
-# Fungible Tokens on the Flow Emulator
+* Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum
+* Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18
+* Implement a vault [resource] to manage the functionality needed for fungible tokens
+* Use [interfaces] to enforce the presence of specified functions and fields
+* Write transactions to transfer tokens safely from one account to another
+* Develop scripts to read account balances
 
----
+## Flow Network Token
 
-:::info[Action]
+In Flow, the [native network token (FLOW)] is implemented as a normal fungible token smart contract using a smart contract similar to the one you'll build in this tutorial.
 
-First, you'll need to follow this link to open a playground session with the
-Fungible Token contracts, transactions, and scripts pre-loaded:{" "}
-<a
-href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
-target="_blank"
->
-https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
-</a>
+There are special transactions and hooks that allow it to be used for transaction execution fees, storage fees, and staking, but besides that, developers and users are able to treat it and use it just like any other token in the network!
 
-:::
+## Fungible Tokens on Flow
 
-:::info[Action]
+Flow implements fungible tokens differently than other programming languages. As a result:
 
-Open the account `0x06` tab to see the file named
-`BasicToken.cdc`. `BasicToken.cdc` should contain the full code for the
-fungible token, which provides the core functionality to store fungible tokens
-in your account and transfer to and accept tokens from other users.
+* Ownership is decentralized and does not rely on a central ledger
+* Bugs and exploits present less risk for users and less opportunity for attackers
+* There is no risk of integer underflow or overflow
+* Assets cannot be duplicated, and it is very hard for them to be lost, stolen, or destroyed
+* Code can be composable
+* Rules can be immutable
+* Code is not unintentionally made public
 
-:::
+### Fungible tokens on Ethereum
 
-The concepts involved in implementing a fungible token in Cadence can be unfamiliar at first.
-If you haven't completed and understood the previous tutorials,
-please go back and complete those first because this tutorial will assume that you
-understand a lot of the concepts explored in those tutorials.
-
-For an in-depth explanation of this functionality and code, continue reading the next section.
-
-Or, if you'd like to go immediately into deploying it and using it in the playground,
-you can skip to the [Interacting with the Fungible Token](#interacting-with-the-fungible-token-in-the-flow-playground) section of this tutorial.
-
-# Fungible Tokens: An In-Depth Exploration
-
----
-
-How Flow implements fungible tokens is different from other programming languages. As a result:
-
-- Ownership is decentralized and does not rely on a central ledger
-- Bugs and exploits present less risk for users and less opportunity for attackers
-- There is no risk of integer underflow or overflow
-- Assets cannot be duplicated, and it is very hard for them to be lost, stolen, or destroyed
-- Code can be composable
-- Rules can be immutable
-- Code is not unintentionally made public
-
-## Decentralizing Ownership
-
----
-
-Instead of using a central ledger system, Flow ties ownership to each account via a new paradigm for asset ownership.
-The example below showcases how Solidity (the smart contract language for the Ethereum Blockchain, among others)
-implements fungible tokens, with only the code for storage and transferring tokens shown for brevity.
+The example below showcases how Solidity (the smart contract language for the Ethereum Blockchain, among others) implements fungible tokens, with only the code for storage and transferring tokens shown for brevity.
 
 ```solidity ERC20.sol
 contract ERC20 {
@@ -178,117 +99,186 @@ contract ERC20 {
         // subtract the amount from the senders ledger balance
         _balances[sender] = _balances[sender] - amount;
 
-        // add the amount to the recipient’s ledger balance
+        // add the amount to the recipient's ledger balance
         _balances[recipient] = _balances[recipient] + amount
     }
 }
 ```
 
-As you can see, Solidity uses a central ledger system for its fungible tokens. There is one contract that manages the state of the tokens
-and every time that a user wants to do anything with their tokens, they have to interact with the central ERC20 contract,
-calling its functions to update their balance. This contract handles access control for all functionality, implements all of its own correctness checks,
-and enforces rules for all of its users.
+As you can see, Solidity uses a central ledger system for its fungible tokens. There is one contract that manages the state of the tokens and every time that a user wants to do anything with their tokens, they have to interact with the central ERC20 contract. This contract handles access control for all functionality, implements all of its own correctness checks, and enforces rules for all of its users.
 
-Instead of using a central ledger system, Flow utilizes a few different concepts
-to provide better safety, security, and clarity for smart contract developers and users.
-In this section, we'll show how Flow's resources, interfaces, and other features are employed via a fungible token example.
+If there's a bug, such as accidentally making the `_transfer` function public, an attacker can immediately exploit the entire contract and the tokens owned by all users.
 
-## Intuiting Ownership with Resources
+### Intuiting Ownership with Resources
 
----
+Instead of using a central ledger system, Flow utilizes a few different concepts to provide better safety, security, and clarity for smart contract developers and users.  Primarily, tokens are stored in each user's vault, which is a [resource] similar to the collection you created to store NFTs in the previous tutorial.  
 
-An important concept in Cadence is **Resources**, which are linear types.
-A resource is a composite type (like a struct) that has its own defined fields and functions.
-The difference is that resource objects have special rules that keep them from being copied or lost.
-Resources are a new paradigm for asset ownership. Instead of representing token ownership in a central ledger smart contract,
-each account owns its own resource object in its account storage that records the number of tokens they own.
-This way, when users want to transact with each other, they can do so peer-to-peer without having to interact with a central token contract.
-To transfer tokens to each other, they call a `transfer` function (or something equivalent)
-on their own resource object and other users' resources, instead of a central `transfer` function.
+This approach simplifies access control because instead of a central contract having to check the sender of a function call, most function calls happen on resource objects stored in users' accounts, and each user natively has sole control over the resources stored in their accounts.
 
-This approach simplifies access control because instead of a central contract having to check the sender of a function call,
-most function calls happen on resource objects stored in users' account,
-and each user controls who is able to call the functions on resources in their account.
-This concept, called Capability-based security, will be explained more in a later section.
+This approach also helps protect against potential bugs. In a Solidity contract with all the logic and state contained in a central contract, an exploit is likely to affect all users who are involved in the contract.
 
-This approach also helps protect against potential bugs. In a Solidity contract with all the logic and state contained in a central contract,
-an exploit is likely to affect all users who are involved in the contract.
+In Cadence, if there is a bug in the resource logic, an attacker would have to exploit the bug in each token holder's account individually, which is much more complicated and time-consuming than it is in a central ledger system.
 
-In Cadence, if there is a bug in the resource logic, an attacker would have to exploit the bug in each token holder's account individually,
-which is much more complicated and time-consuming than it is in a central ledger system.
+## Constructing a Vault
 
-Below is an example of a resource for a fungible token vault. Every user who owns these tokens would have this resource stored in their account.
-It is important to remember that each account stores only a copy of the `Vault` resource, and not a copy of the entire `ExampleToken` contract.
-The `ExampleToken` contract only needs to be stored in the initial account that manages the token definitions.
+Our vault will be a simplified version of the one found in the [Flow Fungible Token standard].  We'll follow some of the same practices, including using [interfaces] to standardize the properties of our vault and make it easier for other contracts to interact with it.
 
-```cadence Token.cdc
-access(all)
-resource Vault: Provider, Receiver {
+:::info[Action]
 
-    // Balance of a user's Vault
-    // we use unsigned fixed point numbers for balances
-    // because they can represent decimals and do not allow negative values
+Open the starter code for this tutorial in the Flow Playground:
+
+<a
+href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
+target="_blank"
+>
+https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
+</a>
+
+:::
+
+In `ExampleToken.cdc`, you'll see:
+
+```cadence ExampleToken.cdc
+access(all) contract ExampleToken {
+
+    access(all) entitlement Withdraw
+
+    access(all) let VaultStoragePath: StoragePath
+    access(all) let VaultPublicPath: PublicPath
+
+   
+    init() {
+        self.VaultStoragePath = /storage/CadenceFungibleTokenTutorialVault
+        self.VaultPublicPath = /public/CadenceFungibleTokenTutorialReceiver
+    }
+}
+```
+
+Before you can add your vault, you'll need to implement the various pieces it will depend on.
+
+### Supply and Balance
+
+The two most basic pieces of information for a fungible token are a method of tracking the balance of a given user, and the total supply for the token.  In Cadence, you'll usually want to use `UFix64` - a [fixed-point number].
+
+Fixed-point numbers are essentially integers with a scale, represented by a decimal point.  They make it much easier to work with money-like numbers as compared to endlessly handling conversions to and from the 10^18 representation of a value.
+
+:::info[Action]
+
+Implement a contract-level [fixed-point number] to track the `totalSupply` of the token.
+
+:::
+
+```cadence
+access(all) var totalSupply: UFix64
+```
+
+### Interfaces
+
+You'll also need a place to store the `balance` of any given user's vault.  You **could** simply add a variable in the vault [resource] definition to do this and it would work just fine.  
+
+Instead, let's use this opportunity to create some [interface]s.
+
+In Cadence, interfaces are abstract types used to specify behavior in types that _implement_ the interface.  Using them helps compatibility and composability by breaking larger constructions down into standardized parts that can be used by more than one contract for more than one use case.  For example, the interface we'll create for `Receiver` is used by the vault, but it's also something you'd use for any other resource that needs to be able to receive tokens - such as a contract that pools a collection of tokens and splits them between several addresses.
+
+You'll create three interfaces, to handle the three functional areas of the vault:
+
+* A `Balance` interface for the balance of tokens stored in the vault
+* A `Provider` interface that can provide tokens by withdrawing them from the vault
+* A `Receiver` interface that can safely deposit tokens from one vault into another
+
+:::info[Action]
+
+First, create a `Balance` interface, requiring a public `UFix64` called `balance`.  It should be public.
+
+:::
+
+```cadence
+access(all) resource interface Balance {
     access(all) var balance: UFix64
-
-    init(balance: UFix64) {
-        self.balance = balance
-    }
-
-    access(Withdraw) fun withdraw(amount: UFix64): @Vault {
-        self.balance = self.balance - amount
-        return <-create Vault(balance: amount)
-    }
-
-    access(all) fun deposit(from: @Vault) {
-        self.balance = self.balance + from.balance
-        destroy from
-    }
 }
 ```
 
-This piece of code is for educational purposes and is not comprehensive. However, it still showcases how a resource for a token works.
+This one is pretty simple.  It just defines the type of variable anything implementing it will need to have to keep track of a token balance.
 
-### Token Balances and Initialization
+:::info[Action]
 
-Each token resource object has a balance and associated functions (e.g., `deposit`, `withdraw`, etc).
-When a user wants to use these tokens, they instantiate a zero-balance copy of this resource in their account storage.
-The language requires that the initialization function `init`, which is only run once, must initialize all member variables.
+Next, create the `Provider` `interface`.  In it, define a `withdraw` function.  It should have the `Withdraw` access [entitlement], accept an argument for `amount`, and return a `Vault` resource type.  This should also be public.
+
+To prevent an error, stub out the `Vault` resource as well.
+
+:::
 
 ```cadence
-// Balance of a user's Vault
-// we use unsigned fixed-point integers for balances because they do not require the
-// concept of a negative number and allow for more clear precision
-access(all) var balance: UFix64
-
-init(balance: UFix64) {
-    self.balance = balance
+access(all) resource interface Provider {
+    access(Withdraw) fun withdraw(amount: UFix64): @Vault {}
 }
+
+access(all) resource Vault {}
 ```
 
-If you remove the `init` function from your `ExampleToken` contract, it will cause an error because
-the balance field is no longer initialized.
+This [interface] will require resources implementing it to have a `withdraw` function, but it doesn't provide any limitations to how that function works.  For example, it could be implemented such that the amount of tokens returned is double the withdrawn amount.  While there might be a use case for that effect, it's not what you want for a normal token standard.
 
-### Deposit
+You can allow for flexibility, such as allowing a `Provider` to select randomly from several vaults to determine the payer, while enforcing that the amount withdrawn is appropriate by adding a `post` condition to the function.  [Function preconditions and postconditions] can be used to restrict the inputs and outputs of a function.
 
-Then, the deposit function is available for any account to transfer tokens to.
+In a postcondition, the special constant `result` is used to reference the `return` of the function.  They're written following the rules of [statements] and can contain multiple conditions.  Optionally, a `:` can be added after the last statement, containing an error message to be passed if the postcondition fails.
+
+:::info[Action]
+
+Add a `post` condition that returns a descriptive and nicely formatted error if the amount returned in the vault from the function doesn't match the `amount` passed into the function.
+
+:::
 
 ```cadence
-access(all) fun deposit(from: @Vault) {
-    self.balance = self.balance + from.balance
-    destroy from
+access(Withdraw) fun withdraw(amount: UFix64): @Vault {
+    post {
+        result.balance == amount:
+            "ExampleToken.Provider.withdraw: Cannot withdraw tokens!"
+            .concat("The balance of the withdrawn tokens (").concat(result.balance.toString())
+            .concat(") is not equal to the amount requested to be withdrawn (")
+            .concat(amount.toString()).concat(")")
+    }
 }
 ```
+
+This `post` condition will be added automatically to the `withdraw` function in a resource implementing `Provider`.
+
+:::info[Action]
+
+Finally, implement an [interface] called `Receiver`, containing a function called `deposit` that accepts a `Vault`.
+
+::
+
+```cadence
+access(all) resource interface Receiver {
+    access(all) fun deposit(from: @Vault)
+}
+```
+
+## Implementing the Vault
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Transferring Tokens
 
 When an account wants to send tokens to a different account, the sending account calls their own withdraw function first,
-which subtracts tokens from their resource’s balance and temporarily creates a new resource object that holds this balance:
+which subtracts tokens from their resource's balance and temporarily creates a new resource object that holds this balance:
 ```cadence
 // Withdraw tokens from the signer's stored vault
 let sentVault <- vaultRef.withdraw(amount: amount)
 ```
 
-The sending account then calls the recipient account’s deposit function, which literally moves the resource instance to the other account,
+The sending account then calls the recipient account's deposit function, which literally moves the resource instance to the other account,
 adds it to their balance, and then destroys the used resource:
 ```cadence
 // Deposit the withdrawn tokens in the recipient's receiver
@@ -309,7 +299,7 @@ This `@` symbol is required when specifying a resource **type** for a field, an 
 The move operator `<-` makes it clear that when a resource is used in an **assignment**, parameter, or return value,
 it is moved to a new location and the old location is invalidated. This ensures that the resource only ever exists in one location at a time.
 
-If a resource is moved out of an account's storage, it either needs to be moved to an account’s storage or explicitly destroyed.
+If a resource is moved out of an account's storage, it either needs to be moved to an account's storage or explicitly destroyed.
 
 ```cadence
 destroy from
@@ -317,7 +307,7 @@ destroy from
 
 This rule ensures that resources, which often represent real value, do not get lost because of a coding error.
 
-You’ll notice that the arithmetic operations aren't explicitly protected against overflow or underflow.
+You'll notice that the arithmetic operations aren't explicitly protected against overflow or underflow.
 
 ```cadence
 self.balance = self.balance - amount
@@ -326,10 +316,10 @@ self.balance = self.balance - amount
 In Solidity, this could be a risk for integer overflow or underflow, but Cadence has built-in overflow and underflow protection, so it is not a risk.
 We are also using unsigned numbers in this example, so as mentioned earlier, the vault`s balance cannot go below 0.
 
-Additionally, the requirement that an account contains a copy of the token’s resource type in its storage
+Additionally, the requirement that an account contains a copy of the token's resource type in its storage
 ensures that funds cannot be lost by being sent to the wrong address.
 
-If an address doesn’t have the correct resource type imported, the transaction will revert, ensuring that transactions sent to the wrong address are not lost.
+If an address doesn't have the correct resource type imported, the transaction will revert, ensuring that transactions sent to the wrong address are not lost.
 
 **Important note: This protection is not in place for the Flow network currency,**
 **because every Flow account is initialized with a default Flow Token Vault**
@@ -346,165 +336,6 @@ return <-create Vault(balance: amount)
 This is another feature that Cadence uses to improve the clarity of code.
 All function calls are required to specify the names of the arguments they are sending
 unless the developer has specifically overridden the requirement in the funtion declaration.
-
-## Interacting with the Fungible Token in the Flow Playground
-
-Now that you have read about how the Fungible Token works,
-we can deploy a basic version of it to your account and send some transactions to interact with it.
-
-:::info[Action]
-
-Make sure that you have opened the Fungible Token templates in the playground
-by following the link at the top of this page. You should have Account `0x06`
-open and should see the code below.
-
-:::
-
-```cadence
-/// BasicToken.cdc
-///
-/// The BasicToken contract is a sample implementation of a fungible token on Flow.
-///
-/// Fungible tokens behave like everyday currencies -- they can be minted, transferred or
-/// traded for digital goods.
-///
-/// This is a basic implementation of a Fungible Token and is NOT meant to be used in production
-/// See the Flow Fungible Token standard for real examples: https://github.com/onflow/flow-ft
-
-access(all) contract BasicToken {
-
-    access(all) entitlement Withdraw
-
-    access(all) let VaultStoragePath: StoragePath
-    access(all) let VaultPublicPath: PublicPath
-
-    /// Vault
-    ///
-    /// Each user stores an instance of only the Vault in their storage
-    /// The functions in the Vault are governed by the pre and post conditions
-    /// in the interfaces when they are called.
-    /// The checks happen at runtime whenever a function is called.
-    ///
-    /// Resources can only be created in the context of the contract that they
-    /// are defined in, so there is no way for a malicious user to create Vaults
-    /// out of thin air. A special Minter resource or constructor function needs to be defined to mint
-    /// new tokens.
-    ///
-    access(all) resource Vault {
-
-		/// keeps track of the total balance of the account's tokens
-        access(all) var balance: UFix64
-
-        /// initialize the balance at resource creation time
-        init(balance: UFix64) {
-            self.balance = balance
-        }
-
-        /// withdraw
-        ///
-        /// Function that takes an integer amount as an argument
-        /// and withdraws that amount from the Vault.
-        ///
-        /// It creates a new temporary Vault that is used to hold
-        /// the money that is being transferred. It returns the newly
-        /// created Vault to the context that called so it can be deposited
-        /// elsewhere.
-        ///
-        access(Withdraw) fun withdraw(amount: UFix64): @Vault {
-            pre {
-                self.balance >= amount:
-                    "BasicToken.Vault.withdraw: Cannot withdraw tokens! "
-                    .concat("The amount requested to be withdrawn (").concat(amount.toString())
-                    .concat(") is greater than the balance of the Vault (")
-                    .concat(self.balance.toString()).concat(").")
-            }
-            self.balance = self.balance - amount
-            return <-create Vault(balance: amount)
-        }
-
-        /// deposit
-        ///
-        /// Function that takes a Vault object as an argument and adds
-        /// its balance to the balance of the owners Vault.
-        ///
-        /// It is allowed to destroy the sent Vault because the Vault
-        /// was a temporary holder of the tokens. The Vault's balance has
-        /// been consumed and therefore can be destroyed.
-        access(all) fun deposit(from: @Vault) {
-            self.balance = self.balance + from.balance
-            destroy from
-        }
-    }
-
-    /// createVault
-    ///
-    /// Function that creates a new Vault with an initial balance
-    /// and returns it to the calling context. A user must call this function
-    /// and store the returned Vault in their storage in order to allow their
-    /// account to be able to receive deposits of this token type.
-    ///
-    access(all) fun createVault(): @Vault {
-        return <-create Vault(balance: 30.0)
-    }
-
-    /// The init function for the contract. All fields in the contract must
-    /// be initialized at deployment. This is just an example of what
-    /// an implementation could do in the init function. The numbers are arbitrary.
-    init() {
-        self.VaultStoragePath = /storage/CadenceFungibleTokenTutorialVault
-        self.VaultPublicPath = /public/CadenceFungibleTokenTutorialReceiver
-        // create the Vault with the initial balance and put it in storage
-        // account.save saves an object to the specified `to` path
-        // The path is a literal path that consists of a domain and identifier
-        // The domain must be `storage`, `private`, or `public`
-        // the identifier can be any name
-        let vault <- self.createVault()
-        self.account.storage.save(<-vault, to: self.VaultStoragePath)
-    }
-}
-```
-
-:::info[Action]
-
-Click the `Deploy` button at the top right of the editor to deploy the code.
-
-:::
-
-![Deploy BasicToken on 0x06](./deploy_basic_token.png)
-
-This deployment stores the contract for the basic fungible token
-in the selected account (account `0x06`) so that it can be imported into transactions.
-
-A contract's `init` function runs at contract creation, and never again afterwards.
-In our example, this function stores an instance of the `Vault` object with an initial balance of 30.
-
-```cadence
-// create the Vault with the initial balance and put it in storage
-// account.save saves an object to the specified `to` path
-// The path is a literal path that consists of a domain and identifier
-// The domain must be `storage` or `public`
-// the identifier can be any string
-let vault <- self.createVault()
-self.account.save(<-vault, to: self.VaultStoragePath)
-```
-
-This line saves the new `@Vault` object to storage.
-Account storage is indexed with [paths](../language/accounts/paths),
-which consist of a domain and identifier. `/domain/identifier`.
-Only two domains are allowed for paths:
-
-- `storage`: The place where all objects are stored. Only accessible by the owner of the account.
-- `public`: Stores links to objects in storage: Accessible by anyone in the network.
-
-Contracts have access to the private `&Account` object of the account it is deployed to, using `self.account`.
-This object has methods that can modify storage in many ways.
-See the [account](../language/accounts) documentation for a list of all the methods it can call.
-
-In this line, we call the `storage.save` method to store an object in storage.
-The first argument is the value to store, and the second argument is the path where the value is being stored.
-For `storage.save` the path has to be in the `/storage/` domain.
-
-You are now ready to run transactions that use the fungible tokens!
 
 ### Perform a Basic Transfer
 
@@ -625,97 +456,9 @@ is handled by the protocol and the language's strong static type system.
 If you aren't the owner of an object or don't have a valid reference to it
 that was created by the owner, you cannot access the object at all!
 
-### Using Pre and Post-Conditions to Secure Implementations
 
----
 
-The next important concept in Cadence is design-by-contract,
-which uses pre-conditions and post-conditions to document and programmatically assert the change in state caused by a piece of a program.
-These conditions are usually specified in [interfaces](../language/interfaces) that enforce rules about how types are defined and behave.
-They can be stored on-chain in an immutable fashion so that certain pieces of code
-can import and implement them to ensure that they meet certain standards.
 
-In our example, we don't use interfaces for simplicity,
-but here is an example of how interfaces for the `Vault` resource we defined above would look.
-
-```cadence Interfaces.cdc
-// Interface that enforces the requirements for withdrawing
-// tokens from the implementing type
-//
-access(all) resource interface Provider {
-    access(Withdraw) fun withdraw(amount: UFix64): @Vault {
-        post {
-            // `result` refers to the return value
-            result.balance == amount:
-                "FungibleToken.Provider.withdraw: Cannot withdraw tokens!"
-                .concat("The balance of the withdrawn tokens (").concat(result.balance.toString())
-                .concat(") is not equal to the amount requested to be withdrawn (")
-                .concat(amount.toString()).concat(")")
-        }
-    }
-}
-// Interface that enforces the requirements for depositing
-// tokens into the implementing type
-//
-access(all) resource interface Receiver {
-
-    // There aren't any meaningful requirements for only a deposit function
-    // but this still shows that the deposit function is required in an implementation.
-    access(all) fun deposit(from: @Vault)
-}
-
-// Balance
-//
-// Interface that specifies a public `balance` field for the vault
-//
-access(all) resource interface Balance {
-    access(all) var balance: UFix64
-}
-```
-
-In production code, the `Vault` resource implements all three of these interfaces.
-The interfaces ensure that specific fields and functions are present in the resource implementation
-and that the function arguments, fields of the resource,
-and any return value are in a valid state before and/or after execution.
-
-These interfaces can be deployed on-chain and imported into other contracts or resources
-so that these requirements are enforced by an immutable source of truth that is not susceptible to human error.
-
-See the [Flow Fungible Token standard](https://github.com/onflow/flow-ft/blob/master/contracts/FungibleToken.cdc)
-for the interfaces that are used for real Fungible Token implementations!
-
-## Adding Interfaces to Our Fungible Token
-
-Now, we are going to add these interfaces to our Fungible token along with a minter resource.
-
-Open the `ExampleToken` contract.
-In addition to everything that is in the `BasicToken` contract,
-we have also added the `Provider`, `Receiver`, and `Balance` interfaces described above.
-
-Now that our `ExampleToken.Vault` type has declared that it implements these interfaces,
-it is required to have their fields and functions, and their pre and post-conditions will also
-be evaluated every time their respective functions are called.
-
-Additionally, `ExampleToken` changes `createVault()` to `createEmptyVault()`
-so that token minting is restricted to the newly added `VaultMinter` resource.
-This illustrates another powerful feature of Cadence resources.
-Instead of the contract maintaining a list of minter addresses,
-accounts that the owner wants to be minters can be giving a special resource
-that directly gives them the authority to mint tokens.
-This method for authorization can be used in many different ways
-and further decentralizes the control of the contract.
-
-We also store the `VaultMinter` object to `/storage/`
-in the `init()` function in the same way as the vault, but in a different storage path:
-
-```cadence
-self.account.storage.save(<-create VaultMinter(), to: /storage/CadenceFungibleTokenTutorialMinter)
-```
-
-Now is an important time to remind you that account storage is not namespaced by contract,
-meaning that path names could potentially conflict. This is why it is important to
-choose unique names for your paths like we have done here so there is a very low chance
-of them conflicting with other projects' paths.
 
 ## Create, Store, and Publish Capabilities and References to a Vault
 
@@ -1228,5 +971,21 @@ From here, you could try to extend the functionality of fungible tokens by makin
 ## Create a Flow Marketplace
 
 ---
+
 Now that you have an understanding of how fungible tokens work on Flow and have a working NFT, you can learn how to create
 a marketplace that uses both fungible tokens and NFTs. Move on to the next tutorial to learn about Marketplaces in Cadence!
+
+
+<!-- Reference-style links, do not render on page -->
+
+[resource]: ../language/resources.mdx
+[interfaces]: ../language/interfaces.mdx
+[native network token (FLOW)]: https://github.com/onflow/flow-core-contracts/blob/master/contracts/FlowToken.cdc
+[Flow Fungible Token standard]: https://github.com/onflow/flow-ft
+[Fungible Token Developer Guide]: https://developers.flow.com/build/guides/fungible-token
+[resource]: ../language/resources.mdx
+[resources]: ../language/resources.mdx
+[fixed-point number]: ../language/values-and-types.mdx#fixed-point-numbers
+[entitlement]: ../language/access-control.md
+[Function preconditions and postconditions]: ../language/functions.mdx#function-preconditions-and-postconditions
+[statements]: ../language/syntax.md#semicolons

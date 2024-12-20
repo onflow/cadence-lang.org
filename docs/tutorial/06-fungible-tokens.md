@@ -129,10 +129,10 @@ Our vault will be a simplified version of the one found in the [Flow Fungible To
 Open the starter code for this tutorial in the Flow Playground:
 
 <a
-href="https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780"
+href="https://play.flow.com/359cf1a1-63cc-4774-9c09-1b63ed83379b"
 target="_blank"
 >
-https://play.flow.com/65b44962-32c8-49c4-8a69-e96475d5a780
+https://play.flow.com/359cf1a1-63cc-4774-9c09-1b63ed83379b
 </a>
 
 :::

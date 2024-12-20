@@ -58,12 +58,13 @@ In this tutorial, we're going to deploy, store, and transfer fungible tokens.
 
 After completing this tutorial, you'll be able to:
 
-* Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum
-* Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18
+* Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum.
+* Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18.
 * Implement a vault [resource] to manage the functionality needed for fungible tokens
-* Use [interfaces] to enforce the presence of specified functions and fields
-* Write transactions to transfer tokens safely from one account to another
-* Develop scripts to read account balances
+* Use [interfaces] to enforce the presence of specified functions and fields.
+* Write transactions to transfer tokens safely from one account to another.
+* Develop scripts to read account balances.
+* Use preconditions and postconditions to perform checks before or after a function call completes.
 
 ## Flow Network Token
 
@@ -333,9 +334,9 @@ access(all) fun deposit(from: @Vault) {
 
 You **must** do something with the `Vault` resource after it's moved into the function.  You can `destroy` it, because it's now empty, and you don't need it anymore.
 
-### Vault Functions
+## Vault Creation
 
-We'll also need some functions to manage the vault itself.  
+We'll need a way to create empty vaults to onboard new users, or to create vaults for a variety of other uses.  
 
 :::info[Action]
 
@@ -349,44 +350,354 @@ access(all) fun createEmptyVault(): @Vault {
 }
 ```
 
+We'll use this when we create a transaction to set up new users.
 
+## Error Handling
 
+As before, you can anticipate some of the errors that other developers building transactions and scripts that interact with your contract might encounter.  At the very least, it's likely that there will be many instances that an attempt is made to borrow a `Vault` that is not present, or lacks a capability for the caller to borrow it.
 
-### Transferring Tokens
+:::info[Action]
 
-When an account wants to send tokens to a different account, the sending account calls their own withdraw function first,
-which subtracts tokens from their resource's balance and temporarily creates a new resource object that holds this balance:
-```cadence
-// Withdraw tokens from the signer's stored vault
-let sentVault <- vaultRef.withdraw(amount: amount)
-```
+Add a function to generate a helpful error if an attempt to borrow a `Vault` fails.
 
-The sending account then calls the recipient account's deposit function, which literally moves the resource instance to the other account,
-adds it to their balance, and then destroys the used resource:
-```cadence
-// Deposit the withdrawn tokens in the recipient's receiver
-receiverRef.deposit(from: <-sentVault)
-```
-
-The resource needs to be destroyed because Cadence enforces strict rules around resource interactions.
-A resource can never be left hanging in a piece of code. It either needs to be explicitly destroyed or stored in an account's storage.
-
-When interacting with resources, you use the `@` symbol to specify the type, and a special “move operator” `<-`
-when moving the resource, such as assigning the resource, when passing it as an argument to a function, or when returning it from a function.
+:::
 
 ```cadence
-access(all) fun withdraw(amount: UInt64): @Vault {
+access(all) fun vaultNotConfiguredError(address: Address): String {
+    return "Could not borrow a collection reference to recipient's ExampleToken.Vault"
+        .concat(" from the path ")
+        .concat(ExampleToken.VaultPublicPath.toString())
+        .concat(". Make sure account ")
+        .concat(address.toString())
+        .concat(" has set up its account ")
+        .concat("with an ExampleToken Vault.")
+}
 ```
 
-This `@` symbol is required when specifying a resource **type** for a field, an argument, or a return value.
-The move operator `<-` makes it clear that when a resource is used in an **assignment**, parameter, or return value,
-it is moved to a new location and the old location is invalidated. This ensures that the resource only ever exists in one location at a time.
+## Minting
 
-If a resource is moved out of an account's storage, it either needs to be moved to an account's storage or explicitly destroyed.
+Next, you need a way to actually create, or mint, tokens.  For this example, we'll be permissive and add a resource that anyone can create, or access any instance of, that has the power to mint and airdrop tokens to any address that possesses a vault, or at least something with the `Receiver` [interface] for this token.
+
+To do so, we use [capability] with a reference to the resource or interface we want to require as the type:  `Capability<&{Receiver}>`
+
+:::info[Action]
+
+Define a public [resource] with a public function `mintTokens` that accepts an `amount` of tokens to mint, and a `recipient` that must possess the `Receiver` [capability].
+
+:::
 
 ```cadence
-destroy from
+access(all) resource VaultMinter {
+    access(all) fun mintTokens(amount: UFix64, recipient: Capability<&{Receiver}>) {
+        let recipientRef = recipient.borrow()
+        ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient.address))
+
+        ExampleToken.totalSupply = ExampleToken.totalSupply + UFix64(amount)
+        recipientRef.deposit(from: <-create Vault(balance: amount))
+    }
+}
 ```
+
+## Final Contract Setup
+
+The last task with the contract is to update the `init` function in your contract to save yourself a little bit of time and create and create a `VaultMinter` in your account.
+
+:::info[Action]
+
+Update the contract `init` function to `create` and `save` an instance of `VaultMinter`:
+
+:::
+
+```cadence
+self
+.account
+.storage
+.save(<-create VaultMinter(),
+    to: /storage/CadenceFungibleTokenTutorialMinter
+)
+```
+
+After doing all of this, your contract should be similar to:
+
+```cadence
+access(all) contract ExampleToken {
+
+    access(all) entitlement Withdraw
+
+    access(all) let VaultStoragePath: StoragePath
+    access(all) let VaultPublicPath: PublicPath
+
+    access(all) var totalSupply: UFix64
+
+    access(all) resource interface Balance {
+        access(all) var balance: UFix64
+    }
+
+    access(all) resource interface Provider {
+        ///
+        /// @param amount the amount of tokens to withdraw from the resource
+        /// @return The Vault with the withdrawn tokens
+        ///
+        access(Withdraw) fun withdraw(amount: UFix64): @Vault {
+            post {
+                // `result` refers to the return value
+                result.balance == amount:
+                    "ExampleToken.Provider.withdraw: Cannot withdraw tokens!"
+                    .concat("The balance of the withdrawn tokens (").concat(result.balance.toString())
+                    .concat(") is not equal to the amount requested to be withdrawn (")
+                    .concat(amount.toString()).concat(")")
+            }
+        }
+    }
+
+    access(all) resource interface Receiver {
+
+        /// deposit takes a Vault and deposits it into the implementing resource type
+        ///
+        /// @param from the Vault that contains the tokens to deposit
+        ///
+        access(all) fun deposit(from: @Vault)
+    }
+
+    access(all) resource Vault: Balance, Provider, Receiver {
+
+        access(all) var balance: UFix64
+
+        init(balance: UFix64) {
+            self.balance = balance
+        }
+
+        access(Withdraw) fun withdraw(amount: UFix64): @Vault {
+            pre {
+                self.balance >= amount:
+                    "ExampleToken.Vault.withdraw: Cannot withdraw tokens! "
+                    .concat("The amount requested to be withdrawn (").concat(amount.toString())
+                    .concat(") is greater than the balance of the Vault (")
+                    .concat(self.balance.toString()).concat(").")
+            }
+            self.balance = self.balance - amount
+            return <-create Vault(balance: amount)
+        }
+
+        access(all) fun deposit(from: @Vault) {
+            self.balance = self.balance + from.balance
+            destroy from
+        }
+    }
+
+    access(all) fun createEmptyVault(): @Vault {
+        return <-create Vault(balance: 0.0)
+    }
+
+    access(all) resource VaultMinter {
+        access(all) fun mintTokens(amount: UFix64, recipient: Capability<&{Receiver}>) {
+            let recipientRef = recipient.borrow()
+            ?? panicpanic(ExampleToken.vaultNotConfiguredError(address: recipient.address))
+
+            ExampleToken.totalSupply = ExampleToken.totalSupply + UFix64(amount)
+            recipientRef.deposit(from: <-create Vault(balance: amount))
+        }
+    }
+
+    access(all) fun vaultNotConfiguredError(address: Address): String {
+        return "Could not borrow a collection reference to recipient's ExampleToken.Vault"
+            .concat(" from the path ")
+            .concat(ExampleToken.VaultPublicPath.toString())
+            .concat(". Make sure account ")
+            .concat(address.toString())
+            .concat(" has set up its account ")
+            .concat("with an ExampleToken Vault.")
+    }
+
+    init() {
+        self.VaultStoragePath = /storage/CadenceFungibleTokenTutorialVault
+        self.VaultPublicPath = /public/CadenceFungibleTokenTutorialReceiver
+
+        self.totalSupply = 30.0
+
+        self
+        .account
+        .storage
+        .save(<-create VaultMinter(),
+            to: /storage/CadenceFungibleTokenTutorialMinter
+        )
+    }
+}
+```
+
+## Set Up Account Transaction
+
+We'll now need to create several transactions and scripts to manage interactions with the vault.  The first of these is one to set up a user's account.  It needs to:
+
+* Create an empty vault
+* Save that vault in the caller's storage
+* Issue a capability for the vault
+* Publish that capability
+
+You've already learned how to do everything you need for this, so you should be able to implement it on your own.
+
+:::info[Action]
+
+Implement the `Set Up Account` transaction.
+
+:::
+
+You should end up with something similar to:
+
+```cadence
+import ExampleToken from 0x06
+
+transaction {
+    prepare(signer: auth(BorrowValue, IssueStorageCapabilityController, PublishCapability, SaveValue) &Account) {
+        // You may wish to check if a vault already exists here
+
+        let vaultA <- ExampleToken.createEmptyVault()
+
+        signer.storage.save(<-vaultA, to: ExampleToken.VaultStoragePath)
+
+        let receiverCap = signer.capabilities.storage.issue<&ExampleToken.Vault>(
+            ExampleToken.VaultStoragePath
+        )
+
+        signer.capabilities.publish(receiverCap, at: ExampleToken.VaultPublicPath)
+    }
+}
+```
+
+## Minting Tokens
+
+The next transaction is another one that you should be able to implement on your own.  Give it a try, and check the solution if you need to.  Your transaction should:
+
+* Accept an `Address` for the `recipient` and an `amount`
+* Store transaction-level references to the `VaultMinter` and `Receiver`
+* Borrow a reference to the `VaultMinter` in the caller's storage
+* Get the `recipient`'s `Receiver` capability
+* Use the above to call the `mintTokens` function in the minter
+
+:::info[Action]
+
+Implement the `Mint Tokens` transaction.
+
+:::
+
+You should end up with something similar to:
+
+```cadence
+import ExampleToken from 0x06
+
+transaction(recipient: Address, amount: UFix64) {
+    let mintingRef: &ExampleToken.VaultMinter
+    var receiver: Capability<&{ExampleToken.Receiver}>
+
+	prepare(signer: auth(BorrowValue) &Account) {
+        self.mintingRef = signer.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
+            ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient))
+
+        let recipient = getAccount(recipient)
+
+        // Consider further error handling if this fails
+        self.receiver = recipient.capabilities.get<&{ExampleToken.Receiver}>
+            (ExampleToken.VaultPublicPath)
+
+	}
+
+    execute {
+        // Mint 30 tokens and deposit them into the recipient's Vault
+        self.mintingRef.mintTokens(amount: 30.0, recipient: self.receiver)
+
+        log("30 tokens minted and deposited to account 0x08"
+            .concat(self.receiver.address.toString()))
+    }
+}
+```
+
+:::info[Action]
+
+Test out your minting function by attempting to mint tokens to accounts that do and do not have vaults.
+
+:::
+
+## Checking Account Balances
+
+You can mint tokens now.  Probably.  But it's hard to tell if you have a bug without a way to check an accounts balance.  You can do this with a script, using techniques you've already learned.
+
+:::info[Action]
+
+Write a script to check the balance of an address.  It should accept an argument for an `address`, `get` and `borrow` a reference to that address's `Vault` from the `VaultPublicPath`, and return a nicely formatted string containing the `balance`.
+
+:::
+
+You should end up with something similar to:
+
+```cadence
+import ExampleToken from 0x06
+
+access(all)
+fun main(address: Address): String {
+    let account = getAccount(address)
+
+    let accountReceiverRef = account.capabilities.get<&{ExampleToken.Balance}>(ExampleToken.VaultPublicPath)
+                            .borrow()
+            ?? panic(ExampleToken.vaultNotConfiguredError(address: address))
+
+    return("Balance for "
+        .concat(address.toString())
+        .concat(": ").concat(accountReceiverRef.balance.toString())
+        )
+}
+```
+
+
+## Transferring Tokens
+
+Transferring tokens from one account to another takes a little more coordination and a more complex contract. When an account wants to send tokens to a different account, the sending account calls their own withdraw function first, which subtracts tokens from their resource's balance and temporarily creates a new resource object that holds this balance.
+
+:::info[Action]
+
+Initialize a transaction-level variable to hold a temporary vault. Borrow a reference for the sender's vault with the `Withdraw` entitlement and send it to the temporary vault.
+
+:::
+
+```cadence
+import ExampleToken from 0x06
+
+transaction(recipient: Address, amount: UFix64) {
+    var temporaryVault: @ExampleToken.Vault
+
+  prepare(signer: auth(BorrowValue) &Account) {
+        let vaultRef = signer.storage.borrow<auth(ExampleToken.Withdraw) &ExampleToken.Vault>
+                        (from: ExampleToken.VaultStoragePath)
+            ?? panic(ExampleToken.vaultNotConfiguredError(address: signer.address))
+
+        self.temporaryVault <- vaultRef.withdraw(amount: amount)
+    }
+}
+```
+
+The sending account then gets a reference to the recipients published capability and calls the recipient account's deposit function, which literally moves the resource instance to the other account, adds it to their balance, and then destroys the used resource.
+
+:::info[Action]
+
+Use the `execute` phase to `deposit` the tokens in the `temporaryVault` into the recipient's vault.
+
+:::
+
+```cadence
+execute{
+    let receiverAccount = getAccount(recipient)
+
+    let receiverRef = receiverAccount
+        .capabilities
+        .borrow<&ExampleToken.Vault>(ExampleToken.VaultPublicPath)
+        ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient))
+
+    receiverRef.deposit(from: <-self.temporaryVault)
+
+    log("Withdraw/Deposit succeeded!")
+}
+```
+
+The resource is destroyed by the `deposit` function.  It needs to be destroyed because Cadence enforces strict rules around resource interactions. A resource can never be left hanging in a piece of code. It either needs to be explicitly destroyed or stored in an account's storage.
 
 This rule ensures that resources, which often represent real value, do not get lost because of a coding error.
 
@@ -396,668 +707,37 @@ You'll notice that the arithmetic operations aren't explicitly protected against
 self.balance = self.balance - amount
 ```
 
-In Solidity, this could be a risk for integer overflow or underflow, but Cadence has built-in overflow and underflow protection, so it is not a risk.
-We are also using unsigned numbers in this example, so as mentioned earlier, the vault`s balance cannot go below 0.
+Cadence has built-in overflow and underflow protection, so it is not a risk. We are also using unsigned numbers in this example, so as mentioned earlier, the vault`s balance cannot go below 0.
 
-Additionally, the requirement that an account contains a copy of the token's resource type in its storage
-ensures that funds cannot be lost by being sent to the wrong address.
+Additionally, the requirement that an account contains a copy of the token's resource type in its storage ensures that funds cannot be lost by being sent to the wrong address.
 
 If an address doesn't have the correct resource type imported, the transaction will revert, ensuring that transactions sent to the wrong address are not lost.
 
-**Important note: This protection is not in place for the Flow network currency,**
-**because every Flow account is initialized with a default Flow Token Vault**
-**in order to pay for [storage fees and transaction fees](https://developers.flow.com/build/basics/fees.md#fees).**
+:::danger
 
-### Function Parameters
-
-The line in `withdraw` that creates a new `Vault` has the parameter name `balance` specified in the function call.
-
-```cadence
-return <-create Vault(balance: amount)
-```
-
-This is another feature that Cadence uses to improve the clarity of code.
-All function calls are required to specify the names of the arguments they are sending
-unless the developer has specifically overridden the requirement in the funtion declaration.
-
-### Perform a Basic Transfer
-
-As we talked about above, a token transfer with resources is not a simple update to a ledger.
-In Cadence, you have to first withdraw tokens from your vault, then deposit them to the vault
-that you want to transfer to. We'll start a simple transaction that withdraws tokens from a vault
-and deposits them back into the same vault.
-
-:::info[Action]
-
-Open the transaction named `Basic Transfer`.
-
-`Basic Transfer` should contain the following code for withdrawing and depositing with a stored Vault:
+Every Flow account is initialized with a default Flow Token Vault in order to pay for storage fees and transaction [fees].  If an address is use, it will be able to accept fees, without a user or developer needing to take further action.  If that account becomes lost, any tokens inside will be lost as well.
 
 :::
 
-```cadence BasicTransfer.cdc
-// Basic Transfer
+## Reviewing Fungible Tokens
 
-import BasicToken from 0x06
+In this tutorial, you learned how to create a simplified version of fungible tokens on Flow. You build a vault [resource] to safely store tokens inside the owner's storage, and used [interfaces] to define and enforce the properties a vault should have.  By using [interfaces], your definition is flexible and composable.  Other developers can use all or parts of these definitions to build new apps and contracts that are compatible with yours.
 
-// This transaction is used to withdraw and deposit tokens with a Vault
+You also practiced writing transactions on your own, and learned some new techniques, such as writing error messages more easily, using paths stored in the contract, and separating different parts of the transaction into their appropriate sections - `prepare` and `execute`.
 
-transaction(amount: UFix64) {
+Now that you have completed the tutorial, you should be able to:
 
-  prepare(signer: auth(BorrowValue) &Account) {
+* Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum.
+* Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18.
+* Implement a vault [resource] to manage the functionality needed for fungible tokens
+* Use [interfaces] to enforce the presence of specified functions and fields.
+* Write transactions to transfer tokens safely from one account to another.
+* Develop scripts to read account balances.
+* Use preconditions and postconditions to perform checks before or after a function call completes.
 
-        // Get a reference to the signer's stored vault
-        let vaultRef = signer.storage.borrow<auth(BasicToken.Withdraw) &BasicToken.Vault>
-                       (from: BasicToken.VaultStoragePath)
-            ?? panic("Could not borrow a vault reference to 0x06's BasicToken.Vault"
-                     .concat(" from the path ")
-                     .concat(BasicToken.VaultStoragePath.toString())
-                     .concat(". Make sure account 0x06 has set up its account ")
-                     .concat("with an BasicToken Vault."))
+If you're ready to try your hand at implementing a production-quality token, head over to the [Fungible Token Developer Guide].
 
-        // Withdraw tokens from the signer's stored vault
-        sentVault <- vaultRef.withdraw(amount: amount)
-
-        // Deposit the withdrawn tokens in the recipient's receiver
-        vaultRef.deposit(from: <-sentVault)
-
-        log("Withdraw/Deposit succeeded!")
-    }
-}
-```
-
-:::info[Action]
-
-Select account `0x06` as the only signer.
-
-You can enter any number less than 30.0 for the amount of tokens to transfer.
-
-Click the `Send` button to submit the transaction.
-
-This transaction withdraws tokens from the main vault and deposits them back
-to it.
-
-:::
-
-This transaction is a basic example of a transfer within an account.
-It withdraws tokens from the main vault and deposits back to the main vault.
-It is simply to illustrate the basic functionality of how transfers work.
-
-You'll see in this transaction that
-you can borrow a reference directly from an object in storage.
-
-```cadence
-// Borrow a Withdraw reference to the signer's vault
-// Remember to always have descriptive error messages!
-let vaultRef = signer.storage.borrow<auth(BasicToken.Withdraw) &BasicToken.Vault>
-                (from: ExampleToken.VaultStoragePath)
-    ?? panic("Could not borrow a vault reference to 0x06's BasicToken.Vault"
-            .concat(" from the path ")
-            .concat(BasicToken.VaultStoragePath.toString())
-            .concat(". Make sure account 0x06 has set up its account ")
-            .concat("with an BasicToken Vault."))
-```
-
-This allows you to efficiently access objects in storage without having to load them,
-which is a much more costly interaction.
-
-This code also uses entitlements (`auth(BasicToken.Withdraw)`)
-to access the withdraw functionality through a reference.
-Without entitlements, any privileged functionality would be able to be accessed
-via a public capability because reference can be downcasted to their concrete reference types.
-Therefore, functions with privileged functionality, like `withdraw()` here,
-should have entitlements in order to be secure.
-
-In production code, you'll likely be transferring tokens to other accounts.
-Capabilities allow us to accomplish this safely.
-
-## Ensuring Security in Public: Capability Security
-
----
-
-Another important feature in Cadence is its utilization of [**Capability-Based Security.**](../language/capabilities.md)
-
-Cadence's security model ensures that objects stored in an account's storage can only be accessed by the account that owns them.
-If a user wants to give another user access to their stored objects, they can link a public capability,
-which is like an "API" that allows others to call specified functions on their objects.
-
-An account only has access to the fields and methods of an object in a different account if they hold a capability to that object
-that explicitly allows them to access those fields and methods with entitlements.
-
-Only the owner of an object can create a capability for it and only the owner
-can add entitlements to a capability.
-
-Therefore, when a user creates a Vault in their account, they publish a capability
-that exposes the `access(all)` fields and functions on the resource.
-Here, those are `balance` and `deposit()`.
-
-The withdraw function can remain hidden as a function that only the owner can call.
-
-This removes the need to check the address of the account that made the function call
-(`msg.sender` in Ethereum) for access control purposes, because this functionality
-is handled by the protocol and the language's strong static type system.
-If you aren't the owner of an object or don't have a valid reference to it
-that was created by the owner, you cannot access the object at all!
-
-
-
-
-
-## Create, Store, and Publish Capabilities and References to a Vault
-
----
-
-Capabilities are kind of like pointers in other languages.
-They are a link to an object in an account's storage
-and can be used to read fields or call functions on the object they reference.
-They cannot move or modify the object directly.
-
-There are many different situations in which you would create a capability to your fungible token vault.
-You might want a simple way to call methods on your `Vault` from anywhere in a transaction.
-You could also send a capability that only exposes withdraw function in your `Vault` so that others can transfer tokens for you.
-
-There could also be a function that takes a capability to a `Vault` as an argument, borrows a reference to the capability,
-makes a single function call on the reference, then finishes and destroys the reference.
-
-We already use this pattern in the `VaultMinter` resource in the `mintTokens` function, shown here:
-
-```cadence
-    // Function that mints new tokens and deposits into an account's vault
-    // using their `{Receiver}` reference.
-    // We say `&{Receiver}` to say that the recipient can be any resource
-    // as long as it implements the Receiver interface
-    access(all) fun mintTokens(amount: UFix64, recipient: Capability<&{Receiver}>) {
-        let recipientRef = recipient.borrow()
-        ?? panic("ExampleToken.VaultMinter.mintTokens: Could not borrow a receiver reference to "
-                    .concat("the specified recipient's ExampleToken.Vault"))
-                    .concat(". Make sure the account has set up its account ")
-                    .concat("with an ExampleToken Vault and valid capability."))
-
-        ExampleToken.totalSupply = ExampleToken.totalSupply + UFix64(amount)
-        recipientRef.deposit(from: <-create Vault(balance: amount))
-    }
-```
-
-The function takes a capability as an argument.
-This syntax might be unclear to you:
-
-```cadence
-recipient: Capability<&{Receiver}>
-```
-
-This means that `recipient` has to be a Capability that was created as the type contained in `<>`.
-The type outside of the curly braces `{}` has to be a concrete type
-and the type in the curly braces has to be an interface type.
-Here we are saying that the type can be any resource that implements the `ExampleToken.Receiver` interface.
-If that is true, this function borrows a reference from this capability
-and uses the reference to call the `deposit` function of that resource because we know that
-the `deposit` function will be there since it is in the `ExampleToken.Receiver` interface.
-
-Let's create capabilities to your `Vault` so that a separate account can send tokens to you.
-
-:::info[Action]
-
-Before we submit a transaction interacting with ExampleToken resources, we'll need to deploy the contract to account `0x07`:
-
-1. Select `ExampleToken` in the playground sidebar
-2. Make sure that signer `0x07` is selected as the deploying address
-3. Click "Deploy"
-
-:::
-
-![Deploy ExampleToken to 0x07](./deploy_example_token.png)
-
-Now we can continue on to configure Capabilities on the ExampleToken Vault.
-
-:::info[Action]
-
-Open the transaction named `Issue Capability`.
-
-`Issue Capability` should contain the following code for creating a reference to the stored Vault:
-
-:::
-
-```cadence issue_capability.cdc
-import ExampleToken from 0x07
-
-// This transaction creates a capability
-// that is linked to the account's token vault.
-// The capability is restricted to the fields in the `Receiver` interface,
-// so it can only be used to deposit funds into the account.
-transaction {
-  prepare(signer: auth(IssueStorageCapabilityController, PublishCapability) &Account) {
-
-    // Create a link to the Vault in storage that is restricted to the
-    // fields and functions in `Receiver` and `Balance` interfaces,
-    // this only exposes the balance field
-    // and deposit function of the underlying vault.
-    let receiverCap = signer.capabilities.storage.issue<&{ExampleToken.Receiver, ExampleToken.Balance}>(
-        ExampleToken.VaultStoragePath
-    )
-    signer.capabilities.publish(receiverCap, at: ExampleToken.VaultPublicPath)
-
-    log("Public Receiver reference created!")
-  }
-
-  post {
-    // Check that the capabilities were created correctly
-    // by getting the public capability and checking
-    // that it points to a valid `Vault` object
-    // that implements the `Receiver` interface
-    getAccount(0x07).capabilities.get<&{ExampleToken.Receiver}>(ExampleToken.VaultPublicPath)
-                    .check():
-                    "Vault Receiver Reference was not created correctly"
-    }
-}
-```
-
-In order to use a capability, we have to first issue a link to that object in storage.
-A reference can then be created from a capability, and references cannot be stored.
-They need to be lost at the end of a transaction execution.
-
-To create a capability, we use the `account.capabilities.issue` function.
-
-```cadence
-// Create a capability to the Vault in storage that is restricted to the
-// fields and functions in `Receiver` and `Balance` interfaces,
-// this only exposes the balance field
-// and deposit function of the underlying vault.
-//
-let receiverCap = signer.capabilities.storage.issue<&ExampleToken.Vault>(
-    ExampleToken.VaultStoragePath
-)
-signer.capabilities.publish(receiverCap, at: ExampleToken.VaultPublicPath)
-```
-
-`issue` creates a new capability that is targeting the storage `target` in the second argument.
-The type restriction for the link is specified in the `<>`. We use `&{ExampleToken.Receiver, ExampleToken.Balance}`
-to say that the link can be any resource as long as it implements and is cast as the Receiver interface.
-This is the common format for describing references.
-You first have a `&` followed by the concrete type, then the interface in curly braces to ensure that
-it is a reference that implements that interface and only includes the fields specified in that interface.
-
-We publish the capability in `ExampleToken.VaultPublicPath` because we want it to be publicly accessible.
-The `public` domain of an account is accessible to anyone in the network via an account's
-public `&Account` reference, which is fetched by using the `getAccount(address)` function.
-
-Next is the `post` phase of the transaction.
-
-```cadence
-post {
-// Check that the capabilities were created correctly
-// by getting the public capability and checking
-// that it points to a valid `Vault` object
-// that implements the `Receiver` interface
-getAccount(0x07).capabilities.get<&{ExampleToken.Receiver}>(ExampleToken.VaultPublicPath)
-                    .check():
-                    "Vault Receiver Reference was not created correctly"
-}
-```
-
-The `post` phase is for ensuring that certain conditions are met after the transaction has been executed.
-Here, we are getting the capability from its public path and calling its `check` function to ensure
-that the capability contains a valid link to a valid object in storage that is the specified type.
-
-:::info[Action]
-
-Now that we understand the transaction, time to submit it:
-
-1. Select account `0x07` as the only signer.
-2. Click the `Send` button to submit the transaction.
-3. This transaction creates a new public capability to your `Vault`
-   and checks that it was created correctly.
-
-:::
-
-## Transfer Tokens to Another User
-
----
-
-Now, we are going to run a transaction that sends 10 tokens to account `0x08`.
-We will do this by calling the `withdraw` function on account `0x07`'s Vault,
-which creates a temporary Vault object for moving the tokens,
-then deposits those tokens into account `0x08`'s vault by calling the `deposit` function on their vault.
-
-:::info[Action]
-
-Account `0x08` has not been set up to receive tokens, so we will do that now:
-
-1. Open the transaction `Setup Account`.
-2. Select account `0x08` as the only signer.
-3. Click the `Send` button to set up account `0x08` so that it can receive tokens.
-
-:::
-
-```cadence SetupAccount.cdc
-// Setup Account
-
-import ExampleToken from 0x07
-
-// This transaction configures an account to store and receive tokens defined by
-// the ExampleToken contract.
-transaction {
-    prepare(signer: auth(BorrowValue, IssueStorageCapabilityController, PublishCapability, SaveValue) &Account) {
-        // Create a new empty Vault object
-        let vaultA <- ExampleToken.createEmptyVault()
-
-        // Create a new ExampleToken Vault and put it in storage
-        signer.storage.save(<-vaultA, to: ExampleToken.VaultStoragePath)
-
-        log("Empty Vault stored")
-
-        // Create a public Receiver capability to the Vault
-        let receiverCap = signer.capabilities.storage.issue<&ExampleToken.Vault>(
-            ExampleToken.VaultStoragePath
-        )
-        signer.capabilities.publish(receiverCap, at: ExampleToken.VaultPublicPath)
-
-        log("References created")
-    }
-
-    post {
-        getAccount(0x08).capabilities.get<&{ExampleToken.Receiver}>(ExampleToken.VaultPublicPath)
-                            .check():
-                            "Vault Receiver Reference was not created correctly"
-    } 
-}
-```
-
-Here we perform the same actions that account `0x07` did to set up its `Vault`, but all in one transaction.
-Account `0x08` is ready to start building its fortune! As you can see, when we created the Vault for account `0x08`,
-we had to create one with a balance of zero by calling the `createEmptyVault()` function.
-Resource creation is restricted to the contract where it is defined, so in this way, the Fungible Token smart contract can ensure that
-nobody is able to create new tokens out of thin air.
-
-As part of the initial deployment process for the ExampleToken contract, account `0x07` created a `VaultMinter` object.
-By using this object, the account that owns it can mint new tokens.
-Right now, account `0x07` owns it, so it has sole power to mint new tokens.
-We could have had a `mintTokens` function defined in the contract,
-but then we would have to check the sender of the function call to make sure that they are authorized,
-which is not the recommended way to perform access control in Cadence.
-
-As we explained before, the resource model plus capability security
-handles this access control for us as a built in language construct
-instead of having to be defined in the code.
-If account `0x07` wanted to authorize another account to mint tokens,
-they could either move the `VaultMinter` object to the other account,
-or give the other account a private capability to the single `VaultMinter`.
-Or, if they didn't want minting to be possible after deployment,
-they would simply mint all the tokens at contract initialization
-and not even include the `VaultMinter` in the contract.
-
-In the next transaction, account `0x07` will mint 30 new tokens and deposit them into account `0x08`'s newly created Vault.
-
-:::info[Action]
-
-1. Open the `Mint Tokens` transaction.
-2. Select only account `0x07` as a signer and send `Mint Tokens` to mint 30 tokens for account `0x08`.
-
-:::
-
-`Mint Tokens` should contain the code below.
-
-```cadence mint_tokens.cdc
-// Mint Tokens
-
-import ExampleToken from 0x07
-
-// This transaction mints tokens and deposits them into account 3's vault
-transaction {
-
-    // Local variable for storing the reference to the minter resource
-    let mintingRef: &ExampleToken.VaultMinter
-
-    // Local variable for storing the reference to the Vault of
-    // the account that will receive the newly minted tokens
-    var receiver: Capability<&{ExampleToken.Receiver}>
-
-	prepare(signer: auth(BorrowValue) &Account) {
-        // Borrow a reference to the stored, private minter resource
-        self.mintingRef = signer.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
-            ?? panic("Could not borrow a reference to the signer's ExampleToken.VaultMinter"
-                     .concat(" from the path /storage/CadenceFungibleTokenTutorialMinter")
-                     .concat(". Make sure you have deployed ExampleToken to 0x07 ")
-                     .concat("and are signing with account 0x07."))
-
-        // Get the public account object for account 0x08
-        let recipient = getAccount(0x08)
-
-        // Get their public receiver capability
-        self.receiver = recipient.capabilities.get<&{ExampleToken.Receiver}>
-(ExampleToken.VaultPublicPath)
-
-	}
-
-    execute {
-        // Mint 30 tokens and deposit them into the recipient's Vault
-        self.mintingRef.mintTokens(amount: 30.0, recipient: self.receiver)
-
-        log("30 tokens minted and deposited to account 0x08")
-    }
-}
-```
-
-This is an example of a transaction where we utilize local transaction variables
-that span different stages in the transaction.
-We declare the `mintingRef` and `receiverRef` variables outside of the prepare stage
-but must initialize them in `prepare`.
-We can then use them in later stages in the transaction.
-
-Then we borrow a reference to the `VaultMinter`. We specify the borrow as a `VaultMinter` reference
-and have the reference point to `/storage/CadenceFungibleTokenTutorialMinter`.
-The reference is borrowed as an optional so we use the nil-coalescing operator (`??`) to make sure the value isn't `nil`.
-If the value is `nil`, the transaction will execute the code after the `??`.
-The code is a panic, so it will revert and print the descriptive error message.
-
-You can use the `getAccount()` built-in function to get any account's public account object.
-The public account object lets you get capabilities from the `public` domain of an account, where public capabilities are stored.
-
-We use the `account.capabilities.get` function to get the public capability from a public path.
-
-```cadence
-// Get the public receiver capability
-let cap = recipient.capabilities.get(ExampleToken.VaultPublicPath)
-```
-
-In the execute phase, we simply use the reference to mint 30 tokens and deposit them into the `Vault` of account `0x08`.
-
-## Check Account Balances
-
-Now, both account `0x07` and account `0x08` should have a `Vault` object in their storage that has a balance of 30 tokens.
-They both should also have a `Receiver` capability stored in their `/public/` domains that links to their stored `Vault`.
-
-<img src="https://storage.googleapis.com/flow-resources/documentation-assets/cadence-tuts/account-balances.png" />
-
-An account cannot receive any token type unless it is specifically configured to accept those tokens.
-As a result, it is difficult to send tokens to the wrong address accidentally.
-But, if you make a mistake setting up the `Vault` in the new account, you won't be able to send tokens to it.
-
-Let's run a script to make sure we have our vaults set up correctly.
-
-You can use scripts to access an account's public state. Scripts aren't signed by any account and cannot modify state.
-
-In this example, we will query the balance of each account's vault. The following will print out the balance of each account in the emulator.
-
-:::info[Action]
-
-Open the script named `Get Balances` in the scripts pane.
-
-:::
-
-`Get Balances` should contain the following code:
-
-```cadence get_balances.cdc
-// Get Balances
-
-import ExampleToken from 0x07
-
-// This script reads the Vault balances of two accounts.
-access(all)
-fun main() {
-    // Get the accounts' public account objects
-    let acct7 = getAccount(0x07)
-    let acct8 = getAccount(0x08)
-
-    // Get references to the account's receivers
-    // by getting their public capability
-    // and borrowing a reference from the capability
-    let acct7ReceiverRef = acct7.capabilities.get<&{ExampleToken.Balance}>(ExampleToken.VaultPublicPath)
-                            .borrow()
-            ?? panic("Could not borrow a balance reference to "
-                     .concat("0x07's ExampleToken.Vault")
-                     .concat(". Make sure 0x07 has set up its account ")
-                     .concat("with an ExampleToken Vault and valid capability."))
-
-    let acct8ReceiverRef = acct8.capabilities.get<&{ExampleToken.Balance}>(ExampleToken.VaultPublicPath)
-                            .borrow()
-            ?? panic("Could not borrow a balance reference to "
-                     .concat("0x08's ExampleToken.Vault")
-                     .concat(". Make sure 0x08 has set up its account ")
-                     .concat("with an ExampleToken Vault and valid capability."))
-
-    // Use optional chaining to read and log balance fields
-    log("Account 0x07 Balance")
-	  log(acct7ReceiverRef.balance)
-    log("Account 0x08 Balance")
-    log(acct8ReceiverRef.balance)
-}
-```
-
-:::info[Action]
-
-Execute `Get Balances` by clicking the Execute button.
-
-:::
-
-This should ensure the following:
-
-- Account `0x07`'s balance is 30
-- Account `0x08`'s balance is 30
-
-If correct, you should see the following lines:
-
-```
-"Account 1 Balance"
-30
-"Account 2 Balance"
-30
-Result > "void"
-```
-
-If there is an error, this probably means that you missed a step earlier
-and might need to restart from the beginning.
-
-To restart the playground, close your current session and open the link at the top of the tutorial.
-
-Now that we have two accounts, each with a `Vault`, we can see how they transfer tokens to each other!
-
-:::info[Action]
-
-1. Open the transaction named `Transfer Tokens`.
-2. Select account `0x08` as a signer and send the transaction.
-3. `Transfer Tokens` should contain the following code for sending tokens to another user:
-
-:::
-
-```cadence transfer_tokens.cdc
-// Transfer Tokens
-
-import ExampleToken from 0x07
-
-// This transaction is a template for a transaction that
-// could be used by anyone to send tokens to another account
-// that owns a Vault
-transaction {
-
-  // Temporary Vault object that holds the balance that is being transferred
-  var temporaryVault: @ExampleToken.Vault
-
-  prepare(signer: auth(BorrowValue) &Account) {
-    // withdraw tokens from your vault by borrowing a reference to it
-    // and calling the withdraw function with that reference
-    let vaultRef = signer.storage.borrow<auth(ExampleToken.Withdraw) &ExampleToken.Vault>(from: ExampleToken.VaultStoragePath)
-        ?? panic("Could not borrow a vault reference to 0x08's ExampleToken.Vault"
-                    .concat(" from the path ")
-                    .concat(ExampleToken.VaultStoragePath.toString())
-                    .concat(". Make sure account 0x06 has set up its account ")
-                    .concat("with an ExampleToken Vault."))
-
-    self.temporaryVault <- vaultRef.withdraw(amount: 10.0)
-  }
-
-  execute {
-    // get the recipient's public account object
-    let recipient = getAccount(0x07)
-
-    // get the recipient's Receiver reference to their Vault
-    // by borrowing the reference from the public capability
-    let receiverRef = recipient.capabilities.get<&{ExampleToken.Receiver}>(ExampleToken.VaultPublicPath)
-                      .borrow()
-            ?? panic("Could not borrow a receiver reference to "
-                     .concat("0x07's ExampleToken.Vault")
-                     .concat(". Make sure 0x07 has set up its account ")
-                     .concat("with an ExampleToken Vault and valid capability."))
-
-    // deposit your tokens to their Vault
-    receiverRef.deposit(from: <-self.temporaryVault)
-
-    log("Transfer succeeded!")
-  }
-}
-
-```
-
-In this example, the signer withdraws tokens from their `Vault` using an **entitled reference**,
-which creates and returns a temporary `Vault` resource object with `balance=10`
-that is used for transferring the tokens. In the execute phase,
-the transaction moves that resource to another user's `Vault` using their `deposit` method.
-The temporary `Vault` is destroyed after its balance is added to the recipient's `Vault`.
-
-You might be wondering why we have to use two function calls to complete a token transfer when it is possible to do it in one.
-This is because of the way resources work in Cadence.
-In a ledger-based model, you would just call transfer, which just updates the ledger,
-but in Cadence, the location of the tokens matters,
-and therefore most token transfer situations will not just be a direct account-to-account transfer.
-
-Most of the time, tokens will be used for a different purpose first,
-like purchasing something, and that requires the `Vault` to be separately sent
-and verified before being deposited to the storage of an account.
-
-Separating the two also allows us to take advantage of being able
-to statically verify which parts of accounts can be modified in the `prepare` section of a transaction,
-which will help users have peace of mind when getting fed transactions to sign from an app.
-
-:::info[Action]
-
-Execute `Get Balances` again.
-
-:::
-
-If correct, you should see the following lines indicating that account `0x07`'s balance is 40 and account `0x08`'s balance is 20:
-
-```
-"Account 2 Balance"
-40
-"Account 3 Balance"
-20
-Result > "void"
-```
-
-You now know how a basic fungible token is used in Cadence and Flow!
-
-From here, you could try to extend the functionality of fungible tokens by making:
-
-- A faucet for these tokens
-- An escrow that can be deposited to (but only withdrawn when the balance reaches a certain point)
-- A function to the resource that mints new tokens!
-
-## Create a Flow Marketplace
-
----
-
-Now that you have an understanding of how fungible tokens work on Flow and have a working NFT, you can learn how to create
-a marketplace that uses both fungible tokens and NFTs. Move on to the next tutorial to learn about Marketplaces in Cadence!
-
+In the next tutorial, you'll combine the techniques and patterns you've learned for the classic challenge - building an NFT marketplace!
 
 <!-- Reference-style links, do not render on page -->
 
@@ -1072,3 +752,5 @@ a marketplace that uses both fungible tokens and NFTs. Move on to the next tutor
 [entitlement]: ../language/access-control.md
 [Function preconditions and postconditions]: ../language/functions.mdx#function-preconditions-and-postconditions
 [statements]: ../language/syntax.md#semicolons
+[capability]: ../language/capabilities.md
+[fees]: https://developers.flow.com/build/basics/fees.md#fees

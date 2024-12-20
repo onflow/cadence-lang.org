@@ -29,10 +29,14 @@
     "react-icons": "^4.11.0",
     "react-syntax-highlighter": "^15.5.0",
     "react-youtube": "^10.1.0",
-    "shiki": "^0.14.5"
+    "shiki": "^0.14.5",
+    "web-vitals": "^4.2.4"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "typescript": "*"
   },
   "browserslist": {

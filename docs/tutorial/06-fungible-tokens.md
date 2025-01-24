@@ -600,7 +600,7 @@ transaction(recipient: Address, amount: UFix64) {
         self.receiver = recipient.capabilities.get<&{ExampleToken.Receiver}>
             (ExampleToken.VaultPublicPath)
 
-	}
+    }
 
     execute {
         // Mint 30 tokens and deposit them into the recipient's Vault

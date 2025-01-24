@@ -623,7 +623,7 @@ You can mint tokens now.  Probably.  But it's hard to tell if you have a bug wit
 
 :::info[Action]
 
-Write a script to check the balance of an address.  It should accept an argument for an `address`, `get` and `borrow` a reference to that address's `Vault` from the `VaultPublicPath`, and return a nicely formatted string containing the `balance`.
+Write a script to check the balance of an address.  It should accept an argument for an `address`. In this script,`get` and `borrow` a reference to that address's `Vault` from the `VaultPublicPath`, and return a nicely formatted string containing the `balance`.
 
 :::
 

@@ -435,7 +435,7 @@ Next, add a `transaction`-level variable to store a result `String`:
 
 :::
 
-Similar to a class-level variable in other languages, these go at the top, inside the `transaction` scope, but not inside anything else:
+Similar to a class-level variable in other languages, these go at the top, inside the `transaction` scope, but not inside anything else. They are accessible in both the `prepare` and `execute` statements of a transaction.
 
 ```cadence
 import HelloResource from 0x06

@@ -33,7 +33,7 @@ After completing this tutorial, you'll be able to:
 
 * Write, deploy, and interact with Cadence code in the Flow Playground.
 * Select and utilize accounts in the Flow Playground.
-* Run Cadence transactions from the playground.
+* Run Cadence transactions and scripts from the playground.
 * Explore the contracts and storage associated with test accounts.
 
 

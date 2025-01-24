@@ -32,7 +32,7 @@ After completing this tutorial, you'll be able to:
 
 * Declare a public Cadence smart contract.
 * Initialize a public `String` variable. 
-* Write simple transactions in Cadence.
+* Write simple transactions and scripts in Cadence.
 * Describe the role of signers in a Cadence transaction.
 
 ## Implementing Hello World
@@ -132,37 +132,55 @@ The `view` annotation indicates that the function is permitted to view, but not 
 
 Each user has an account controlled by one or more private keys with configurable weight. This means that support for accounts/wallets with [multiple controllers] is built into the protocol by default.
 
-An account is divided into two main areas - the _Contract Area_ and _Account Storage_.
+An account is divided into several areas:
+* _Contracts_
+* _Account Storage_
+* _Capabilities_
+* _Keys_
 
 ### Contract Area
 
-The first area is the [contract area].
+The first area is the [contract area], or `account.contracts`.
 
-This is the area that stores smart contracts containing type definitions, fields, and functions that relate to common functionality. There is no limit to the number of smart contracts an account can store.
+This is the area that stores smart contracts deployed to the account.  These contracts contain type definitions, fields, and functions that relate to common functionality. There is no limit to the number of smart contracts an account can store.
 
-The information in the contract area cannot be directly accessed in a transaction unless the transaction is just returning (reading) a copy of the code deployed to an account.
+:::tip
+
+Much of the functionality that you'd find in a Solidity smart contract is instead written in [transactions] or scripts for Cadence apps.  These exist outside the smart contract, which means you don't need to anticipate absolutely everything you might want to do or view before deploying the contract.
+
+:::
+
+The information in the contract area cannot be directly accessed in a transaction unless the transaction imports the contract or returns (reads) a copy of the code deployed to an account.
 
 The owner of an account can directly add or update contracts that are deployed to it.
 
 :::warning[Important]
 
-On Flow Cadence, **smart contracts are upgradeable**.  If you make a mistake, you can often [update] it, constrained by some rules, in a public and transparent manner.
+On Flow Cadence, **smart contracts _are_ upgradeable**.  If you make a mistake, you can often [update] it, constrained by some rules, in a public and transparent manner.
 
 :::
 
 ### Account Storage
 
-The second area is where you'll find [account storage].  This area is where an account stores the objects that they own. This is an important differentiator between Cadence and other languages, because in other languages, assets that accounts own are usually stored in the centralized smart contract that defines the assets. 
+The second area is where you'll find [account storage], or `account.storage`.  This area is where an account stores the objects that it owns. This is an important differentiator between Cadence and other languages, because in other languages, assets that accounts own are usually stored in the centralized smart contract ledger that defines the assets. 
 
 :::warning[Important]
 
-In Cadence, **each account stores its assets as objects directly in its own account storage**.
+In Cadence, **each account stores its assets as objects directly in its own account storage, like how you store your own possessions in your own house in real life**!
 
 :::
 
 The account storage section also stores code that declares the capabilities for controlling how these stored objects can be accessed. We'll cover account storage and capabilities in more detail in a later tutorial.
 
 In this tutorial, we'll use the account with the address `0x06` to store our `HelloWorld` contract.
+
+### Capabilities
+
+[Capabilities], or `account.capabilities`, are a part of the security model in Cadence.  They represent the right to access parts or all of an object and perform operations on it.  For example, a user might possess a vault that holds fungible tokens.  For it, they'll have a capability that allows anyone to deposit tokens into the vault, and may choose to grant the capability to withdraw tokens to their broker's account.
+
+### Keys
+
+[Keys], or `account.keys`, are used to sign [transactions].  In Cadence, an account can have many keys. These keys can be shared or revoked, providing native version of [account abstraction] that is extremely powerful.  For example, you can use it [build an app] that pulls NFTs in an embedded wallet in one app into that user's browser wallet and use them in your app.
 
 ## Deploying the HelloWorld Contract
 
@@ -317,10 +335,15 @@ Now that you have completed the tutorial, you can:
 [variable]: ../language/constants-and-variables.md
 [type annotation]: ../language/type-annotations.md
 [Composite Types]: ../language/composite-types.mdx
-[multiple controllers]: https://www.coindesk.com/what-is-a-multisignature-crypto-wallet
+[multiple controllers]: https://www.coindesk.comwhat-is-a-multisignature-crypto-wallet
 [contract area]: ../language/accounts/contracts
 [update]: ../language/contract-updatability.md
 [account storage]: ../language/accounts/storage.mdx
+[Capabilities]: ../language/capabilities.md
+[Keys]: ../language/accounts/keys.md
+[account abstraction]: https://ethereum.org/en/roadmap/account-abstraction
+[build an app]: https://developers.flow.com/build/guides/account-linking-with-dapper
 [Transaction]: ../language/transactions.md
+[transactions]: ../language/transactions.md
 [`prepare`]: ../language/transactions.md#prepare-phase
 [Cadence types]: ../language/values-and-types.mdx

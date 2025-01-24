@@ -111,10 +111,10 @@ Add a `resource` called `HelloAsset` that contains a function to return a string
 ```cadence HelloResource.cdc
 access(all) contract HelloResource {
     access(all) resource HelloAsset {
-        // A transaction can call this function to get the "Hello, World!"
+        // A transaction can call this function to get the "Hello Resources!"
         // message from the resource.
         access(all) view fun hello(): String {
-            return "Hello, World!"
+            return "Hello Resources!"
         }
     }
 }
@@ -233,7 +233,7 @@ let newHello <- HelloWorldResource.createHelloAsset()
 
 :::info[Action]
 
-Finally use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`.
+Finally, use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`.
 
 :::
 
@@ -265,7 +265,7 @@ Use the `execute` phase to `log` a message that the resource was successfully sa
 execute {
     log("Saved Hello Resource to account.")
 }
-:::
+```
 
 You should have something similar to:
 
@@ -549,7 +549,7 @@ Finally, `log` the return from a call to the `hello()` function.
 
 :::warning
 
-Borrowing a [reference] does **not** allow you to move or destroy a resource, but it **does allow** you to mutate data inside that resource.
+Borrowing a [reference] does **not** allow you to move or destroy a resource, but it **does allow** you to mutate data inside that resource via one of the resource's functions.
 
 :::
 

@@ -43,13 +43,13 @@ After completing this tutorial, you'll be able to:
 
 Let's look at why you would want to use capabilities and entitlements to expand access to resources in a real-world context. A real user's account and stored objects will contain functions and fields that need varying levels of access scope and privacy.
 
-If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases.While you definitely want to make a feature like withdrawing tokens from an account only accessible by the owner of the tokens, your app should allow anybody to deposit tokens.
+If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want to make a feature like withdrawing tokens from an account only accessible by the owner of the tokens, your app should allow anybody to deposit tokens.
 
 Capabilities and entitlements are what allows for this detailed control of access to owned assets. They allow a user to indicate which of the functionality of their account and owned objects should be accessible to themselves, their trusted friends, and the public.
 
 For example, a user might want to allow a friend of theirs to use some of their money to spend, in this case, they could create an entitled capability that gives the friend access to only this part of their account, instead of having to hand over full control.
 
-Another example is when a user authenticates a trading app for the first time, the trading app could ask the user for a capability object that allows the app to access the trading functionality of a user's account so that the app doesn't need to ask the user for a signature every time the want to do a trade.  The user can choose to empower the app, and that app alone, for this functionality.
+Another example is when a user authenticates a trading app for the first time, the trading app could ask the user for a capability object that allows the app to access the trading functionality of a user's account so that the app doesn't need to ask the user for a signature every time it wants to do a trade.  The user can choose to empower the app, and that app alone, for this functionality and this functionality alone.
 
 ## Accessing Resources with Capabilities
 
@@ -178,7 +178,7 @@ The capability says that whoever borrows a reference from this capability has ac
 
 A reference is referred to by the `&` symbol. Here, the capability references the `HelloAsset` object, so we specify `<&HelloWorld.HelloAsset>` as the type, which gives access to **everything** in the `HelloAsset` object.
 
-The argument to the `issue` function is the path to the object in storage that is to be linked to. When a capability is issued, a [capability controller] is created for it in `Account.Capabilities`, which allows the creator of the capability to have fine-grained control over the capability.
+The argument to the `issue` function is the path to the object in storage that is to be linked to. When a capability is issued, a [capability controller] is created for it in `account.capabilities`. This controller allows the creator of the capability to have fine-grained control over the capability.
 
 Capabilities usually link to objects in the `/storage/` domain,
 but can also be created for `Account` objects. Account capabilities will not be covered in this tutorial.

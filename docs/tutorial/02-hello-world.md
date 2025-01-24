@@ -340,7 +340,7 @@ Now that you have completed the tutorial, you can:
 [update]: ../language/contract-updatability.md
 [account storage]: ../language/accounts/storage.mdx
 [Capabilities]: ../language/capabilities.md
-[Keys]: ../language/accounts/keys.md
+[Keys]: ../language/accounts/keys.mdx
 [account abstraction]: https://ethereum.org/en/roadmap/account-abstraction
 [build an app]: https://developers.flow.com/build/guides/account-linking-with-dapper
 [Transaction]: ../language/transactions.md

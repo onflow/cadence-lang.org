@@ -87,6 +87,10 @@ Flow is different from most other blockchains in that contracts, assets, and inf
 
 :::
 
+We've used the `warning` label to get your attention, but this is a **good thing**!  In most other chains, a coding error that accidentally changes a single number in a ledger can destroy, change, or duplicate ownership of an asset or assets.  It's like a medieval shop with a bunch of paper IOUs having a gust of wind blow through vs. having the gold in your pocket.
+
+The model of ownership in Cadence makes this kind of loss nearly impossible.
+
 The Flow playground comes with pre-created accounts that you can use for testing and experimentation.
 
 They're listed in the `Accounts` section on the bottom left part of the playground window.

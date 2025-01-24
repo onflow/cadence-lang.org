@@ -606,7 +606,7 @@ transaction(recipient: Address, amount: UFix64) {
         // Mint 30 tokens and deposit them into the recipient's Vault
         self.mintingRef.mintTokens(amount: 30.0, recipient: self.receiver)
 
-        log("30 tokens minted and deposited to account 0x08"
+        log("30 tokens minted and deposited to account "
             .concat(self.receiver.address.toString()))
     }
 }

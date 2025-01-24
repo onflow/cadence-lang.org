@@ -322,7 +322,7 @@ At the end of the script execution, the `helloReference` value is lost, but that
 
 :::danger
 
-Never construct your app logic such that it depends on something in a user's storage.  They own their storage and can delete anything in it at any time without asking anyone.
+While most apps will need to depend on users storing resource that allow the user to interact with the app, avoid constructing your app logic such that it depends on something in a user's storage for important metadata.  They own their storage and can delete anything in it at any time without asking anyone.
 
 For example, if you stored the amount of debt for tokens you'd lent a user in their account, they could simply delete the storage and erase the debt.
 

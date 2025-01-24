@@ -2,6 +2,14 @@
 title: 7. Marketplace Setup
 ---
 
+:::warning
+
+We're in the process of updating the Cadence tutorial series.  This tutorial, and the ones following, have **not** yet been updated.
+
+Check back, or follow us on socials.  These will be updated soon!
+
+:::
+
 In this tutorial, we're going to create a marketplace that uses both the fungible
 and non-fungible token (NFTs) contracts that we have learned about in previous tutorials.
 This page requires you to execute a series of transactions to setup your accounts to complete the Marketplace tutorial.

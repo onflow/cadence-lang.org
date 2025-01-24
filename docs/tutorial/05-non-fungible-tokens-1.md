@@ -233,7 +233,7 @@ However, if the resource contained functions to mutate data within the token, th
 
 You might be tempted to add this code to to `mintNFT` so that you can reuse it for anyone who wants to mint the NFT and automatically create the related capability.
 
-The code will work, but it will **not** function the way you're probably expecting it to.  In the context of being called from a function inside a contract, `self.account` refers to the account of the contract deployer.  That's you!
+The code will work, but it will **not** function the way you're probably expecting it to.  In the context of being called from a function inside a contract, `self.account` refers to the account of the contract deployer, not the caller of the function.  That's you!
 
 Adding `self.account.save` or `self.account.publish` to `mintNFT` will allow anyone to attempt to mint and publish capabilities to **your** account.
 

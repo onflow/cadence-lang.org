@@ -126,6 +126,20 @@ transaction {
 
 The [`IssueStorageCapabilityController`] allows the transaction to [issue] a new capability, which includes storing that capability to the user's account.  [`PublishCapability`] allows the transaction to [publish] a capability and make it available to other users - in this case, we'll make it public.
 
+### Capability Based Access Control
+
+[Capabilities] allow the owners of objects to specify what functionality of their private objects is available to others. Think of it kind of like an account's API, if you're familiar with the concept.
+
+The account owner has private objects stored in their storage, like their collectibles or their money, but they might still want others to be able to see what collectibles they have in their account, or they want to allow anyone to access the deposit functionality for a certain asset.
+
+Since these objects are stored in private storage by default, the owner has to authorize something to open up access to these while still retaining full control.
+
+We create capabilities to accomplish this, and the account owner must sign a transaction to [issue] and [publish] them.
+
+Every capability has a `borrow` method, which creates a reference to the object that the capability is linked to. This reference is used to read fields or call methods on the object they reference, **as if the owner of the reference had the actual object**.
+
+It is important to remember that someone else who has access to a capability cannot move or destroy the object that the capability is linked to! They can only access fields that the owner has explicitly declared in the type specification and authorization-level of the [issue] method.
+
 ### Issue the Capability
 
 Capabilities are created with the [issue] function and can be stored in variables or constants.
@@ -142,20 +156,6 @@ let capability = account
   .storage
   .issue<&HelloWorld.HelloAsset>(/storage/HelloAssetTutorial)
 ```
-
-### Capability Based Access Control
-
-[Capabilities] allow the owners of objects to specify what functionality of their private objects is available to others. Think of it kind of like an account's API, if you're familiar with the concept.
-
-The account owner has private objects stored in their storage, like their collectibles or their money, but they might still want others to be able to see what collectibles they have in their account, or they want to allow anyone to access the deposit functionality for a certain asset.
-
-Since these objects are stored in private storage by default, the owner has to authorize something to open up access to these while still retaining full control.
-
-We create capabilities to accomplish this, and the account owner must sign a transaction to [issue] and [publish] them.
-
-Every capability has a `borrow` method, which creates a reference to the object that the capability is linked to. This reference is used to read fields or call methods on the object they reference, **as if the owner of the reference had the actual object**.
-
-It is important to remember that someone else who has access to a capability cannot move or destroy the object that the capability is linked to! They can only access fields that the owner has explicitly declared in the type specification and authorization-level of the [issue] method.
 
 :::danger
 

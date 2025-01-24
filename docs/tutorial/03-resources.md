@@ -426,8 +426,15 @@ Next, add a `transaction`-level variable to store a result `String`:
 
 :::
 
+Similar to a class-level variable in other languages, these go at the top, inside the `transaction` scope, but not inside anything else:
+
 ```cadence
-var result: String
+import HelloResource from 0x06
+
+transaction {
+    var result: String
+    // Other code...
+}
 ```
 
 You'll get an error: `missing initialization of field `result` in type `Transaction`. not initialized`

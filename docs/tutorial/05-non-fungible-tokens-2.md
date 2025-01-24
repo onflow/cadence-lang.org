@@ -97,7 +97,7 @@ access(all) resource Collection {
 
 :::tip
 
-Cadence is an object-oriented language.  Inside of a composite type, such as a [capability], `self` refers to the instance of that type and **not** the contract itself.
+Cadence is an object-oriented language.  Inside of a composite type, such as a [resource], `self` refers to the instance of that type and **not** the contract itself.
 
 :::
 

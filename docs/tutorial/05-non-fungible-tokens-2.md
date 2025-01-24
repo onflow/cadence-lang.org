@@ -219,7 +219,7 @@ access(Withdraw) fun withdraw(withdrawID: UInt64): @NFT {
 }
 ```
 
-Providing an access scope of `access(Withdraw)` locks this functionality to only the owner that has the [resource] directly in their storage, **or** to any address possessing the `Withdraw` entitlement for this contract.
+Providing an access scope of `access(Withdraw)` locks this functionality to only the owner that has the [resource] directly in their storage, **or** to any address possessing a reference to this resource that has the `Withdraw` entitlement.
 
 As with other types defined in contracts, these are namespaced to the deployer and contract.  The full name of `Withdraw` would be something like `0x06.IntermediateNFT.Withdraw`.  More than one contract or account can declare separate and distinct entitlements with the same name.
 

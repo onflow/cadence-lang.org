@@ -716,7 +716,7 @@ If an address doesn't have the correct resource type imported, the transaction w
 
 :::danger
 
-Every Flow account is initialized with a default Flow Token Vault in order to pay for storage fees and transaction [fees].  If an address is use, it will be able to accept fees, without a user or developer needing to take further action.  If that account becomes lost, any tokens inside will be lost as well.
+Every Flow account is initialized with a default Flow Token Vault in order to pay for storage fees and transaction [fees].  If an address is in use, it will be able to accept Flow tokens, without a user or developer needing to take further action.  If that account becomes lost, any tokens inside will be lost as well.
 
 :::
 

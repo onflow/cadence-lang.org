@@ -590,7 +590,7 @@ transaction(recipient: Address, amount: UFix64) {
     let mintingRef: &ExampleToken.VaultMinter
     var receiver: Capability<&{ExampleToken.Receiver}>
 
-	prepare(signer: auth(BorrowValue) &Account) {
+    prepare(signer: auth(BorrowValue) &Account) {
         self.mintingRef = signer.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
             ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient))
 

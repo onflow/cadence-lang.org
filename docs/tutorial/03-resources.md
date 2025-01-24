@@ -473,7 +473,7 @@ One way to check whether or not a storage path has an object in it is to use the
 
 A response of `false` does **not** mean the location is empty.  If you ask for an apple and the location contains an orange, this function will return `false`.
 
-This is not likely to occur, but is theoretically possible.
+This is not likely to occur because projects are encouraged to create storage and public paths that are very unique, but is theoretically possible if projects don't follow this best practice or if there is a malicious app that tries to store things in other projects' paths.
 
 ```
 

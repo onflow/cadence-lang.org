@@ -338,9 +338,7 @@ import IntermediateNFT from 0x06
 transaction(description: String) {
     let receiverRef: &IntermediateNFT.Collection
 
-    prepare(account: auth(
-        BorrowValue,
-        ) &Account) {
+    prepare(account: auth(BorrowValue) &Account) {
         self.receiverRef = account.capabilities
             .borrow<&IntermediateNFT.Collection>(IntermediateNFT.CollectionPublicPath)
             ?? panic(IntermediateNFT.collectionNotConfiguredError(address: account.address))

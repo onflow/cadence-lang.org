@@ -344,7 +344,7 @@ Now that you have completed the tutorial, you should be able to:
 * Write transactions to create [capabilities] to extend resource access scope from the owner to anyone (`public`).
 * Write and execute a script that interacts with the resource through the capability.
 
-You're on the right track to building more complex applications with Cadence. Now is a great time to check out the [Cadence Best Practices document] and [Anti-patterns document].
+You're on the right track to building more complex applications with Cadence. Now is a great time to check out the [Cadence Best Practices document], [Anti-patterns document], and the first NFT tutorial!
 
 <!-- Reference-style links, will not render on page -->
 

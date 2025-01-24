@@ -1,9 +1,9 @@
 ---
 archived: false
 draft: false
-title: 4. Capability Tutorial
+title: Capabilities
 description: An introduction to capabilities and how they interact with resources in Cadence
-date: 2024-09-17
+date: 2024-12-11
 meta:
   keywords:
     - tutorial
@@ -11,6 +11,7 @@ meta:
     - Cadence
     - Resources
     - Capabilities
+    - Capability
 tags:
   - reference
   - cadence
@@ -18,446 +19,349 @@ tags:
 socialImageTitle: Cadence Resources
 socialImageDescription: Capability smart contract image.
 ---
-## Overview
 
-:::tip
+This tutorial will build on your understanding of [accounts] and [resources]. You'll learn how to interact with resources using [capabilities] and [entitlements].
 
-Open the starter code for this tutorial in the Flow Playground. It is the same code that was in the previous tutorial: <br />
-<a
-  href="https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f"
-  target="_blank"
->
-  https://play.flow.com/47d92bae-5234-463c-ae14-3dbd452a004f
-</a>
-The tutorial will ask you to take various actions to interact with this code.
+:::tip[Reminder]
 
-:::
-
-:::info[Action]
-
-Instructions that require you to take action are always included in a callout
-box like this one. These highlighted actions are all that you need to do to
-get your code running, but reading the rest is necessary to understand the
-language's design.
-
-:::
-
-This tutorial builds on the [previous `Resource` tutorial](./03-resources.md).
-Before beginning this tutorial, you should have an idea of
-how accounts, transactions, resources, and signers work with basic field types.
-This tutorial will build on your understanding of accounts and resources.
-
-You'll learn how to interact with resources using [capabilities](../language/capabilities.md)
-and [entitlements](../language/access-control#entitlements).
-
-In Cadence, resources are a composite type like a struct or a class, but with some special rules:
+In Cadence, resources are a composite type like a struct or a class, but with some **special rules**:
 - Each instance of a resource can only exist in exactly one location and cannot be copied.
 - Resources must be explicitly moved from one location to another when accessed.
 - Resources also cannot go out of scope at the end of function execution, they must be explicitly stored somewhere or destroyed.
 
-### Use-Cases for Capabilities and Entitlements
+:::
 
-Let's look at why you would want to use capabilities and entitlements
-to expand access to resources in a real-world context.
+## Objectives
 
-A real user's account and stored objects will contain functions
-and fields that need varying levels of access scope and privacy.
-For example, if you're working on an app that allows users to exchange tokens.
-While you definitely want to make a feature like withdrawing tokens
-from an account only accessible by the owner of the tokens,
-your app should allow anybody to deposit tokens.
+After completing this tutorial, you'll be able to:
 
-Capabilities and entitlements are what allows for this detailed control of access to owned assets.
-They allow a user to indicate which of the functionality of their account and owned objects
-should be accessible to themselves, their trusted friends, and the public.
+* Interact with [resources] created using transactions.
+* Write transactions to create [capabilities] to extend resource access scope from the owner to anyone (`public`).
+* Write and execute a script that interacts with the resource through the capability.
 
-For example, a user might want to allow a friend of theirs to use some of their money to spend,
-in this case, they could create an entitled capability that gives the friend access
-to only this part of their account, instead of having to hand over full control.
+## Use-Cases for Capabilities and Entitlements
 
-Another example is when a user authenticates a trading app for the first time,
-they could ask the user for a capability object that allows
-the app to access the trading functionality of a user's account so that
-the app doesn't need to ask the user for a signature every time.
+Let's look at why you would want to use capabilities and entitlements to expand access to resources in a real-world context. A real user's account and stored objects will contain functions and fields that need varying levels of access scope and privacy.
 
-In this tutorial, you will:
-1. Interact with the resource we created using transactions
-2. Create capabilities to extend the resource access scope
-3. Execute a script that interacts with the resource through the capability
+If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want to make a feature like withdrawing tokens from an account only accessible by the owner of the tokens, your app should allow anybody to deposit tokens.
+
+Capabilities and entitlements are what allows for this detailed control of access to owned assets. They allow a user to indicate which of the functionality of their account and owned objects should be accessible to themselves, their trusted friends, and the public.
+
+For example, a user might want to allow a friend of theirs to use some of their money to spend, in this case, they could create an entitled capability that gives the friend access to only this part of their account, instead of having to hand over full control.
+
+Another example is when a user authenticates a trading app for the first time, the trading app could ask the user for a capability object that allows the app to access the trading functionality of a user's account so that the app doesn't need to ask the user for a signature every time it wants to do a trade.  The user can choose to empower the app, and that app alone, for this functionality and this functionality alone.
 
 ## Accessing Resources with Capabilities
 
----
-Before following this tutorial, you should have the `HelloWorld` contract deployed in account `0x06`,
-just like in the [previous `Resource` contract tutorial](./03-resources.md).
+As a smart contract developer, you need explicit permission from the owner of an account to access its [storage]. Capabilities allow an account owner to grant access to specific fields and functions on objects stored in their account.
+
+First, you'll write a transaction in which you'll issue a new capability using the `issue` function. This capability creates a link to the user's `HelloAsset` resource object. It then publishes that link to the account's public space, so others can access it.
+
+Next, you'll write a script that anyone can use that link to borrow a [reference] to the underlying object and call the `hello()` function.
+
+## Creating Capabilities and References to Stored Resources
 
 :::info[Action]
 
-Open the Account `0x06` tab with file named `HelloWorldResource.cdc`. 
-`HelloWorldResource.cdc` should contain the following code:
-
-:::
-
-```cadence HelloWorldResource-2.cdc
-access(all) contract HelloWorld {
-
-    // Declare a resource that only includes one function.
-    access(all) resource HelloAsset {
-
-        // A transaction can call this function to get the "Hello, World!"
-        // message from the resource.
-        access(all) fun hello(): String {
-            return "Hello, World!"
-        }
-    }
-
-    // We're going to use the built-in create function to create a new instance
-    // of the HelloAsset resource
-    access(all) fun createHelloAsset(): @HelloAsset {
-        return <-create HelloAsset()
-    }
-}
-```
-
-:::info[Action]
-
-Deploy this code to account `0x06` using the `Deploy` button.
+Continue working with your code from the previous tutorial.  Alternately, open a fresh copy here:
+<a
+  href="https://play.flow.com/64287da4-50c4-4580-8b9f-5792b78d77c3"
+  target="_blank"
+>
+  https://play.flow.com/64287da4-50c4-4580-8b9f-5792b78d77c3
+</a>
 
 :::
 
 :::info[Action]
 
-Click on the `Create Hello` transaction and send it with `0x06` as the signer.
+If you started with a fresh playground, be sure to deploy the `HelloWorld` contract with account `0x06` and call the `Create Hello` transaction, also with `0x06`.
 
 :::
 
-The contract and transaction above creates and stores the resource we'll be using in this tutorial.
-For a more detailed breakdown of the contract and transactions,
-have a look at the [previous tutorial](./03-resources.md).
-
-### Creating Capabilities and References to Stored Resources
-
----
-You need explicit permission from the owner of an account to access its storage.
-Capabilities allow an account owner to grant access to specific fields and functions
-on objects stored in their account. (Explained more below)
-
-In the upcoming transaction, you issue a new capability using the `issue` function.
-This creates a link to your `HelloAsset` resource object.
-Then you publish that link to your account's public space, so others can access it.
-
-Next, anyone can use that link to borrow a [reference](../language/references.mdx)
-to the underlying object and call the `hello()` function.
-A detailed explanation of what is happening in this transaction
-is below the transaction code so, if you feel lost, keep reading!
+### Prepare the Account Capabilities
 
 :::info[Action]
 
-Open the transaction named `Create Link`.
+Create a new transaction called `Create Link`.
 
-`Create Link` should contain the following code:
+Import `HelloWorld` and stub out a `transaction` with a `prepare` phase.
+
+:::
+
+:::tip
+
+Cadence allows for static analysis of imported contracts.  You'll get errors in the transactions and scripts that import `HelloWorld` from `0x06` if you haven't deployed that contract.
 
 :::
 
 ```cadence create_link.cdc
 import HelloWorld from 0x06
 
-/// This transaction issues a new capability for the HelloAsset resource
-/// in storage and publishes it
-///
-/// Other accounts and scripts can use this public capability
-/// to create a reference to the private object to be able to
-/// access its fields and call its methods.
-
 transaction {
-  // We use `auth(IssueStorageCapabilityController, PublishCapability) &Account` to 
-  // ensure that the only thing that this transaction is allowed to do with the signer's account
-  // is issue and publish capabilities
-  prepare(account: auth(IssueStorageCapabilityController, PublishCapability) &Account) {
-
-    // Create a capability by linking the capability to
-    // an object in account storage at the specified path
-    // The capability allows access to the object of the type specified
-    // without needing to actually possess the object
-    let capability = account.capabilities.storage.issue<&HelloWorld.HelloAsset>(/storage/HelloAssetTutorial)
-
-    // Publish the capability so it is accessible to all
-    account.capabilities.publish(capability, at: /public/HelloAssetTutorial)
-
-    // Use the capability's borrow method to create a new reference
-    // to the object that the capability links to
-    // We use optional chaining "??" to get the value because
-    // result of the borrow could fail, so it is an optional.
-    // If the optional is nil,
-    // the panic will happen with a descriptive error message
-    let helloReference = capability.borrow()
-      ?? panic("Could not borrow a reference to the HelloAsset capability. This could be"
-                .concat("because the resource is not stored or the capability wasn't published.")
-                .concat("Run the Create Hello transaction again to store the resource"))
-
-    // Call the hello function using the reference
-    // to the HelloAsset resource.
-    //
-    log(helloReference.hello())
+  prepare() {
+    // TODO
   }
 }
 ```
 
 :::info[Action]
 
-Ensure account `0x06` is still selected as a transaction signer.
-
-Click the `Send` button to send the transaction.
+Next, pass an `&Account` reference into `prepare` with the capabilities needed to give the `transaction` the ability to create and publish a capability.
 
 :::
 
-In this transaction, we use the prepare phase to:
-1. Create a capability with the `account.capabilities.storage.issue` method to the stored object `HelloWorld.HelloAsset` from the account path `/storage/HelloAssetTutorial`
-2. Publish the capability to the account path `/public/HelloAssetTutorial`
-3. Use the `borrow` method to create a reference to the object we linked to called `helloReference`
-4. Call the `hello()` function using the reference we created, `helloReference`
+```cadence create_link.cdc
+import HelloWorld from 0x06
 
-You should see `"Hello, World"` show up in the console again.
-You might be confused that we were able to call a method on the `HelloAsset` object
-without actually having loaded it from storage to get control of it!
-It is stored in the `/storage/` domain of the account, which should be private.
+transaction {
+  prepare(account: auth(
+    IssueStorageCapabilityController,
+    PublishCapability
+  ) &Account) {
+    // TODO
+  }
+}
+```
 
-This is because we created a [**capability**](../language/capabilities.md) for the `HelloAsset` object.
-Capabilities are kind of like pointers in other languages, but with much more fine-grained control.
+The [`IssueStorageCapabilityController`] allows the transaction to [issue] a new capability, which includes storing that capability to the user's account.  [`PublishCapability`] allows the transaction to [publish] a capability and make it available to other users - in this case, we'll make it public.
 
 ### Capability Based Access Control
 
-[Capabilities](../language/capabilities.md) allow the owners of objects
-to specify what functionality of their private objects is available to others.
-Think of it kind of like an account's API, if you're familiar with the concept.
+[Capabilities] allow the owners of objects to specify what functionality of their private objects is available to others. Think of it kind of like an account's API, if you're familiar with the concept.
 
-The account owner has private objects stored in their storage, like their collectibles or their money,
-but they might still want others to be able to see what collectibles they have in their account,
-or they want to allow anyone to access the deposit functionality for a certain asset.
-Since these objects are stored in private storage by default, the owner has to do something
-to open up access to these while still retaining full control.
-We create capabilities to accomplish this.
+The account owner has private objects stored in their storage, like their collectibles or their money, but they might still want others to be able to see what collectibles they have in their account, or they want to allow anyone to access the deposit functionality for a certain asset.
 
-In our example, the owner of `HelloAsset` might still want to let other people call the `hello` method.
-This is what capabilities are for. They represent a link to an object
-in an account's storage that has the type specified when the link is created.
+Since these objects are stored in private storage by default, the owner has to authorize something to open up access to these while still retaining full control.
 
-It is important to remember that someone else who has this capability
-cannot move or destroy the object that the capability is linked to!
-They can only access fields that the owner has explicitly declared in the type specification
-and authorization-level of the `issue` method (described below).
+We create capabilities to accomplish this, and the account owner must sign a transaction to [issue] and [publish] them.
 
-Capabilities do not have any meaningful functionality on their own, but every capability has a `borrow` method,
-which creates a reference to the object that the capability is linked to.
-This reference is used to read fields or call methods on the object they reference
-as if the owner of the reference had the actual object.
+Every capability has a `borrow` method, which creates a reference to the object that the capability is linked to. This reference is used to read fields or call methods on the object they reference, **as if the owner of the reference had the actual object**.
 
-Note that this only allows access to fields and methods.
-It does not allow copying, moving, or modifying the original object directly.
+It is important to remember that someone else who has access to a capability cannot move or destroy the object that the capability is linked to! They can only access fields that the owner has explicitly declared in the type specification and authorization-level of the [issue] method.
 
-Let's break down what is happening in this transaction.
+### Issue the Capability
 
-First, we issue a capability to the private `HelloAsset` object in `/storage/`:
+Capabilities are created with the [issue] function and can be stored in variables or constants.
+
+:::info[Action]
+
+Issue a capability to allow access to the instance of the `HelloAsset` [resource] the `Create Hello` transaction saved in `/storage/HelloAssetTutorial`.
+
+:::
 
 ```cadence
-    let capability = account.capabilities.storage.issue<&HelloWorld.HelloAsset>(/storage/HelloAssetTutorial)
+let capability = account
+  .capabilities
+  .storage
+  .issue<&HelloWorld.HelloAsset>(/storage/HelloAssetTutorial)
 ```
 
-To create a capability, we use the `Account.capabilities.issue()` method to issue a new capability to an object in storage.
-The type contained in `<>` is the reference type that the capability represents.
-The capability says that whoever borrows a reference from this capability has access to the fields and methods
-that are specified by the type and entitlements in `<>`.
-The specified type has to be a subtype of the type of the object being linked to,
-meaning that it cannot contain any fields or functions that the linked object doesn't have.
+:::danger
 
-A reference is referred to by the `&` symbol. Here, the capability references the `HelloAsset` object,
-so we specify `<&HelloWorld.HelloAsset>` as the type, which gives access to everything in the `HelloAsset` object.
+In our example capability, we had the user sign a transaction that gave public access to **everything** found in the `HelloAsset` resource!
 
-The argument to the `issue` function is the path to the object in storage that is to be linked to.
-When a capability is issued, [a capability controller](../language/accounts/capabilities#accountcapabilities) is created for it
-in `Account.Capabilities`, which allows the
-creator of the capability to have fine-grained control over the capability.
+When you're writing real transactions, follow the principle of giving minimal access.  While the capability cannot move or destroy an object, it might be able to mutate data inside of it in a way that the owner does not desire.
+
+For example, if you added a function to allow the owner of the resource to change the greeting message, this code would open that function up to anyone and everyone!
+
+:::
+
+```cadence
+let capability = account
+  .capabilities
+  .storage
+  .issue<&HelloWorld.HelloAsset>(/storage/HelloAssetTutorial)
+```
+
+The capability says that whoever borrows a reference from this capability has access to the fields and methods that are specified by the type and entitlements in `<>`. The specified type has to be a subtype of the type of the object being linked to, meaning that it cannot contain any fields or functions that the linked object doesn't have.
+
+A reference is referred to by the `&` symbol. Here, the capability references the `HelloAsset` object, so we specify `<&HelloWorld.HelloAsset>` as the type, which gives access to **everything** in the `HelloAsset` object.
+
+The argument to the `issue` function is the path to the object in storage that is to be linked to. When a capability is issued, a [capability controller] is created for it in `account.capabilities`. This controller allows the creator of the capability to have fine-grained control over the capability.
 
 Capabilities usually link to objects in the `/storage/` domain,
 but can also be created for `Account` objects. Account capabilities will not be covered in this tutorial.
 
-After issuing the capability, it can be stored somewhere or in this case, published
-to the account's public section with the `account.capabilities.publish()` method.
-The caller provides the capability to publish and a public path to publish it at.
+### Publish the Capability
 
-To borrow a reference to an object from the capability, we use the capability's `borrow` method.
-
-```cadence
-let helloReference = capability.borrow()
-    ?? panic("Could not borrow a reference to the hello capability")
-```
-
-This method creates the reference as the type we specified in `<>` in the `issue` function.
-While borrowing the reference, we use
-[optional chaining](../language/composite-types.mdx#accessing-fields-and-functions-of-composite-types-using-optional-chaining)
-because the borrowing of the reference could fail.
-The reference could be `nil` if the targeted storage slot is empty, is already borrowed,
-or if the requested type exceeds what is allowed by the capability.
-We panic with a descriptive error message so the caller can know better what went wrong.
-
-Additionally, the owner of an object can effectively [revoke capabilities](../language/accounts/capabilities#revoking-capabilities)
-they have created by using the `delete` method on the Capability Controller
-that was created for the capability when it was issued.
-
-Additionally, if the referenced object in storage is moved, capabilities that have been created from that storage path are invalidated.
-
-You can find more [detailed documentation about capabilities in the language reference.](../language/capabilities.md)
-
-Now, anyone can call the `hello()` method on your `HelloAsset` object by borrowing a reference with your public capability in `/public/Hello`!
-(Covered in the next section)
-
-Lastly, we call the `hello()` method with our borrowed reference:
-
-```cadence
-// Call the hello function using the reference to the HelloAsset resource
-log(helloReference.hello())
-```
-
-At the end of the transaction execution, the `helloReference` value is lost,
-but that is ok because while it references a resource, it isn't the actual resource itself, so it is ok to lose it.
-
-In the next section, we look at how capabilities can expand the access a script has to an account.
-
-### Executing Scripts
-
----
-
-A script is a very simple transaction type in Cadence that cannot perform
-any writes to the blockchain and can only read the state of an account or contract.
-
-To execute a script, write a function called `access(all) fun main()`.
-You can click the execute script button to run the script.
-The result of the script will be printed to the console output.
+Now that your transaction has created the capability with the [issue] function and saved it in a constant, you can use the [publish] function to store the capability in a place where it can be used by anyone.
 
 :::info[Action]
 
-Open the file `Get Greeting`.
-
-`Get Greeting` should look like the following:
+Use [publish] function to publish the `capability` at `/public/HelloAssetTutorial`.
 
 :::
 
-```cadence get_greeting.cdc
+```cadence
+account.capabilities.publish(capability, at: /public/HelloAssetTutorial)
+```
+
+You should end up with a transaction similar to:
+
+```cadence Create Link.cdc
 import HelloWorld from 0x06
 
-access(all) fun main(): String {
+transaction {
+  prepare(account: auth(
+    IssueStorageCapabilityController,
+    PublishCapability
+  ) &Account) {
+    let capability = account
+      .capabilities
+      .storage
+      .issue<&HelloWorld.HelloAsset>(/storage/HelloAssetTutorial)
 
-    // Cadence code can get an account's public account object
-    // by using the getAccount() built-in function.
-    let helloAccount = getAccount(0x06)
-
-    // Borrow the public capability from the public path of the owner's account
-    let helloReference = helloAccount.capabilities
-        .borrow<&HelloWorld.HelloAsset>(/public/HelloAssetTutorial)
-        ?? panic("Could not borrow a reference to the HelloAsset capability")
-
-    // The log built-in function logs its argument to stdout.
-    //
-    return helloReference.hello()
+    account
+      .capabilities
+      .publish(capability, at: /public/HelloAssetTutorial)
+  }
 }
 ```
 
-Here's what this script does:
-1. It gets a public `Account` reference with `getAccount`
-   and assigns it to the variable `helloAccount`.
-2. Borrows a reference using the `borrow` method for the capability
-   from the `Create Link` transaction and assigns it to `helloReference`.
-3. Returns the result of the `hello()` function from `helloReference` to the caller.
+### Execute the Transaction to Publish the Capability
+
+:::info[Action]
+
+Ensure account `0x06` is still selected as a transaction signer.
+
+Click the `Send` button to send the transaction.  Then, send it a second time.
+
+:::
+
+:::warning
+
+This implementation will work the first time and fail the second.  The object cannot be saved because something is already at the path.
+
+:::
+
+As you learned in the [resources tutorial], Cadence prevents you from writing code that might accidentally overwrite an object in storage, thus mutating or even destroying a piece of your users' digital property.
+
+:::info[action]
+
+On your own, refactor your `Create Link` transaction to elegantly handle a scenario where an object is already stored at `/public/HelloAssetTutorial`
+
+:::
+
+## Using the Capability in a Script
+
+Now that you've published the capability with `public` `access`, anyone who wants to can write transactions or scripts that make use of it.
+
+:::info[Action]
+
+Create a script called `GetGreeting`. Import `HelloWorld` and give it public `access`.
+
+:::
+
+```cadence GetGreeting.cdc
+import HelloWorld from 0x06
+
+access(all) fun main(): String {
+  // TODO
+}
+```
+
+You'll need a reference to the public account object for the `0x06` account to be able to access public capabilities within it.
+
+:::info[Action]
+
+Use `getAccount` to get a reference to account `0x06`.  Hardcode it for now.
+
+:::
 
 ```cadence
 let helloAccount = getAccount(0x06)
 ```
 
-The `&Account` reference is available to anyone in the network for every account,
-but only has access to a small subset of functions that can be read from the `/public/` domain in an account.
+:::warning
 
-Then, the script borrows the capability that was created in `Create Link`.
-
-```cadence
-// Borrow the public capability from the public path of the owner's account
-let helloReference = helloAccount.capabilities
-    .borrow<&HelloWorld.HelloAsset>(/public/HelloAssetTutorial)
-    ?? panic("Could not borrow a reference to the HelloAsset capability")
-```
-
-To borrow a capability that is stored in an account, use the `account.capabilities.borrow()` function.
-`borrow()` returns a reference to the storage object that the capability targets.
-The borrow will return `nil` if the capability does not exist,
-the capabilities target storage path does not store a value,
-or the value cannot be borrowed with the given type.
-
-Then, the script uses the reference to call the `hello()` function and returns the result.
-
-Let's execute the script to see it run correctly.
-
-:::info[Action]
-
-Click the `Execute` button in the playground.
+Addresses are **not** strings and thus do **not** have quotes around them.
 
 :::
 
-<img src="https://storage.googleapis.com/flow-resources/documentation-assets/cadence-tuts/playground-execute.png" />
+:::info[Action]
 
-You should see something like this print:
+Next, `borrow` the public capability your `Create Link` transaction saved in `/public/HelloAssetTutoral`.
 
-```
-> Result > "Hello, World"
-```
+Your script should return `return helloReference.hello()`.
 
-Good work!
-Your script ran successfully.
+:::
 
-One other really cool feature of scripts is that since they can't actually change anything on chain,
-they can access any accounts' private storage and objects.
-This allows scripts even more power to understand the full state of the chain
-and it is safe because they can't actually make any changes.
-Also, everything on-chain is publicly readable anyway,
-so it is a logical feature for a blockchain programming language to have.
+You've already borrowed something before.  Try to implement this on your own.  **Hint:** this time you're borrowing a `capability` from the account, **not** something from `storage`.  Don't forget to handle the case where the object can't be found!
 
-A script can get the `&Account` reference for an account address using the built-in `getAuthAccount()` function:
+You should end up with a script similar to:
 
-```cadence
-view fun getAuthAccount<T: &Account>(_ address: Address): &T
-```
+```cadence GetGreeting.cdc
+import HelloWorld from 0x06
 
-The caller needs to specify which entitlements they want in `<>`
-for which parts of the account they want to access. See such an example below:
-```cadence
-access(all) fun main(address: Address) {
-    let entitledAccount = getAuthAccount<auth(BorrowValue) &Account>(address)
+access(all) fun main(): String {
+    let helloAccount = getAccount(0x06)
+
+    let helloReference = helloAccount
+        .capabilities
+        .borrow<&HelloWorld.HelloAsset>(/public/HelloAssetTutorial)
+        ?? panic("Could not borrow a reference to the HelloAsset capability")
+
+    return helloReference.hello()
 }
 ```
 
-See the [language reference](../language/accounts) for more information about accounts.
+:::info[Action]
+
+`Execute` your script.
+
+:::
+
+You'll see `"Hello, World!"` logged to the console.
+
+Note that scripts don't need any authorization and can only access public information.  You've enabled the user to make this capability public through the transaction you wrote and they signed.
+
+At the end of the script execution, the `helloReference` value is lost, but that is ok because while it references a resource, it isn't the actual resource itself. It's ok to lose it.
+
+## Deleting Capabilities
+
+:::danger
+
+While most apps will need to depend on users storing resource that allow the user to interact with the app, avoid constructing your app logic such that it depends on something in a user's storage for important metadata.  They own their storage and can delete anything in it at any time without asking anyone.
+
+For example, if you stored the amount of debt for tokens you'd lent a user as a standalone resource in their account, they could simply delete the storage and erase the debt. Instead, store that metadata in your smart contract.
+
+:::
+
+The owner of an object can effectively [revoke capabilities] they have created by using the `delete` method on the Capability Controller that was created for the capability when it was issued.
+
+Additionally, if the referenced object in storage is moved, capabilities that have been created from that storage path are invalidated.
 
 ## Reviewing Capabilities
 
-This tutorial expanded on the idea of resources in Cadence by expanding access scope to a resource using capabilities
-and covering more account storage API use-cases.
+This tutorial expanded on the idea of resources in Cadence by expanding access scope to a resource using capabilities and covering more account storage API use-cases.
 
-You deployed a smart contract with a resource, then created a capability to grant access to that resource.
-With the capability, you used the borrow method to create a reference and used the reference to call the
-resource's `hello()` function.
-Finally, you used a script to borrow the same capability and create a reference so that the script can
-call the resource's `hello()` function. This is important because script's cannot access account storage
-without using capabilities.
+You deployed a smart contract with a resource, then created a capability to grant access to that resource. With the capability, you used the `borrow` method in a script to create a reference to the capability.  You then used the reference to call the resource's `hello()` function. This is important because scripts cannot access account storage without using capabilities.
 
-Now that you have completed the tutorial, you have the basic knowledge to write a simple Cadence program that can:
-- Implement a resource in a smart contract
-- Create capabilities to grant access to resources in an account
-- Interact with resources using both signed transactions and scripts
+Now that you have completed the tutorial, you should be able to:
 
-Feel free to modify the smart contract to create different resources,
-experiment with the available [account storage API](../language/accounts/storage.mdx),
-and write new transactions and scripts that execute different functions from your smart contract.
-Have a look at the [capability-based access control page](../language/capabilities.md)
-to find out more about what you can do with capabilities.
+* Interact with [resources] created using transactions.
+* Write transactions to create [capabilities] to extend resource access scope from the owner to anyone (`public`).
+* Write and execute a script that interacts with the resource through the capability.
 
-You're on the right track to building more complex applications with Cadence,
-now is a great time to check out the [Cadence Best Practices document](../design-patterns.md)
-and [Anti-patterns document](../anti-patterns.md) as your applications become more complex.
+You're on the right track to building more complex applications with Cadence. Now is a great time to check out the [Cadence Best Practices document], [Anti-patterns document], and the first NFT tutorial!
+
+<!-- Reference-style links, will not render on page -->
+
+[accounts]: ../language/accounts/index.mdx
+[storage]: ../language/accounts/storage.mdx
+[resources]: ../language/resources.mdx
+[resource]: ../language/resources.mdx
+[capabilities]: ../language/capabilities.md
+[Capabilities]: ../language/capabilities.md
+[entitlements]: ../language/access-control.md#entitlements
+[reference]: ../language/references.mdx
+[`IssueStorageCapabilityController`]: ../language/accounts/capabilities.mdx#accountstoragecapabilities-and-accountaccountcapabilities
+[`PublishCapability`]: /language/accounts/capabilities.mdx#accountcapabilities
+[issue]: ../language/accounts/capabilities.mdx#issuing-capabilities
+[publish]: ../language/accounts/capabilities.mdx#publishing-capabilities
+[resources tutorial]: ./03-resources.md
+[capability controller]: ../language/accounts/capabilities.mdx#accountcapabilities
+[revoke capabilities]: ../language/accounts/capabilities.mdx#revoking-capabilities
+[Cadence Best Practices document]: ../design-patterns.md
+[Anti-patterns document]: ../anti-patterns.md

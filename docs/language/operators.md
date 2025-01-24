@@ -88,7 +88,43 @@ dictionaries[false][3] = 0
 //}`
 ```
 
-## Force-assignment operator (`<-!`)
+## Move Operator (`<-`)
+
+The move operator (`<-`) is unique to Cadence and is used to move [resource types](./resources.mdx) from one location to another.  It works similar to the assignment operator (`=`) you're used to from most programming languages, except that the data in the location on the right side of the statement is **destroyed** by the operation.
+
+```cadence
+// Declare a resource named `SomeResource`, with a variable integer field.
+
+access(all)
+resource SomeResource {
+    
+    access(all)
+    var value: Int
+
+    init(value: Int) {
+        self.value = value
+    }
+}
+
+// Declare a constant with value of resource type `SomeResource`.
+
+let a: @SomeResource <- create SomeResource(value: 5)
+
+// *Move* the resource value to a new constant.
+
+let b <- a
+
+// Invalid Line Below: Cannot use constant `a` anymore as the resource that it
+// referred to was moved to constant `b`.
+
+a.value
+
+// Constant `b` owns the resource.
+
+b.value // equals 5
+```
+
+## Force-assignment Operator (`<-!`)
 
 The force-assignment operator (`<-!`) assigns a resource-typed value
 to an optional-typed variable if the variable is nil.

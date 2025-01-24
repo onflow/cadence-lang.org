@@ -1,150 +1,192 @@
 ---
-title: 1. First Steps
+archived: false
+draft: false
+title: First Steps
+date: 2024-11-26
+meta:
+  keywords:
+    - tutorial
+    - Flow
+    - Cadence
+    - Hello World
+tags:
+  - reference
+  - cadence
+  - tutorial
+socialImageTitle: Cadence First Steps
+socialImageDescription: Take your first steps to learn the Cadence smart contract programming language.
 ---
 
-In this tutorial, we will learn how to use smart contracts, switch accounts, and view account state.
+Welcome to our series of guides that will get you up to speed on [Cadence] as quickly as possible!  In this program, you'll jump right into making meaningful projects.  Don't worry, we'll point you to the important parts of the language reference as each concept is introduced!
 
-## What is Cadence?
-
----
-
-Cadence is a new smart contract programming language for use on the Flow Blockchain.
-Cadence introduces new features to smart contract programming that help developers ensure that their code is safe, secure, clear, and approachable. Some of these features are:
-
-- Type safety and a strong static type system
-- Resource-oriented programming, a new paradigm that pairs linear types with object capabilities to create a secure and declarative model for digital ownership
-  by ensuring that resources (and their associated assets) can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted
-- Built-in pre-conditions and post-conditions for functions and [transactions](../language/transactions.md)
-- The utilization of capability-based security and entitlements,
-  which enforces access control by requiring that access to objects
-  is restricted to only the owner and those who have a valid reference to the object
-
-Please see the [Cadence introduction](../index.md) for more information about the high level design of the language.
-
-## What is the Flow Developer Playground?
-
----
-
-The [Flow Playground](https://play.flow.com) includes
-an in-browser editor and Flow emulator to experiment with Flow.
-Using the Flow Playground, you can write Cadence smart contracts,
-deploy them to a local Flow emulated blockchain, and submit transactions.
-
-The Flow Playground should work with any standard web browser.
-However, we recommend using Google Chrome, as it has been primarily tested and optimized for this browser.
-
-## Getting to know the Playground
-
-The Playground contains everything you need to get familiar
-with deploying Cadence smart contracts and interacting with transaction and scripts.
-
-The Playground comes pre-loaded with contract and transaction templates
-that correspond to each of the tutorials in the docs site.
-To load the contracts for a specific tutorial, open the desired tutorial
-in the sidebar here and click the link in the callout box at the beginning of the tutorial.
-
-The callout boxes should look like this:
+This series makes use of the [Flow Playground] - an online IDE that enables you to easily write and test Cadence code in a simulated environment.
 
 :::tip
 
+If you already know Solidity, you might want to review the [Cadence Guide for Solidity Developers].  It compares the two languages and points out the most impactful differences from the perspective of a Solidity dev.
+
+:::
+
+## Objectives
+
+After completing this tutorial, you'll be able to:
+
+* Write, deploy, and interact with Cadence code in the Flow Playground.
+* Select and utilize accounts in the Flow Playground.
+* Run Cadence transactions and scripts from the playground.
+* Explore the contracts and storage associated with test accounts.
+
+
+:::info[Action]
+
+Instructions that require you to take action are always included in a call out box like this one.
+
+:::
+
+## The Flow Developer Playground
+
+![Flow Playground](flow-playground.png)
+
+The [Flow Playground] includes an in-browser editor and Flow emulator that you can use to experiment with Flow Cadence.  Using the Flow Playground, you can write Cadence smart contracts, deploy them to a local Flow emulated blockchain, and submit transactions.
+
+It has been primarily tested and optimized for Google Chrome, but other browsers will should work as well.
+
+The playground comes pre-loaded with contract and transaction templates that correspond to each of the tutorials in this series.  At the top of the page, you'll find it in a call out like this one:
+
+:::info[Action]
+
 Open the starter code for this tutorial in the Flow Playground: <br />
 <a
-  href="https://play.flow.com/"
+  href="https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897"
   target="_blank"
 >
-  https://play.flow.com/
+  https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897
 </a>
 
 :::
 
-When you click on one of these links, the tutorial code will open in a new tab
-and the contracts, transactions, and scripts will be loaded 
-into the templates in the Playground for you to use.
-You will need to navigate between the editor and this tutorial to read instructions
-and make changes to your code.
+When you click on one of these links, the tutorial code will open in a new tab and the contracts, transactions, and scripts will be loaded into the templates in the Playground for you to use. You will need to navigate between the editor and this tutorial to read instructions and make changes to your code.
 
 ## What is a smart contract?
 
-In regular terms, a contract is an agreement between two parties for some exchange of information or assets.
-Normally, the terms of a contract are supervised and enforced by a trusted third party, such as a bank or a lawyer.
+In regular terms, a contract is an agreement between two parties for some exchange of information or assets. Normally, the terms of a contract are supervised and enforced by a trusted third party, such as a bank or a lawyer.
 
-A smart contract is a computer program stored in a network like a blockchain
-that verifies and executes the performance of a contract (like a lawyer does)
-without the need for any trusted third party anywhere in the process, because the code itself is trusted.
+A smart contract is a computer program stored in a blockchain that verifies and executes the performance of a contract without the need for any trusted third party.  The code itself is public and will perform all operations in an open, repeatable, and testable manner.
 
-Programs that run on blockchains are commonly referred to as smart contracts
-because they facilitate important functions, such as managing digital currency,
-without relying on a central authority like a bank.
+Programs that run on blockchains are commonly referred to as smart contracts because they facilitate important functions, such as managing digital currency, without relying on a central authority like a bank.
 
-[Cadence is the premier resource-oriented programming language](../index.md)
-for developing smart contracts and is currently
-the primary smart contract programming language on the Flow Blockchain.
+Flow can run smart contracts written in [Cadence].  It can also run older contracts written in Solidity, on the [Flow EVM].  These guides focus on learning Cadence.
 
-## Accounts and Contracts
+## Accounts
 
-In addition to smart contracts, blockchains also have accounts.
-Accounts are the primary conduit for user interaction with on-chain code and assets.
-Users authorize transactions with their accounts
-and store their owned assets in their account storage.
+Accounts are the primary conduit for user interaction with on-chain code and assets.  Users authorize transactions with their accounts and store their owned assets in their account storage.
 
-The Flow playground comes with pre-created accounts that you can use automatically.
+:::warning
 
-The Accounts section on the bottom left part of the screen is where the active accounts are listed.
+Flow is different from most other blockchains in that contracts, assets, and information owned by a user or associated with their wallet address **are stored in the user's account**.  
+
+:::
+
+We've used the `warning` label to get your attention, but this is a **good thing**!  In most other chains, a coding error that accidentally changes a single number in a ledger can destroy, change, or duplicate ownership of an asset or assets.  It's like a medieval shop with a bunch of paper IOUs having a gust of wind blow through vs. having the gold in your pocket.
+
+The model of ownership in Cadence makes this kind of loss nearly impossible.
+
+The Flow playground comes with pre-created accounts that you can use for testing and experimentation.
+
+They're listed in the `Accounts` section on the bottom left part of the playground window.
 
 ![Playground Intro](playground-intro.png)
 
-An account can have multiple smart contracts deployed to it, which will be covered later.
-When you click on an account, you will see a view of the contracts
-that are associated with that account in the main editor as well as
-a list of what is in that account's storage.
+:::info[Action]
 
-By default, every account should have no deployed contracts and nothing in storage.
+Click on a few of the accounts.  They're empty when first created, but you'll see contracts and storage data here as you go through the tutorials.
+
+:::
 
 ![Account View](playground-account-view.png)
 
-You can click on a contract name under `Contracts` on the left side of the screen
-to see the code of Contracts that are associated with an account.
+## Contracts
+
+The playground organizes contract source files under `Contracts` folder in the nav panel on the left side of the window.  Until deployed, these are source files that are not associated with an account or address.
+
 The default contract in a new playground session is a simple `HelloWorld` contract.
 
-When you have Cadence code open in the account editor that contains a contract,
-you can click the deploy button in the bottom-right of the screen
-to deploy that contract to the currently selected account.
+When you have Cadence code open in the account editor that contains a contract, you can click the deploy button in the bottom-right of the screen to deploy that contract to the currently selected account.
 
 ![Deploy Contract](deploybox.png)
 
-After a few seconds, the contract should deploy. In the accounts section, you should 
-now see the name of the contract next to the selected account that you deployed too
-and if you click on "Log" in the bottom section of the screen, you should 
-see a message in the console confirming that the contract was deployed
-and which account it was deployed to.
-This will also show any errors that might have happened as part of deployment.
+:::info[Action]
 
-You can additionally click on the account that has the contract deployed to it
-and look at the editor again. You'll now see that the `HelloWorld` contract is deployed
-and you'll also see that there are `FlowToken` objects listed in the `Account Storage`
-section. 
+Click the button to `Deploy` the contract.
+
+:::
+
+After a few seconds, the contract will deploy. 
+
+:::info[Action]
+
+Select `0x06-Default` in the `Accounts` list.
+
+:::
+
+
+You'll see the name of the contract and the block height it was deployed at in the list of `Deployed Contracts`.  You'll also see that there are `FlowToken` objects listed in the `Account Storage` section. Every Flow account is created with the ability to manage Flow Tokens.
 
 ![Full Storage View](full-storage.png)
 
-Every Flow account is created with the ability to manage Flow Tokens.
-Right now, you don't need to worry about the specifics here because you will learn later.
+## Scripts
 
-You can also select transactions and scripts from the left selection menu
-and submit them to interact with your deployed smart contracts,
-which will be covered in the Hello World tutorial.
+In Cadence, scripts are simple, transaction-like snippets of code that you can use to **read** onchain data that is public.
 
-This is just a small set of the things you can do with the Playground.
-The rest of the tutorials will cover all the features in much more detail.
+:::info[Action]
 
-## Resources
+Open the `GetGreeting` script and `Execute` it.
 
-Each tutorial in this package uses several files containing transactions, contracts, and scripts.
-Each tutorial contains a link to a pre-made Cadence project that contains
-all the code that you'll need to execute to complete the tutorial.
-Additionally, all the code is provided within the tutorials in case you
-would like to copy and paste it into your playground project yourself.
+:::
+
+This script loads the instance of the `HelloWorld` contract you deployed with account `0x06` and returns the result of calling the `hello` function, which is the value stored onchain in the contract's `greeting` field.
+
+You'll see the `result` logged in the console.
+
+## Transactions
+
+Cadence transactions are also written in Cadence.
+
+In the `Transactions` folder, you'll find an example of one.
+
+:::info[Action]
+
+Open the `ChangeGreeting` transaction, enter a new `greeting`, and `Send` it. 
+
+:::
+
+Doing so executes a transaction to call `changeGreeting` and update the value in `greeting` for this specific instance of `HelloWorld`, deployed by address `0x06`.
+
+Once the transaction completes, you'll see the output in the `Log` at the bottom of the window.
+
+:::info[Action]
+
+Open the `GetGreeting` script and `Execute` it again.
+
+:::
+
+You'll now see your new greeting returned in the log!
 
 ## Say Hello, World!
 
-Now that you have the Flow Developer Playground running,
-you can [create a smart contract](./02-hello-world.md) for Flow!
+You're now ready to write your own contract and say "Hello World!"
+
+Now that you have completed the tutorial, you can:
+
+* Write, deploy, and interact with Cadence code in the Flow Playground.
+* Select and utilize accounts in the Flow Playground.
+* Run Cadence transactions and scripts from the playground.
+* Explore the contracts and storage associated with test accounts.
+
+<!-- Relative links.  Will not render on the page -->
+
+[Cadence]: ../index.md
+[Flow Playground]: https://play.flow.com
+[Cadence Guide for Solidity Developers]: ../solidity-to-cadence.md
+[Flow EVM]: https://developers.flow.com/evm/about
+[Account Model]: ../docs/language/accounts/

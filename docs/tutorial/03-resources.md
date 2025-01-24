@@ -231,9 +231,21 @@ Next, use the `createHelloAsset` function in `HelloWorldResource` to `create` an
 let newHello <- HelloWorldResource.createHelloAsset()
 ```
 
+### Storage Paths
+
+In Cadence Accounts, objects are stored in [paths]. Paths represent a file system for your account, where an object can be stored at any user-defined path. Often, contracts will specify for the user where objects from that contract should be stored. This enables any code to know how to access these objects in a standard way.
+
+Paths start with the character `/`, followed by the domain, the path separator `/`, and finally the identifier. The identifier must start with a letter and can only be followed by letters, numbers, or the underscore `_`. For example, the path `/storage/test` has the domain `storage` and the identifier `test`.
+
+There are two valid domains: `storage` and `public`.
+
+Paths in the storage domain have type `StoragePath`, and paths in the public domain have the type `PublicPath`. Both `StoragePath` and `PublicPath` are subtypes of `Path`.
+
+Paths are not strings and do not have quotes around them.
+
 :::info[Action]
 
-Finally, use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`.
+Use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`.
 
 :::
 
@@ -290,10 +302,7 @@ The `prepare` phase is the only place that has access to the signing account, vi
 
 Account references have access to many different methods that are used to interact with an account, such as to `save` a resource to the account's storage.
 
-Accounts store objects in [paths]. Paths represent a file system for your account, where an object can be stored at any user-defined path. Often, contracts will specify for the user where objects from that contract should be stored. This enables any code to know how to access these objects in a standard way.
-
-By not allowing the execute phase to access account storage and using entitlements,
-we can statically verify which assets and areas/paths of the signers' account a given transaction can modify.
+By not allowing the execute phase to access account storage and using entitlements, we can statically verify which assets and areas/paths of the signers' account a given transaction can modify.
 
 Browser wallets and applications that submit transactions for users can use this to show what a transaction could alter, giving users information about transactions that wallets will be executing for them, and confidence that they aren't getting fed a malicious or dangerous transaction from an app or wallet.
 

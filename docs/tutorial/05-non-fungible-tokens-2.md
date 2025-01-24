@@ -123,7 +123,7 @@ access(all) fun deposit(token: @NFT) {
 
 :::tip
 
-Notice that we're using the `<-!` force assignment operator to move the token.  This will give still give a runtime error if the location is **not** `nil`, but it won't give a typecheck error like the `<-` move operator would in this instance.
+Notice that we're using the `<-!` force assignment operator to move the token.  This will still give a runtime error if the location already has something else stored, but it won't give a typecheck error like the `<-` move operator would in this instance.
 
 :::
 

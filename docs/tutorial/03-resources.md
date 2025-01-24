@@ -467,7 +467,15 @@ In Cadence, storage paths are a type.  They are **not** `Strings` and are not en
 
 :::
 
-The best way to check whether or not a storage path has an object in it is to attempt to [borrow] the object from that path.  If the result is `nil`, then it's empty.  Otherwise, something is present.
+One way to check whether or not a storage path has an object in it is to use the built-in [`storage.check`] function with the type and path.  If the result is `true`, then there is an object in account storage that matches the type requested.  If it's `false`, there is not.
+
+```warning
+
+A response of `false` does **not** mean the location is empty.  If you ask for an apple and the location contains an orange, this function will return `false`.
+
+This is not likely to occur, but is theoretically possible.
+
+```
 
 Depending on the needs of your app, you'll use this pattern to decide what to do in each case.  For this example, we'll simply use it to change the log message if the storage is in use or create and save the `HelloAsset` if it is not.
 
@@ -478,9 +486,7 @@ Refactor your prepare statement to check and see if the storage path is in use. 
 :::
 
 ```cadence
-let helloAsset = acct.storage.borrow<&HelloWorldResource.HelloAsset>(from: storagePath)
-
-if helloAsset != nil {
+if !acct.storage.check<&HelloWorldResource.HelloAsset>(from: storagePath) {
     self.result = "Unable to save, resource already present."
 } else {
     let newHello <- HelloWorldResource.createHelloAsset()
@@ -488,7 +494,7 @@ if helloAsset != nil {
 }
 ```
 
-When you [`borrow`] a resource, you must put the type of the resource to be borrowed inside the `<>` after the call to `borrow`, before the parentheses.  The `from` parameter is the storage path to the object you are borrowing.
+When you [`check`] a resource, you must put the type of the resource to be borrowed inside the `<>` after the call to `borrow`, before the parentheses.  The `from` parameter is the storage path to the object you are borrowing.
 
 :::info[Action]
 
@@ -614,7 +620,8 @@ Now that you have completed the tutorial, you can:
 [resources]: ../language/resources.mdx
 [Resources]: ../language/resources.mdx
 [move operator]: ../language/operators.md#move-operator--
-[Account Storage API]: ..//language/accounts/storage.mdx
+[Account Storage API]: ../language/accounts/storage.mdx
+[`storage.check`]: ../language/accounts/storage.mdx#accountstorage
 [`borrow`]: ../language/accounts/storage.mdx#accessing-objects
 [borrow]: ../language/accounts/storage.mdx#accessing-objects
 [entitlement]: ../language/access-control#entitlements

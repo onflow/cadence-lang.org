@@ -667,7 +667,7 @@ transaction(recipient: Address, amount: UFix64) {
 
   prepare(signer: auth(BorrowValue) &Account) {
         let vaultRef = signer.storage.borrow<auth(ExampleToken.Withdraw) &ExampleToken.Vault>
-                        (from: ExampleToken.VaultStoragePath)
+                from: ExampleToken.VaultStoragePath)
             ?? panic(ExampleToken.vaultNotConfiguredError(address: signer.address))
 
         self.temporaryVault <- vaultRef.withdraw(amount: amount)

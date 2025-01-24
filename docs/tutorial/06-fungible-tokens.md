@@ -376,7 +376,8 @@ access(all) fun vaultNotConfiguredError(address: Address): String {
 
 ## Minting
 
-Next, you need a way to actually create, or mint, tokens.  For this example, we'll be permissive and add a resource that anyone can create, or access any instance of, that has the power to mint and airdrop tokens to any address that possesses a vault, or at least something with the `Receiver` [interface] for this token.
+Next, you need a way to actually create, or mint, tokens.  For this example, we'll define a  `VaultMinter` resource that has the power to mint and airdrop tokens to any address that possesses a vault, or at least something with the `Receiver` [interface] for this token.
+Only the owner of this resource will be able to mint tokens.
 
 To do so, we use [capability] with a reference to the resource or interface we want to require as the type:  `Capability<&{Receiver}>`
 

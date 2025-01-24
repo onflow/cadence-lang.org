@@ -121,9 +121,9 @@ access(all) fun deposit(token: @NFT) {
 }
 ```
 
-:::danger
+:::tip
 
-Notice that we're using the `<-!` force assignment operator to move the token.  This will error if the location is **not** `nil`.  It's safer as the `<-` move operator will overwrite an existing value.
+Notice that we're using the `<-!` force assignment operator to move the token.  This will give still give a runtime error if the location is **not** `nil`, but it won't give a typecheck error like the `<-` move operator would in this instance.
 
 :::
 
@@ -178,7 +178,7 @@ Entitlements enable you to restrict the scope of access at a granular level, wit
 
 :::tip
 
-If you're used to Solidity, you can think of this as being similar to frameworks that enable you to use modifiers to limit some functions to specific address with the correct role, such as `onlyOwner`.
+If you're used to Solidity, you can think of this as being similar to frameworks that enable you to use modifiers to limit some functions to specific addresses with the correct role, such as `onlyOwner`.
 
 :::
 

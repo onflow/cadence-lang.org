@@ -21,11 +21,7 @@ and thereby to time off-chain by the methods described in this article.
 
 ## Time On The Flow Blockchain
 
-> Flow targets 1 second block times but the protocol is still early in its development
-and further optimizations are needed to achieve that.
-As of Feb 2021, the rate of block finalization on Mainnet is more than 0.5 blocks/s; with a standard deviation of ±0.1 blocks/s.
-Hence, a new block is finalized on average every 2 seconds.
-Note that block height only has a loose correlation with time,
+> Flow currently produces blocks approximately every 0.8 seconds. Note that block height only has a loose correlation with time,
 as [the block rate naturally fluctuates](https://developers.flow.com/build/run-and-secure/nodes/faq/operators.mdx#does-the-blockheight-go-up-1-every-second).
 
 In addition to the natural variation described above,
@@ -88,10 +84,10 @@ If not, you may need to consider more exotic solutions (time oracles, etc.).
 
 Whichever method you use, be careful not to hardcode any assumptions
 about block rates production rates into your code, on-chain or off,
-in a way that cannot be updated later.
+in a way that cannot be updated later. Block production rates can and will change over time.
 
 On-chain auctions and similar mechanisms should always have an extension mechanism.
 If someone bids at the last moment (which is easier to do with a block production attack),
 the end time for the auction extends (if necessary) to N minutes past the last bid.
 (10 minutes, 30 minutes, an hour). As N increases, this becomes more secure:
-N=5 should be more than enough. with the current parameters of the Flow blockchain.
+N=5 should be more than enough with the current parameters of the Flow blockchain.

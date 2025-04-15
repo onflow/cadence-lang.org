@@ -29,7 +29,8 @@ there are several theoretical block production attacks that could skew this rela
 These attacks are unlikely on Flow in the absence of byzantine nodes.
 The timestamp cannot be earlier than the timestamp of the previous block,
 and cannot be too far into the future ([currently ten seconds](https://github.com/onflow/flow-go/blob/master/module/builder/consensus/builder.go#L60))
-- proposed blocks that fail to satisfy these conditions will be rejected by Flow's consensus algorithm.
+
+Proposed blocks that fail to satisfy these conditions will be rejected by Flow's consensus algorithm.
 But the mere possibility of these attacks places an additional limit on the confidence
 with which we can use block heights or block timestamps to determine off-chain time from protocol-level data on-chain.
 

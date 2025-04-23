@@ -25,7 +25,7 @@ socialImageTitle: Intermediate NFTs in Cadence
 socialImageDescription: NFT social image.
 ---
 
-In the [last tutorial], you implemented a simple NFT that users could mint, hold, and trade, but there was a serious flaw - each user could only hold one NFT at a time.  In this tutorial, you'll improve your implementation to allow it to be able to grant users multiple NFTs and the tools needed to manage them.
+In the [last tutorial], you implemented a simple NFT that users could mint, hold, and trade, but there was a serious flaw - each user could only hold one NFT at a time. In this tutorial, you'll improve your implementation to allow it to be able to grant users multiple NFTs and the tools needed to manage them.
 
 :::tip
 
@@ -37,9 +37,9 @@ If you're already comfortable with Cadence and have found this page looking for 
 
 After completing this tutorial, you'll be able to:
 
-* Implement a collection [resource] that can manage multiple NFTs on behalf of a user.
-* Create an [entitlement] to limit some functionality of a [resource] to the owner.
-* Handle errors more elegantly with functions that generate error messages.
+- Implement a collection [resource] that can manage multiple NFTs on behalf of a user.
+- Create an [entitlement] to limit some functionality of a [resource] to the owner.
+- Handle errors more elegantly with functions that generate error messages.
 
 ## Storing Multiple NFTs in a Collection
 
@@ -48,14 +48,14 @@ After completing this tutorial, you'll be able to:
 Open the starter code for this tutorial in the Flow Playground:
 <a
 href="https://play.flow.com/9da6f80f-cd79-4797-a067-47a57dc54770"
-target="_blank"
->
-https://play.flow.com/9da6f80f-cd79-4797-a067-47a57dc54770
-</a>
+target="\_blank"
+
+> https://play.flow.com/9da6f80f-cd79-4797-a067-47a57dc54770
+> </a>
 
 :::
 
-This tutorial continues from the last one, but we'll be doing significant refactoring.  The provided starter contains the NFT resource, but removes the code and transactions for creating NFTs and capabilities to interact with them.  You'll replace those with a more sophisticated approach that will allow collections of NFTs.
+This tutorial continues from the last one, but we'll be doing significant refactoring. The provided starter contains the NFT resource, but removes the code and transactions for creating NFTs and capabilities to interact with them. You'll replace those with a more sophisticated approach that will allow collections of NFTs.
 
 It also adds some constants for the paths we'll be using so we don't need to worry about typos as we add them to several transactions and scripts.
 
@@ -65,7 +65,7 @@ Using a [dictionary] on its own to store our NFTs would solve the problem of hav
 
 ### Resources that Own Resources
 
-Instead, we can use a powerful feature of Cadence, resources owning other resources! We'll define a new `Collection` resource as our NFT storage place to enable more-sophisticated ways to interact with our NFTs.  This pattern comes with interesting powers and side effects.
+Instead, we can use a powerful feature of Cadence, resources owning other resources! We'll define a new `Collection` resource as our NFT storage place to enable more-sophisticated ways to interact with our NFTs. This pattern comes with interesting powers and side effects.
 
 Since the `Collection` explicitly owns the NFTs in it, the owner could transfer all of the NFTs at once by just transferring the single collection. In addition to allowing easy batch transfers, this means that if a unique NFT wants to own another unique NFT, like a CryptoKitty owning a hat accessory, the Kitty literally stores the hat in its own fields and effectively owns it.
 
@@ -81,7 +81,7 @@ When the NFT `Collection` resource is destroyed with the `destroy` command, all 
 
 :::info[Action]
 
-Add a public resource definition called `Collection` to the `IntermediateNFT` contract.  In it, add a public [dictionary] called `ownedNFTs` that maps `NFT`s to their `Uint64` id numbers.  Initialize `ownedNFTs` with an empty dictionary. 
+Add a public resource definition called `Collection` to the `IntermediateNFT` contract. In it, add a public [dictionary] called `ownedNFTs` that maps `NFT`s to their `Uint64` id numbers. Initialize `ownedNFTs` with an empty dictionary.
 
 :::
 
@@ -97,11 +97,11 @@ access(all) resource Collection {
 
 :::tip
 
-Cadence is an object-oriented language.  Inside of a composite type, such as a [resource], `self` refers to the instance of that type and **not** the contract itself.
+Cadence is an object-oriented language. Inside of a composite type, such as a [resource], `self` refers to the instance of that type and **not** the contract itself.
 
 :::
 
-Dictionary definitions don't usually have the `@` symbol in the type specification, but because the `myNFTs` mapping stores resources, the whole field must become a resource type.  Therefore, you need the `@` symbol indicating that `ownedNFTs` is a resource type.
+Dictionary definitions don't usually have the `@` symbol in the type specification, but because the `myNFTs` mapping stores resources, the whole field must become a resource type. Therefore, you need the `@` symbol indicating that `ownedNFTs` is a resource type.
 
 As a result, all the rules that apply to resources apply to this type.
 
@@ -123,7 +123,7 @@ access(all) fun deposit(token: @NFT) {
 
 :::tip
 
-Notice that we're using the `<-!` force assignment operator to move the token.  This will still give a runtime error if the location already has something else stored, but it won't give a typecheck error like the `<-` move operator would in this instance.
+Notice that we're using the `<-!` force assignment operator to move the token. This will still give a runtime error if the location already has something else stored, but it won't give a typecheck error like the `<-` move operator would in this instance.
 
 :::
 
@@ -131,7 +131,7 @@ Notice that we're using the `<-!` force assignment operator to move the token.  
 
 Next, write a function called `idExists` that returns a `Bool` - `true` if the id is present and `false` if it is not.
 
-Also write a function called `getIDs` that returns an array of the `UInt64` ids of all NFTs found in the collection.  Make use of the built-in `keys` function present on the dictionary type.
+Also write a function called `getIDs` that returns an array of the `UInt64` ids of all NFTs found in the collection. Make use of the built-in `keys` function present on the dictionary type.
 
 :::
 
@@ -147,7 +147,7 @@ access(all) view fun getIDs(): [UInt64] {
 
 ## Withdrawing NFTs
 
-For the NFT `Collection`, we will publish a capability to allow anyone to access the utility functions you just created - depositing NFTs into it, verifying if an NFT is in the collection, or getting the ids of all NFTs present.  We'll also need functionality to withdraw an NFT and remove it from the collection, but we obviously **don't** want anyone to be able to do that.
+For the NFT `Collection`, we will publish a capability to allow anyone to access the utility functions you just created - depositing NFTs into it, verifying if an NFT is in the collection, or getting the ids of all NFTs present. We'll also need functionality to withdraw an NFT and remove it from the collection, but we obviously **don't** want anyone to be able to do that.
 
 ### Capability Security
 
@@ -168,7 +168,7 @@ You've done this already when you've written transactions to `issue` and `publis
 
 We do not want everyone in the network to be able to call our `withdraw` function though.
 
-In Cadence, any reference can be freely up-casted or down-casted to any subtype or supertype that the reference conforms to. This means that if you had a reference of the type `&ExampleNFT.Collection`, this would expose all the `access(all)` functions on the `Collection`. 
+In Cadence, any reference can be freely up-casted or down-casted to any subtype or supertype that the reference conforms to. This means that if you had a reference of the type `&ExampleNFT.Collection`, this would expose all the `access(all)` functions on the `Collection`.
 
 This is a powerful feature that is very useful, but it means if there is any privileged functionality on a resource that has a public capability, then this functionality cannot be `access(all)`.
 
@@ -196,12 +196,12 @@ You've now effectively created a type of lock that can only be opened by someone
 
 :::info[Action]
 
-Implement a `withdraw` function.  It should:
+Implement a `withdraw` function. It should:
 
-* Only allow `access` to addresses with the `Withdraw` [entitlement].
-* Accept the id of the NFT to be withdrawn as an argument
-* Return an error if the NFT with that id is not present in the account's `ownedNFTs`
-* Return the **actual token resource**
+- Only allow `access` to addresses with the `Withdraw` [entitlement].
+- Accept the id of the NFT to be withdrawn as an argument
+- Return an error if the NFT with that id is not present in the account's `ownedNFTs`
+- Return the **actual token resource**
 
 :::
 
@@ -221,7 +221,7 @@ access(Withdraw) fun withdraw(withdrawID: UInt64): @NFT {
 
 Providing an access scope of `access(Withdraw)` locks this functionality to only the owner that has the [resource] directly in their storage, **or** to any address possessing a reference to this resource that has the `Withdraw` entitlement.
 
-As with other types defined in contracts, these are namespaced to the deployer and contract.  The full name of `Withdraw` would be something like `0x06.IntermediateNFT.Withdraw`.  More than one contract or account can declare separate and distinct entitlements with the same name.
+As with other types defined in contracts, these are namespaced to the deployer and contract. The full name of `Withdraw` would be something like `0x06.IntermediateNFT.Withdraw`. More than one contract or account can declare separate and distinct entitlements with the same name.
 
 ### Issuing an Entitlement
 
@@ -251,7 +251,7 @@ Later tutorials will cover more nuanced methods for sharing an [entitlement].
 
 ## Error Handling
 
-Thinking ahead, many of the transactions that we might write (or other developers composing on our contracts) will need to borrow a reference to a user's collection.  We can make everyone's lives easier by adding a function to help create that error in a nice and consistent manner.
+Thinking ahead, many of the transactions that we might write (or other developers composing on our contracts) will need to borrow a reference to a user's collection. We can make everyone's lives easier by adding a function to help create that error in a nice and consistent manner.
 
 :::info[Action]
 
@@ -279,10 +279,9 @@ Deploy the `IntermediateNFT` contract with account `0x06`.
 
 :::
 
-
 ## Creating Collections
 
-We'll need several transactions to manage our NFT collection.  The first is one to allow users to create a collection on their account.
+We'll need several transactions to manage our NFT collection. The first is one to allow users to create a collection on their account.
 
 :::info[Action]
 
@@ -314,7 +313,7 @@ transaction {
 
 :::info[Action]
 
-Test your transaction by creating `Collections` for several accounts.  Try it with accounts that do and do **not** have `Collections` already, and verify that the correct behavior occurs.
+Test your transaction by creating `Collections` for several accounts. Try it with accounts that do and do **not** have `Collections` already, and verify that the correct behavior occurs.
 
 :::
 
@@ -322,7 +321,7 @@ Test your transaction by creating `Collections` for several accounts.  Try it wi
 
 :::info[Action]
 
-Next, add a transaction to mint an nft and grant it to the caller.  Use the `prepare` phase to `borrow` a reference to the caller's `Collection` and store it in a transaction-level field.  Then, use `execute` to create the nft and use the `Collection`'s `deposit` function to save it in the `Collection`.
+Next, add a transaction to mint an nft and grant it to the caller. Use the `prepare` phase to `borrow` a reference to the caller's `Collection` and store it in a transaction-level field. Then, use `execute` to create the nft and use the `Collection`'s `deposit` function to save it in the `Collection`.
 
 It's better practice to separate code that accesses accounts and storage to collect authorized references from the code that executes the changes to state.
 
@@ -356,7 +355,7 @@ transaction(description: String) {
 
 :::info[Action]
 
-Test your transaction by minting several NFTs for several accounts.  Try it with accounts that do and do **not** have `Collections` and verify that the correct behavior occurs.
+Test your transaction by minting several NFTs for several accounts. Try it with accounts that do and do **not** have `Collections` and verify that the correct behavior occurs.
 
 :::
 
@@ -398,13 +397,13 @@ access(all) fun main(address: Address): [UInt64] {
 
 ## Transferring NFTs
 
-Finally, you'll want to provide a method for users to `Transfer` NFTs to one another.  To do so, you'll need to `withdraw` the NFT from the owner's `Collection` and `deposit` it to the recipient.  
+Finally, you'll want to provide a method for users to `Transfer` NFTs to one another. To do so, you'll need to `withdraw` the NFT from the owner's `Collection` and `deposit` it to the recipient.
 
-This transaction is **not** bound by the `Withdraw` capability, because the caller will be the account that has the NFT in storage, which automatically possesses full entitlement to everything in its own storage.  It also doesn't need the permission of or a signature from the recipient, because we gave the `deposit` function `access(all)` and published a public capability to it.
+This transaction is **not** bound by the `Withdraw` capability, because the caller will be the account that has the NFT in storage, which automatically possesses full entitlement to everything in its own storage. It also doesn't need the permission of or a signature from the recipient, because we gave the `deposit` function `access(all)` and published a public capability to it.
 
 :::info[Action]
 
-Start by stubbing out a transaction that accepts a `recipientAddress` and `tokenId`.  It should have a transaction-level field called `transferToken` to store the NFT temporarily, between the `prepare`, and `execute` phases. 
+Start by stubbing out a transaction that accepts a `recipientAddress` and `tokenId`. It should have a transaction-level field called `transferToken` to store the NFT temporarily, between the `prepare`, and `execute` phases.
 
 :::
 
@@ -459,25 +458,26 @@ log("NFT ID transferred to account "
 
 :::info[Action]
 
-Test your transaction by transferring several NFTs for several accounts.  Try various combinations, and use the `PrintNFTs` script to make sure the NFTs move as expected.
+Test your transaction by transferring several NFTs for several accounts. Try various combinations, and use the `PrintNFTs` script to make sure the NFTs move as expected.
 
 :::
 
-
 ## Reviewing Intermediate NFTs
 
-In this tutorial, you learned how to expand the functionality of your basic NFT to allow users to create collections of NFTs, then mint and trade those collections.  You also learned more about the details of [entitlements] and how you can use them to protect functionality so that only those who are supposed to be able to access something are able to.
+In this tutorial, you learned how to expand the functionality of your basic NFT to allow users to create collections of NFTs, then mint and trade those collections. You also learned more about the details of [entitlements] and how you can use them to protect functionality so that only those who are supposed to be able to access something are able to.
 
 Now that you have completed the tutorial, you should be able to:
 
-* Implement a collection [resource] that can manage multiple NFTs on behalf of a user.
-* Create an [entitlement] to limit some functionality of a [resource] to the owner.
-* Handle errors more elegantly with functions that generate error messages.
+- Implement a collection [resource] that can manage multiple NFTs on behalf of a user.
+- Create an [entitlement] to limit some functionality of a [resource] to the owner.
+- Handle errors more elegantly with functions that generate error messages.
 
 In the next tutorial, you'll learn how to create fungible token collections.
 
 <!-- Reference-style links, will not render on the page -->
 
+[NFT Guide]: https://developers.flow.com/build/guides/nft
+[Flow NFT Standard]: https://github.com/onflow/flow-nft
 [last tutorial]: ./05-non-fungible-tokens-1.md
 [resource]: ../language/resources.mdx
 [entitlement]: ../language/access-control.md

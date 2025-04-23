@@ -2,70 +2,97 @@
 title: 7. Marketplace Setup
 ---
 
+In this tutorial, we're going to create a marketplace that uses both the fungible and non-fungible token (NFTs) contracts that we have learned about in previous tutorials. You'll execute a series of transactions to set up the accounts that you'll need to complete the marketplace tutorial. You'll build the marketplace itself in the next tutorial.
+
 :::warning
 
-We're in the process of updating the Cadence tutorial series.  This tutorial, and the ones following, have **not** yet been updated.
-
-Check back, or follow us on socials.  These will be updated soon!
+If you're farther along with your Cadence learning journey and found this page looking for a production-ready marketplace, check out the [NFTStorefront repo]!
 
 :::
 
-In this tutorial, we're going to create a marketplace that uses both the fungible
-and non-fungible token (NFTs) contracts that we have learned about in previous tutorials.
-This page requires you to execute a series of transactions to setup your accounts to complete the Marketplace tutorial.
-The next page contains the main content of the tutorial.
+## Objectives
 
-When you are done with the tutorial, check out the [NFTStorefront repo](https://github.com/onflow/nft-storefront)
-for an example of a production ready marketplace that you can use right now on testnet or mainnet!
+After completing this tutorial, you'll be able to:
 
----
+-
+
+## Getting Started
 
 :::info[Action]
 
 Open the starter code for this tutorial in the Flow Playground:
-<a
-  href="https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645"
-  target="_blank"
->
-  https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645
+
+<a href="https://play.flow.com/XXXX" target="_blank">
+https://play.flow.com/XXXX
 </a>
-The tutorial will be asking you to take various actions to interact with this code.
 
 :::
 
-If you have already completed the Marketplace tutorial, please move on to [Composable Resources: Kitty Hats](./10-resources-compose.md).
-
-This guide will help you quickly get the playground to the state you need to complete the Marketplace tutorial.
-The marketplace tutorial uses the Fungible Token and Non-Fungible token contracts
-to allow users to buy and sell NFTs with fungible tokens.
-
----
+To start, you'll need to deploy some copies of the contracts you've built in the previous tutorials. For your convenience, they've been provided in the starter playground.
 
 :::info[Action]
 
-Some of the code in these setup instructions has intentional errors built into it.
-You should understand enough about Cadence to be able to fix these tutorials on your own.
-All of the errors involve concepts that you have learned in previous tutorials
+1. Open the `ExampleToken` contract. This is the same contract from the fungible token tutorial.
+2. Deploy the `ExampleToken` code to account `0x06`.
+3. Switch to the `IntermediateNFT` contract.
+4. Deploy the NFT code to account `0x07` by selecting it as the deploying signer.
 
 :::
 
-1. Open the `ExampleToken` contract. This is the same contract from the fungible token tutorial.
-2. Deploy the `ExampleToken` code to account `0x06`.
-3. Switch to the `ExampleNFT` contract (Contract 2)
-4. Deploy the NFT code to account `0x07` by selecting it as the deploying signer.
-5. Run the transaction in "Setup 6". This is the `SetupAccount6Transaction.cdc` file.
-   Use account `0x06` as the only signer to set up account `0x06`'s storage.
+## Account Setup Transactions
 
-```cadence SetupAccount6Transaction.cdc
-// SetupAccount6Transaction.cdc
+Next, you'll need to build transactions to set up accounts `0x06` and `0x07` to be able to work with the contracts for the marketplace.
 
+:::tip
+
+**Remember**: On Flow, accounts must maintain a balance of $FLOW proportional to the amount of storage the account is using. As a result, accounts can **not** accept arbitrary data (including tokens!) from random contracts without first executing a transaction to allow it.
+
+This might seem like a burden, but it's **great!!** Thanks to this feature, one of the most common causes of burning assets is impossible on Flow. You can **not** send property to a random address - only those that know how to receive it!
+
+:::
+
+### Set Up Account `0x06`
+
+:::info[Action]
+
+Open the `Setup 6` transaction. It's scaffolded for you:
+
+:::
+
+```cadence
 import ExampleToken from 0x06
-import ExampleNFT from 0x07
+import IntermediateNFT from 0x07
 
 // This transaction sets up account 0x06 for the marketplace tutorial
 // by publishing a Vault reference and creating an empty NFT Collection.
 transaction {
-  prepare(acct: auth(SaveValue) &Account) {
+  // TODO
+}
+```
+
+This transaction needs to:
+
+- Prepare an account reference with permissions to create and save capabilities
+- Create a [capability] to receive our example tokens, and [publish] it
+- Call `createEmptyCollection()` from the `IntermediateNFT` contract to create a collection
+- Create and publish public capabilities for the NFT collection
+
+:::info[Action]
+
+Build this transaction on your own. **Hint:** The fungible token and NFT contracts both have constants for the appropriate storage locations needed for the above.
+
+:::
+
+You should end up with something similar to:
+
+```cadence
+import ExampleToken from 0x06
+import IntermediateNFT from 0x07
+
+// This transaction sets up account 0x06 for the marketplace tutorial
+// by publishing a Vault reference and creating an empty NFT Collection.
+transaction {
+  prepare(acct: auth(SaveValue, Capabilities) &Account) {
         // Create a public Receiver capability to the Vault
     let receiverCap = acct.capabilities.storage.issue<&{ExampleToken.Receiver}>(
         /storage/CadenceFungibleTokenTutorialVault
@@ -73,19 +100,51 @@ transaction {
     acct.capabilities.publish(receiverCap, at: /public/CadenceFungibleTokenTutorialReceiver)
 
     // store the empty NFT Collection in account storage
-    acct.storage.save(<-ExampleNFT.createEmptyCollection(nftType: nil), to: ExampleNFT.CollectionStoragePath)
+    acct.storage.save(<-IntermediateNFT.createEmptyCollection(), to: IntermediateNFT.CollectionStoragePath)
 
     log("Collection created for account 2")
 
     // create a public capability for the Collection
-    let cap = acct.capabilities.storage.issue<&ExampleNFT.Collection>(ExampleNFT.CollectionStoragePath)
-    acct.capabilities.publish(cap, at: ExampleNFT.CollectionStoragePath)
+    let cap = acct.capabilities.storage.issue<&IntermediateNFT.Collection>(IntermediateNFT.CollectionStoragePath)
+    acct.capabilities.publish(cap, at: IntermediateNFT.CollectionPublicPath)
   }
 }
 ```
 
+:::info[Action]
+
+Run the transaction using `0x06` as the signer.
+
+:::
+
+### Set Up Account `0x07`
+
+:::info[Action]
+
+Open the `Setup 7` transaction. It's also scaffolded for you:
+
+:::
+
+This transaction needs to:
+
+- Create and add an empty `ExampleToken` vault and add the `Receiver` capability
+- Instantiate a constant for and borrow a reference to the `IntermediateNFT` contract
+-
+
+:::hint
+
+You'll need to use `prepare` and `execute` in this `transaction`.
+
+:::
+
+:::info[Action]
+
+Build this transaction on your own as well. **Reminder:** The fungible token and NFT contracts both have constants for the appropriate storage locations needed for the above.
+
+:::
+
 7. Run the second transaction, "Setup 7". This is the `SetupAccount7Transaction.cdc` file.
-Use account `0x07` as the only signer to set up account `0x07`'s storage.
+   Use account `0x07` as the only signer to set up account `0x07`'s storage.
 
 ```cadence SetupAccount7Transaction.cdc
 // SetupAccount7Transaction.cdc
@@ -285,3 +344,9 @@ access(all) fun main(): OwnerInfo {
 With your playground now in the correct state, you're ready to continue with the next tutorial.
 
 You do not need to open a new playground session for the marketplace tutorial. You can just continue using this one.
+
+<!-- Reference-style links, do not render on page -->
+
+[NFTStorefront repo]: https://github.com/onflow/nft-storefront
+[capability]: ../language/capabilities.md
+[publish]: ../language/accounts/capabilities.mdx#publishing-capabilities

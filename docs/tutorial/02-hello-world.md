@@ -18,7 +18,7 @@ socialImageTitle: Hello World
 socialImageDescription: Write your own Hello World smart contract in Cadence.
 ---
 
-It's time to write your own "Hello World" contract.  In this instance, the contract will:
+It's time to write your own "Hello World" contract. In this instance, the contract will:
 
 1. Create and initialize a smart contract with a single field of type `String`.
 1. Initialize the field with the phrase "Hello, World!".
@@ -30,10 +30,10 @@ We will deploy this contract in an account, use a transaction to interact with t
 
 After completing this tutorial, you'll be able to:
 
-* Declare a public Cadence smart contract.
-* Initialize a public `String` variable. 
-* Write simple transactions and scripts in Cadence.
-* Describe the role of signers in a Cadence transaction.
+- Declare a public Cadence smart contract.
+- Initialize a public `String` variable.
+- Write simple transactions and scripts in Cadence.
+- Describe the role of signers in a Cadence transaction.
 
 ## Implementing Hello World
 
@@ -42,11 +42,11 @@ After completing this tutorial, you'll be able to:
 Open the starter code for this tutorial in the Flow Playground:
 
 <a
-  href="https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4"
-  target="_blank"
->
-  https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4
-</a>
+href="https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4"
+target="\_blank"
+
+> https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4
+> </a>
 
 :::
 
@@ -70,7 +70,7 @@ The line `access(all) contract HelloWorld ` declares a contract with [Access Con
 
 :::info[Action]
 
-Add a public constant `String` field to store your greeting.  
+Add a public constant `String` field to store your greeting.
 
 :::
 
@@ -88,11 +88,11 @@ Cadence follows the same pattern as Swift where the `let` keyword is used to dec
 
 :::
 
-As before, you're using the `access` keyword to set the scope to `all` and make the constant public.  The `let` keyword declares a state constant named `greeting`, and the [type annotation] declares it as a `String`.
+As before, you're using the `access` keyword to set the scope to `all` and make the constant public. The `let` keyword declares a state constant named `greeting`, and the [type annotation] declares it as a `String`.
 
 You've probably noticed the error that your code is `` missing initializer for field `greeting` in type `HelloWorld` ``
 
-[Composite Types], which includes contracts, have a special initializer function that is run exactly once, upon object creation.  It's optional, but constants declared at the contract level must have a value set in the initializer.
+[Composite Types], which includes contracts, have a special initializer function that is run exactly once, upon object creation. It's optional, but constants declared at the contract level must have a value set in the initializer.
 
 :::info[Action]
 
@@ -109,7 +109,7 @@ init() {
 
 ### Add a View Function
 
-You've created a contract and initialized the `"Hello, World!"` `String`.  The next step is to:
+You've created a contract and initialized the `"Hello, World!"` `String`. The next step is to:
 
 :::info[Action]
 
@@ -124,7 +124,7 @@ access(all) view fun hello(): String {
 }
 ```
 
-Once again, the access level is public.  Anyone who imports this contract into their own contract, transaction, or script can read the public fields, use the public types, and call the public contract functions - the ones that have `access(all)` specified.
+Once again, the access level is public. Anyone who imports this contract into their own contract, transaction, or script can read the public fields, use the public types, and call the public contract functions - the ones that have `access(all)` specified.
 
 The `view` annotation indicates that the function is permitted to view, but not modify blockchain state.
 
@@ -133,20 +133,21 @@ The `view` annotation indicates that the function is permitted to view, but not 
 Each user has an account controlled by one or more private keys with configurable weight. This means that support for accounts/wallets with [multiple controllers] is built into the protocol by default.
 
 An account is divided into several areas:
-* _Contracts_
-* _Account Storage_
-* _Capabilities_
-* _Keys_
+
+- _Contracts_
+- _Account Storage_
+- _Capabilities_
+- _Keys_
 
 ### Contract Area
 
 The first area is the [contract area], or `account.contracts`.
 
-This is the area that stores smart contracts deployed to the account.  These contracts contain type definitions, fields, and functions that relate to common functionality. There is no limit to the number of smart contracts an account can store.
+This is the area that stores smart contracts deployed to the account. These contracts contain type definitions, fields, and functions that relate to common functionality. There is no limit to the number of smart contracts an account can store.
 
 :::tip
 
-Much of the functionality that you'd find in a Solidity smart contract is instead written in [transactions] or scripts for Cadence apps.  These exist outside the smart contract, which means you don't need to anticipate absolutely everything you might want to do or view before deploying the contract.
+Much of the functionality that you'd find in a Solidity smart contract is instead written in [transactions] or scripts for Cadence apps. These exist outside the smart contract, which means you don't need to anticipate absolutely everything you might want to do or view before deploying the contract.
 
 :::
 
@@ -156,13 +157,13 @@ The owner of an account can directly add or update contracts that are deployed t
 
 :::warning[Important]
 
-On Flow Cadence, **smart contracts _are_ upgradeable**.  If you make a mistake, you can often [update] it, constrained by some rules, in a public and transparent manner.
+On Flow Cadence, **smart contracts _are_ upgradeable**. If you make a mistake, you can often [update] it, constrained by some rules, in a public and transparent manner.
 
 :::
 
 ### Account Storage
 
-The second area is where you'll find [account storage], or `account.storage`.  This area is where an account stores the objects that it owns. This is an important differentiator between Cadence and other languages, because in other languages, assets that accounts own are usually stored in the centralized smart contract ledger that defines the assets. 
+The second area is where you'll find [account storage], or `account.storage`. This area is where an account stores the objects that it owns. This is an important differentiator between Cadence and other languages, because in other languages, assets that accounts own are usually stored in the centralized smart contract ledger that defines the assets.
 
 :::warning[Important]
 
@@ -176,11 +177,11 @@ In this tutorial, we'll use the account with the address `0x06` to store our `He
 
 ### Capabilities
 
-[Capabilities], or `account.capabilities`, are a part of the security model in Cadence.  They represent the right to access parts or all of an object and perform operations on it.  For example, a user might possess a vault that holds fungible tokens.  For it, they'll have a capability that allows anyone to deposit tokens into the vault, and may choose to grant the capability to withdraw tokens to their broker's account.
+[Capabilities], or `account.capabilities`, are a part of the security model in Cadence. They represent the right to access parts or all of an object and perform operations on it. For example, a user might possess a vault that holds fungible tokens. For it, they'll have a capability that allows anyone to deposit tokens into the vault, and may choose to grant the capability to withdraw tokens to their broker's account.
 
 ### Keys
 
-[Keys], or `account.keys`, are used to sign [transactions].  In Cadence, an account can have many keys. These keys can be shared or revoked, providing native version of [account abstraction] that is extremely powerful.  For example, you can use it [build an app] that pulls NFTs in an embedded wallet in one app into that user's browser wallet and use them in your app.
+[Keys], or `account.keys`, are used to sign [transactions]. In Cadence, an account can have many keys. These keys can be shared or revoked, providing native version of [account abstraction] that is extremely powerful. For example, you can use it [build an app] that pulls NFTs in an embedded wallet in one app into that user's browser wallet and use them in your app.
 
 ## Deploying the HelloWorld Contract
 
@@ -263,7 +264,7 @@ transaction {
 
 Transactions are divided into two main phases, `prepare` and `execute`.
 
-The [`prepare`] phase is required and is used to identify the account(s) that will sign the transaction.  It's also used when the transaction needs to access the account(s) that signed the transaction. The latter is not needed for this simple transaction.
+The [`prepare`] phase is required and is used to identify the account(s) that will sign the transaction. It's also used when the transaction needs to access the account(s) that signed the transaction. The latter is not needed for this simple transaction.
 
 :::info[Action]
 
@@ -323,10 +324,22 @@ Next, we deployed this contract in an account and implemented a transaction to c
 
 Now that you have completed the tutorial, you can:
 
-* Declare a public Cadence smart contract.
-* Initialize a public `String` variable. 
-* Write simple transactions in Cadence.
-* Describe the role of signers in a Cadence transaction.
+- Declare a public Cadence smart contract.
+- Initialize a public `String` variable.
+- Write simple transactions in Cadence.
+- Describe the role of signers in a Cadence transaction.
+
+## Reference Solution
+
+:::warning
+
+You are **not** saving time by skipping the the reference implementation. You'll learn much faster by doing the tutorials as presented!
+
+Reference solutions are functional, but may not be optimal.
+
+:::
+
+[Reference Solution]
 
 <!-- Relative links.  Will not render on the page -->
 
@@ -347,3 +360,4 @@ Now that you have completed the tutorial, you can:
 [transactions]: ../language/transactions.md
 [`prepare`]: ../language/transactions.md#prepare-phase
 [Cadence types]: ../language/values-and-types.mdx
+[Reference Solution]: https://play.flow.com/edba10ad-1232-4720-bc1b-cd34cb12b6dc?type=tx&id=6e788751-6f18-4133-8158-62f4e55c74a6

@@ -45,8 +45,7 @@ Open the starter code for this tutorial in the Flow Playground:
 href="https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4"
 target="\_blank"
 
-> https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4
-> </a>
+> https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4 > </a>
 
 :::
 
@@ -360,4 +359,4 @@ Reference solutions are functional, but may not be optimal.
 [transactions]: ../language/transactions.md
 [`prepare`]: ../language/transactions.md#prepare-phase
 [Cadence types]: ../language/values-and-types.mdx
-[Reference Solution]: https://play.flow.com/edba10ad-1232-4720-bc1b-cd34cb12b6dc?type=tx&id=6e788751-6f18-4133-8158-62f4e55c74a6
+[Reference Solution]: https://play.flow.com/edba10ad-1232-4720-bc1b-cd34cb12b6dc

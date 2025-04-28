@@ -69,9 +69,7 @@ Open the starter code for this tutorial in the Flow Playground:
 
 <a
 href="https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1"
-target="\_blank"
-
-> https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1 > </a>
+target="\_blank">https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1</a>
 
 `HelloResource.cdc` contains the following code:
 

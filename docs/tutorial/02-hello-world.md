@@ -43,9 +43,7 @@ Open the starter code for this tutorial in the Flow Playground:
 
 <a
 href="https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4"
-target="\_blank"
-
-> https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4 > </a>
+target="\_blank">https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4</a>
 
 :::
 

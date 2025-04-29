@@ -490,7 +490,7 @@ Refactor your prepare statement to check and see if the storage path is in use. 
 :::
 
 ```cadence
-if !acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
+if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
     self.result = "Unable to save, resource already present."
 } else {
     let newHello <- HelloResource.createHelloAsset()
@@ -524,7 +524,7 @@ transaction {
     self.result = "Saved Hello Resource to account."
     let storagePath = /storage/HelloAssetTutorial
 
-    if !acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
+    if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
       self.result = "Unable to save, resource already present."
     } else {
       let newHello <- HelloResource.createHelloAsset()

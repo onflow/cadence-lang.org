@@ -381,7 +381,6 @@ Write a script to `PrintNFTs` for the provided address.
 You can also pass arguments into the `main` function in a script.
 
 ```cadence
-
 import IntermediateNFT from 0x06
 
 access(all) fun main(address: Address): [UInt64] {
@@ -401,7 +400,6 @@ access(all) fun main(address: Address): [UInt64] {
 
     return receiverRef.getIDs()
 }
-
 ```
 
 ## Transferring NFTs
@@ -448,7 +446,7 @@ self.transferToken <- collectionRef.withdraw(withdrawID: tokenId)
 
 :::info[Action]
 
-Finally, get a public reference to the recipient's account, use that to get a reference to the capability for the recipient's `Collection`, and use the `deposit` function to `move (<-)` the NFT.
+Finally, `execute` the transfer by getting a public reference to the recipient's account, using that to get a reference to the capability for the recipient's `Collection`, and using the `deposit` function to `move (<-)` the NFT.
 
 :::
 

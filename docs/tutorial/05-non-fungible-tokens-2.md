@@ -52,7 +52,7 @@ target="\_blank"> https://play.flow.com/9da6f80f-cd79-4797-a067-47a57dc54770</a>
 
 :::
 
-This tutorial continues from the last one, but we'll be doing significant refactoring. The provided starter contains the NFT resource, but removes the code and transactions for creating NFTs and capabilities to interact with them. You'll replace those with a more sophisticated approach that will allow collections of NFTs.
+This tutorial continues from the last one, but we'll be doing significant refactoring. The provided starter contains the NFT resource, but **removes the code and transactions** for creating NFTs and capabilities to interact with them. You'll replace those with a more sophisticated approach that will allow collections of NFTs.
 
 It also adds some constants for the paths we'll be using so we don't need to worry about typos as we add them to several transactions and scripts.
 
@@ -62,11 +62,11 @@ Using a [dictionary] on its own to store our NFTs would solve the problem of hav
 
 ### Resources that Own Resources
 
-Instead, we can use a powerful feature of Cadence, resources owning other resources! We'll define a new `Collection` resource as our NFT storage place to enable more-sophisticated ways to interact with our NFTs. This pattern comes with interesting powers and side effects.
+Instead, we can use a powerful feature of Cadence - resources owning other resources! We'll define a new `Collection` resource as our NFT storage place to enable more-sophisticated ways to interact with our NFTs. This pattern comes with interesting powers and side effects.
 
 Since the `Collection` explicitly owns the NFTs in it, the owner could transfer all of the NFTs at once by just transferring the single collection. In addition to allowing easy batch transfers, this means that if a unique NFT wants to own another unique NFT, like a CryptoKitty owning a hat accessory, the Kitty literally stores the hat in its own fields and effectively owns it.
 
-The hat belongs to the CryptoKitty that it is stored in, and the hat can be transferred separately or along with the CryptoKitty that owns it. Cadence is a fully object-oriented language, so ownership is indicated by where an object is stored, not just an entry on a ledger.
+The hat belongs to the CryptoKitty that it is stored in, and the hat can be transferred separately or along with the CryptoKitty that owns it. Cadence is a fully object-oriented language, so ownership is indicated by where an object is stored, not just an entry in a ledger.
 
 :::danger
 
@@ -98,7 +98,7 @@ Cadence is an object-oriented language. Inside of a composite type, such as a [r
 
 :::
 
-Dictionary definitions don't usually have the `@` symbol in the type specification, but because the `myNFTs` mapping stores resources, the whole field must become a resource type. Therefore, you need the `@` symbol indicating that `ownedNFTs` is a resource type.
+Dictionary definitions in Cadence don't always need the `@` symbol in the type specification, but because the `myNFTs` mapping stores resources, the whole field must become a resource type. Therefore, you need the `@` symbol indicating that `ownedNFTs` is a resource type.
 
 As a result, all the rules that apply to resources apply to this type.
 
@@ -108,7 +108,7 @@ It's helpful for a collection to be able to handle some basic operations, such a
 
 :::info[Action]
 
-Write a function to `deposit` a token into `ownedNFTs`:
+Write a function in the `Collection` `resource` to `deposit` a token into `ownedNFTs`:
 
 :::
 
@@ -142,9 +142,9 @@ access(all) view fun getIDs(): [UInt64] {
 }
 ```
 
-## Withdrawing NFTs
+## Collection Capabilities
 
-For the NFT `Collection`, we will publish a capability to allow anyone to access the utility functions you just created - depositing NFTs into it, verifying if an NFT is in the collection, or getting the ids of all NFTs present. We'll also need functionality to withdraw an NFT and remove it from the collection, but we obviously **don't** want anyone to be able to do that.
+For the NFT `Collection`, we will publish a capability to allow anyone to access the utility functions you just created - depositing NFTs into it, verifying if an NFT is in the collection, or getting the ids of all NFTs present. We'll also need functionality to withdraw an NFT and remove it from the collection, but we obviously **don't** want just anyone to be able to do that - only the owner.
 
 ### Capability Security
 
@@ -175,7 +175,7 @@ Entitlements enable you to restrict the scope of access at a granular level, wit
 
 :::tip
 
-If you're used to Solidity, you can think of this as being similar to frameworks that enable you to use modifiers to limit some functions to specific addresses with the correct role, such as `onlyOwner`.
+If you're used to Solidity, you can think of this as being similar to frameworks that enable you to use modifiers to limit some functions to specific addresses with the correct role, such as `onlyOwner`. It's quite a bit more powerful though!
 
 :::
 
@@ -193,7 +193,7 @@ You've now effectively created a type of lock that can only be opened by someone
 
 :::info[Action]
 
-Implement a `withdraw` function. It should:
+Implement a `withdraw` function inside the `Collection` resource. It should:
 
 - Only allow `access` to addresses with the `Withdraw` [entitlement].
 - Accept the id of the NFT to be withdrawn as an argument
@@ -224,9 +224,7 @@ As with other types defined in contracts, these are namespaced to the deployer a
 
 The owner of an object is the only one who can sign a transaction to create an entitled capability or reference.
 
-In the above example, if you wanted to make the withdraw function publicly accessible,
-you could issue the capability as an entitled capability by specifying all the entitlements in the capability's type specification
-using the `auth` keyword:
+In the above example, if you wanted to make the withdraw function publicly accessible, you could issue the capability as an entitled capability by specifying all the entitlements in the capability's type specification using the `auth` keyword:
 
 ```cadence
 // DANGEROUS CODE EXAMPLE - DO NOT USE
@@ -246,13 +244,29 @@ let stolenNFT <- entitledCollectionRef.withdraw(withdrawID: 1)
 
 Later tutorials will cover more nuanced methods for sharing an [entitlement].
 
+### Creating Empty Collections
+
+Finally, your contract needs a way to create an empty collection to initialize the user's account when they start collecting your NFTs.
+
+:::info[Action]
+
+Add a function to create and return an empty `Collection`.
+
+:::
+
+```cadence
+access(all) fun createEmptyCollection(): @Collection {
+    return <- create Collection()
+}
+```
+
 ## Error Handling
 
 Thinking ahead, many of the transactions that we might write (or other developers composing on our contracts) will need to borrow a reference to a user's collection. We can make everyone's lives easier by adding a function to help create that error in a nice and consistent manner.
 
 :::info[Action]
 
-Write a function called `collectionNotConfiguredError` that accepts an `address` and returns a descriptive error message that the collection was not found.
+Write a function at the contract level called `collectionNotConfiguredError` that accepts an `address` and returns a descriptive error message that the collection was not found.
 
 :::
 
@@ -320,11 +334,9 @@ Test your transaction by creating `Collections` for several accounts. Try it wit
 
 Next, add a transaction to mint an nft and grant it to the caller. Use the `prepare` phase to `borrow` a reference to the caller's `Collection` and store it in a transaction-level field. Then, use `execute` to create the nft and use the `Collection`'s `deposit` function to save it in the `Collection`.
 
-It's better practice to separate code that accesses accounts and storage to collect authorized references from the code that executes the changes to state.
-
 :::
 
-You can pass arguments, such as the `String` for the NFT `description` by defining parameters on the `transaction`.
+It's better practice to separate code that accesses accounts and storage to collect authorized references from the code that executes the changes to state. You can pass arguments, such as the `String` for the NFT `description` by defining parameters on the `transaction`.
 
 Your transaction should be similar to:
 
@@ -471,6 +483,18 @@ Now that you have completed the tutorial, you should be able to:
 
 In the next tutorial, you'll learn how to create fungible token collections.
 
+## Reference Solution
+
+:::warning
+
+You are **not** saving time by skipping the the reference implementation. You'll learn much faster by doing the tutorials as presented!
+
+Reference solutions are functional, but may not be optimal.
+
+:::
+
+[Reference Solution]
+
 <!-- Reference-style links, will not render on the page -->
 
 [NFT Guide]: https://developers.flow.com/build/guides/nft
@@ -481,3 +505,4 @@ In the next tutorial, you'll learn how to create fungible token collections.
 [dictionary]: ../language/values-and-types.mdx#dictionaries
 [capability security]: ../language/capabilities.md
 [entitlements]: ../language/access-control.md#entitlements
+[Reference Solution]: https://play.flow.com/72bf4f76-fa1a-4b24-8f5e-f1e5aab9f39d

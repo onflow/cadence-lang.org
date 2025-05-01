@@ -19,7 +19,7 @@ socialImageTitle: Cadence Resources
 socialImageDescription: Resource smart contract image.
 ---
 
-This tutorial will build on your understanding of accounts and how to interact with them by introducing [resources].  Resources are a special type found in Cadence that are used for any virtual items, properties, or any other sort of data that are **owned** by an account.  They can **only exist in one place at a time**, which means they can be moved or borrowed, but they **cannot be copied**.
+This tutorial will build on your understanding of accounts and how to interact with them by introducing [resources]. Resources are a special type found in Cadence that are used for any virtual items, properties, or any other sort of data that are **owned** by an account. They can **only exist in one place at a time**, which means they can be moved or borrowed, but they **cannot be copied**.
 
 Working with resources requires you to take a few more steps to complete some tasks, but this level of explicit control makes it nearly impossible to accidentally duplicate, break, or burn an asset.
 
@@ -27,16 +27,16 @@ Working with resources requires you to take a few more steps to complete some ta
 
 After completing this tutorial, you'll be able to:
 
-* Instantiate a `resource` in a smart contract with the `create` keyword
-* Save, move, and load resources using the [Account Storage API] and the [move operator] (`<-`)
-* Use [`borrow`] to access and use a function in a resource
-* Use the `prepare` phase of a transaction to load resources from account storage
-* Set and use variables in both the `prepare` and `execute` phase
-* Use the [nil-coalescing operator (`??`)] to `panic` if a resource is not found
+- Instantiate a `resource` in a smart contract with the `create` keyword
+- Save, move, and load resources using the [Account Storage API] and the [move operator] (`<-`)
+- Use [`borrow`] to access and use a function in a resource
+- Use the `prepare` phase of a transaction to load resources from account storage
+- Set and use variables in both the `prepare` and `execute` phase
+- Use the [nil-coalescing operator (`??`)] to `panic` if a resource is not found
 
 ## Resources
 
-[Resources] are one of the most important and unique features in Cadence.  They're a composite type, like a struct or a class in other languages, but with some special rules designed to avoid many of the traditional dangers in smart contract development.  The short version is that resources can only exist in one location at a time - they cannot be copied, duplicated, or have multiple references.
+[Resources] are one of the most important and unique features in Cadence. They're a composite type, like a struct or a class in other languages, but with some special rules designed to avoid many of the traditional dangers in smart contract development. The short version is that resources can only exist in one location at a time - they cannot be copied, duplicated, or have multiple references.
 
 Here is an example definition of a resource:
 
@@ -57,7 +57,7 @@ Resources are useful when you want to model **direct ownership** of an asset or 
 Traditional structs or classes from other conventional programming languages
 are not an ideal way to represent direct ownership because they can be **copied**. This means a coding error can easily result in creating multiple copies of the same asset, which breaks the scarcity requirements needed for these assets to have real value.
 
-We have to consider loss and theft at the scale of a house, a car, a bank account, or a horse.  It's worth a little bit of extra code to avoid accidentally duplicating ownership of one of these properties!
+We have to consider loss and theft at the scale of a house, a car, a bank account, or a horse. It's worth a little bit of extra code to avoid accidentally duplicating ownership of one of these properties!
 
 Resources solve this problem by making creation, destruction, and movement of assets explicit.
 
@@ -68,18 +68,14 @@ Resources solve this problem by making creation, destruction, and movement of as
 Open the starter code for this tutorial in the Flow Playground:
 
 <a
-  href="https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1"
-  target="_blank"
->
-  https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1
-</a>
+href="https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1"
+target="\_blank">https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1</a>
 
-`HelloWorldResource.cdc` contains the following code:
+`HelloResource.cdc` contains the following code:
 
 :::
 
-
-```cadence HelloWorldResource.cdc
+```cadence HelloResource.cdc
 access(all) contract HelloResource {
   // TODO
 }
@@ -97,7 +93,7 @@ The key difference between a `resource` and a `struct` or `class` is the access 
   - Here, location refers to account storage, a temporary variable in a function, a storage field in a contract, etc.
 - Resources must be explicitly moved from one location to another when accessed.
 - Resources also cannot go out of scope at the end of function execution. They must be explicitly stored somewhere or explicitly destroyed.
-- A resource can only be created in the scope that it is defined in. 
+- A resource can only be created in the scope that it is defined in.
   - This prevents anyone from being able to create arbitrary amounts of resource objects that others have defined.
 
 These characteristics make it impossible to accidentally lose a resource from a coding mistake.
@@ -106,7 +102,7 @@ These characteristics make it impossible to accidentally lose a resource from a 
 
 Add a `resource` called `HelloAsset` that contains a function to return a string containing "Hello Resources!":
 
-::
+:::
 
 ```cadence HelloResource.cdc
 access(all) contract HelloResource {
@@ -121,10 +117,11 @@ access(all) contract HelloResource {
 ```
 
 A few notes on this function:
-* `access(all)` makes the function publicly accessible
-* `view` indicates that the function does not modify state
-* The function return type is a `String`
-* The function is **not** present on the contract itself and cannot be called by interacting with the contract
+
+- `access(all)` makes the function publicly accessible
+- `view` indicates that the function does not modify state
+- The function return type is a `String`
+- The function is **not** present on the contract itself and cannot be called by interacting with the contract
 
 :::warning
 
@@ -166,15 +163,15 @@ Add a function called `createHelloAsset` that creates and returns a `HelloAsset`
 
 :::
 
-```cadence HelloWorldResource.cdc
+```cadence HelloResource.cdc
 access(all) fun createHelloAsset(): @HelloAsset {
     return <-create HelloAsset()
 }
 ```
 
-Unlike the `hello()` function, this function **does** exist on the contract and can be called directly.  Doing so creates an instance of the `HelloAsset` resource, **moves** it through the `return` of the function to the location calling the function - the same as you'd expect for other languages.
+Unlike the `hello()` function, this function **does** exist on the contract and can be called directly. Doing so creates an instance of the `HelloAsset` resource, **moves** it through the `return` of the function to the location calling the function - the same as you'd expect for other languages.
 
-Remember, when resources are referenced, the `@` symbol is placed at the beginning.  In the function above, the return type is a resource of the `HelloAsset` type.
+Remember, when resources are referenced, the `@` symbol is placed at the beginning. In the function above, the return type is a resource of the `HelloAsset` type.
 
 :::info[Action]
 
@@ -192,18 +189,17 @@ Open the transaction named `Create Hello`.
 
 :::
 
-
 `Create Hello` should contain the following code:
 
 ```cadence create_hello.cdc
-import HelloWorldResource from 0x06
+import HelloResource from 0x06
 
 transaction {
   // TODO
 }
 ```
 
-We've already imported the `HelloWorldResource` contract for you and stubbed out a `transaction`.  Unlike the transaction in Hello World, you will need to modify the user's account, which means you will need to use the `prepare` phase to access and modify the account that is going to get an instance of the resource.
+We've already imported the `HelloResource` contract for you and stubbed out a `transaction`. Unlike the transaction in Hello World, you will need to modify the user's account, which means you will need to use the `prepare` phase to access and modify the account that is going to get an instance of the resource.
 
 ### Prepare Phase
 
@@ -216,24 +212,30 @@ First, inside the `transaction`, stub out the `prepare` phase with the authoriza
 :::
 
 ```cadence
-prepare(acct: auth(SaveValue) &Account) {
-   // TODO
+import HelloResource from 0x06
+
+transaction {
+  prepare(acct: auth(SaveValue) &Account) {
+    // TODO
+  }
 }
 ```
 
 :::info[Action]
 
-Next, use the `createHelloAsset` function in `HelloWorldResource` to `create` an instance of the resource and _move_ it into a constant:
+Next, use the `createHelloAsset` function in `HelloResource` to `create` an instance of the resource inside of the `prepeare` and _move_ it into a constant:
 
 :::
 
 ```cadence
-let newHello <- HelloWorldResource.createHelloAsset()
+let newHello <- HelloResource.createHelloAsset()
 ```
+
+You'll get an error for `loss of resource`. This is one of the best features of Cadence! The language **prevents you from accidentally destroying a resource** at the syntax level.
 
 ### Storage Paths
 
-In Cadence Accounts, objects are stored in [paths]. Paths represent a file system for your account, where an object can be stored at any user-defined path. Often, contracts will specify for the user where objects from that contract should be stored. This enables any code to know how to access these objects in a standard way.
+In Cadence Accounts, objects are stored in [paths]. Paths represent a file system for user accounts, where an object can be stored at any user-defined path. Usually, contracts will specify for the user where objects from that contract should be stored. This enables any code to know how to access these objects in a standard way.
 
 Paths start with the character `/`, followed by the domain, the path separator `/`, and finally the identifier. The identifier must start with a letter and can only be followed by letters, numbers, or the underscore `_`. For example, the path `/storage/test` has the domain `storage` and the identifier `test`.
 
@@ -241,7 +243,7 @@ There are two valid domains: `storage` and `public`.
 
 Paths in the storage domain have type `StoragePath`, and paths in the public domain have the type `PublicPath`. Both `StoragePath` and `PublicPath` are subtypes of `Path`.
 
-Paths are not strings and do not have quotes around them.
+Paths are **not** strings and do **not** have quotes around them.
 
 :::info[Action]
 
@@ -255,9 +257,9 @@ acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
 
 The first parameter in `save` is the object that is being stored, and the `to` parameter is the path that the object is being stored at. The path must be a storage path, so only the domain `/storage/` is allowed in the `to` parameter.
 
-If there is already an object stored under the given path, the program aborts.
+Notice that the error for `loss of resource` has been resolved.
 
-Remember, the Cadence type system ensures that a resource can never be accidentally lost. When moving a resource to a field, into an array, into a dictionary, or into storage, there is the possibility that the location already contains a resource.
+If there is already an object stored under the given path, the program aborts. Remember, the Cadence type system ensures that a resource can never be accidentally lost. When moving a resource to a field, into an array, into a dictionary, or into storage, there is the possibility that the location already contains a resource.
 
 Cadence forces the developer to explicitly handle the case of an existing resource so that it is not accidentally lost through an overwrite.
 
@@ -278,6 +280,8 @@ execute {
     log("Saved Hello Resource to account.")
 }
 ```
+
+We'll learn more realistic uses of this phase soon.
 
 You should have something similar to:
 
@@ -341,7 +345,7 @@ error: failed to save object: path /storage/HelloAssetTutorial in account 0x0000
 
 Try removing the line of code that saves `newHello` to storage.
 
-You'll get an error for `newHello` that says `loss of resource`. This means that you are not handling the resource properly. Remember that if you ever see this error in any of your programs, it means there is a resource somewhere that is not being explicitly stored or destroyed.
+Again, you'll get an error for `newHello` that says `loss of resource`. This means that you are not handling the resource properly. Remember that if you ever see this error in any of your programs, it means there is a resource somewhere that is not being explicitly stored or destroyed.
 
 **Add the line back before you forget!**
 
@@ -431,7 +435,7 @@ prepare(acct: auth(BorrowValue, SaveValue) &Account) {
 
 :::info[Action]
 
-Next, add a `transaction`-level variable to store a result `String`:
+Next, add a `transaction`-level (similar to contract-level or class-level) variable to store a result `String`:
 
 :::
 
@@ -446,7 +450,7 @@ transaction {
 }
 ```
 
-You'll get an error: `missing initialization of field `result` in type `Transaction`. not initialized`
+You'll get an error: `missing initialization of field 'result' in type 'Transaction'. not initialized`
 
 In transactions, variables at the `transaction` level must be initialized in the `prepare` phase.
 
@@ -463,11 +467,11 @@ let storagePath = /storage/HelloAssetTutorial
 
 :::warning
 
-In Cadence, storage paths are a type.  They are **not** `Strings` and are not enclosed by quotes.
+In Cadence, storage paths are a type. They are **not** `Strings` and are not enclosed by quotes.
 
 :::
 
-One way to check whether or not a storage path has an object in it is to use the built-in [`storage.check`] function with the type and path.  If the result is `true`, then there is an object in account storage that matches the type requested.  If it's `false`, there is not.
+One way to check whether or not a storage path has an object in it is to use the built-in [`storage.check`] function with the type and path. If the result is `true`, then there is an object in account storage that matches the type requested. If it's `false`, there is not.
 
 ```warning
 
@@ -477,24 +481,24 @@ This is not likely to occur because projects are encouraged to create storage an
 
 ```
 
-Depending on the needs of your app, you'll use this pattern to decide what to do in each case.  For this example, we'll simply use it to change the log message if the storage is in use or create and save the `HelloAsset` if it is not.
+Depending on the needs of your app, you'll use this pattern to decide what to do in each case. For this example, we'll simply use it to change the log message if the storage is in use or create and save the `HelloAsset` if it is not.
 
 :::info[Action]
 
-Refactor your prepare statement to check and see if the storage path is in use.  If it is, update the `result` message.  Otherwise, create and save a `HelloAsset`:
+Refactor your prepare statement to check and see if the storage path is in use. If it is, update the `result` message. Otherwise, create and save a `HelloAsset`:
 
 :::
 
 ```cadence
-if !acct.storage.check<&HelloWorldResource.HelloAsset>(from: storagePath) {
+if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
     self.result = "Unable to save, resource already present."
 } else {
-    let newHello <- HelloWorldResource.createHelloAsset()
+    let newHello <- HelloResource.createHelloAsset()
     acct.storage.save(<-newHello, to: storagePath)
 }
 ```
 
-When you [`check`] a resource, you must put the type of the resource to be borrowed inside the `<>` after the call to `borrow`, before the parentheses.  The `from` parameter is the storage path to the object you are borrowing.
+When you [`check`] a resource, you must put the type of the resource to be borrowed inside the `<>` after the call to `borrow`, before the parentheses. The `from` parameter is the storage path to the object you are borrowing.
 
 :::info[Action]
 
@@ -508,6 +512,32 @@ execute {
 }
 ```
 
+You should end up with something similar to:
+
+```cadence
+import HelloResource from 0x06
+
+transaction {
+  var result: String
+
+  prepare(acct: auth(BorrowValue, SaveValue) &Account) {
+    self.result = "Saved Hello Resource to account."
+    let storagePath = /storage/HelloAssetTutorial
+
+    if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
+      self.result = "Unable to save, resource already present."
+    } else {
+      let newHello <- HelloResource.createHelloAsset()
+      acct.storage.save(<-newHello, to: storagePath)
+    }
+  }
+
+  execute {
+    log(self.result)
+  }
+}
+```
+
 :::info[Action]
 
 `Send` the transaction again, both with accounts that have and have not yet created and stored an instance of `HelloAsset`.
@@ -516,10 +546,9 @@ execute {
 
 Now you'll see an appropriate log whether or not a new resource was created and saved.
 
-
 ## Load Hello Transaction
 
-Now we're going to use a transaction to call the `hello()` method from the `HelloAsset` resource.
+Now, we're going to use a transaction to call the `hello()` method from the `HelloAsset` resource.
 
 :::info[Action]
 
@@ -531,14 +560,14 @@ It's empty!
 
 :::info[Action]
 
-On your own, stub out a transaction that imports `HelloWorldResource` and passes in an account [reference] with the `BorrowValue` authorization entitlement.
+On your own, stub out a transaction that imports `HelloResource` and passes in an account [reference] with the `BorrowValue` authorization entitlement.
 
 :::
 
 You should end up with something like this:
 
 ```cadence load_hello.cdc
-import HelloWorldResource from 0x06
+import HelloResource from 0x06
 
 transaction {
 
@@ -548,18 +577,18 @@ transaction {
 }
 ```
 
-You just learned how to [`borrow`] a [reference] to a resource.  You could use an `if` statement to handle the possibility that the resource isn't there, but if you want to simply terminate execution, a common practice is to combine a `panic` statement with the [nil-coalescing operator (`??`)].
+You just learned how to [`borrow`] a [reference] to a resource. You could use an `if` statement to handle the possibility that the resource isn't there, but if you want to simply terminate execution, a common practice is to combine a `panic` statement with the [nil-coalescing operator (`??`)].
 
-This operator executes the statement on the left side.  If that is `nil`, the right side is evaluated and returned.  In this case, the return is irrelevant, because we're going to cause a `panic` and terminate execution.
+This operator executes the statement on the left side. If that is `nil`, the right side is evaluated and returned. In this case, the return is irrelevant, because we're going to cause a `panic` and terminate execution.
 
 :::info[Action]
 
-Create a variable with a [reference] to the `HelloAsset` resource stored in the user's account.  Panic if this resource is not found.
+Create a variable with a [reference] to the `HelloAsset` resource stored in the user's account. Panic if this resource is not found.
 
 :::
 
 ```cadence
-let helloAsset = acct.storage.borrow<&HelloWorldResource.HelloAsset>(from: /storage/HelloAssetTutorial)
+let helloAsset = acct.storage.borrow<&HelloResource.HelloAsset>(from: /storage/HelloAssetTutorial)
     ?? panic("The signer does not have the HelloAsset resource stored at /storage/HelloAssetTutorial. Run the `Create Hello` Transaction to store the resource")
 ```
 
@@ -569,7 +598,7 @@ Finally, `log` the return from a call to the `hello()` function.
 
 :::
 
-:::warning
+:::danger
 
 Borrowing a [reference] does **not** allow you to move or destroy a resource, but it **does allow** you to mutate data inside that resource via one of the resource's functions.
 
@@ -578,11 +607,11 @@ Borrowing a [reference] does **not** allow you to move or destroy a resource, bu
 Your transaction should be similar to:
 
 ```cadence
-import HelloWorldResource from 0x06
+import HelloResource from 0x06
 
 transaction {
     prepare(acct: auth(BorrowValue, LoadValue, SaveValue) &Account) {
-        let helloAsset = acct.storage.borrow<&HelloWorldResource.HelloAsset>(from: /storage/HelloAssetTutorial)
+        let helloAsset = acct.storage.borrow<&HelloResource.HelloAsset>(from: /storage/HelloAssetTutorial)
             ?? panic("The signer does not have the HelloAsset resource stored at /storage/HelloAssetTutorial. Run the `Create Hello` Transaction again to store the resource")
 
         log(helloAsset.hello())
@@ -600,7 +629,7 @@ Test your transaction with several accounts to evaluate all possible cases.
 
 ## Reviewing the Resource Contract
 
-In this tutorial you learned how to `create` [resources] in Cadence. You implemented a smart contract that is accessible in all scopes.  The smart contract has a resource declared that implemented a function called `hello()`, that returns the string `"Hello, World!"`.  It also declares a function that can create a resource.
+In this tutorial you learned how to `create` [resources] in Cadence. You implemented a smart contract that is accessible in all scopes. The smart contract has a resource declared that implemented a function called `hello()`, that returns the string `"Hello, World!"`. It also declares a function that can create a resource.
 
 Next, you implemented a transaction to create the resource and save it in the account calling it.
 
@@ -608,12 +637,24 @@ Finally, you used a transaction to [borrow] a [reference] to the `HelloAsset` re
 
 Now that you have completed the tutorial, you can:
 
-* Instantiate a `resource` in a smart contract with the `create` keyword
-* Save, move, and load resources using the [Account Storage API] and the [move operator] (`<-`)
-* Use [`borrow`] to access and use a function in a resource
-* Use the `prepare` phase of a transaction to load resources from account storage
-* Set and use variables in both the `prepare` and `execute` phase
-* Use the [nil-coalescing operator (`??`)] to `panic` if a resource is not found
+- Instantiate a `resource` in a smart contract with the `create` keyword
+- Save, move, and load resources using the [Account Storage API] and the [move operator] (`<-`)
+- Use [`borrow`] to access and use a function in a resource
+- Use the `prepare` phase of a transaction to load resources from account storage
+- Set and use variables in both the `prepare` and `execute` phase
+- Use the [nil-coalescing operator (`??`)] to `panic` if a resource is not found
+
+## Reference Solution
+
+:::warning
+
+You are **not** saving time by skipping the the reference implementation. You'll learn much faster by doing the tutorials as presented!
+
+Reference solutions are functional, but may not be optimal.
+
+:::
+
+[Reference Solution]
 
 <!-- Relative links.  Will not render on the page -->
 
@@ -631,3 +672,4 @@ Now that you have completed the tutorial, you can:
 [nil-coalescing operator (`??`)]: ../language/operators.md#nil-coalescing-operator-
 [Non-Fungible Token Contract]: https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121)
 [Generic NFT Transfer transaction]: https://github.com/onflow/flow-nft/blob/master/transactions/generic_transfer_with_address_and_type.cdc#L46-L50
+[Reference Solution]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6

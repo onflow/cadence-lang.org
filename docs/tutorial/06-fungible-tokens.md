@@ -21,12 +21,27 @@ socialImageTitle: Fungible Tokens in Cadence
 socialImageDescription: FT social image.
 ---
 
-Some of the most popular contract classes on blockchains today are fungible tokens.
-These contracts create homogeneous tokens that can be transferred to other users and spent as currency (e.g., ERC-20 on Ethereum).
+Some of the most popular contract classes on blockchains today are fungible tokens. These contracts create homogeneous tokens that can be transferred to other users and spent as currency (e.g., ERC-20 on Ethereum).
 
 In traditional software and smart contracts, balances for each user are tracked by a central ledger, such as a dictionary:
 
+```solidity
+// Solidity Example
+// SIMPLIFIED ERC20 EXAMPLE. DO NOT USE THIS CODE FOR YOUR PROJECT
+contract LedgerToken {
+    mapping (address => uint) public balances;
+    uint public supply;
+
+    function transfer(address _to, uint _amount) public {
+        require(_balances[msg.sender] >= amount, "Insufficent funds");
+        balances[msg.sender] -= _amount;
+        balances[_to] += _amount;
+    }
+}
+```
+
 ```cadence
+// Cadence Example
 // BAD CODE EXAMPLE. DO NOT USE THIS CODE FOR YOUR PROJECT
 contract LedgerToken {
     // Tracks every user's balance
@@ -42,11 +57,13 @@ contract LedgerToken {
 }
 ```
 
+This is an **immensely dangerous** pattern - all the funds are stored in one account, the contract itself, which means that they can all be stolen at once if a vulnerability is found.
+
 With Cadence, we use the new resource-oriented paradigm to implement fungible tokens and avoid using a central ledger, because there are inherent problems with using a central ledger that are detailed in [the Fungible Tokens section below].
 
 :::warning
 
-This tutorial implements a working fungible token, but it has been simplified for educational purposes and is not what you should use in production. 
+This tutorial implements a working fungible token, but it has been simplified for educational purposes and is not what you should use in production.
 
 If you've found this tutorial looking for information on how to implement a real token, see the [Flow Fungible Token standard] for the standard interface and example implementation, and the [Fungible Token Developer Guide] for a details on creating a production ready version of a Fungible Token contract.
 
@@ -58,13 +75,13 @@ In this tutorial, we're going to deploy, store, and transfer fungible tokens.
 
 After completing this tutorial, you'll be able to:
 
-* Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum.
-* Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18.
-* Implement a vault [resource] to manage the functionality needed for fungible tokens
-* Use [interfaces] to enforce the presence of specified functions and fields.
-* Write transactions to transfer tokens safely from one account to another.
-* Develop scripts to read account balances.
-* Use preconditions and postconditions to perform checks before or after a function call completes.
+- Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum.
+- Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18.
+- Implement a vault [resource] to manage the functionality needed for fungible tokens
+- Use [interfaces] to enforce the presence of specified functions and fields.
+- Write transactions to transfer tokens safely from one account to another.
+- Develop scripts to read account balances.
+- Use preconditions and postconditions to perform checks before or after a function call completes.
 
 ## Flow Network Token
 
@@ -76,43 +93,47 @@ There are special transactions and hooks that allow it to be used for transactio
 
 Flow implements fungible tokens differently than other programming languages. As a result:
 
-* Ownership is decentralized and does not rely on a central ledger
-* Bugs and exploits present less risk for users and less opportunity for attackers
-* There is no risk of integer underflow or overflow
-* Assets cannot be duplicated, and it is very hard for them to be lost, stolen, or destroyed
-* Code can be composable
-* Rules can be immutable
-* Code is not unintentionally made public
+- Ownership is decentralized and does not rely on a central ledger
+- Bugs and exploits present less risk for users and less opportunity for attackers
+- There is no risk of integer underflow or overflow
+- Assets cannot be duplicated, and it is very hard for them to be lost, stolen, or destroyed
+- Code can be composable
 
 ### Fungible tokens on Ethereum
 
 The example below showcases how Solidity (the smart contract language for the Ethereum Blockchain, among others) implements fungible tokens, with only the code for storage and transferring tokens shown for brevity.
 
 ```solidity ERC20.sol
-contract ERC20 {
-    // Maps user addresses to balances, similar to a dictionary in Cadence
-    mapping (address => uint256) private _balances;
+// Solidity Example
+// SIMPLIFIED ERC20 EXAMPLE. DO NOT USE THIS CODE FOR YOUR PROJECT
+contract LedgerToken {
+    mapping (address => uint) public balances;
+    uint public supply;
 
-    function _transfer(address sender, address recipient, uint256 amount) {
-        // ensure the sender has a valid balance
-        require(_balances[sender] >= amount);
-
-        // subtract the amount from the senders ledger balance
-        _balances[sender] = _balances[sender] - amount;
-
-        // add the amount to the recipient's ledger balance
-        _balances[recipient] = _balances[recipient] + amount
+    function transfer(address _to, uint _amount) public {
+        require(_balances[msg.sender] >= amount, "Insufficent funds");
+        balances[msg.sender] -= _amount;
+        balances[_to] += _amount;
     }
 }
 ```
 
 As you can see, Solidity uses a central ledger system for its fungible tokens. There is one contract that manages the state of the tokens and every time that a user wants to do anything with their tokens, they have to interact with the central ERC20 contract. This contract handles access control for all functionality, implements all of its own correctness checks, and enforces rules for all of its users.
 
-If there's a bug, such as accidentally making the `_transfer` function public, an attacker can immediately exploit the entire contract and the tokens owned by all users.
+If there's a bug, such as accidentally making the `_transfer` function accessible to the wrong user, a [reentrancy] issue, or another bug, an attacker can immediately exploit the entire contract and the tokens owned by all users.
+
+```solidity
+// BAD CODE - DO NOT USE
+// Anyone can transfer funds out of any account!
+function exploitableTransfer(address, _from, address _to, uint _amount) public {
+    balances[_from] -= _amount;
+    balances[_to] += _amount;
+}
+```
 
 ### Intuiting Ownership with Resources
 
-Instead of using a central ledger system, Flow utilizes a few different concepts to provide better safety, security, and clarity for smart contract developers and users.  Primarily, tokens are stored in each user's vault, which is a [resource] similar to the collection you created to store NFTs in the previous tutorial.  
+Instead of using a central ledger system, Flow utilizes a few different concepts to provide better safety, security, and clarity for smart contract developers and users. Primarily, tokens are stored in each user's vault, which is a [resource] similar to the collection you created to store NFTs in the previous tutorial.
 
 This approach simplifies access control because instead of a central contract having to check the sender of a function call, most function calls happen on resource objects stored in users' accounts, and each user natively has sole control over the resources stored in their accounts.
 
@@ -122,7 +143,7 @@ In Cadence, if there is a bug in the resource logic, an attacker would have to e
 
 ## Constructing a Vault
 
-Our vault will be a simplified version of the one found in the [Flow Fungible Token standard].  We'll follow some of the same practices, including using [interfaces] to standardize the properties of our vault and make it easier for other contracts to interact with it.
+Our vault will be a simplified version of the one found in the [Flow Fungible Token standard]. We'll follow some of the same practices, including using [interfaces] to standardize the properties of our vault and make it easier for other contracts to interact with it.
 
 :::info[Action]
 
@@ -130,10 +151,7 @@ Open the starter code for this tutorial in the Flow Playground:
 
 <a
 href="https://play.flow.com/359cf1a1-63cc-4774-9c09-1b63ed83379b"
-target="_blank"
->
-https://play.flow.com/359cf1a1-63cc-4774-9c09-1b63ed83379b
-</a>
+target="\_blank">https://play.flow.com/359cf1a1-63cc-4774-9c09-1b63ed83379b</a>
 
 :::
 
@@ -147,7 +165,7 @@ access(all) contract ExampleToken {
     access(all) let VaultStoragePath: StoragePath
     access(all) let VaultPublicPath: PublicPath
 
-   
+
     init() {
         self.VaultStoragePath = /storage/CadenceFungibleTokenTutorialVault
         self.VaultPublicPath = /public/CadenceFungibleTokenTutorialReceiver
@@ -159,13 +177,13 @@ Before you can add your vault, you'll need to implement the various pieces it wi
 
 ### Supply and Balance
 
-The two most basic pieces of information for a fungible token are a method of tracking the balance of a given user, and the total supply for the token.  In Cadence, you'll usually want to use `UFix64` - a [fixed-point number].
+The two most basic pieces of information for a fungible token are a method of tracking the balance of a given user, and the total supply for the token. In Cadence, you'll usually want to use `UFix64` - a [fixed-point number].
 
-Fixed-point numbers are essentially integers with a scale, represented by a decimal point.  They make it much easier to work with money-like numbers as compared to endlessly handling conversions to and from the 10^18 representation of a value.
+Fixed-point numbers are essentially integers with a scale, represented by a decimal point. They make it much easier to work with money-like numbers as compared to endlessly handling conversions to and from the 10^18 or 10^9 representation of a value.
 
 :::info[Action]
 
-Implement a contract-level [fixed-point number] to track the `totalSupply` of the token.
+Implement a contract-level [fixed-point number] to track the `totalSupply` of the token, and `init` it.
 
 :::
 
@@ -173,23 +191,27 @@ Implement a contract-level [fixed-point number] to track the `totalSupply` of th
 access(all) var totalSupply: UFix64
 ```
 
+```cadence
+self.totalSupply = 0.0;
+```
+
 ### Interfaces
 
-You'll also need a place to store the `balance` of any given user's vault.  You **could** simply add a variable in the vault [resource] definition to do this and it would work just fine.  
+You'll also need a place to store the `balance` of any given user's vault. You **could** simply add a variable in the vault [resource] definition to do this and it would work, but it's not the best option for composability.
 
 Instead, let's use this opportunity to create some [interface]s.
 
-In Cadence, interfaces are abstract types used to specify behavior in types that _implement_ the interface.  Using them helps compatibility and composability by breaking larger constructions down into standardized parts that can be used by more than one contract for more than one use case.  For example, the interface we'll create for `Receiver` is used by the vault, but it's also something you'd use for any other resource that needs to be able to receive tokens - such as a contract that pools a collection of tokens and splits them between several addresses.
+In Cadence, interfaces are abstract types used to specify behavior in types that _implement_ the interface. Using them helps compatibility and composability by breaking larger constructions down into standardized parts that can be used by more than one contract for more than one use case. For example, the interface we'll create for `Receiver` is used by the vault, but it's also something you'd use for any other resource that needs to be able to receive tokens - such as a contract that pools a collection of tokens and splits them between several addresses.
 
 You'll create three interfaces, to handle the three functional areas of the vault:
 
-* A `Balance` interface for the balance of tokens stored in the vault
-* A `Provider` interface that can provide tokens by withdrawing them from the vault
-* A `Receiver` interface that can safely deposit tokens from one vault into another
+- A `Balance` interface for the balance of tokens stored in the vault
+- A `Provider` interface that can provide tokens by withdrawing them from the vault
+- A `Receiver` interface that can safely deposit tokens from one vault into another
 
 :::info[Action]
 
-First, create a `Balance` interface, requiring a public `UFix64` called `balance`.  It should be public.
+First, create a `Balance` interface, requiring a public `UFix64` called `balance`. It should be public.
 
 :::
 
@@ -199,11 +221,11 @@ access(all) resource interface Balance {
 }
 ```
 
-This one is pretty simple.  It just defines the type of variable anything implementing it will need to have to keep track of a token balance.
+This one is pretty simple. It just defines the type of variable anything implementing it will need to have to keep track of a token balance.
 
 :::info[Action]
 
-Next, create the `Provider` `interface`.  In it, define a `withdraw` function.  It should have the `Withdraw` access [entitlement], accept an argument for `amount`, and return a `Vault` resource type.  This should also be public.
+Next, create the `Provider` `interface`. In it, define a `withdraw` function. It should have the `Withdraw` access [entitlement], accept an argument for `amount`, and return a `Vault` resource type. This should also be public.
 
 To prevent an error, stub out the `Vault` resource as well.
 
@@ -211,17 +233,17 @@ To prevent an error, stub out the `Vault` resource as well.
 
 ```cadence
 access(all) resource interface Provider {
-    access(Withdraw) fun withdraw(amount: UFix64): @Vault {}
+    access(Withdraw) fun withdraw(amount: UFix64): @Vault
 }
 
 access(all) resource Vault {}
 ```
 
-This [interface] will require resources implementing it to have a `withdraw` function, but it doesn't provide any limitations to how that function works.  For example, it could be implemented such that the amount of tokens returned is double the withdrawn amount.  While there might be a use case for that effect, it's not what you want for a normal token standard.
+This [interface] will require resources implementing it to have a `withdraw` function, but it doesn't provide any limitations to how that function works. For example, it could be implemented such that the amount of tokens returned is double the withdrawn amount. While there might be a use case for that effect, it's not what you want for a normal token standard.
 
-You can allow for flexibility, such as allowing a `Provider` to select randomly from several vaults to determine the payer, while enforcing that the amount withdrawn is appropriate by adding a `post` condition to the function.  [Function preconditions and postconditions] can be used to restrict the inputs and outputs of a function.
+You can allow for flexibility, such as allowing a `Provider` to select randomly from several vaults to determine the payer, while enforcing that the amount withdrawn is appropriate by adding a `post` condition to the function. [Function preconditions and postconditions] can be used to restrict the inputs and outputs of a function.
 
-In a postcondition, the special constant `result` is used to reference the `return` of the function.  They're written following the rules of [statements] and can contain multiple conditions.  Optionally, a `:` can be added after the last statement, containing an error message to be passed if the postcondition fails.
+In a postcondition, the special constant `result` is used to reference the `return` of the function. They're written following the rules of [statements] and can contain multiple conditions. Optionally, a `:` can be added after the last statement, containing an error message to be passed if the postcondition fails.
 
 :::info[Action]
 
@@ -261,7 +283,7 @@ You're finally ready to implement the vault.
 
 :::info[Action]
 
-Start by declaring a type for a `Vault` that implements `Balance`, `Provider`, and `Receiver`.
+Start by updating the stub for a `Vault` to implement `Balance`, `Provider`, and `Receiver`.
 
 :::
 
@@ -277,17 +299,13 @@ You'll get errors:
 resource `ExampleToken.Vault` does not conform to resource interface `ExampleToken.Balance`. `ExampleToken.Vault` is missing definitions for members: Balance
 ```
 
-And similar errors for `Provider` and `Receiver`.  Similar to inheriting from a virtual class in other languages, implementing the interfaces requires you to implement the properties from those interfaces in your resource.
+And similar errors for `Provider` and `Receiver`. Similar to inheriting from a virtual class in other languages, implementing the interfaces requires you to implement the properties from those interfaces in your resource.
 
 :::info[Action]
 
-Implement `balance`.  You'll also need to initialize it.  Initialize it with the `balance` passed into the `init` for the resource itself.
+Implement `balance` in the `vault`. You'll also need to initialize it. Initialize it with the `balance` passed into the `init` for the resource itself.
 
 :::
-
-The pattern we're setting up here let's us create vaults and give them a `balance` in one go.  Doing so is useful for several tasks, as creating a temporary `Vault` to hold a balance during a transaction also creates most of the functionality you need to do complex tasks with that balance.
-
-For example, you might want to set up a conditional transaction that `deposit`s the balance in the vaults in different addresses based on whether or not a part of the transaction is successful.  
 
 ```cadence
 access(all) var balance: UFix64
@@ -297,9 +315,13 @@ init(balance: UFix64) {
 }
 ```
 
+The pattern we're setting up here lets us create vaults and give them a `balance` in one go. Doing so is useful for several tasks - creating a temporary `Vault` to hold a balance during a transaction also creates most of the functionality you need to do complex tasks with that balance.
+
+For example, you might want to set up a conditional transaction that `deposit`s the balance in the vaults in different addresses based on whether or not a part of the transaction is successful.
+
 :::info[Action]
 
-Next, implement `withdraw` function.  It should contain a precondition that validates that the user actually possesses equal to or greater the number of tokens they are withdrawing.
+Next, implement `withdraw` function for the `vault`. It should contain a precondition that validates that the user actually possesses equal to or greater the number of tokens they are withdrawing.
 
 :::
 
@@ -321,7 +343,7 @@ access(Withdraw) fun withdraw(amount: UFix64): @Vault {
 
 :::info[Action]
 
-Finally, implement the `deposit` function.  Depositing should move the entire balance from the provided vault, and then `destroy` it.
+Finally, implement the `deposit` function for the `vault`. Depositing should move the entire balance from the provided vault, and then `destroy` that `vault`. Remember, we're transferring tokens by creating a vault and funding it with the amount to transfer. It's not needed once the deposit has emptied it.
 
 :::
 
@@ -332,15 +354,15 @@ access(all) fun deposit(from: @Vault) {
 }
 ```
 
-You **must** do something with the `Vault` resource after it's moved into the function.  You can `destroy` it, because it's now empty, and you don't need it anymore.
+You **must** do something with the `Vault` resource after it's moved into the function. Again, you can safely `destroy` it, because it's now empty, and you don't need it anymore.
 
 ## Vault Creation
 
-We'll need a way to create empty vaults to onboard new users, or to create vaults for a variety of other uses.  
+We'll also need a way to create empty vaults to onboard new users, or to create vaults for a variety of other uses.
 
 :::info[Action]
 
-Add a function to `create` an empty `Vault`.
+Add a function to the contract to `create` an empty `Vault`.
 
 :::
 
@@ -354,7 +376,7 @@ We'll use this when we create a transaction to set up new users.
 
 ## Error Handling
 
-As before, you can anticipate some of the errors that other developers building transactions and scripts that interact with your contract might encounter.  At the very least, it's likely that there will be many instances that an attempt is made to borrow a `Vault` that is not present, or lacks a capability for the caller to borrow it.
+As before, you can anticipate some of the errors that other developers building transactions and scripts that interact with your contract might encounter. At the very least, it's likely that there will be many instances that an attempt is made to borrow a `Vault` that is not present, or lacks a capability for the caller to borrow it.
 
 :::info[Action]
 
@@ -376,10 +398,11 @@ access(all) fun vaultNotConfiguredError(address: Address): String {
 
 ## Minting
 
-Next, you need a way to actually create, or mint, tokens.  For this example, we'll define a  `VaultMinter` resource that has the power to mint and airdrop tokens to any address that possesses a vault, or at least something with the `Receiver` [interface] for this token.
+Next, you need a way to actually create, or mint, tokens. For this example, we'll define a `VaultMinter` resource that has the power to mint and airdrop tokens to any address that possesses a vault, or at least something with the `Receiver` [interface] for this token.
+
 Only the owner of this resource will be able to mint tokens.
 
-To do so, we use [capability] with a reference to the resource or interface we want to require as the type:  `Capability<&{Receiver}>`
+To do so, we use [capability] with a reference to the resource or interface we want to require as the type: `Capability<&{Receiver}>`
 
 :::info[Action]
 
@@ -399,6 +422,12 @@ access(all) resource VaultMinter {
 }
 ```
 
+:::tip
+
+Don't be misled by the `access(all)` [entitlement] for this resource. This entitlement only allows public access to the `VaultMinter` **type**. It does **not** give access to the **instance** we'll create in a moment. That instance will be owned by the publisher of the contract and is the only one that can be created since there isn't a function to create more and `VaultMinter` does **not** have a public `init` function.
+
+:::
+
 ## Final Contract Setup
 
 The last task with the contract is to update the `init` function in your contract to save yourself a little bit of time and create and create a `VaultMinter` in your account.
@@ -411,11 +440,11 @@ Update the contract `init` function to `create` and `save` an instance of `Vault
 
 ```cadence
 self
-.account
-.storage
-.save(<-create VaultMinter(),
-    to: /storage/CadenceFungibleTokenTutorialMinter
-)
+    .account
+    .storage
+    .save(<-create VaultMinter(),
+        to: /storage/CadenceFungibleTokenTutorialMinter
+    )
 ```
 
 After doing all of this, your contract should be similar to:
@@ -435,13 +464,8 @@ access(all) contract ExampleToken {
     }
 
     access(all) resource interface Provider {
-        ///
-        /// @param amount the amount of tokens to withdraw from the resource
-        /// @return The Vault with the withdrawn tokens
-        ///
         access(Withdraw) fun withdraw(amount: UFix64): @Vault {
             post {
-                // `result` refers to the return value
                 result.balance == amount:
                     "ExampleToken.Provider.withdraw: Cannot withdraw tokens!"
                     .concat("The balance of the withdrawn tokens (").concat(result.balance.toString())
@@ -452,16 +476,10 @@ access(all) contract ExampleToken {
     }
 
     access(all) resource interface Receiver {
-
-        /// deposit takes a Vault and deposits it into the implementing resource type
-        ///
-        /// @param from the Vault that contains the tokens to deposit
-        ///
         access(all) fun deposit(from: @Vault)
     }
 
     access(all) resource Vault: Balance, Provider, Receiver {
-
         access(all) var balance: UFix64
 
         init(balance: UFix64) {
@@ -490,16 +508,6 @@ access(all) contract ExampleToken {
         return <-create Vault(balance: 0.0)
     }
 
-    access(all) resource VaultMinter {
-        access(all) fun mintTokens(amount: UFix64, recipient: Capability<&{Receiver}>) {
-            let recipientRef = recipient.borrow()
-            ?? panicpanic(ExampleToken.vaultNotConfiguredError(address: recipient.address))
-
-            ExampleToken.totalSupply = ExampleToken.totalSupply + UFix64(amount)
-            recipientRef.deposit(from: <-create Vault(balance: amount))
-        }
-    }
-
     access(all) fun vaultNotConfiguredError(address: Address): String {
         return "Could not borrow a collection reference to recipient's ExampleToken.Vault"
             .concat(" from the path ")
@@ -510,30 +518,46 @@ access(all) contract ExampleToken {
             .concat("with an ExampleToken Vault.")
     }
 
+    access(all) resource VaultMinter {
+        access(all) fun mintTokens(amount: UFix64, recipient: Capability<&{Receiver}>) {
+            let recipientRef = recipient.borrow()
+            ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient.address))
+
+            ExampleToken.totalSupply = ExampleToken.totalSupply + UFix64(amount)
+            recipientRef.deposit(from: <-create Vault(balance: amount))
+        }
+    }
+
     init() {
         self.VaultStoragePath = /storage/CadenceFungibleTokenTutorialVault
         self.VaultPublicPath = /public/CadenceFungibleTokenTutorialReceiver
 
-        self.totalSupply = 30.0
-
         self
-        .account
-        .storage
-        .save(<-create VaultMinter(),
-            to: /storage/CadenceFungibleTokenTutorialMinter
-        )
+            .account
+            .storage
+            .save(<-create VaultMinter(),
+                to: /storage/CadenceFungibleTokenTutorialMinter
+            )
+
+        self.totalSupply = 0.0;
     }
 }
 ```
 
+:::info[Action]
+
+Deploy the `ExampleToken` contract with account `0x06`.
+
+:::
+
 ## Set Up Account Transaction
 
-We'll now need to create several transactions and scripts to manage interactions with the vault.  The first of these is one to set up a user's account.  It needs to:
+We'll now need to create several transactions and scripts to manage interactions with the vault. The first of these is one to set up a user's account. It needs to:
 
-* Create an empty vault
-* Save that vault in the caller's storage
-* Issue a capability for the vault
-* Publish that capability
+- Create an empty vault
+- Save that vault in the caller's storage
+- Issue a capability for the vault
+- Publish that capability
 
 You've already learned how to do everything you need for this, so you should be able to implement it on your own.
 
@@ -567,13 +591,13 @@ transaction {
 
 ## Minting Tokens
 
-The next transaction is another one that you should be able to implement on your own.  Give it a try, and check the solution if you need to.  Your transaction should:
+The next transaction is another one that you should be able to implement on your own. Give it a try, and check the solution if you need to. Your transaction should:
 
-* Accept an `Address` for the `recipient` and an `amount`
-* Store transaction-level references to the `VaultMinter` and `Receiver`
-* Borrow a reference to the `VaultMinter` in the caller's storage
-* Get the `recipient`'s `Receiver` capability
-* Use the above to call the `mintTokens` function in the minter
+- Accept an `Address` for the `recipient` and an `amount`
+- Store transaction-level references to the `VaultMinter` and `Receiver`
+- Borrow a reference to the `VaultMinter` in the caller's storage
+- Get the `recipient`'s `Receiver` capability
+- Use the above to call the `mintTokens` function in the minter
 
 :::info[Action]
 
@@ -620,11 +644,11 @@ Test out your minting function by attempting to mint tokens to accounts that do 
 
 ## Checking Account Balances
 
-You can mint tokens now.  Probably.  But it's hard to tell if you have a bug without a way to check an accounts balance.  You can do this with a script, using techniques you've already learned.
+You can mint tokens now. Probably. But it's hard to tell if you have a bug without a way to check an accounts balance. You can do this with a script, using techniques you've already learned.
 
 :::info[Action]
 
-Write a script to check the balance of an address.  It should accept an argument for an `address`. In this script,`get` and `borrow` a reference to that address's `Vault` from the `VaultPublicPath`, and return a nicely formatted string containing the `balance`.
+Write a script to check the balance of an address. It should accept an argument for an `address`. In this script,`get` and `borrow` a reference to that address's `Vault` from the `VaultPublicPath`, and return a nicely formatted string containing the `balance`.
 
 :::
 
@@ -648,10 +672,9 @@ fun main(address: Address): String {
 }
 ```
 
-
 ## Transferring Tokens
 
-Transferring tokens from one account to another takes a little more coordination and a more complex contract. When an account wants to send tokens to a different account, the sending account calls their own withdraw function first, which subtracts tokens from their resource's balance and temporarily creates a new resource object that holds this balance.
+Transferring tokens from one account to another takes a little more coordination and a more complex transaction. When an account wants to send tokens to a different account, the sending account calls their own withdraw function first, which subtracts tokens from their resource's balance and temporarily creates a new resource object that holds this balance.
 
 :::info[Action]
 
@@ -666,7 +689,7 @@ transaction(recipient: Address, amount: UFix64) {
     var temporaryVault: @ExampleToken.Vault
 
   prepare(signer: auth(BorrowValue) &Account) {
-        let vaultRef = signer.storage.borrow<auth(ExampleToken.Withdraw) &ExampleToken.Vault>
+        let vaultRef = signer.storage.borrow<auth(ExampleToken.Withdraw) &ExampleToken.Vault>(
                 from: ExampleToken.VaultStoragePath)
             ?? panic(ExampleToken.vaultNotConfiguredError(address: signer.address))
 
@@ -675,7 +698,7 @@ transaction(recipient: Address, amount: UFix64) {
 }
 ```
 
-The sending account then gets a reference to the recipients published capability and calls the recipient account's deposit function, which literally moves the resource instance to the other account, adds it to their balance, and then destroys the used resource.
+The sending account then gets a reference to the recipients published capability and calls the recipient account's deposit function, which literally moves the resource instance to the other account, adds the temporary vault's balance to their balance, and then destroys the used resource.
 
 :::info[Action]
 
@@ -698,7 +721,7 @@ execute{
 }
 ```
 
-The resource is destroyed by the `deposit` function.  It needs to be destroyed because Cadence enforces strict rules around resource interactions. A resource can never be left hanging in a piece of code. It either needs to be explicitly destroyed or stored in an account's storage.
+The resource is destroyed by the `deposit` function. It needs to be destroyed because Cadence enforces strict rules around resource interactions. A resource can never be left hanging in a piece of code. It either needs to be explicitly destroyed or stored in an account's storage.
 
 This rule ensures that resources, which often represent real value, do not get lost because of a coding error.
 
@@ -716,29 +739,41 @@ If an address doesn't have the correct resource type imported, the transaction w
 
 :::danger
 
-Every Flow account is initialized with a default Flow Token Vault in order to pay for storage fees and transaction [fees].  If an address is in use, it will be able to accept Flow tokens, without a user or developer needing to take further action.  If that account becomes lost, any tokens inside will be lost as well.
+Every Flow account is initialized with a default Flow Token Vault in order to pay for storage fees and transaction [fees]. If an address is in use, it will be able to accept Flow tokens, without a user or developer needing to take further action. If that account becomes lost, any tokens inside will be lost as well.
 
 :::
 
 ## Reviewing Fungible Tokens
 
-In this tutorial, you learned how to create a simplified version of fungible tokens on Flow. You build a vault [resource] to safely store tokens inside the owner's storage, and used [interfaces] to define and enforce the properties a vault should have.  By using [interfaces], your definition is flexible and composable.  Other developers can use all or parts of these definitions to build new apps and contracts that are compatible with yours.
+In this tutorial, you learned how to create a simplified version of fungible tokens on Flow. You build a vault [resource] to safely store tokens inside the owner's storage, and used [interfaces] to define and enforce the properties a vault should have. By using [interfaces], your definition is flexible and composable. Other developers can use all or parts of these definitions to build new apps and contracts that are compatible with yours.
 
 You also practiced writing transactions on your own, and learned some new techniques, such as writing error messages more easily, using paths stored in the contract, and separating different parts of the transaction into their appropriate sections - `prepare` and `execute`.
 
 Now that you have completed the tutorial, you should be able to:
 
-* Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum.
-* Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18.
-* Implement a vault [resource] to manage the functionality needed for fungible tokens
-* Use [interfaces] to enforce the presence of specified functions and fields.
-* Write transactions to transfer tokens safely from one account to another.
-* Develop scripts to read account balances.
-* Use preconditions and postconditions to perform checks before or after a function call completes.
+- Compare and contrast how tokens are stored in Flow Cadence compared to Ethereum.
+- Utilize the `UFix64` type to allow decimals without converting back and forth with 10^18.
+- Implement a vault [resource] to manage the functionality needed for fungible tokens
+- Use [interfaces] to enforce the presence of specified functions and fields.
+- Write transactions to transfer tokens safely from one account to another.
+- Develop scripts to read account balances.
+- Use preconditions and postconditions to perform checks before or after a function call completes.
 
 If you're ready to try your hand at implementing a production-quality token, head over to the [Fungible Token Developer Guide].
 
 In the next tutorial, you'll combine the techniques and patterns you've learned for the classic challenge - building an NFT marketplace!
+
+## Reference Solution
+
+:::warning
+
+You are **not** saving time by skipping the the reference implementation. You'll learn much faster by doing the tutorials as presented!
+
+Reference solutions are functional, but may not be optimal.
+
+:::
+
+[Reference Solution]
 
 <!-- Reference-style links, do not render on page -->
 
@@ -747,6 +782,7 @@ In the next tutorial, you'll combine the techniques and patterns you've learned 
 [native network token (FLOW)]: https://github.com/onflow/flow-core-contracts/blob/master/contracts/FlowToken.cdc
 [Flow Fungible Token standard]: https://github.com/onflow/flow-ft
 [Fungible Token Developer Guide]: https://developers.flow.com/build/guides/fungible-token
+[reentrancy]: https://docs.soliditylang.org/en/latest/security-considerations.html#reentrancy
 [resource]: ../language/resources.mdx
 [resources]: ../language/resources.mdx
 [fixed-point number]: ../language/values-and-types.mdx#fixed-point-numbers
@@ -755,3 +791,4 @@ In the next tutorial, you'll combine the techniques and patterns you've learned 
 [statements]: ../language/syntax.md#semicolons
 [capability]: ../language/capabilities.md
 [fees]: https://developers.flow.com/build/basics/fees.md#fees
+[Reference Solution]: https://play.flow.com/b0f19641-0831-4192-ae25-ae745b1cab55

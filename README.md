@@ -1,5 +1,6 @@
 # cadence-lang.org
 
+If you're looking for the live site, you can find it at [cadence-lang.org](https://cadence-lang.org).
 
 ## Technical
 

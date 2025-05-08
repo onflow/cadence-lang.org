@@ -2,7 +2,7 @@
 title: 7. Marketplace Setup
 ---
 
-In this tutorial, we're going to create a marketplace that uses both the fungible and non-fungible token (NFTs) contracts that we have learned about in previous tutorials. First, you'll build and execute a series of transactions to set up the accounts that you'll need to complete the marketplace tutorial. You'll build the marketplace itself in the next tutorial.
+In the [Marketplace Tutorial], we're going to create a marketplace that uses both the fungible and non-fungible token (NFTs) contracts that we have learned about in previous tutorials. First, you'll execute a series of transactions to set up the accounts that you'll need to complete the marketplace tutorial. You'll build the marketplace itself in the next tutorial.
 
 :::warning
 
@@ -12,11 +12,7 @@ If you're farther along with your Cadence learning journey and found this page l
 
 ## Objectives
 
-After completing this tutorial, you'll be able to:
-
-- Set up accounts and deploy contracts required for a basic NFT marketplace on Flow.
-- Configure account storage and capabilities for fungible and non-fungible tokens.
-- Validate the correct setup of accounts and assets in preparation for marketplace operations.
+In this tutorial, you'll simply execute transactions that you've already written and validate that setup is complete. It's only necessary because the playground is not actually a blockchain, so the state is transient.
 
 ## Getting Started
 
@@ -24,8 +20,8 @@ After completing this tutorial, you'll be able to:
 
 Open the starter code for this tutorial in the Flow Playground:
 
-<a href="https://play.flow.com/XXXX" target="_blank">
-https://play.flow.com/XXXX
+<a href="https://play.flow.com/463a9a08-deb0-455a-b2ed-4583ea6dcb64" target="_blank">
+https://play.flow.com/463a9a08-deb0-455a-b2ed-4583ea6dcb64
 </a>
 
 :::
@@ -38,7 +34,7 @@ Your goal for this exercise is to set up the ephemeral playground into the state
 - Give fungible tokens to `0x08`
 - Give an NFT to `0x09`
 
-To start, you'll need to deploy some copies of the contracts you've built in the previous tutorials. For your convenience, they've been provided in the starter playground.
+To start, you'll need to deploy some copies of the contracts you've built in the previous tutorials, and call transactions you've already built. For your convenience, they've been provided in the starter playground.
 
 :::info[Action]
 
@@ -51,7 +47,7 @@ To start, you'll need to deploy some copies of the contracts you've built in the
 
 ## Account Setup Transactions
 
-Next, you'll need to build transactions to set up accounts `0x08` and `0x09` to be able to work with the contracts for the marketplace.
+Next, you'll need to execute transactions to set up accounts `0x08` and `0x09` to be able to work with the contracts for the marketplace. You've already built these transactions in previous exercises.
 
 :::tip
 
@@ -65,31 +61,9 @@ This might seem like a burden, but it's **great!!** Thanks to this feature, one 
 
 :::info[Action]
 
-Open the `NFT Setup` transaction. It's scaffolded for you:
+Open the `NFT Setup` transaction.
 
 :::
-
-```cadence
-import IntermediateNFT from 0x07
-
-transaction() {
-  // TODO
-}
-```
-
-This transaction needs to:
-
-- `prepare` an account reference with permissions to create and save capabilities
-- Call `createEmptyCollection()` from the `IntermediateNFT` contract to create a collection
-- Create and publish public capabilities for the NFT collection
-
-:::info[Action]
-
-Build this transaction on your own. **Hint:** The NFT contract has constants for the appropriate storage locations needed for the above.
-
-:::
-
-You should end up with something similar to:
 
 ```cadence
 import IntermediateNFT from 0x07
@@ -103,8 +77,18 @@ transaction() {
     let cap = acct.capabilities.storage.issue<&IntermediateNFT.Collection>(IntermediateNFT.CollectionStoragePath)
     acct.capabilities.publish(cap, at: IntermediateNFT.CollectionPublicPath)
   }
+
+  execute {
+    log("Empty NFT Collection Created")
+  }
 }
 ```
+
+This transaction will:
+
+- `prepare` an account reference with permissions to create and save capabilities
+- Call `createEmptyCollection()` from the `IntermediateNFT` contract to create a collection
+- Create and publish public capabilities for the NFT collection
 
 :::info[Action]
 
@@ -116,31 +100,9 @@ Run the transaction using `0x07` as the signer, then run it again for `0x08`.
 
 :::info[Action]
 
-Open the `Fungible Token Setup` transaction. It's also scaffolded for you:
+Open the `Fungible Token Setup` transaction.
 
 :::
-
-```cadence
-import ExampleToken from 0x06
-
-transaction() {
-  // TODO
-}
-```
-
-This transaction needs to:
-
-- Instantiate a constant for and borrow a reference to the `ExampleToken` contract
-- Create and add an empty `ExampleToken` vault
-- Add the `Receiver` [capability] and [publish] it
-
-:::info[Action]
-
-Build this transaction on your own as well. **Reminder:** The fungible token contract has constants for the appropriate storage locations needed for the above.
-
-:::
-
-You should end up with something similar to:
 
 ```cadence
 import ExampleToken from 0x06
@@ -164,6 +126,12 @@ transaction() {
 }
 ```
 
+This transaction will:
+
+- Instantiate a constant for and borrow a reference to the `ExampleToken` contract
+- Create and add an empty `ExampleToken` vault
+- Add the `Receiver` [capability] and [publish] it
+
 :::info[Action]
 
 Run the transaction using `0x07` as the signer, then run it again for `0x08`.
@@ -182,6 +150,28 @@ Now that you've set up both account to be able to receive NFTs, it's time to giv
 
 You've already written a transaction to mint an NFT, so we've provided it here. You just need to call it.
 
+```cadence
+import IntermediateNFT from 0x07
+
+transaction(description: String) {
+    let receiverRef: &IntermediateNFT.Collection
+
+    prepare(account: auth(BorrowValue) &Account) {
+        self.receiverRef = account.capabilities
+            .borrow<&IntermediateNFT.Collection>(IntermediateNFT.CollectionPublicPath)
+            ?? panic(IntermediateNFT.collectionNotConfiguredError(address: account.address))
+    }
+
+    execute {
+        let newNFT <- IntermediateNFT.mintNFT(description: description)
+
+        self.receiverRef.deposit(token: <-newNFT)
+
+        log("NFT Minted and deposited to minter's Collection")
+    }
+}
+```
+
 :::info[Action]
 
 Mint a token with account `0x08`.
@@ -190,7 +180,7 @@ Mint a token with account `0x08`.
 
 ## Mint Fungible Tokens
 
-You've also set up both accounts to be able to receive nonfungible tokens from `ExampleToken`.
+You've also set up both accounts to be able to receive non-fungible tokens from `ExampleToken`.
 
 :::tip
 
@@ -199,6 +189,35 @@ You've also set up both accounts to be able to receive nonfungible tokens from `
 :::
 
 You've already written a transaction to mint fungible tokens, so we've provided it here. You just need to call it.
+
+```cadence
+import ExampleToken from 0x06
+
+transaction(recipient: Address, amount: UFix64) {
+    let mintingRef: &ExampleToken.VaultMinter
+    var receiver: Capability<&{ExampleToken.Receiver}>
+
+    prepare(signer: auth(BorrowValue) &Account) {
+        self.mintingRef = signer.storage.borrow<&ExampleToken.VaultMinter>(from: /storage/CadenceFungibleTokenTutorialMinter)
+            ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient))
+
+        let recipient = getAccount(recipient)
+
+        // Consider further error handling if this fails
+        self.receiver = recipient.capabilities.get<&{ExampleToken.Receiver}>
+            (ExampleToken.VaultPublicPath)
+
+    }
+
+    execute {
+        // Mint tokens and deposit them into the recipient's Vault
+        self.mintingRef.mintTokens(amount: amount, recipient: self.receiver)
+
+        log("Tokens minted and deposited to account "
+            .concat(self.receiver.address.toString()))
+    }
+}
+```
 
 :::info[Action]
 
@@ -248,6 +267,7 @@ Reference solutions are functional, but may not be optimal.
 
 <!-- Reference-style links, do not render on page -->
 
+[Marketplace Tutorial]: ./08-marketplace-compose.md
 [NFTStorefront repo]: https://github.com/onflow/nft-storefront
 [capability]: ../language/capabilities.md
 [publish]: ../language/accounts/capabilities.mdx#publishing-capabilities

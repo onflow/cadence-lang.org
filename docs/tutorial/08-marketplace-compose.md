@@ -21,10 +21,8 @@ This tutorial series is in the process of being updated. The previous tutorials 
 Open the starter code for this tutorial in the Flow Playground:
 <a
 href="https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645"
-target="\_blank"
+target="\_blank"> https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645</a>
 
-> https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645
-> </a>
 > The tutorial will be asking you to take various actions to interact with this code.
 > [The marketplace setup guide](./07-marketplace-setup.md) shows you how to get the playground set up to do this tutorial.
 

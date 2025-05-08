@@ -19,10 +19,9 @@ access(all)
 event AccountCreated(address: Address)
 ```
 
-| Field             | Type      | Description                              |
-| ----------------- | --------- | ---------------------------------------- |
-| `address`         | `Address` | The address of the newly created account |
-
+| Field     | Type      | Description                              |
+| --------- | --------- | ---------------------------------------- |
+| `address` | `Address` | The address of the newly created account |
 
 ### Account Key Added
 
@@ -42,7 +41,7 @@ event AccountKeyAdded(
 ```
 
 | Field           | Type            | Description                                    |
-|-----------------|-----------------|------------------------------------------------|
+| --------------- | --------------- | ---------------------------------------------- |
 | `address`       | `Address`       | The address of the account the key is added to |
 | `publicKey`     | `PublicKey`     | The public key added to the account            |
 | `weight`        | `UFix64`        | Weight of the new account key                  |
@@ -64,7 +63,7 @@ event AccountKeyRemoved(
 ```
 
 | Field       | Type      | Description                                        |
-|-------------|-----------|----------------------------------------------------|
+| ----------- | --------- | -------------------------------------------------- |
 | `address`   | `Address` | The address of the account the key is removed from |
 | `publicKey` | `Int`     | Index of public key removed from the account       |
 
@@ -83,11 +82,11 @@ event AccountContractAdded(
 )
 ```
 
-| Field       | Type   | Description                                                  |
-| ----------- | ------ | ------------------------------------------------------------ |
-| `address`   | `Address` | The address of the account the contract gets deployed to  |
-| `codeHash`  | `[UInt8]` | Hash of the contract source code                          |
-| `contract`  | `String`  | The name of the the contract                              |
+| Field      | Type      | Description                                              |
+| ---------- | --------- | -------------------------------------------------------- |
+| `address`  | `Address` | The address of the account the contract gets deployed to |
+| `codeHash` | `[UInt8]` | Hash of the contract source code                         |
+| `contract` | `String`  | The name of the contract                                 |
 
 ### Account Contract Updated
 
@@ -104,12 +103,11 @@ event AccountContractUpdated(
 )
 ```
 
-| Field       | Type      | Description                                              |
-| ----------- | --------- | -------------------------------------------------------- |
-| `address`   | `Address` | The address of the account where the updated contract is deployed  |
-| `codeHash`  | `[UInt8]` | Hash of the contract source code                         |
-| `contract`  | `String`  | The name of the the contract                             |
-
+| Field      | Type      | Description                                                       |
+| ---------- | --------- | ----------------------------------------------------------------- |
+| `address`  | `Address` | The address of the account where the updated contract is deployed |
+| `codeHash` | `[UInt8]` | Hash of the contract source code                                  |
+| `contract` | `String`  | The name of the contract                                          |
 
 ### Account Contract Removed
 
@@ -126,11 +124,11 @@ event AccountContractRemoved(
 )
 ```
 
-| Field       | Type      | Description                                               |
-| ----------- | --------- | --------------------------------------------------------- |
-| `address`   | `Address` | The address of the account the contract gets removed from |
-| `codeHash`  | `[UInt8]` | Hash of the contract source code                          |
-| `contract`  | `String`  | The name of the the contract                              |
+| Field      | Type      | Description                                               |
+| ---------- | --------- | --------------------------------------------------------- |
+| `address`  | `Address` | The address of the account the contract gets removed from |
+| `codeHash` | `[UInt8]` | Hash of the contract source code                          |
+| `contract` | `String`  | The name of the contract                                  |
 
 ### Inbox Value Published
 
@@ -143,12 +141,12 @@ access(all)
 event InboxValuePublished(provider: Address, recipient: Address, name: String, type: Type)
 ```
 
-| Field             | Type      | Description                                  |
-| ----------------- | --------- | -------------------------------------------- |
-| `provider`        | `Address` | The address of the publishing account        |
-| `recipient`       | `Address` | The address of the intended recipient        |
-| `name`            | `String`  | The name associated with the published value |
-| `type`            | `Type`    | The type of the published value              |
+| Field       | Type      | Description                                  |
+| ----------- | --------- | -------------------------------------------- |
+| `provider`  | `Address` | The address of the publishing account        |
+| `recipient` | `Address` | The address of the intended recipient        |
+| `name`      | `String`  | The name associated with the published value |
+| `type`      | `Type`    | The type of the published value              |
 
 To reduce the potential for spam,
 we recommend that user agents that display events do not display this event as-is to their users,
@@ -165,10 +163,10 @@ access(all)
 event InboxValueUnpublished(provider: Address, name: String)
 ```
 
-| Field           | Type      | Description                                  |
-| --------------- | --------- | -------------------------------------------- |
-| `provider`      | `Address` | The address of the publishing account        |
-| `name`          | `String`  | The name associated with the published value |
+| Field      | Type      | Description                                  |
+| ---------- | --------- | -------------------------------------------- |
+| `provider` | `Address` | The address of the publishing account        |
+| `name`     | `String`  | The name associated with the published value |
 
 To reduce the potential for spam,
 we recommend that user agents that display events do not display this event as-is to their users,
@@ -185,11 +183,11 @@ access(all)
 event InboxValueClaimed(provider: Address, recipient: Address, name: String)
 ```
 
-| Field           | Type      | Description                                  |
-| --------------- | --------- | -------------------------------------------- |
-| `provider`      | `Address` | The address of the publishing account        |
-| `recipient`     | `Address` | The address of the claiming recipient        |
-| `name`          | `String`  | The name associated with the published value |
+| Field       | Type      | Description                                  |
+| ----------- | --------- | -------------------------------------------- |
+| `provider`  | `Address` | The address of the publishing account        |
+| `recipient` | `Address` | The address of the claiming recipient        |
+| `name`      | `String`  | The name associated with the published value |
 
 To reduce the potential for spam,
 we recommend that user agents that display events do not display this event as-is to their users,

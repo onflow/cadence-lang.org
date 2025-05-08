@@ -349,7 +349,7 @@ You're on the right track to building more complex applications with Cadence. No
 
 :::warning
 
-You are **not** saving time by skipping the the reference implementation. You'll learn much faster by doing the tutorials as presented!
+You are **not** saving time by skipping the reference implementation. You'll learn much faster by doing the tutorials as presented!
 
 Reference solutions are functional, but may not be optimal.
 

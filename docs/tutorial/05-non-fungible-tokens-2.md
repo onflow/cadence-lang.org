@@ -485,7 +485,7 @@ In the next tutorial, you'll learn how to create fungible token collections.
 
 :::warning
 
-You are **not** saving time by skipping the the reference implementation. You'll learn much faster by doing the tutorials as presented!
+You are **not** saving time by skipping the reference implementation. You'll learn much faster by doing the tutorials as presented!
 
 Reference solutions are functional, but may not be optimal.
 

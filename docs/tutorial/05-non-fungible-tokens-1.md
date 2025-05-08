@@ -545,7 +545,7 @@ In the next tutorial, you'll learn how to make more complete NFTs that allow eac
 
 :::warning
 
-You are **not** saving time by skipping the the reference implementation. You'll learn much faster by doing the tutorials as presented!
+You are **not** saving time by skipping the reference implementation. You'll learn much faster by doing the tutorials as presented!
 
 Reference solutions are functional, but may not be optimal.
 

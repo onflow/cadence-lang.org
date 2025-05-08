@@ -8,6 +8,12 @@ This is only for educational purposes and is not meant to be used in production
 See a production-ready marketplace in the [NFT storefront repo.](https://github.com/onflow/nft-storefront)
 This contract is already deployed to testnet and mainnet and can be used by anyone for any generic NFT sale!
 
+:::warning
+
+This tutorial series is in the process of being updated. The previous tutorials no longer align completely with this one. We will update this tutorial soon!
+
+:::
+
 ---
 
 :::info[Action]
@@ -15,12 +21,10 @@ This contract is already deployed to testnet and mainnet and can be used by anyo
 Open the starter code for this tutorial in the Flow Playground:
 <a
 href="https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645"
-target="_blank"
->
-https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645
-</a>
-The tutorial will be asking you to take various actions to interact with this code.
-[The marketplace setup guide](./07-marketplace-setup.md) shows you how to get the playground set up to do this tutorial.
+target="\_blank"> https://play.flow.com/7355d51c-066b-46be-adab-a3da6c28b645</a>
+
+> The tutorial will be asking you to take various actions to interact with this code.
+> [The marketplace setup guide](./07-marketplace-setup.md) shows you how to get the playground set up to do this tutorial.
 
 :::
 
@@ -452,6 +456,7 @@ when getting information about their users' accounts or generating analytics.
 
 Events are declared by indicating [the access level](../language/access-control.md), `event`,
 and the name and parameters of the event, like a function declaration:
+
 ```cadence
 access(all) event ForSale(id: UInt64, price: UFix64, owner: Address?)
 ```
@@ -459,6 +464,7 @@ access(all) event ForSale(id: UInt64, price: UFix64, owner: Address?)
 Events cannot modify state at all; they indicate when important actions happen in the smart contract.
 
 Events are emitted with the `emit` keyword followed by the invocation of the event as if it were a function call.
+
 ```cadence
 emit ForSale(id: tokenID, price: price, owner: self.owner?.address)
 ```
@@ -543,7 +549,8 @@ Additionally, these capabilities can be stored anywhere, but if a user decides t
 to be used, they can revoke it by getting the controller for the capability
 from their account with the `getControllers` method and delete the capability with `delete`.
 Here is an example that deletes all the controllers for a specified storage path:
-```cadence
+
+````cadence
 let controllers = self.account.capabilities.storage.getControllers(forPath: storagePath)
 for controller in controllers {
     controller.delete()
@@ -562,7 +569,7 @@ access(all) resource SaleCollection {
     /// Not recommended
     access(self) var forSale: @{UInt64: ExampleNFT.NFT}
 }
-```
+````
 
 This is a logical way to do it, and illustrates another important concept in Cadence, that resources can own other resources!
 Check out the [Kitty Hats tutorial](./10-resources-compose.md) for a little more exploration of this concept.
@@ -933,7 +940,6 @@ There are a few good examples of generic marketplaces on Flow right now.
 
 - The Flow team has created a completely decentralized example of a generic marketplace in the [NFT storefront repo.](https://github.com/onflow/nft-storefront)
   This contract is already deployed to testnet and mainnet and can be used by anyone for any generic NFT sale!
-
 
 ## Composable Resources on Flow
 

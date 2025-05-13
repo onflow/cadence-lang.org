@@ -87,7 +87,7 @@ You can click on a few of the accounts. They're empty when first created, but yo
 
 The playground organizes contract source files under the `Contracts` folder in the nav panel on the left side of the window. Until deployed, these are source files not associated with an account or address.
 
-**Deploying a contract**
+### Deploying a contract
 
 The default contract in a new playground session is a simple `HelloWorld` contract. To deploy:
 
@@ -119,7 +119,7 @@ You'll see the `result` logged in the console.
 
 Cadence transactions are also written in Cadence.
 
-**Executing a transaction**
+### Executing a transaction
 
 In the `Transactions` folder, you'll find an example of one:
 

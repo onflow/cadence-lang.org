@@ -17,13 +17,13 @@ socialImageTitle: Cadence First Steps
 socialImageDescription: Take your first steps to learn the Cadence smart contract programming language.
 ---
 
-Welcome to our series of guides that will get you up to speed on [Cadence] as quickly as possible!  In this program, you'll jump right into making meaningful projects.  Don't worry, we'll point you to the important parts of the language reference as each concept is introduced!
+Welcome to our series of guides that get you up to speed on [Cadence] as quickly as possible! In this program, we jump right into making meaningful projects. Don't worry, we'll point you to the important parts of the language reference as each concept is introduced.
 
-This series makes use of the [Flow Playground] - an online IDE that enables you to easily write and test Cadence code in a simulated environment.
+This series makes use of the [Flow Playground], an online IDE that enables you to easily write and test Cadence code in a simulated environment.
 
 :::tip
 
-If you already know Solidity, you might want to review the [Cadence Guide for Solidity Developers].  It compares the two languages and points out the most impactful differences from the perspective of a Solidity dev.
+If you already know Solidity, you might want to review the [Cadence Guide for Solidity Developers]. It compares the two languages and points out the most impactful differences from the perspective of a Solidity dev.
 
 :::
 
@@ -37,57 +37,39 @@ After completing this tutorial, you'll be able to:
 * Explore the contracts and storage associated with test accounts.
 
 
-:::info[Action]
-
-Instructions that require you to take action are always included in a call out box like this one.
-
-:::
-
 ## The Flow Developer Playground
 
 ![Flow Playground](flow-playground.png)
 
-The [Flow Playground] includes an in-browser editor and Flow emulator that you can use to experiment with Flow Cadence.  Using the Flow Playground, you can write Cadence smart contracts, deploy them to a local Flow emulated blockchain, and submit transactions.
+The [Flow Playground] includes an in-browser editor and Flow emulator that you can use to experiment with Flow Cadence. Using the Flow Playground, you can write Cadence smart contracts, deploy them to a local Flow emulated blockchain, and submit transactions.
 
-It has been primarily tested and optimized for Google Chrome, but other browsers will should work as well.
+It has been primarily tested and optimized for Google Chrome, but other browsers should also work.
 
-The playground comes pre-loaded with contract and transaction templates that correspond to each of the tutorials in this series.  At the top of the page, you'll find it in a call out like this one:
+The playground comes pre-loaded with contract and transaction templates that correspond to each of the tutorials in this series. The tutorials also include a link (e.g., [https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897](https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897)), which opens the tutorial code in a new tab. The contracts, transactions, and scripts are loaded into the templates in the Playground for you to use. 
 
-:::info[Action]
-
-Open the starter code for this tutorial in the Flow Playground: <br />
-<a
-  href="https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897"
-  target="_blank"
->
-  https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897
-</a>
-
-:::
-
-When you click on one of these links, the tutorial code will open in a new tab and the contracts, transactions, and scripts will be loaded into the templates in the Playground for you to use. You will need to navigate between the editor and this tutorial to read instructions and make changes to your code.
+You'll need to navigate between the editor and this tutorial to read the instructions and make changes to your code.
 
 ## What is a smart contract?
 
-In regular terms, a contract is an agreement between two parties for some exchange of information or assets. Normally, the terms of a contract are supervised and enforced by a trusted third party, such as a bank or a lawyer.
+In regular terms, a contract is an agreement between two parties to exchange information or assets. Normally, the terms of a contract are supervised and enforced by a trusted third party, such as a bank or a lawyer.
 
-A smart contract is a computer program stored in a blockchain that verifies and executes the performance of a contract without the need for any trusted third party.  The code itself is public and will perform all operations in an open, repeatable, and testable manner.
+A smart contract is a computer program stored in a blockchain that verifies and executes the performance of a contract without the need for any trusted third party. The code itself is public and will perform all operations in an open, repeatable, and testable manner.
 
 Programs that run on blockchains are commonly referred to as smart contracts because they facilitate important functions, such as managing digital currency, without relying on a central authority like a bank.
 
-Flow can run smart contracts written in [Cadence].  It can also run older contracts written in Solidity, on the [Flow EVM].  These guides focus on learning Cadence.
+Flow can run smart contracts written in [Cadence] and older contracts written in Solidity on the [Flow EVM]. These guides focus on learning Cadence.
 
 ## Accounts
 
-Accounts are the primary conduit for user interaction with on-chain code and assets.  Users authorize transactions with their accounts and store their owned assets in their account storage.
+Accounts are the primary conduit for user interaction with on-chain code and assets. Users authorize transactions with their accounts and store their owned assets in their account storage.
 
 :::warning
 
-Flow is different from most other blockchains in that contracts, assets, and information owned by a user or associated with their wallet address **are stored in the user's account**.  
+Flow is different from other blockchains in that contracts, assets, and information owned by a user or associated with their wallet address **are stored in the user's account**.
 
 :::
 
-We've used the `warning` label to get your attention, but this is a **good thing**!  In most other chains, a coding error that accidentally changes a single number in a ledger can destroy, change, or duplicate ownership of an asset or assets.  It's like a medieval shop with a bunch of paper IOUs having a gust of wind blow through vs. having the gold in your pocket.
+We use the `warning` label above to get your attention, but this is a **good thing**! In most other chains, a coding error that accidentally changes a single number in a ledger can destroy, change, or duplicate ownership of an asset or assets. It's like a medieval shop with a bunch of paper IOUs having a gust of wind blow through vs. having the gold in your pocket.
 
 The model of ownership in Cadence makes this kind of loss nearly impossible.
 
@@ -97,40 +79,29 @@ They're listed in the `Accounts` section on the bottom left part of the playgrou
 
 ![Playground Intro](playground-intro.png)
 
-:::info[Action]
-
-Click on a few of the accounts.  They're empty when first created, but you'll see contracts and storage data here as you go through the tutorials.
-
-:::
+You can click on a few of the accounts. They're empty when first created, but you'll see contracts and storage data here as you go through the tutorials.
 
 ![Account View](playground-account-view.png)
 
 ## Contracts
 
-The playground organizes contract source files under `Contracts` folder in the nav panel on the left side of the window.  Until deployed, these are source files that are not associated with an account or address.
+The playground organizes contract source files under the `Contracts` folder in the nav panel on the left side of the window. Until deployed, these are source files not associated with an account or address.
 
-The default contract in a new playground session is a simple `HelloWorld` contract.
+**Deploying a contract**
 
-When you have Cadence code open in the account editor that contains a contract, you can click the deploy button in the bottom-right of the screen to deploy that contract to the currently selected account.
+The default contract in a new playground session is a simple `HelloWorld` contract. To deploy:
 
+1. Open the Cadence code in the account editor that contains a contract.
+1. Click the `Deploy` button in the bottom-right of the screen to deploy that contract to the currently selected account.
 ![Deploy Contract](deploybox.png)
+<dl><dd><em>The contract deploys after a few seconds.</em></dd></dl>
+1. Select `0x06-Default` in the **ACCOUNTS** list.
 
-:::info[Action]
+Here's what happens:
 
-Click the button to `Deploy` the contract.
-
-:::
-
-After a few seconds, the contract will deploy. 
-
-:::info[Action]
-
-Select `0x06-Default` in the `Accounts` list.
-
-:::
-
-
-You'll see the name of the contract and the block height it was deployed at in the list of `Deployed Contracts`.  You'll also see that there are `FlowToken` objects listed in the `Account Storage` section. Every Flow account is created with the ability to manage Flow Tokens.
+- The name of the contract and the block height it was deployed at appear in the list of `Deployed Contracts`.
+- `FlowToken` objects are listed in the `Account Storage` section.
+- Every Flow account is created with the ability to manage Flow Tokens.
 
 ![Full Storage View](full-storage.png)
 
@@ -138,11 +109,7 @@ You'll see the name of the contract and the block height it was deployed at in t
 
 In Cadence, scripts are simple, transaction-like snippets of code that you can use to **read** onchain data that is public.
 
-:::info[Action]
-
-Open the `GetGreeting` script and `Execute` it.
-
-:::
+To load a script, open the `GetGreeting` script and `Execute` it.
 
 This script loads the instance of the `HelloWorld` contract you deployed with account `0x06` and returns the result of calling the `hello` function, which is the value stored onchain in the contract's `greeting` field.
 
@@ -152,23 +119,15 @@ You'll see the `result` logged in the console.
 
 Cadence transactions are also written in Cadence.
 
-In the `Transactions` folder, you'll find an example of one.
+**Executing a transaction**
 
-:::info[Action]
+In the `Transactions` folder, you'll find an example of one:
 
-Open the `ChangeGreeting` transaction, enter a new `greeting`, and `Send` it. 
-
-:::
-
-Doing so executes a transaction to call `changeGreeting` and update the value in `greeting` for this specific instance of `HelloWorld`, deployed by address `0x06`.
-
-Once the transaction completes, you'll see the output in the `Log` at the bottom of the window.
-
-:::info[Action]
-
-Open the `GetGreeting` script and `Execute` it again.
-
-:::
+1. Open the `ChangeGreeting` transaction.
+1. Enter a new `greeting` and `Send` it. 
+   - This executes a transaction to call `changeGreeting` and update the value in `greeting` for this specific instance of `HelloWorld`, deployed by address `0x06`.
+   - Once the transaction completes, you'll see the output in the `Log` at the bottom of the window.
+1. Open the `GetGreeting` script and `Execute` it again.
 
 You'll now see your new greeting returned in the log!
 
@@ -183,7 +142,7 @@ Now that you have completed the tutorial, you can:
 * Run Cadence transactions and scripts from the playground.
 * Explore the contracts and storage associated with test accounts.
 
-<!-- Relative links.  Will not render on the page -->
+<!-- Relative links. Will not render on the page -->
 
 [Cadence]: ../index.md
 [Flow Playground]: https://play.flow.com

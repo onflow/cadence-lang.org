@@ -45,7 +45,7 @@ The [Flow Playground] includes an in-browser editor and Flow emulator that you c
 
 It has been primarily tested and optimized for Google Chrome, but other browsers should also work.
 
-The playground comes pre-loaded with contract and transaction templates that correspond to each of the tutorials in this series. The tutorials also include a link (e.g., [https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897](https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897)), which opens the tutorial code in a new tab. The contracts, transactions, and scripts are loaded into the templates in the Playground for you to use. 
+The playground comes pre-loaded with contract and transaction templates that correspond to each of the tutorials in this series. The tutorials also include a link (e.g., [play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897]), which opens the tutorial code in a new tab. The contracts, transactions, and scripts are loaded into the templates in the Playground for you to use. 
 
 You'll need to navigate between the editor and this tutorial to read the instructions and make changes to your code.
 
@@ -79,7 +79,7 @@ They're listed in the `Accounts` section on the bottom left part of the playgrou
 
 ![Playground Intro](playground-intro.png)
 
-You can click on a few of the accounts. They're empty when first created, but you'll see contracts and storage data here as you go through the tutorials.
+Click on a few of the accounts. They're empty when first created, but you'll see contracts and storage data here as you go through the tutorials.
 
 ![Account View](playground-account-view.png)
 
@@ -109,7 +109,7 @@ Here's what happens:
 
 In Cadence, scripts are simple, transaction-like snippets of code that you can use to **read** onchain data that is public.
 
-To load a script, open the `GetGreeting` script and `Execute` it.
+Open the `GetGreeting` script and `Execute` it.
 
 This script loads the instance of the `HelloWorld` contract you deployed with account `0x06` and returns the result of calling the `hello` function, which is the value stored onchain in the contract's `greeting` field.
 
@@ -149,3 +149,4 @@ Now that you have completed the tutorial, you can:
 [Cadence Guide for Solidity Developers]: ../solidity-to-cadence.md
 [Flow EVM]: https://developers.flow.com/evm/about
 [Account Model]: ../docs/language/accounts/
+[play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897]: https://play.flow.com/367d1462-f291-481f-aa14-02bb5ce3e897

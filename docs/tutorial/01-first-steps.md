@@ -93,8 +93,8 @@ The default contract in a new playground session is a simple `HelloWorld` contra
 
 1. Open the Cadence code in the account editor that contains a contract.
 1. Click the `Deploy` button in the bottom-right of the screen to deploy that contract to the currently selected account.
-![Deploy Contract](deploybox.png)
-<dl><dd><em>The contract deploys after a few seconds.</em></dd></dl>
+   ![Deploy Contract](deploybox.png)
+   <dl><dd><em>The contract deploys after a few seconds.</em></dd></dl>
 1. Select `0x06-Default` in the **ACCOUNTS** list.
 
 Here's what happens:

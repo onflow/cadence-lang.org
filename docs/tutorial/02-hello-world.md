@@ -37,7 +37,9 @@ After completing this tutorial, you'll be able to:
 
 ## How to implement Hello World
 
-Open the starter code for this tutorial in the [Flow Playground], which is empty. Declare your contract by entering the following:
+Open the starter code for this tutorial in the Flow Playground, which is empty: [play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4].
+
+Declare your contract by entering the following:
 
 ```cadence
 access(all) contract HelloWorld {
@@ -284,4 +286,4 @@ Reference solutions are functional, but may not be optimal.
 [`prepare`]: ../language/transactions.md#prepare-phase
 [Cadence types]: ../language/values-and-types.mdx
 [Reference Solution]: https://play.flow.com/edba10ad-1232-4720-bc1b-cd34cb12b6dc
-[Flow Playground]: https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4
+[play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4]: https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4

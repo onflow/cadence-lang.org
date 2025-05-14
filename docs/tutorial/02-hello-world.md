@@ -49,7 +49,7 @@ access(all) contract HelloWorld {
 
 The line `access(all) contract HelloWorld ` declares a contract with [Access Control] that is accessible in all scopes, including public.
 
-You can add a public constant `String` field to store your greeting:
+Add a public constant `String` field to store your greeting:
 
 ```cadence
 // Incomplete code example

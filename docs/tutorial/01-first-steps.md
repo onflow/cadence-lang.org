@@ -57,7 +57,7 @@ A smart contract is a computer program stored in a blockchain that verifies and 
 
 Programs that run on blockchains are commonly referred to as smart contracts because they facilitate important functions, such as managing digital currency, without relying on a central authority like a bank.
 
-Flow can run smart contracts written in [Cadence] and older contracts written in Solidity on the [Flow EVM]. These guides focus on learning Cadence.
+Flow can run smart contracts written in [Cadence]. It can also run contracts written in Solidity on [Flow EVM]. These guides focus on learning Cadence.
 
 ## Accounts
 

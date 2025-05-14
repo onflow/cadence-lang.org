@@ -51,13 +51,13 @@ You'll need to navigate between the editor and this tutorial to read the instruc
 
 ## What is a smart contract?
 
-In regular terms, a contract is an agreement between two parties to exchange information or assets. Normally, the terms of a contract are supervised and enforced by a trusted third party, such as a bank or a lawyer.
+In regular terms, a contract is an agreement between two parties to exchange information or assets. Normally, the terms of a contract are supervised and enforced by a trusted and empowered third party, such as a bank or a lawyer.
 
 A smart contract is a computer program stored in a blockchain that verifies and executes the performance of a contract without the need for any trusted third party. The code itself is public and will perform all operations in an open, repeatable, and testable manner.
 
 Programs that run on blockchains are commonly referred to as smart contracts because they facilitate important functions, such as managing digital currency, without relying on a central authority like a bank.
 
-Flow can run smart contracts written in [Cadence] and older contracts written in Solidity on the [Flow EVM]. These guides focus on learning Cadence.
+Flow can run smart contracts written in [Cadence]. It can also run contracts written in Solidity on [Flow EVM]. These guides focus on learning Cadence.
 
 ## Accounts
 

@@ -79,7 +79,7 @@ They're listed in the `Accounts` section on the bottom left part of the playgrou
 
 ![Playground Intro](playground-intro.png)
 
-You can click on a few of the accounts. They're empty when first created, but you'll see contracts and storage data here as you go through the tutorials.
+Click on a few of the accounts. They're empty when first created, but you'll see contracts and storage data here as you go through the tutorials.
 
 ![Account View](playground-account-view.png)
 

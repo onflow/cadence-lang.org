@@ -144,7 +144,7 @@ Now that you've set up both accounts to be able to receive NFTs, it's time to gi
 
 :::tip
 
-**Reminder**: The `IntermediateNFT` contract allow **anyone** to freely mint NFTs.
+**Reminder**: The `IntermediateNFT` contract allows **anyone** to freely mint NFTs. You wouldn't want this ability in production, but it is in here to streamline the tutorial.
 
 :::
 

@@ -140,7 +140,7 @@ Run the transaction using `0x07` as the signer, then run it again for `0x08`.
 
 ## Mint NFTs
 
-Now that you've set up both account to be able to receive NFTs, it's time to give account `0x08` an NFT to sell to `0x09`.
+Now that you've set up both accounts to be able to receive NFTs, it's time to give account `0x08` an NFT to sell to `0x09`.
 
 :::tip
 

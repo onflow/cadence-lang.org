@@ -523,6 +523,7 @@ Reference solutions are functional, but may not be optimal.
 [entitlement]: ../language/access-control#entitlements
 [account references (`&Account`)]: ../language/accounts/index.mdx
 [paths]: ../language/accounts/paths.mdx
+[accounts]: ../docs/language/accounts/index.md
 [reference]: ../language/references.mdx
 [nil-coalescing operator (`??`)]: ../language/operators.md#nil-coalescing-operator-
 [Non-Fungible Token Contract]: https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121

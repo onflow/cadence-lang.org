@@ -19,7 +19,7 @@ socialImageTitle: Cadence Resources
 socialImageDescription: Resource smart contract image.
 ---
 
-This tutorial builds your understanding of accounts and how to interact with them by introducing [resources]. Resources are a special type found in Cadence that are used for any virtual items, properties, or any other sort of data that are **owned** by an account. They can **only exist in one place at a time**, which means they can be moved or borrowed, but they **cannot be copied**.
+This tutorial builds your understanding of [accounts] and how to interact with them by introducing [resources]. Resources are a special type found in Cadence that are used for any virtual items, properties, or any other sort of data that are **owned** by an account. They can **only exist in one place at a time**, which means they can be moved or borrowed, but they **cannot be copied**.
 
 Working with resources requires you to take a few more steps to complete some tasks, but this level of explicit control makes it nearly impossible to accidentally duplicate, break, or burn an asset.
 

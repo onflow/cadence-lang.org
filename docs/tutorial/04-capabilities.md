@@ -110,7 +110,7 @@ The [`IssueStorageCapabilityController`] allows the transaction to [issue] a new
 
 The account owner has private objects stored in their storage, like their collectibles or their money, but they might still want others to be able to see what collectibles they have in their account, or they want to allow anyone to access the deposit functionality for a certain asset.
 
-Since these objects are stored in private storage by default, the owner must authorize something to open up access to them while still retaining full control.
+Since these objects are stored in private storage by default, the owner must provide authorization to open up access to them.
 
 We create capabilities to accomplish this, and the account owner must sign a transaction to [issue] and [publish] them.
 

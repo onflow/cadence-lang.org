@@ -79,7 +79,7 @@ access(all) resource NFT {
 
 An NFT is also usually expected to include some metadata like a name, description, traits, or a picture. Historically, most of this metadata has been stored off-chain, and the on-chain token only contains a URL or something similar that points to the off-chain metadata.
 
-This practice was necessary due to the original costs of doing anything onchain, but it created the illusion that the actual content of an NFT can vanish (and sadly, sometimes _did_ vanish) at any time.
+This practice was necessary due to the original costs of doing anything onchain, but it created the illusion that the actual content of an NFT was permanent and onchain.  Unfortunately, the metadata and images for many older NFT collections can vanish (and sadly, sometimes _have_ vanished) at any time.
 
 In Flow, storing this data offchain is possible, but you can—_and normally should_—store all the metadata associated with a token directly on-chain. Unlike many other blockchain networks, **you do not need to consider string storage or manipulation as particularly expensive**.
 

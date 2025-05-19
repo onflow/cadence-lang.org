@@ -27,7 +27,7 @@ In this tutorial, we're going to deploy, store, and transfer **Non-Fungible Toke
 
 Production-quality NFTs on Flow implement the [Flow NFT Standard], which defines a basic set of properties for NFTs on Flow.
 
-This tutorial will teach you a basic method of creating simple NFTs to illustrate important language concepts, but will not use the full NFT Standard for the sake of simplicity.
+This tutorial teaches you a basic method of creating simple NFTs to illustrate important language concepts, but will not use the full NFT Standard for the sake of simplicity.
 
 :::tip
 
@@ -50,30 +50,19 @@ After completing this tutorial, you'll be able to:
 
 Instead of being represented in a central ledger, like in most smart contract languages, Cadence represents each NFT as a **[resource] object that users store in their accounts**. This strategy is a response to the lessons learned by the Flow team (the Chief Architect of Flow is the original proposer and co-author of the [ERC-721 NFT standard]).
 
-It allows NFTs to benefit from the resource ownership rules that are enforced by the [type system] - resources can only have a single owner, they cannot be duplicated, and they cannot be lost due to accidental or malicious programming errors. These protections ensure that owners know that their NFT is safe and can represent an asset that has real value, and helps prevent developers from breaking this trust with easy-to-make programming mistakes.
+It allows NFTs to benefit from the resource ownership rules that are enforced by the [type system] — resources can only have a single owner, they cannot be duplicated, and they cannot be lost due to accidental or malicious programming errors. These protections ensure that owners know that their NFT is safe and can represent an asset that has real value, and helps prevent developers from breaking this trust with easy-to-make programming mistakes.
 
 When users on Flow want to **transact** with each other, they can do so **peer-to-peer**, without having to interact with a central NFT contract, by calling resource-defined methods in both users' accounts.
 
-NFTs in a real-world context make it possible to trade assets and prove who the owner of an asset is. On Flow, NFTs are interoperable - so the NFTs in an account can be used in different smart contracts and app contexts.
+NFTs in a real-world context make it possible to trade assets and prove who the owner of an asset is. On Flow, NFTs are interoperable: they can be used in different smart contracts and app contexts in an account.
 
-## The Simplest Possible NFT
+## The simplest possible NFT
 
-:::info[Action]
+Open the starter code for this tutorial in the Flow Playground: [play.flow.com/ea3aadb6-1ce6-4734-9792-e8fd334af7dc].
 
-Open the starter code for this tutorial in the Flow Playground:
+At their core, NFTs are simply a way to create true ownership of unique digital property. The simplest possible implementation is a resource with a unique id number.
 
-<a href="https://play.flow.com/ea3aadb6-1ce6-4734-9792-e8fd334af7dc"
-  target="_blank">https://play.flow.com/ea3aadb6-1ce6-4734-9792-e8fd334af7dc</a>
-
-:::
-
-At the core, NFTs are simply a way to create true ownership of unique digital property. The simplest possible implementation is a resource with a unique id number.
-
-:::info[Action]
-
-Implement a simple NFT by creating a [resource] with a constant `id` that is assigned in `init`. The `id` should be public.
-
-:::
+Implement a simple NFT by creating a [resource] with a constant `id` that is assigned in `init`. The `id` should be public:
 
 ```cadence
 access(all) resource NFT {
@@ -86,27 +75,21 @@ access(all) resource NFT {
 }
 ```
 
-### Adding Basic Metadata
+### Adding basic metadata
 
 An NFT is also usually expected to include some metadata like a name, description, traits, or a picture. Historically, most of this metadata has been stored off-chain, and the on-chain token only contains a URL or something similar that points to the off-chain metadata.
 
-This practice was necessary due to the original costs of doing anything onchain, but it created a fiction where the actual content of an NFT can vanish (and sadly sometimes have vanished) at any time.
+This practice was necessary due to the original costs of doing anything onchain, but it created the illusion that the actual content of an NFT can vanish (and sadly, sometimes _did_ vanish) at any time.
 
-In Flow, storing this data offchain is possible, but you can and normally should store all the metadata associated with a token directly on-chain. Unlike many other blockchain networks, **you do not need to consider string storage or manipulation as particularly expensive.**
+In Flow, storing this data offchain is possible, but you can—_and normally should_—store all the metadata associated with a token directly on-chain. Unlike many other blockchain networks, **you do not need to consider string storage or manipulation as particularly expensive**.
 
 :::tip
 
-This tutorial will stick to a simplified implementation. Check out the [the NFT metadata guide] if you want to learn how to do this in production.
+This tutorial describes a simplified implementation. Check out the [the NFT metadata guide] if you want to learn how to do this in production.
 
 :::
 
-:::info[Action]
-
-Add a public `metadata` variable to your NFT. For now, it can be a simple `String` to `String` [dictionary]. Update the `init` to also initialize a `description` in your metadata.
-
-:::
-
-It should now look similar to:
+Add a public `metadata` variable to your NFT. For now, it can be a simple `String`-to-`String` [dictionary]. Update the `init` to also initialize a `description` in your metadata. It should now look similar to:
 
 ```cadence
 access(all) resource NFT {
@@ -122,39 +105,23 @@ access(all) resource NFT {
 
 ### Creating the NFT
 
-As with any complex type in any language, now that you've created the definition for the type, you need to add a way to instantiate new instances of that type - these instances are the NFTs. This simple NFT type must be initialized with an id number and a `String` description.
+As with any complex type in any language, now that you've created the definition for the type, you need to add a way to instantiate new instances of that type, since these instances are the NFTs. This simple NFT type must be initialized with an id number and a `String` description.
 
-Traditionally, NFTs are provided with id numbers that indicate the order in which they were minted. To handle this, you can use a simple counter.
+Traditionally, NFTs are provided with id numbers that indicate the order in which they were minted. To handle this, you can use a simple counter:
 
-:::info[Action]
-
-First, add a public, contract-level field to keep track of the last assigned id number.
-
-:::
-
-```cadence
-access(contract) var counter: UInt64
-```
-
-You're going to immediately get an error in the editor with `counter`. Contract-level fields must be initialized in the `init` function.
-
-:::info[Action]
-
-Add an `init` function to the `BasicNFT` contract and initialize `counter` to zero.
-
-:::
-
-```cadence
-init() {
-    self.counter = 0
-}
-```
-
-:::info[Action]
-
-Next, add a public function to increment the counter and `create` and `return` an `NFT` with a provided description.
-
-:::
+1. Add a public, contract-level field to keep track of the last assigned id number.
+   ```cadence
+   access(contract) var counter: UInt64
+   ```
+   - You're going to immediately get an error in the editor with `counter`.
+   - Contract-level fields must be initialized in the `init` function.
+1. Add an `init` function to the `BasicNFT` contract and initialize `counter` to zero:
+   ```cadence
+   init() {
+       self.counter = 0
+   }
+   ```
+1. Add a public function to increment the counter and `create` and `return` an `NFT` with a provided description.
 
 :::warning
 
@@ -171,15 +138,11 @@ access(all) fun mintNFT(description: String): @NFT {
 
 Remember, when you work with a [resource], you must use the [move operator] (`<-`) to **move** it from one location to another.
 
-## Adding an NFT to Your Account
+## Adding an NFT to your account
 
-You've gone through the trouble of creating this NFT contract - you deserve the first NFT!
+You've gone through the trouble of creating this NFT contract — you deserve the first NFT!
 
-:::info[Action]
-
-Protect yourself from snipers by updating the `init` function to give yourself the first `NFT`. You'll need to mint it and save it to your account storage.
-
-:::
+Protect yourself from snipers by updating the `init` function to give yourself the first `NFT`. You'll need to mint it and save it to your account storage:
 
 ```cadence
 self
@@ -188,9 +151,9 @@ self
     .save(<-self.mintNFT(description: "First one for me!"), to: /storage/BasicNFTPath)
 ```
 
-### NFT Capability
+### NFT capability
 
-Saving the NFT to your account will give you one, but it will be locked away where no apps can see or access it. You've just learned how to create capabilities in the previous tutorial. You can use the same techniques here to create a capability to give others the ability to access the NFT.
+Saving the NFT to your account will give you one, but it will be locked away where no apps can see or access it. Since you've just learned how to create capabilities in the previous tutorial, you can use the same techniques here to create a capability to give others the ability to access the NFT.
 
 :::warning
 
@@ -202,13 +165,7 @@ Most of the time, you probably won't want to do this because it will limit what 
 
 Cadence contracts are deployed to the account of the deployer. As a result, the contract is in the deployer's storage, and the contract itself has read and write access to the storage of the account that they are deployed to by using the built-in [`self.account`] field. This is an [account reference] (`&Account`), authorized and entitled to access and manage all aspects of the account, such as account storage, capabilities, keys, and contracts.
 
-You can access any of the account functions with `self.account`.
-
-:::info[Action]
-
-Update the `init` function to create and publish a [capability] allowing public access to the NFT.
-
-:::
+You can access any of the account functions with `self.account` by updating the `init` function to create and publish a [capability] allowing public access to the NFT:
 
 ```cadence
 let capability = self
@@ -231,25 +188,21 @@ However, if the resource contained functions to mutate data within the token, th
 
 :::
 
-You might be tempted to add this code to to `mintNFT` so that you can reuse it for anyone who wants to mint the NFT and automatically create the related capability.
+You might be tempted to add this code to `mintNFT` so that you can reuse it for anyone who wants to mint the NFT and automatically create the related capability.
 
 The code will work, but it will **not** function the way you're probably expecting it to. In the context of being called from a function inside a contract, `self.account` refers to the account of the contract deployer, not the caller of the function. That's you!
 
-Adding `self.account.save` or `self.account.publish` to `mintNFT` will allow anyone to attempt to mint and publish capabilities to **your** account, so don't do it!
+Adding `self.account.save` or `self.account.publish` to `mintNFT` allows anyone to attempt to mint and publish capabilities to **your** account, so don't do it!
 
 :::danger
 
-Passing a [fully-authorized account reference] as a function parameter is a dangerous anti-pattern.
+Passing a [fully authorized account reference] as a function parameter is a dangerous anti-pattern.
 
 ::::
 
-### Deploy and Test
-
-:::info[Action]
+### Deploying and testing
 
 Deploy the contract and check the storage for account `0x06`.
-
-:::
 
 You'll be able to find your NFT in the storage for `0x06`:
 
@@ -296,17 +249,13 @@ You'll be able to find your NFT in the storage for `0x06`:
 }
 ```
 
-## Get the Number of an NFT Owned by a User
+## Getting the number of an NFT owned by a user
 
 We can see the NFT from the storage view for each account, but it's much more useful to write a script or transaction that can do that for any account. You can follow a similar technique as the last tutorial and create a script to use the capability.
 
-:::info[Action]
-
-Add a script called `GetNFTNumber` that returns the id number of the nft owned by an address. It should accept the `Address` of the account you wish to check as an argument
+Add a script called `GetNFTNumber` that returns the id number of the NFT owned by an address. It should accept the `Address` of the account you wish to check as an argument.
 
 Try to do this on your own. You should end up with something similar to:
-
-:::
 
 ```cadence
 import BasicNFT from 0x06
@@ -323,157 +272,93 @@ access(all) fun main(address: Address): UInt64 {
 }
 ```
 
-## Minting With a Transaction
+## Minting with a transaction
 
-You usually don't want a contract with just one NFT given to the account holder. One strategy is to allow anyone who wants to mint an NFT. To do this, you can simply create a transaction that calls the `mintNFT` function you added to your contract, and adds the capability for others to view the NFT.
+You usually don't want a contract with just one NFT given to the account holder. One strategy is to allow anyone who wants to mint an NFT. To do this, you can simply create a transaction that calls the `mintNFT` function you added to your contract, and adds the capability for others to view the NFT:
 
-:::info[Action]
+1. Create a transaction called `MintNFT.cdc` that mints an NFT for the caller with the `description` they provide. You'll need entitlements to borrow values, save values, and issue and publish capabilities.
+1. Verify that the NFT isn't already stored in the location used by the contract:
+   ```cadence MintNFT.cdc
+   import BasicNFT from 0x06
 
-Create a transaction called `MintNFT.cdc` that mints an NFT for the caller with the `description` they provide. You'll need entitlements to borrow values, save values, and issue and publish capabilities.
+   transaction {
+      prepare(account: auth(
+         BorrowValue,
+         SaveValue,
+         IssueStorageCapabilityController,
+         PublishCapability
+         ) &Account) {
+         if account.storage.borrow<&BasicNFT.NFT>(from: /storage/BasicNFTPath) != nil {
+             panic("This user has a token already!")
+         }
+         // TODO
+      }
+   }
+   ```
+1. Use the `mintNFT` function to create an NFT, and then save that NFT in the user's account storage:
+   ```cadence
+   account.storage
+      .save(<-BasicNFT.mintNFT(description: "Hi there!"), to: /storage/BasicNFTPath)
+   ```
+1. Create and publish a capability to access the NFT:
+   ```cadence
+   let capability = account
+      .capabilities
+      .storage
+      .issue<&BasicNFT.NFT>(/storage/BasicNFTPath)
 
-First, verify that the NFT isn't already stored in the location used by the contract.
-
-:::
-
-```cadence MintNFT.cdc
-import BasicNFT from 0x06
-
-transaction {
-    prepare(account: auth(
-        BorrowValue,
-        SaveValue,
-        IssueStorageCapabilityController,
-        PublishCapability
-        ) &Account) {
-        if account.storage.borrow<&BasicNFT.NFT>(from: /storage/BasicNFTPath) != nil {
-            panic("This user has a token already!")
-        }
-        // TODO
-    }
-}
-```
-
-:::info[Action]
-
-Next, use the `mintNFT` function to create an NFT, then save than NFT in the user's account storage.
-
-:::
-
-```cadence
-account.storage
-    .save(<-BasicNFT.mintNFT(description: "Hi there!"), to: /storage/BasicNFTPath)
-```
-
-:::info[Action]
-
-Finally, create and publish a capability to access the NFT.
-
-:::
-
-```cadence
-let capability = account
-    .capabilities
-    .storage
-    .issue<&BasicNFT.NFT>(/storage/BasicNFTPath)
-
-account
-    .capabilities
-    .publish(capability, at: /public/BasicNFTPath)
-```
-
-:::info[Action]
-
-Call the `MintNFT` transaction from account `0x06`
-
-:::
-
-It will fail because you minted an NFT with `0x06` when you deployed the contract.
-
-:::info[Action]
-
-Now, call `MintNFT` from account `0x07`. Then, `Execute` the `GetNFTNumber` script for account `0x07`.
-
-:::
+   account
+      .capabilities
+      .publish(capability, at: /public/BasicNFTPath)
+   ```
+1. Call the `MintNFT` transaction from account `0x06`.
+   - It will fail because you minted an NFT with `0x06` when you deployed the contract.
+1. Call `MintNFT` from account `0x07`. Then, `Execute` the `GetNFTNumber` script for account `0x07`.
 
 You'll see the NFT number `2` returned in the log.
 
-## Performing a Basic Transfer
+## Performing a basic transfer
 
-Users, independently or with the help of other developers, have the **inherent ability to delete or transfer any resources in their accounts**, including those created by your contracts.
+Users, independently or with the help of other developers, have the **inherent ability to delete or transfer any resources in their accounts**, including those created by your contracts. To perform a basic transfer:
 
-:::info[Action]
+1. Open the `Basic Transfer` transaction. We've stubbed out the beginnings of a transfer transaction for you. Note that we're preparing account references for not one, but **two** accounts: the sender and the recipient.
+   ```cadence Basic Transfer.cdc
+   import BasicNFT from 0x06
 
-Open the `Basic Transfer` transaction.
+   transaction {
+      prepare(
+         signer1: auth(LoadValue) &Account,
+         signer2: auth(SaveValue) &Account
+      ) {
+         // TODO
+      }
+   }
+   ```
+   - While a transaction is open, you can select one or more accounts to sign a transaction. This is because, in Flow, multiple accounts can sign the same transaction, giving access to their private storage.
+1. Write a transaction to execute the transfer. You'll need to `load()` the NFT from `signer1`'s storage and `save()` it into `signer2`'s storage:
+   ```cadence
+   import BasicNFT from 0x06
 
-:::
+   transaction {
+      prepare(
+         signer1: auth(LoadValue) &Account,
+         signer2: auth(SaveValue) &Account
+      ) {
+         let nft <- signer1.storage.load<@BasicNFT.NFT>(from: /storage/BasicNFTPath)
+             ?? panic("Could not load NFT from the first signer's storage")
 
-We've stubbed out the beginnings of a transfer transaction for you. Note that we're preparing account references for not one, but **two** accounts - the sender and the recipient.
-
-```cadence Basic Transfer.cdc
-import BasicNFT from 0x06
-
-transaction {
-    prepare(
-        signer1: auth(LoadValue) &Account,
-        signer2: auth(SaveValue) &Account
-    ) {
-        // TODO
-    }
-}
-```
-
-While a transaction is open, you can select one or more accounts to sign a transaction. This is because, in Flow, multiple accounts can sign the same transaction, giving access to their private storage.
-
-:::info[Action]
-
-Write a transaction to execute the transfer. You'll need to `load()` the NFT from `signer1`'s storage and `save()` it into `signer2`'s storage.
-
-:::
-
-```cadence
-import BasicNFT from 0x06
-
-transaction {
-    prepare(
-        signer1: auth(LoadValue) &Account,
-        signer2: auth(SaveValue) &Account
-    ) {
-        let nft <- signer1.storage.load<@BasicNFT.NFT>(from: /storage/BasicNFTPath)
-            ?? panic("Could not load NFT from the first signer's storage")
-
-        // WARNING:  Incomplete code, see below
-        signer2.storage.save(<-nft, to: /storage/BasicNFTPath)
-    }
-}
-```
-
-:::info[Action]
-
-Select both account `0x06` and account `0x08` as the signers. Make sure account `0x06` is the first signer.
-
-Click the "Send" button to send the transaction.
-
-Verify the NFT is in account storage for account `0x08`.
-
-:::
-
-What about using your nifty script to check if a user has an NFT?
-
-:::info[Action]
-
-Run `GetNFTNumber` to check account `0x08`.
-
-:::
-
-**You'll get an error here.** The reason is that you haven't created or published the capability on account `0x08` to access and return the id number of the NFT owned by that account. You can do this as a part of your transaction, but remember that it isn't required. Another dev, or sophisticated user, could do the transfer **without** publishing a capability.
-
-:::info[Action]
-
-On your own, refactor your transaction to publish a capability in the new owner's account.
-
-You're also not making sure that the recipient doesn't already have an NFT in the storage location, so go ahead and add that check as well.
-
-:::
+         // WARNING:  Incomplete code, see below
+         signer2.storage.save(<-nft, to: /storage/BasicNFTPath)
+      }
+   }
+   ```
+1. Select both account `0x06` and account `0x08` as the signers. Make sure account `0x06` is the first signer.
+1. Click the `Send` button to send the transaction.
+1. Verify the NFT is in account storage for account `0x08`.
+1. Run the `GetNFTNumber` script to check account `0x08` to see if a user has an NFT.
+   - **You'll get an error here.** The reason is that you haven't created or published the capability on account `0x08` to access and return the id number of the NFT owned by that account. You can do this as a part of your transaction, but remember that it isn't required. Another dev, or sophisticated user, could do the transfer **without** publishing a capability.
+1. On your own, refactor your transaction to publish a capability in the new owner's account.
+   - You're also not making sure that the recipient doesn't already have an NFT in the storage location, so go ahead and add that check as well.
 
 You should end up with something similar to:
 
@@ -509,15 +394,11 @@ transaction {
 }
 ```
 
-### Capabilities Referencing Moved Objects
+### Capabilities referencing moved objects
 
 What about the capability you published for account `0x06` to access the NFT? What happens to that?
 
-:::info[Action]
-
-Run `GetNFTNumber` for account `0x06`.
-
-:::
+Run `GetNFTNumber` for account `0x06` to find out.
 
 **You'll get an error** here as well, but this is expected. Capabilities that reference an object in storage return `nil` if that storage path is empty.
 
@@ -551,7 +432,7 @@ Reference solutions are functional, but may not be optimal.
 
 :::
 
-[Reference Solution]
+- [Reference Solution]
 
 ---
 
@@ -570,5 +451,6 @@ Reference solutions are functional, but may not be optimal.
 [`self.account`]: ../language/contracts.mdx
 [account reference]: ../language/accounts/index.mdx
 [capability]: ../language/capabilities.md
-[fully-authorized account reference]: ../anti-patterns.md#avoid-using-fully-authorized-account-references-as-a-function-parameter
+[fully authorized account reference]: ../anti-patterns.md#avoid-using-fully-authorized-account-references-as-a-function-parameter
 [Reference Solution]: https://play.flow.com/4a74242f-bf77-4efd-9742-31a2b7580b8e
+[play.flow.com/ea3aadb6-1ce6-4734-9792-e8fd334af7dc]: https://play.flow.com/ea3aadb6-1ce6-4734-9792-e8fd334af7dc

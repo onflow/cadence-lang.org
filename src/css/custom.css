@@ -316,6 +316,11 @@ ul {
   list-style: disc outside;
 }
 
+.markdown ol {
+  list-style-type: decimal !important;
+  margin-left: 1.5rem;
+}
+
 li {
   margin-left: 1.8rem;
 }

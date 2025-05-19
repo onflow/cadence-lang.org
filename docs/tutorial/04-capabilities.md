@@ -46,6 +46,12 @@ Let's look at why you would want to use capabilities and entitlements to expand 
 
 If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want to make a feature like withdrawing tokens from an account only accessible by the owner of the tokens, your app should allow anybody to deposit tokens.
 
+:::info
+
+In Cadence, users have complete control over their storage, and their storage is tied directly to their accounts.  This feature allows amazing benefits including peer-to-peer transfers of property and it being impossible to accidentally burn an asset by sending it to an unused address.  The one mixed blessing is that you can't airdrop tokens or NFTs without the recipient signing a transaction.  Less spam, but you'll need to use a claim mechanism if the recipient doesn't already have a vault for your asset.
+
+:::
+
 Capabilities and entitlements are what allows for this detailed control of access to owned assets. They allow a user to indicate which of the functionality of their account and owned objects should be accessible to themselves, their trusted friends, and the public.
 
 For example, a user might want to allow a friend of theirs to use some of their money to spend. In this case, they could create an entitled capability that gives the friend access to only this part of their account, instead of having to hand over full control.

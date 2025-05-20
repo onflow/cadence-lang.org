@@ -80,6 +80,7 @@ and can represent values in the following ranges:
 - **`Int64`**: -2^63 through 2^63 − 1 (-9223372036854775808 through 9223372036854775807)
 - **`Int128`**: -2^127 through 2^127 − 1
 - **`Int256`**: -2^255 through 2^255 − 1
+- **`Int`**: unbounded
 
 Unsigned integer types which check for overflow and underflow have a `UInt` prefix
 and can represent values in the following ranges:
@@ -90,6 +91,7 @@ and can represent values in the following ranges:
 - **`UInt64`**: 0 through 2^64 − 1 (18446744073709551615)
 - **`UInt128`**: 0 through 2^128 − 1
 - **`UInt256`**: 0 through 2^256 − 1
+- **`UInt`**: unbounded >= 0
 
 Unsigned integer types which do **not** check for overflow and underflow,
 i.e. wrap around, have the `Word` prefix
@@ -118,10 +120,11 @@ let smallNumber: UInt8 = 10
 let invalidNumber: UInt8 = -10
 ```
 
-In addition, the arbitrary precision integer type `Int` is provided.
+Note that as shown above, there are two arbitrary precision integer types `Int` and `UInt`.
 
 ```cadence
-let veryLargeNumber: Int = 10000000000000000000000000000000
+let veryLargeNumber: Int = -10000000000000000000000000000000
+let veryLargeNonNegativeNumber: UInt = 10000000000000000000000000000000
 ```
 
 Integer literals are [inferred](./type-inference.md) to have type `Int`,

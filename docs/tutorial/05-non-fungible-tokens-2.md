@@ -104,6 +104,7 @@ It's helpful for a collection to be able to handle some basic operations, such a
    - Notice that we're using the `<-!` force assignment operator to move the token. This will still give a runtime error if the location already has something else stored, but it won't give a typecheck error like the `<-` move operator would in this instance.
 1. Write a function called `idExists` that returns a `Bool` - `true` if the id is present and `false` if it is not.
 1. Write a function called `getIDs` that returns an array of the `UInt64` ids of all NFTs found in the collection. Make use of the built-in `keys` function present on the dictionary type:
+
    ```cadence
    access(all) view fun idExists(id: UInt64): Bool {
        return self.ownedNFTs[id] != nil
@@ -152,9 +153,11 @@ If you're used to Solidity, you can think of this as being similar to frameworks
 :::
 
 1. Define an [entitlement] called `Withdraw` in your contract at the contract level.
+
    ```cadence
    access(all) entitlement Withdraw
    ```
+
    - You've now effectively created a type of lock that can only be opened by someone with the right key - or the owner of the property, who always has access natively.
 
 2. Implement a `withdraw` function inside the `Collection` resource. It should:
@@ -190,7 +193,10 @@ In the above example, if you wanted to make the withdraw function publicly acces
 
 ```cadence
 // DANGEROUS CODE EXAMPLE - DO NOT USE
-let cap = self.account.capabilities.storage.issue<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>(self.CollectionStoragePath)
+let cap = self.account.capabilities.storage
+    .issue<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>(
+        self.CollectionStoragePath
+    )
 self.account.capabilities.publish(cap, at: self.CollectionPublicPath)
 ```
 
@@ -276,9 +282,11 @@ To mint an NFT:
 
 1. Add a transaction to mint an NFT and grant it to the caller. Use the `prepare` phase to `borrow` a reference to the caller's `Collection` and store it in a transaction-level field.
 1. Use `execute` to create the NFT and use the `Collection`'s `deposit` function to save it in the `Collection`.
+
    - It's a better practice to separate code that accesses accounts and storage to collect authorized references from the code that executes the changes to state. You can pass arguments, such as the `String` for the NFT `description` by defining parameters on the `transaction`.
-   
+
    Your transaction should be similar to:
+
    ```cadence
    import IntermediateNFT from 0x06
 
@@ -300,6 +308,7 @@ To mint an NFT:
       }
    }
    ```
+
 1. Test your transaction by minting several NFTs for several accounts. Try it with accounts that do and do **not** have `Collections` and verify that the correct behavior occurs.
 
 ## Printing the NFTs owned by an account
@@ -339,6 +348,7 @@ Finally, you'll want to provide a method for users to `Transfer` NFTs to one ano
 This transaction is **not** bound by the `Withdraw` capability, because the caller will be the account that has the NFT in storage, which automatically possesses full entitlement to everything in its own storage. It also doesn't need the permission of or a signature from the recipient, because we gave the `deposit` function `access(all)` and published a public capability to it.
 
 1. Start by stubbing out a transaction that accepts a `recipientAddress` and `tokenId`. It should have a transaction-level field called `transferToken` to store the NFT temporarily, between the `prepare` and `execute` phases:
+
    ```cadence
    import IntermediateNFT from 0x06
 
@@ -354,7 +364,9 @@ This transaction is **not** bound by the `Withdraw` capability, because the call
       }
    }
    ```
+
 1. In `prepare`, get a reference to the sender's `Collection` and use it to `move (<-)` the token out of their collection and into `transferToken`:
+
    ```cadence
    let collectionRef = account.storage
        .borrow<auth(IntermediateNFT.Withdraw) &IntermediateNFT.Collection>(from: IntermediateNFT.CollectionStoragePath)
@@ -362,7 +374,9 @@ This transaction is **not** bound by the `Withdraw` capability, because the call
 
    self.transferToken <- collectionRef.withdraw(withdrawID: tokenId)
    ```
+
 1. Use `execute` to execute the transfer by getting a public reference to the recipient's account, using that to get a reference to the capability for the recipient's `Collection`, and using the `deposit` function to `move (<-)` the NFT:
+
    ```cadence
    let recipient = getAccount(recipientAddress)
 
@@ -375,6 +389,7 @@ This transaction is **not** bound by the `Withdraw` capability, because the call
    log("NFT ID transferred to account "
        .concat(recipient.address.toString()))
    ```
+
 1. Test your transaction by transferring several NFTs in several accounts. Try various combinations, and use the `PrintNFTs` script to make sure the NFTs move as expected.
 
 ## Reviewing intermediate NFTs

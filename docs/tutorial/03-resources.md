@@ -172,6 +172,7 @@ To prepare:
 1. Use `create` to create a new instance of the `HelloAsset`.
 1. Save the new resource in the user's account.
 1. Inside the `transaction`, stub out the `prepare` phase with the authorization [entitlement]:
+
    ```cadence
    import HelloResource from 0x06
 
@@ -181,6 +182,7 @@ To prepare:
      }
    }
    ```
+
 1. Use the `createHelloAsset` function in `HelloResource` to `create` an instance of the resource inside of the `prepeare` and _move_ it into a constant:
    ```cadence
    let newHello <- HelloResource.createHelloAsset()
@@ -269,7 +271,7 @@ To execute:
    _You'll now get an error, because there's already a resource in `/storage/HelloAssetTutorial`:_
    ```text
    execution error code 1: [Error Code: 1101] error caused by: 1 error occurred:
-	   * transaction execute failed: [Error Code: 1101] cadence runtime error: Execution failed:
+      * transaction execute failed: [Error Code: 1101] cadence runtime error: Execution failed:
    error: failed to save object: path /storage/HelloAssetTutorial in account 0x0000000000000009 already stores an object
      --> 805f4e247a920635abf91969b95a63964dcba086bc364aedc552087334024656:19:8
       |
@@ -352,17 +354,21 @@ In real applications, you need to check the location path you are storing in to 
    }
    ```
 1. Add a `transaction`-level (similar to contract-level or class-level) variable to store a result `String`.
+
    - Similar to a class-level variable in other languages, these go at the top, inside the `transaction` scope, but not inside anything else. They are accessible in both the `prepare` and `execute` statements of a transaction:
+
    ```cadence
    import HelloResource from 0x06
-   
+
    transaction {
        var result: String
        // Other code...
    }
    ```
+
    - You'll get an error: `missing initialization of field 'result' in type 'Transaction'. not initialized`
    - In transactions, variables at the `transaction` level must be initialized in the `prepare` phase.
+
 1. Initialize the `result` message and create a constant for the storage path:
    ```cadence
    self.result = "Saved Hello Resource to account."
@@ -388,6 +394,7 @@ This is not likely to occur because projects are encouraged to create storage an
 Depending on the needs of your app, you'll use this pattern to decide what to do in each case. For this example, we'll simply use it to change the log message if the storage is in use or create and save the `HelloAsset` if it is not.
 
 1. Refactor your prepare statement to check and see if the storage path is in use. If it is, update the `result` message. Otherwise, create and save a `HelloAsset`:
+
    ```cadence
    if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
        self.result = "Unable to save, resource already present."
@@ -396,25 +403,29 @@ Depending on the needs of your app, you'll use this pattern to decide what to do
        acct.storage.save(<-newHello, to: storagePath)
    }
    ```
+
    - When you [`check`] a resource, you must put the type of the resource to be borrowed inside the `<>` after the call to `borrow`, before the parentheses. The `from` parameter is the storage path to the object you are borrowing.
 
 1. Update the `log` in execute to use `self.result` instead of the hardcoded string:
+
    ```cadence
    execute {
        log(self.result)
    }
    ```
+
    You should end up with something similar to:
+
    ```cadence
    import HelloResource from 0x06
-   
+
    transaction {
      var result: String
-   
+
      prepare(acct: auth(BorrowValue, SaveValue) &Account) {
        self.result = "Saved Hello Resource to account."
        let storagePath = /storage/HelloAssetTutorial
-   
+
        if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
          self.result = "Unable to save, resource already present."
        } else {
@@ -422,12 +433,13 @@ Depending on the needs of your app, you'll use this pattern to decide what to do
          acct.storage.save(<-newHello, to: storagePath)
        }
      }
-   
+
      execute {
        log(self.result)
      }
    }
    ```
+
 1. Use `Send` to send the transaction again, both with accounts that have and have not yet created and stored an instance of `HelloAsset`.
 
 Now you'll see an appropriate log whether or not a new resource was created and saved.
@@ -438,18 +450,21 @@ The following shows you how to use a transaction to call the `hello()` method fr
 
 1. Open the transaction named `Load Hello`, which is empty.
 1. Stub out a transaction that imports `HelloResource` and passes in an account [reference] with the `BorrowValue` authorization entitlement, which looks something like this:
+
    ```cadence load_hello.cdc
    import HelloResource from 0x06
-   
+
    transaction {
-   
+
        prepare(acct: auth(BorrowValue) &Account) {
            // TODO
        }
    }
    ```
+
    - You just learned how to [`borrow`] a [reference] to a resource. You could use an `if` statement to handle the possibility that the resource isn't there, but if you want to simply terminate execution, a common practice is to combine a `panic` statement with the [nil-coalescing operator (`??`)].
    - This operator executes the statement on the left side. If that is `nil`, the right side is evaluated and returned. In this case, the return is irrelevant, because we're going to cause a `panic` and terminate execution.
+
 1. Create a variable with a [reference] to the `HelloAsset` resource stored in the user's account. Use `panic` if this resource is not found:
    ```cadence
    let helloAsset = acct.storage.borrow<&HelloResource.HelloAsset>(from: /storage/HelloAssetTutorial)
@@ -523,10 +538,10 @@ Reference solutions are functional, but may not be optimal.
 [entitlement]: ../language/access-control#entitlements
 [account references (`&Account`)]: ../language/accounts/index.mdx
 [paths]: ../language/accounts/paths.mdx
-[accounts]: ../docs/language/accounts/index.md
+[accounts]: ../language/accounts/index.mdx
 [reference]: ../language/references.mdx
 [nil-coalescing operator (`??`)]: ../language/operators.md#nil-coalescing-operator-
 [Non-Fungible Token Contract]: https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121
 [Generic NFT Transfer transaction]: https://github.com/onflow/flow-nft/blob/master/transactions/generic_transfer_with_address_and_type.cdc#L46-L50
 [Reference Solution]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6
-[play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1]: [https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1]
+[play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1]: https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1

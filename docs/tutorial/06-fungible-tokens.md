@@ -85,7 +85,7 @@ After completing this tutorial, you'll be able to:
 
 ## Flow network token
 
-In Flow, the [native network token (FLOW)] is implemented as a normal fungible token smart contract using a smart contract similar to the one you'll build in this tutorial.
+In Flow, the [native network token (FLOW)] is implemented as a normal fungible token smart contract using a smart contract similar to the one you'll build in this tutorial - with all the features and properties found in the [Fungible Token Developer Guide].
 
 There are special transactions and hooks that allow it to be used for transaction execution fees, storage fees, and staking, but besides that, developers and users are able to treat it and use it just like any other token in the network!
 

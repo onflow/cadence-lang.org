@@ -606,9 +606,9 @@ Transferring tokens from one account to another takes a little more coordination
 
 1. Use the `execute` phase to `deposit` the tokens in the `temporaryVault` into the recipient's vault:
 
-   ```cadence
-   execute{
-       let receiverAccount = getAccount(recipient)
+```cadence
+execute{
+    let receiverAccount = getAccount(recipient)
 
        let receiverRef = receiverAccount
            .capabilities

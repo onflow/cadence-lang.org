@@ -221,6 +221,7 @@ In the following steps, you'll create three interfaces to handle the three funct
    In a postcondition, the special constant `result` is used to reference the `return` of the function. They're written following the rules of [statements] and can contain multiple conditions. Optionally, a `:` can be added after the last statement, containing an error message to be passed if the postcondition fails.
 
 1. Add a `post` condition that returns a descriptive and nicely formatted error if the amount returned in the vault from the function doesn't match the `amount` passed into the function:
+
    ```cadence
    access(Withdraw) fun withdraw(amount: UFix64): @Vault {
        post {

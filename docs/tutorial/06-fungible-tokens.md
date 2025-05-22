@@ -91,7 +91,7 @@ There are special transactions and hooks that allow it to be used for transactio
 
 ## Fungible tokens on Flow
 
-Flow implements fungible tokens differently than other programming languages. As a result:
+Flow Cadence implements fungible tokens differently than other blockchains. As a result:
 
 - Ownership is decentralized and does not rely on a central ledger.
 - Bugs and exploits present less risk for users and less opportunity for attackers.

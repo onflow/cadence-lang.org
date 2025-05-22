@@ -610,10 +610,10 @@ Transferring tokens from one account to another takes a little more coordination
 execute{
     let receiverAccount = getAccount(recipient)
 
-       let receiverRef = receiverAccount
-           .capabilities
-           .borrow<&ExampleToken.Vault>(ExampleToken.VaultPublicPath)
-           ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient))
+    let receiverRef = receiverAccount
+        .capabilities
+        .borrow<&ExampleToken.Vault>(ExampleToken.VaultPublicPath)
+        ?? panic(ExampleToken.vaultNotConfiguredError(address: recipient))
 
        receiverRef.deposit(from: <-self.temporaryVault)
 

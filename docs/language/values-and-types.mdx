@@ -787,6 +787,15 @@ let canadianFlag: Character = "\u{1F1E8}\u{1F1E6}"
 // `canadianFlag` is `🇨🇦`
 ```
 
+### String Templates
+
+String templates allow constants, variables, and expressions to be inlined into strings simplifying the process of constructing dynamic strings. String templates are currently supported in single-line literals by wrapping the target in parentheses and prefixing it with a backslash (`\`). Carriage returns, line feeds and nested string literals are not supported inside the parentheses. 
+
+```cadence
+let result = 2 + 2
+let template: String = "2 + 2 = \(result)" // `template` is `2 + 2 = 4`
+```
+
 ### String Fields and Functions
 
 Strings have multiple built-in functions you can use:

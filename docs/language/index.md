@@ -24,7 +24,7 @@ In this document, the following terminology is used to describe syntax or behavi
 
 Much of the language's syntax is inspired by Swift, Kotlin, and TypeScript.
 
-- Much of the syntax, types, and standard library is inspired by Swift, which popularized, for example,  optionals, argument labels, and provides safe handling of integers and strings.
+- Much of the syntax, types, and standard library is inspired by Swift, which popularized features including optionals, argument labels, and provides safe handling of integers and strings.
 - Resources are based on linear types which were popularized by Rust.
 - Events are inspired by Solidity.
 

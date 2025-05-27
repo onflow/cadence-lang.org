@@ -5,7 +5,7 @@ sidebar_position: 2
 
 Constants and variables are declarations that bind a value and [type] to an identifier. Constants are initialized with a value and cannot be reassigned afterwards. Variables are initialized with a value and can be reassigned later. Declarations can be created in any scope, including the global scope.
 
-Constant means that the _identifier's_ association is constant, not the _value_ itself — the value may still be changed if it is mutable.
+Constant means that the _identifier's_ association is constant, not the _value_ itself — the value may still be changed if it is mutable.  For example, you can change the values inside of a constant array, but you cannot replace the array assignment with a new array.
 
 Constants are declared using the `let` keyword. Variables are declared using the `var` keyword. The keywords are followed by the identifier, an optional [type annotation], an equals sign `=`, and the initial value:
 

@@ -19,7 +19,7 @@ Cadence is a resource-oriented programming language that introduces new features
 - Built-in pre-conditions and post-conditions for functions and transactions.
 - The utilization of capability-based security, which enforces that access to objects is restricted to only the owner of the object and those who have a valid reference to it. This is Cadence's main form of access control.
 
-Cadence’s syntax is inspired by popular modern general-purpose programming languages like [Swift], [Kotlin], and [Rust]. Its use of resource types maps well to that of [Move], the programming language being developed by the Diem team.
+Cadence’s syntax is inspired by popular modern general-purpose programming languages like [Swift], [Kotlin], and [Rust]. Its use of resource types maps well to that of [Move], the programming language used by Aptos and Sui, though Flow provides greater fine-grained permission control with Capabilities.
 
 ## Cadence's programming language pillars
 

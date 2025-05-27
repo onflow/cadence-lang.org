@@ -9,7 +9,7 @@ Cadence provides security and safety guarantees that greatly simplify the develo
 
 ## Composability
 
-Cadence enables composability. Resources (which are arbitrary user-defined data types) are stored directly in users’ accounts, and can flow freely between contracts: They can be passed as arguments to functions, returned from functions, or even combined in arbitrary data structures. This makes implementing business logic easier, more natural, and promotes the reuse of existing logic.
+Cadence enables composability. Resources (which are arbitrary user-defined data types similar to `struct`s) are stored directly in users’ accounts, and can flow freely between contracts: They can be passed as arguments to functions, returned from functions, or even combined in arbitrary data structures. This makes implementing business logic easier, more natural, and promotes the reuse of existing logic.
 
 ## Simplicity
 

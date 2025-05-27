@@ -95,7 +95,7 @@ Currently, Cadence is an interpreted language, as opposed to a compiled language
 
 The structure of the language lends itself well to compilation (e.g., static typing), but using an interpreter for the first version allows us to refine the language features more quickly as we define them.
 
-## Getting started with cadence
+## Getting started with Cadence
 
 Now that you've learned about the goals and design of Cadence and Flow, you're ready to get started with the Flow emulator and tools! Go to the [Getting Started] page to work through language fundamentals and tutorials.
 

@@ -4,10 +4,11 @@ sidebar_position: 1
 sidebar_label: Introduction
 ---
 
-In a blockchain environment like Flow, programs that are stored onchain in accounts are commonly referred to as smart contracts.
-A smart contract is a program that verifies and executes the performance of a contract without the need for a trusted third party.
-Programs that run on blockchains are commonly referred to as smart contracts because they mediate important functionality (such as currency)
-without having to rely on a central authority (like a bank).
+In a blockchain environment like Flow, programs that are stored and executed onchain are referred to as smart contracts. A smart contract programmatically verifies and executes the performance of a contract without the need for a trusted third party. Many people think of it as code-as-law.  
+
+They control and execute important functionality such as the creation and management of currency, buying and selling of digital property, and the execution of contractual agreements without having to rely on a central authority (like a bank).
+
+All of this happens on the same shared computer that anyone can use and no one can shut down or exercise admin control.
 
 ## A new programming language
 

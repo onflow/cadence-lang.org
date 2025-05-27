@@ -13,7 +13,7 @@ Cadence enables composability. Resources (which are arbitrary user-defined data 
 
 ## Simplicity
 
-Cadence’s syntax is inspired by popular modern general-purpose programming languages like [Swift], [Kotlin], and [Rust], so developers will find the syntax and the semantics familiar. Practical tooling, documentation, and examples enable developers to start creating programs quickly and effectively. Hundreds of developers were able to learn Cadence quickly and develop production-quality smart contracts with it shortly.
+Cadence’s syntax is inspired by popular modern general-purpose programming languages like [Swift], [Kotlin], and [Rust], so developers will find the syntax and the semantics familiar. Practical tooling, documentation, and examples enable developers to start creating programs quickly and effectively.
 
 <!-- Relative links.  Will not render on the page -->
 

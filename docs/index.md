@@ -51,7 +51,7 @@ Overlooked mistakes cause the most damaging scenarios. It is easy to lose or dup
 
 Some languages also express behaviors that developers tend to forget about. For example, a fixed-range type might express monetary value, without considerations for a potential overflow or underflow. In Solidity, Ethereum's smart contract language, an overflow originally caused the value to wrap around, as shown [here]. Solidity also allows contracts to declare variables without initializing them. If the developer forgets to add an initialization somewhere and then tries to read the variable somewhere else in the code expecting it to be a specific value, issues will occur.
 
-Cadence is type safe and has a strong static type system, which prevents important classes of erroneous or undesirable program behavior at compile-time (i.e., before the program is run onchain). Types are checked statically and are not implicitly converted. Cadence also improves the safety of programs by preventing arithmetic underflow and overflow, introduces optionals to make nil-cases explicit, and always requires variables to be initialized. This helps ensure the behavior of these smart contracts is apparent and not dependent on context.
+Cadence is type-safe and has a strong static type system, which prevents important classes of erroneous or undesirable program behavior at compile-time (i.e., before the program is run onchain). Types are checked statically and are not implicitly converted. Cadence also improves the safety of programs by preventing arithmetic underflow and overflow, introduces optionals to make nil-cases explicit, and always requires variables to be initialized. This helps ensure the behavior of these smart contracts is apparent and not dependent on context.
 
 ### Security
 

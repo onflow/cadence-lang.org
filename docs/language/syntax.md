@@ -5,11 +5,9 @@ sidebar_position: 1
 
 ## Comments
 
-Comments can be used to document code.
-A comment is text that is not executed.
+Comments can be used to document code. A comment is text that is not executed.
 
-*Single-line comments* start with two slashes (`//`).
-These comments can go on a line by themselves or they can go directly after a line of code.
+_Single-line comments_ start with two slashes (`//`). These comments can go on a line by themselves, or they can go directly after a line of code:
 
 ```cadence
 // This is a comment on a single line.
@@ -18,32 +16,30 @@ These comments can go on a line by themselves or they can go directly after a li
 let x = 1  // Here is another comment after a line of code.
 ```
 
-*Multi-line comments* start with a slash and an asterisk (`/*`)
-and end with an asterisk and a slash (`*/`):
+_Multi-line comments_ start with a slash and an asterisk (`/*`) and end with an asterisk and a slash (`*/`):
 
 ```cadence
 /* This is a comment which
 spans multiple lines. */
 ```
 
-Comments may be nested.
+Comments may be nested:
 
 ```cadence
 /* /* this */ is a valid comment */
 ```
 
-Multi-line comments are balanced.
+Multi-line comments are balanced:
 
 ```cadence
 /* this is a // comment up to here */ this is not part of the comment */
 ```
 
-### Documentation Comments
-Documentation comments (also known as "doc-strings" or "doc-comment") are a special set of comments that can be
-processed by tools, for example to generate human-readable documentation, or provide documentation in an IDE.
+### Documentation comments
 
-Doc-comments either start with three slashes (`///`) on each line,
-or are surrounded by `/**` and `**/`.
+Documentation comments (also known as _doc-strings_ or _doc-comment_) are a special set of comments that can be processed by tools (e.g., to generate human-readable documentation or provide documentation in an IDE).
+
+Doc-comments either start with three slashes (`///`) on each line or are surrounded by `/**` and `**/`:
 
 ```cadence
 /// This is a documentation comment for `x`.
@@ -61,11 +57,7 @@ let x = 1
 
 ## Identifiers
 
-Identifiers may start with any upper or lowercase letter (A-Z, a-z)
-or an underscore (`_`).
-This may be followed by zero or more upper and lower case letters,
-underscores, and numbers (0-9).
-Identifiers may not begin with a number.
+Identifiers can start with any upper or lowercase letter (A-Z, a-z) or an underscore (`_`). This may be followed by zero or more upper and lower case letters, underscores, and numbers (0-9). Identifiers can **not** begin with a number:
 
 ```cadence
 // Valid: title-case
@@ -111,27 +103,21 @@ The following identifiers are reserved, as they are keywords of the language:
 - `fun`, `pre`, `post`,
 - `auth`, `access`
 - `self`, `init`
-- `contract`, `event`, `struct`, `resource`, `interface`,
-  `entitlement`, `enum`, `mapping`, `attachment`, `result`
+- `contract`, `event`, `struct`, `resource`, `interface`, `entitlement`, `enum`, `mapping`, `attachment`, `result`
 - `transaction`, `prepare`, `execute`
 - `switch`, `case`, `default`
 - `import`, `include`
-- `require`, `requires`, `static`, `native`, `pub`, `priv`, `try`, `catch`, `finally`,
-  `goto`, `const`, `export`, `throw`, `throws`, `where`, `final`, `internal`, `typealias`,
-  `repeat`, `guard`, `is`
+- `require`, `requires`, `static`, `native`, `pub`, `priv`, `try`, `catch`, `finally`, `goto`, `const`, `export`, `throw`, `throws`, `where`, `final`, `internal`, `typealias`, `repeat`, `guard`, `is`
 
 ### Conventions
 
-By convention, variables, constants, and functions have lowercase identifiers;
-and types have title-case identifiers.
+By convention, variables, constants, and functions have lowercase identifiers, and types have title-case identifiers.
 
 ## Semicolons
 
-Semicolons (;) are used as separators between declarations and statements.
-A semicolon can be placed after any declaration and statement,
-but can be omitted between declarations and if only one statement appears on the line.
+Semicolons (`;`) are used as separators between declarations and statements. A semicolon can be placed after any declaration and statement, but can be omitted between declarations if only one statement appears on the line.
 
-Semicolons must be used to separate multiple statements if they appear on the same line.
+Semicolons must be used to separate multiple statements if they appear on the same line:
 
 ```cadence
 // Declare a constant, without a semicolon.

@@ -25,6 +25,11 @@
     {
       "source": "/docs/1.0/:path*",
       "destination": "/docs/:path*"
+    },
+    {
+      "source": "/docs/language/values-and-types.md/:path*",
+      "destination": "/docs/language/values-and-types/index.md:path*",
+      "permanent": true
     }
   ]
 }

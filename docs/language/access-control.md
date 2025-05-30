@@ -625,8 +625,8 @@ In order to support this, the following built-in entitlements can be used:
 - `Remove`
 - `Mutate`
 
-These are primarily used by the built-in [array](./values-and-types.mdx#arrays)
-and [dictionary](./values-and-types.mdx#dictionaries) functions,
+These are primarily used by the built-in [array](./values-and-types/arrays.md)
+and [dictionary](./values-and-types/dictionaries.md) functions,
 but are available to be used in access modifiers of any declaration.
 
 While Cadence does not support entitlement composition or inheritance,

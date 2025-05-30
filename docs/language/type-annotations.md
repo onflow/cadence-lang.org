@@ -3,14 +3,11 @@ title: Type Annotations
 sidebar_position: 3
 ---
 
-When declaring a constant or variable,
-an optional *type annotation* can be provided,
-to make it explicit what type the declaration has.
+When declaring a constant or variable, an optional _type annotation_ can be provided, to make it explicit what type the declaration has.
 
-If no type annotation is provided, the type of the declaration is
-[inferred from the initial value](./type-inference.md).
+If no type annotation is provided, the type of the declaration is [inferred from the initial value].
 
-For function parameters a type annotation must be provided.
+For function parameters, a type annotation must be provided:
 
 ```cadence
 // Declare a variable named `boolVarWithAnnotation`, which has an explicit type annotation.
@@ -35,9 +32,7 @@ let integerWithoutAnnotation = 1
 let smallIntegerWithAnnotation: Int8 = 1
 ```
 
-If a type annotation is provided, the initial value must be of this type.
-All new values assigned to variables must match its type.
-This type safety is explained in more detail in a [separate section](./type-safety.md).
+If a type annotation is provided, the initial value must be of this type. All new values assigned to variables must match their type. This type safety is explained in more detail in a [separate section]:
 
 ```cadence
 // Invalid: declare a variable with an explicit type `Bool`,
@@ -53,3 +48,8 @@ var booleanVariable = false
 //
 booleanVariable = 1
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[inferred from the initial value]: ./type-inference.md
+[separate section]: ./type-safety.md

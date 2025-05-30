@@ -1,5 +1,5 @@
 ---
-title: AnyStruct/AnyResource, Optionals, and Never
+title: AnyStruct, AnyResource, Optionals, and Never
 sidebar_position: 5
 ---
 

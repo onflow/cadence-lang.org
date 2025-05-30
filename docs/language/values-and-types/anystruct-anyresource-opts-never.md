@@ -3,8 +3,6 @@ title: AnyStruct, AnyResource, Optionals, and Never
 sidebar_position: 5
 ---
 
-## AnyStruct and AnyResource
-
 `AnyStruct` is the top type of all non-resource types (i.e., all non-resource types are a subtype of it).
 
 `AnyResource` is the top type of all resource types.

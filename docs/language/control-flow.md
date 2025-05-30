@@ -360,7 +360,7 @@ dictionary.forEachKey(fun (key: String): Bool {
 
 ### Ranges in Loops
 
-An [`InclusiveRange` value](#../values-and-types/InclusiveRange) can be used in a for-in statement in place of an array or dictionary. In this case, 
+An [`InclusiveRange` value](./values-and-types/inclusive-range.md) can be used in a for-in statement in place of an array or dictionary. In this case, 
 the loop will iterate over all the values contained in the range, beginning with `range.start` and ending with `range.end`. E.g. 
 
 ```cadence

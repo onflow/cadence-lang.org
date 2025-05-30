@@ -423,7 +423,7 @@ Reference solutions are functional, but may not be optimal.
 [last tutorial]: ./05-non-fungible-tokens-1.md
 [resource]: ../language/resources.mdx
 [entitlement]: ../language/access-control.md
-[dictionary]: ../language/values-and-types.mdx#dictionaries
+[dictionary]: ../language/values-and-types/dictionaries.md
 [capability security]: ../language/capabilities.md
 [entitlements]: ../language/access-control.md#entitlements
 [Reference Solution]: https://play.flow.com/72bf4f76-fa1a-4b24-8f5e-f1e5aab9f39d

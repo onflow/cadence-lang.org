@@ -686,7 +686,7 @@ Reference solutions are functional, but may not be optimal.
 [reentrancy]: https://docs.soliditylang.org/en/latest/security-considerations.html#reentrancy
 [resource]: ../language/resources.mdx
 [resources]: ../language/resources.mdx
-[fixed-point number]: ../language/values-and-types.mdx#fixed-point-numbers
+[fixed-point number]: ../language/values-and-types/fixed-point-nums-ints.md#fixed-point-numbers
 [entitlement]: ../language/access-control.md
 [Function preconditions and postconditions]: ../language/functions.mdx#function-preconditions-and-postconditions
 [statements]: ../language/syntax.md#semicolons

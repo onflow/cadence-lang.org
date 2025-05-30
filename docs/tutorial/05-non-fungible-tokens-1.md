@@ -443,10 +443,10 @@ Reference solutions are functional, but may not be optimal.
 [Top Shot Moments]: https://nbatopshot.com/
 [resource]: ../language/resources.mdx
 [ERC-721 NFT standard]: https://github.com/ethereum/eips/issues/721
-[type system]: ../language/values-and-types.mdx
+[type system]: ../language/values-and-types/index.md
 [Flow NFT Standard]: https://github.com/onflow/flow-nft
 [the NFT metadata guide]: https://developers.flow.com/build/advanced-concepts/metadata-views
-[dictionary]: ../language/values-and-types.mdx#dictionary-types
+[dictionary]: ../language/values-and-types/dictionaries.md#dictionary-types
 [move operator]: ../language/operators.md#move-operator--
 [`self.account`]: ../language/contracts.mdx
 [account reference]: ../language/accounts/index.mdx

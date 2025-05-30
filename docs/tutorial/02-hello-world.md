@@ -284,6 +284,6 @@ Reference solutions are functional, but may not be optimal.
 [Transaction]: ../language/transactions.md
 [transactions]: ../language/transactions.md
 [`prepare`]: ../language/transactions.md#prepare-phase
-[Cadence types]: ../language/values-and-types.mdx
+[Cadence types]: ../language/values-and-types/index.md
 [Reference Solution]: https://play.flow.com/edba10ad-1232-4720-bc1b-cd34cb12b6dc
 [play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4]: https://play.flow.com/e559739d-603e-40d5-b2f1-b9957051cdc4

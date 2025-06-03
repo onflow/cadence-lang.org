@@ -28,8 +28,3 @@ All operators are left-associative, except for the following operators, which ar
 Expressions can be wrapped in parentheses to override precedence conventions (i.e., an alternate order should be indicated), or when the default order should be emphasized (e.g., to avoid confusion). For example, `(2 + 3) * 4` forces addition to precede multiplication, and `5 + (6 * 7)` reinforces the default order.
 
 <!-- Relative links. Will not render on the page -->
-
-[resource types]: ../resources.mdx
-[logical shifting]: https://en.wikipedia.org/wiki/Logical_shift
-[arithmetic shifting]: https://en.wikipedia.org/wiki/Arithmetic_shift
-[conditional downcasting operator `as?`]: ./casting-operators.md#conditional-downcasting-operator-as

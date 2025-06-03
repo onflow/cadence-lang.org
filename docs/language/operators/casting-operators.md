@@ -105,7 +105,4 @@ let boolean = something as! Bool
 
 <!-- Relative links. Will not render on the page -->
 
-[resource types]: ../resources.mdx
-[logical shifting]: https://en.wikipedia.org/wiki/Logical_shift
-[arithmetic shifting]: https://en.wikipedia.org/wiki/Arithmetic_shift
 [conditional downcasting operator `as?`]: #conditional-downcasting-operator-as

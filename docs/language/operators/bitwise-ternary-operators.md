@@ -77,7 +77,5 @@ let y = 1 > 2 ? nil : 3
 
 <!-- Relative links. Will not render on the page -->
 
-[resource types]: ../resources.mdx
 [logical shifting]: https://en.wikipedia.org/wiki/Logical_shift
 [arithmetic shifting]: https://en.wikipedia.org/wiki/Arithmetic_shift
-[conditional downcasting operator `as?`]: ./casting-operators.md#conditional-downcasting-operator-as

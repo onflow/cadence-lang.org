@@ -447,7 +447,7 @@ Reference solutions are functional, but may not be optimal.
 [Flow NFT Standard]: https://github.com/onflow/flow-nft
 [the NFT metadata guide]: https://developers.flow.com/build/advanced-concepts/metadata-views
 [dictionary]: ../language/values-and-types/dictionaries.md#dictionary-types
-[move operator]: ../language/operators.md#move-operator--
+[move operator]: ../language/operators/assign-move-force-swap.md#move-operator--
 [`self.account`]: ../language/contracts.mdx
 [account reference]: ../language/accounts/index.mdx
 [capability]: ../language/capabilities.md

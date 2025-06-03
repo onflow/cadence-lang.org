@@ -273,8 +273,8 @@ h2 {
   margin-top: 0.8rem;
   margin-bottom: 0.8rem;
 
-  font-size: calc(var(--h1-size) * 0.56);
-  font-weight: 300;
+  font-size: calc(var(--h1-size) * 0.59);
+  font-weight: 500;
   line-height: 1.4;
 }
 
@@ -294,8 +294,8 @@ h3 {
   align-items: center;
   gap: .3rem;
 
-  font-size: 1.8rem;
-  font-weight: 500;
+  font-size: 1.3rem;
+  font-weight: 550;
 }
 
 h3 svg {

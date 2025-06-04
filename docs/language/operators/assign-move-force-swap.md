@@ -97,7 +97,7 @@ let b <- a
 // Invalid Line Below: Cannot use constant `a` anymore as the resource that it
 // referred to was moved to constant `b`.
 
-a.value
+a.value // Error: a no longer exists
 
 // Constant `b` owns the resource.
 

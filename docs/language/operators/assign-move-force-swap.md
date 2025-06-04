@@ -49,7 +49,6 @@ numbers[0] = 3
 let arrays = [[1, 2], [3, 4]]
 
 // Change the first element in the second array
-//
 arrays[1][0] = 5
 
 // `arrays` is `[[1, 2], [5, 4]]`

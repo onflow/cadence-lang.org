@@ -39,7 +39,6 @@ The left-hand side of the assignment operand must be an identifier. For arrays a
 let numbers = [1, 2]
 
 // Change the first element of the array.
-//
 numbers[0] = 3
 
 // `numbers` is `[3, 2]`

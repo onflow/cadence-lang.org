@@ -65,7 +65,7 @@ There is only one ternary conditional operator (e.g., `a ? b : c`).
 
 It behaves like an if-statement, but is an expression: if the first operator value is true, the second operator value is returned. If the first operator value is false, the third value is returned.
 
-The first value must be a boolean (and must have the type `Bool`). The second value and third value can be of any type. The result type is the least common supertype of the second and third value.
+The first value must be a boolean, or resolve to one (and must have the type `Bool`). The second value and third value can be of any type. The result type is the least common supertype of the second and third value.
 
 ```cadence
 let x = 1 > 2 ? 3 : 4

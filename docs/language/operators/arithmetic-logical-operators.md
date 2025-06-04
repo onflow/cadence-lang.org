@@ -59,7 +59,7 @@ let a: Int8 = -128
 let b = -a
 ```
 
-Arithmetic operations on the unsigned integer types `Word8`, `Word16`, `Word32`, and `Word64` may cause values to overflow or underflow.
+Arithmetic operations on the unsigned integer types `Word8`, `Word16`, `Word32`, and `Word64` **can cause values to overflow or underflow**.
 
 For example, the maximum value of an unsigned 8-bit integer is 255 (binary 11111111). Adding 1 results in an overflow, truncation to 8 bits, and the value 0:
 

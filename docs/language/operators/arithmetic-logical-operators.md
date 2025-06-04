@@ -29,7 +29,7 @@ The arguments for the operators need to be of the same type. The result is alway
 
 The division and remainder operators abort the program when the divisor is zero.
 
-Arithmetic operations on the signed integer types `Int8`, `Int16`, `Int32`, `Int64`, `Int128`, `Int256`, and on the unsigned integer types `UInt8`, `UInt16`, `UInt32`, `UInt64`, `UInt128`, and `UInt256` do not cause values to overflow or underflow.
+Arithmetic operations on the signed integer types `Int8`, `Int16`, `Int32`, `Int64`, `Int128`, `Int256`, and on the unsigned integer types `UInt8`, `UInt16`, `UInt32`, `UInt64`, `UInt128`, and `UInt256` do not cause values to overflow or underflow - the program will abort with a fatal overflow error.
 
 ```cadence
 let a: UInt8 = 255

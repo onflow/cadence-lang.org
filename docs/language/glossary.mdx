@@ -35,7 +35,7 @@ let refOfA: auth(X) &String = &a as auth(X) &String
 
 ### Logical Operator
 
-It can be also used as a [logical operator (AND)](./operators.md#logical-operators),
+It can be also used as a [logical operator (AND)](./operators/arithmetic-logical-operators.md#logical-operators),
 by appearing twice in succession (i.e. `&&`):
 
 ```cadence
@@ -96,7 +96,7 @@ fun addOne(x: Int): Int { // return type of Int
 
 ### Ternary Conditional Operator
 
-The `:` (colon) is also be used in [ternary operations](./operators.md#ternary-conditional-operator) to represent the "otherwise" section,
+The `:` (colon) is also be used in [ternary operations](./operators/bitwise-ternary-operators.md#ternary-conditional-operator) to represent the "otherwise" section,
 such as the following:
 
 ```cadence
@@ -136,7 +136,7 @@ let b: Bool = !a
 // b is false
 ```
 
-When it immediately **succeeds** an *optional* variable, it [force-unwraps](./operators.md#force-unwrap-operator-) it.
+When it immediately **succeeds** an *optional* variable, it [force-unwraps](./operators/optional-operators.md#force-unwrap-operator-) it.
 Force-unwrapping returns the value inside an optional if it contains a value,
 or panics and aborts the execution if the optional has no value, i.e. the optional value is nil.
 
@@ -154,7 +154,7 @@ The `/` (forward slash) symbol has several uses.
 
 ### Division Operator
 
-Inbetween two expressions, the forward slash acts as the [division operator](./operators.md#arithmetic-operators).
+Inbetween two expressions, the forward slash acts as the [division operator](./operators/arithmetic-logical-operators.md#arithmetic-operators).
 
 ```cadence
 let result = 4 / 2
@@ -188,7 +188,7 @@ let a <- create R() // we instantiate a new resource and move it into a
 
 ## `<-!` (lower than, hyphen, exclamation mark) (Force-assignment move operator)
 
-The [force-assignment move operator `<-!`](./operators.md#force-assignment-operator--) moves a resource value to an optional variable.
+The [force-assignment move operator `<-!`](./operators/assign-move-force-swap.md#force-assignment-operator--) moves a resource value to an optional variable.
 If the variable is `nil`, the move succeeds.
 If it is not nil, the program aborts.
 
@@ -202,12 +202,12 @@ a <-! create R()
 
 ## `<->` (lower than, hyphen, greater than) (Swap operator)
 
-The [swapping operator `<->`](./operators.md#swapping-operator--) swaps two resource between the variables to the left and right of it.
+The [swapping operator `<->`](./operators/assign-move-force-swap.md#swapping-operator--) swaps two resource between the variables to the left and right of it.
 
 
 ## `+` (plus), `-` (minus), `*` (asterisk), `%` (percentage sign)
 
-These are all typical [arithmetic operators](./operators.md#arithmetic-operators):
+These are all typical [arithmetic operators](./operators/arithmetic-logical-operators.md#arithmetic-operators):
 
 - Addition: `+`
 - Subtraction: `-`
@@ -231,7 +231,7 @@ let a: Int? = nil
 
 ### Ternary Conditional Operator
 
-The `?` (question mark) is also be used in [ternary operations](./operators.md#ternary-conditional-operator) to represent the "then" section,
+The `?` (question mark) is also be used in [ternary operations](./operators/bitwise-ternary-operators.md#ternary-conditional-operator) to represent the "then" section,
 such as the following:
 
 ```cadence
@@ -244,7 +244,7 @@ let a = 1 > 2 ? 3 : 4
 
 ### Nil-Coalescing Operator
 
-The `?` (question mark) is also used in the [nil-coalescing operator `??`](./operators.md#nil-coalescing-operator-).
+The `?` (question mark) is also used in the [nil-coalescing operator `??`](./operators/optional-operators.md#nil-coalescing-operator-).
 
 It returns the value inside the optional, if the optional contains a value,
 or returns an alternative value if the optional has no value, i.e., the optional value is nil.

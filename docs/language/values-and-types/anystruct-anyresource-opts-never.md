@@ -190,6 +190,6 @@ fun returnNever(): Never {
 
 [optional type]: ./anystruct-anyresource-opts-never.md#optionals
 [arrays]: ./arrays.md
-[Conditional downcasting]: ../operators.md#conditional-downcasting-operator-as
-[optional operators]: ../operators.md#optional-operators
+[Conditional downcasting]: ../operators/casting-operators.md#conditional-downcasting-operator-as
+[optional operators]: ../operators/optional-operators.md
 [`panic`]: ../built-in-functions.mdx#panic

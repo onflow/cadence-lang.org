@@ -530,7 +530,7 @@ Reference solutions are functional, but may not be optimal.
 
 [resources]: ../language/resources.mdx
 [Resources]: ../language/resources.mdx
-[move operator]: ../language/operators.md#move-operator--
+[move operator]: ../language/operators/assign-move-force-swap.md#move-operator--
 [Account Storage API]: ../language/accounts/storage.mdx
 [`storage.check`]: ../language/accounts/storage.mdx#accountstorage
 [`borrow`]: ../language/accounts/storage.mdx#accessing-objects
@@ -540,7 +540,7 @@ Reference solutions are functional, but may not be optimal.
 [paths]: ../language/accounts/paths.mdx
 [accounts]: ../language/accounts/index.mdx
 [reference]: ../language/references.mdx
-[nil-coalescing operator (`??`)]: ../language/operators.md#nil-coalescing-operator-
+[nil-coalescing operator (`??`)]: ../language/operators/optional-operators.md#nil-coalescing-operator-
 [Non-Fungible Token Contract]: https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121
 [Generic NFT Transfer transaction]: https://github.com/onflow/flow-nft/blob/master/transactions/generic_transfer_with_address_and_type.cdc#L46-L50
 [Reference Solution]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6

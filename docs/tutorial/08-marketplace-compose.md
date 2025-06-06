@@ -812,6 +812,18 @@ By completing this tutorial, you are now able to:
 
 If you're ready to take your skills further, explore the [NFT storefront repo] for a production-ready, generic NFT marketplace, or try extending your marketplace to support additional features and token types!
 
+## Reference solution
+
+:::warning
+
+You are **not** saving time by skipping the reference implementation. You'll learn much faster by doing the tutorials as presented!
+
+Reference solutions are functional, but may not be optimal.
+
+:::
+
+- [Reference Solution]
+
 <!-- Reference-style links.  Will not render on page. -->
 
 [NFT storefront repo]: https://github.com/onflow/nft-storefront
@@ -828,3 +840,4 @@ If you're ready to take your skills further, explore the [NFT storefront repo] f
 [capabilities tutorial]: ./04-capabilities.md
 [$FLOW]: https://developers.flow.com/build/core-contracts/flow-token
 [Flow Fungible Token standard]: https://github.com/onflow/flow-ft
+[Reference Solution]: https://play.flow.com/d8906744-aa9b-4323-9f72-ccf78ab8e4b2

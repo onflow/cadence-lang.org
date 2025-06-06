@@ -396,7 +396,7 @@ Depending on the needs of your app, you'll use this pattern to decide what to do
 1. Refactor your prepare statement to check and see if the storage path is in use. If it is, update the `result` message. Otherwise, create and save a `HelloAsset`:
 
    ```cadence
-   if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
+   if acct.storage.check<@HelloResource.HelloAsset>(from: storagePath) {
        self.result = "Unable to save, resource already present."
    } else {
        let newHello <- HelloResource.createHelloAsset()
@@ -426,7 +426,7 @@ Depending on the needs of your app, you'll use this pattern to decide what to do
        self.result = "Saved Hello Resource to account."
        let storagePath = /storage/HelloAssetTutorial
 
-       if acct.storage.check<&HelloResource.HelloAsset>(from: storagePath) {
+       if acct.storage.check<@HelloResource.HelloAsset>(from: storagePath) {
          self.result = "Unable to save, resource already present."
        } else {
          let newHello <- HelloResource.createHelloAsset()

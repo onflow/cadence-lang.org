@@ -1,6 +1,6 @@
 ---
 title: Capabilities
-sidebar_position: 14
+sidebar_position: 11
 ---
 
 Cadence supports [capability-based security](https://en.wikipedia.org/wiki/Capability-based_security)

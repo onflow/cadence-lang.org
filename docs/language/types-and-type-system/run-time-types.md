@@ -1,12 +1,11 @@
 ---
 title: Run-time Types
-sidebar_position: 27
+sidebar_position: 6
 ---
 
-Types can be represented at run-time.
-To create a type value, use the constructor function `Type<T>()`, which accepts the static type as a type argument.
+Types can be represented at run-time. To create a type value, use the constructor function `Type<T>()`, which accepts the static type as a type argument.
 
-This is similar to e.g. `T.self` in Swift, `T::class`/`KClass<T>` in Kotlin, and `T.class`/`Class<T>` in Java.
+This is similar to `T.self` in Swift, `T::class`/`KClass<T>` in Kotlin, and `T.class`/`Class<T>` in Java.
 
 For example, to represent the type `Int` at run-time:
 
@@ -59,9 +58,9 @@ let type = Type<Test>()
 type.identifier  // is "A.0000000000000001.Test"
 ```
 
-### Getting the Type from a Value
+## Getting the type from a value
 
-The method `view fun getType(): Type` can be used to get the runtime type of a value.
+The method `view fun getType(): Type` can be used to get the run-time type of a value:
 
 ```cadence
 let something = "hello"
@@ -84,9 +83,9 @@ let type: Type = something.getType()
 // `type` is `Type<@Collectible>()`
 ```
 
-### Constructing a Run-time Type
+## Constructing a run-time type
 
-Run-time types can also be constructed from type identifier strings using built-in constructor functions.
+Run-time types can also be constructed from type identifier strings using built-in constructor functions:
 
 ```cadence
 view fun CompositeType(_ identifier: String): Type?
@@ -94,11 +93,7 @@ view fun InterfaceType(_ identifier: String): Type?
 view fun IntersectionType(types: [String]): Type?
 ```
 
-Given a type identifier (or a list of identifiers for interfaces
-in the case of `IntersectionType`), these functions will look up nominal types and
-produce their run-time equivalents. If the provided identifiers do not correspond
-to any types, or (in the case of `IntersectionType`) the provided combination of
-identifiers would not type-check statically, these functions will produce `nil`.
+Given a type identifier (or a list of identifiers for interfaces in the case of `IntersectionType`), these functions will look up nominal types and produce their run-time equivalents. If the provided identifiers do not correspond to any types, or (in the case of `IntersectionType`) the provided combination of identifiers would not type-check statically, these functions will produce `nil`:
 
 ```cadence
 struct Test: I {}
@@ -126,10 +121,9 @@ view fun CapabilityType(_ type: Type): Type?
 view fun ReferenceType(entitlements: [String], type: Type): Type?
 ```
 
-### Asserting the Type of a Value
+## Asserting the type of a value
 
-The method `view fun isInstance(_ type: Type): Bool` can be used to check if a value has a certain type,
-using the concrete run-time type, and considering subtyping rules,
+The method `view fun isInstance(_ type: Type): Bool` can be used to check if a value has a certain type, using the concrete run-time type, and considering subtyping rules:
 
 ```cadence
 // Declare a variable named `collectible` that has the *static* type `Collectible`
@@ -153,7 +147,11 @@ collectible.isInstance(Type<@AnyResource>())  // is `true`
 collectible.isInstance(Type<String>())  // is `false`
 ```
 
-Note that the **concrete run-time type** of the object is used, **not** the static type.
+:::info
+
+The **concrete run-time type** of the object is used, **not** the static type.
+
+:::
 
 ```cadence
 // Declare a variable named `something` that has the *static* type `AnyResource`

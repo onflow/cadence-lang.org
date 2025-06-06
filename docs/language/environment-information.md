@@ -1,6 +1,6 @@
 ---
 title: Environment Information
-sidebar_position: 29
+sidebar_position: 24
 ---
 
 ## Transaction Information

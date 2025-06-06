@@ -1,6 +1,6 @@
 ---
 title: Transactions
-sidebar_position: 24
+sidebar_position: 20
 ---
 
 Transactions are objects that are signed with keys of one or more [accounts](./accounts/index.mdx)
@@ -117,7 +117,7 @@ This ensures that users can easily read and understand the logic of the transact
 and how it affects their account.
 
 The prepare phase serves a similar purpose as the
-[initializer of a composite](https://developers.flow.com/next/cadence/language/composite-types#composite-type-fields).
+[initializer of a composite](./types-and-type-system/composite-types.mdx#composite-type-fields).
 
 For example, if a transaction performs a token transfer, put the withdrawal in the `prepare` phase,
 as it requires access to the account storage, but perform the deposit in the `execute` phase.

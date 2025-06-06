@@ -1,6 +1,6 @@
 ---
 title: Type Annotations
-sidebar_position: 3
+sidebar_position: 1
 ---
 
 When declaring a constant or variable, an optional _type annotation_ can be provided, to make it explicit what type the declaration has.
@@ -32,7 +32,7 @@ let integerWithoutAnnotation = 1
 let smallIntegerWithAnnotation: Int8 = 1
 ```
 
-If a type annotation is provided, the initial value must be of this type. All new values assigned to variables must match their type. This type safety is explained in more detail in a [separate section]:
+If a type annotation is provided, the initial value must be of this type. All new values assigned to variables must match their type. This type safety is explained in more detail in [this article]:
 
 ```cadence
 // Invalid: declare a variable with an explicit type `Bool`,
@@ -52,4 +52,4 @@ booleanVariable = 1
 <!-- Relative links. Will not render on the page -->
 
 [inferred from the initial value]: ./type-inference.md
-[separate section]: ./type-safety.md
+[this article]: ./type-safety.md

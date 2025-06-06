@@ -1,6 +1,6 @@
 ---
 title: Access control
-sidebar_position: 13
+sidebar_position: 10
 ---
 
 Access control allows making certain parts of a program accessible/visible
@@ -29,7 +29,7 @@ In Cadence, access control consists of:
 This page covers the second part of access control,
 using access modifiers.
 
-All declarations, such as [function](./functions.mdx), [composite types](./composite-types.mdx), and fields,
+All declarations, such as [function](./functions.mdx), [composite types](./types-and-type-system/composite-types.mdx), and fields,
 must be prefixed with an access modifier, using the `access` keyword.
 
 The access modifier determines where the declaration is accessible/visible.
@@ -105,7 +105,7 @@ To summarize the behavior for variable declarations, constant declarations, and 
 | `var`            | `access(all)`      | **All**                                              | Current and inner | Current and inner |
 | `var`            | `access(E)`        | **All** with required entitlements                   | Current and inner | Current and inner |
 
-Declarations of [composite types](./composite-types.mdx) must be public.
+Declarations of [composite types](./types-and-type-system/composite-types.mdx) must be public.
 However, even though the declarations/types are publicly visible,
 resources can only be created, and events can only be emitted
 from inside the contract they are declared in.

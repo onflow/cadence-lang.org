@@ -74,7 +74,7 @@ This transaction will:
 - Call `createEmptyCollection()` from the `IntermediateNFT` contract to create a collection.
 - Create and publish public capabilities for the NFT collection.
 
-Run the transaction using `0x07` as the signer, then run it again for `0x08`.
+Run the transaction using `0x08` as the signer, then run it again for `0x09`.
 
 ### Fungible token setup
 
@@ -108,7 +108,7 @@ This transaction will:
 - Create and add an empty `ExampleToken` vault.
 - Add the `Receiver` [capability] and [publish] it.
 
-Run the transaction using `0x07` as the signer, then run it again for `0x08`.
+Run the transaction using `0x08` as the signer, then run it again for `0x09`.
 
 ## Minting NFTs
 
@@ -144,7 +144,7 @@ transaction(description: String) {
 }
 ```
 
-Mint a token with account `0x08`.
+Mint an NFT with account `0x08`.
 
 ## Minting fungible tokens
 
@@ -187,7 +187,7 @@ transaction(recipient: Address, amount: UFix64) {
 }
 ```
 
-Call `Mint Tokens` with account `0x06` to grant 40 tokens to `0x09` and 20 tokens to `0x08`.
+Call `Mint Tokens` with account `0x06` as the signer to grant 40 tokens to `0x09` and 20 tokens to `0x08`.
 
 ## Validating the setup
 

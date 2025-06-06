@@ -30,6 +30,51 @@
       "source": "/docs/language/values-and-types.md/:path*",
       "destination": "/docs/language/values-and-types/index.md:path*",
       "permanent": true
+    },
+    {
+      "source": "/docs/language/intersection-types.md",
+      "destination": "/docs/language/types-and-type-system/intersection-types.md",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/run-time-types.md",
+      "destination": "/docs/language/types-and-type-system/run-time-types.md",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/type-annotations.md",
+      "destination": "/docs/language/types-and-type-system/type-annotations.md",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/type-hierarchy.md",
+      "destination": "/docs/language/types-and-type-system/type-hierarchy.md",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/type-hierarchy.monopic",
+      "destination": "/docs/language/types-and-type-system/type-hierarchy.monopic",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/type-hierarchy.png",
+      "destination": "/docs/language/types-and-type-system/type-hierarchy.png",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/type-hierarchy.svg",
+      "destination": "/docs/language/types-and-type-system/type-hierarchy.svg",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/type-inference.md",
+      "destination": "/docs/language/types-and-type-system/type-inference.md",
+      "permanent": true
+    },
+    {
+      "source": "/docs/language/type-safety.md",
+      "destination": "/docs/language/types-and-type-system/type-safety.md",
+      "permanent": true
     }
   ]
 }

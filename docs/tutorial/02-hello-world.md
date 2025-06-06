@@ -271,8 +271,8 @@ Reference solutions are functional, but may not be optimal.
 [Cadence]: ../index.md
 [Access Control]: ../language/access-control.md
 [variable]: ../language/constants-and-variables.md
-[type annotation]: ../language/type-annotations.md
-[Composite Types]: ../language/composite-types.mdx
+[type annotation]: ../language/types-and-type-system/type-annotations.md
+[Composite Types]: ../language/types-and-type-system/composite-types.mdx
 [multiple controllers]: https://www.coindesk.comwhat-is-a-multisignature-crypto-wallet
 [contract area]: ../language/accounts/contracts
 [update]: ../language/contract-updatability.md

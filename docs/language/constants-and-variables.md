@@ -90,5 +90,5 @@ let a = a
 
 <!-- Relative links. Will not render on the page -->
 
-[type]: ./type-safety.md
-[type annotation]: ./type-annotations.md
+[type]: ./types-and-type-system/type-safety.md
+[type annotation]: ./types-and-type-system/type-annotations.md

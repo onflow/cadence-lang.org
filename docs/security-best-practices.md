@@ -74,7 +74,7 @@ and only request the least and most fine-grained account entitlements necessary 
 
 ## Types
 
-Use [intersection types and interfaces](./language/intersection-types.md). Always use the most specific type possible, following the principle of least privilege. Types should always be as restrictive as possible, especially for resource types.
+Use [intersection types and interfaces](./language/types-and-type-system/intersection-types.md). Always use the most specific type possible, following the principle of least privilege. Types should always be as restrictive as possible, especially for resource types.
 
 If given a less-specific type, cast to the more specific type that is expected. For example, when implementing the fungible token standard, a user may deposit any fungible token, so the implementation should cast to the expected concrete fungible token type.
 

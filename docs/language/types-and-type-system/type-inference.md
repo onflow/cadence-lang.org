@@ -1,13 +1,13 @@
 ---
 title: Type Inference
-sidebar_position: 10
+sidebar_position: 3
 ---
 
-If a variable or constant declaration is not annotated explicitly with a type,
-the declaration's type is inferred from the initial value.
+If a variable or constant declaration is not annotated explicitly with a type, the declaration's type is inferred from the initial value.
 
-### Basic Literals
-Decimal integer literals and hex literals are inferred to type `Int`.
+### Basic literals
+
+Decimal integer literals and hex literals are inferred to type `Int`:
 
 ```cadence
 let a = 1
@@ -20,8 +20,7 @@ let c = 0x02
 // `c` has type `Int`
 ```
 
-Unsigned fixed-point literals are inferred to type `UFix64`.
-Signed fixed-point literals are inferred to type `Fix64`.
+Unsigned fixed-point literals are inferred to type `UFix64`. Signed fixed-point literals are inferred to type `Fix64`:
 
 ```cadence
 let a = 1.2
@@ -40,9 +39,9 @@ Similarly, for other basic literals, the types are inferred in the following man
 | Nil literal       | `let x = nil`     |  Never?           |
 
 
-### Array Literals
-Array literals are inferred based on the elements of the literal, and to be variable-size.
-The inferred element type is the _least common super-type_ of all elements.
+### Array literals
+
+Array literals are inferred based on the elements of the literal, and to be variable-size. The inferred element type is the _least common super-type_ of all elements:
 
 ```cadence
 let integers = [1, 2]
@@ -61,9 +60,9 @@ let mixed = [1, true, 2, false]
 // `mixed` has type `[AnyStruct]`
 ```
 
-### Dictionary Literals
-Dictionary literals are inferred based on the keys and values of the literal.
-The inferred type of keys and values is the _least common super-type_ of all keys and values, respectively.
+### Dictionary literals
+
+Dictionary literals are inferred based on the keys and values of the literal. The inferred type of keys and values is the _least common super-type_ of all keys and values, respectively:
 
 ```cadence
 let booleans = {
@@ -88,8 +87,10 @@ let invalidMixed = {
 // But it is not a valid type for dictionary keys.
 ```
 
-### Ternary Expression
-Ternary expression type is inferred  to be the least common super-type of the second and third operands.
+### Ternary expression
+
+The ternary expression type is inferred to be the least common super-type of the second and third operands:
+
 ```cadence
 let a = true ? 1 : 2
 // `a` has type `Int`
@@ -102,7 +103,8 @@ let c = true ? 5 : (false ? "hello" : nil)
 ```
 
 ### Functions
-Functions are inferred based on the parameter types and the return type.
+
+Functions are inferred based on the parameter types and the return type:
 
 ```cadence
 let add = (a: Int8, b: Int8): Int {
@@ -112,11 +114,11 @@ let add = (a: Int8, b: Int8): Int {
 // `add` has type `fun(Int8, Int8): Int`
 ```
 
-Type inference is performed for each expression / statement, and not across statements.
+Type inference is performed for each expression and statement, and not across statements.
 
 ## Ambiguities
-There are cases where types cannot be inferred.
-In these cases explicit type annotations are required.
+
+There are cases where types cannot be inferred. In these cases, explicit type annotations are required:
 
 ```cadence
 // Invalid: not possible to infer type based on array literal's elements.

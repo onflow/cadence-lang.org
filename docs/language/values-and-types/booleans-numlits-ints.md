@@ -239,5 +239,5 @@ All integer types support the following functions:
 <!-- Relative links. Will not render on the page -->
 
 [arithmetic operators]: ../operators/arithmetic-logical-operators.md#arithmetic-operators
-[inferred]: ../type-inference.md
+[inferred]: ../types-and-type-system/type-inference.md
 [optional]: ./anystruct-anyresource-opts-never.md#optionals

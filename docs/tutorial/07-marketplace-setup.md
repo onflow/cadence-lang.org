@@ -2,7 +2,7 @@
 title: Marketplace Setup
 ---
 
-In the [Marketplace Tutorial], we're going to create a marketplace that uses both the fungible and non-fungible token (NFTs) contracts that we have learned about in previous tutorials. First, you'll execute a series of transactions to set up the accounts that you'll need to complete the marketplace tutorial. Next, you'll build the marketplace itself.
+In the [Marketplace Tutorial], we're going to create a marketplace that uses both the fungible and non-fungible token (NFT) contracts that we have learned about in previous tutorials. First, you'll execute a series of transactions to set up the accounts that you'll need to complete the marketplace tutorial. Next, you'll build the marketplace itself.
 
 :::warning
 
@@ -41,7 +41,7 @@ Next, you'll need to execute transactions to set up accounts `0x08` and `0x09` t
 
 **Remember**: On Flow, accounts must maintain a balance of $FLOW proportional to the amount of storage the account is using. Furthermore, placing something in the storage of an account requires that the receiving account has a capability that can accept the asset type. As a result, accounts can **not** accept arbitrary data (including tokens!) from random contracts without first executing a transaction to allow it.
 
-This might seem like a burden, but it's **great!!** Thanks to this feature, one of the most common causes of burning assets is impossible on Flow. You can **not** send property to a random address — only those that know how to receive it!
+This might seem like a burden, but it's **great!** Thanks to this feature, one of the most common causes of burning assets is impossible on Flow. You can **not** send property to a random address — only those that know how to receive it!
 
 :::
 
@@ -74,7 +74,7 @@ This transaction will:
 - Call `createEmptyCollection()` from the `IntermediateNFT` contract to create a collection.
 - Create and publish public capabilities for the NFT collection.
 
-Run the transaction using `0x07` as the signer, then run it again for `0x08`.
+Run the transaction using `0x08` as the signer, then run it again for `0x09`.
 
 ### Fungible token setup
 
@@ -108,15 +108,15 @@ This transaction will:
 - Create and add an empty `ExampleToken` vault.
 - Add the `Receiver` [capability] and [publish] it.
 
-Run the transaction using `0x07` as the signer, then run it again for `0x08`.
+Run the transaction using `0x08` as the signer, then run it again for `0x09`.
 
 ## Minting NFTs
 
 Now that you've set up both accounts to be able to receive NFTs, it's time to give account `0x08` an NFT to sell to `0x09`.
 
-:::tip
+:::tip[Reminder]
 
-**Reminder**: The `IntermediateNFT` contract allows **anyone** to freely mint NFTs. You wouldn't want this ability in production, but it is in here to streamline the tutorial.
+The `IntermediateNFT` contract allows **anyone** to freely mint NFTs. You wouldn't want this ability in production, but it is in here to streamline the tutorial.
 
 :::
 
@@ -144,15 +144,15 @@ transaction(description: String) {
 }
 ```
 
-Mint a token with account `0x08`.
+Mint an NFT with account `0x08`.
 
 ## Minting fungible tokens
 
 You've also set up both accounts to be able to receive non-fungible tokens from `ExampleToken`.
 
-:::tip
+:::tip[Reminder]
 
-**Reminder**: The `ExampleToken` contract only allows the owner of the contract to mint NFTs.
+The `ExampleToken` contract only allows the owner of the contract to mint NFTs.
 
 :::
 
@@ -187,7 +187,7 @@ transaction(recipient: Address, amount: UFix64) {
 }
 ```
 
-Call `Mint Tokens` with account `0x06` to grant 40 tokens to `0x09` and 20 tokens to `0x08`.
+Call `Mint Tokens` with account `0x06` as the signer to grant 40 tokens to `0x09` and 20 tokens to `0x08`.
 
 ## Validating the setup
 
@@ -213,7 +213,7 @@ Now that you have completed this tutorial, you are able to:
 
 You do not need to open a new playground session for the marketplace tutorial. You can just continue using this one.
 
-## Reference Solution
+## Reference solution
 
 :::warning
 

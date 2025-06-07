@@ -519,7 +519,7 @@ Finally, a marketplace contract includes appropriate `event`s that are emitted w
 
 Deploy the marketplace contract with account `0x0a`.
 
-## Using the Marketplace
+## Using the marketplace
 
 Now that you've set up your user accounts, and deployed the contracts for the NFT, fungible token, and marketplace, it's time to write a few `transaction`s to tie everything together.
 
@@ -791,7 +791,7 @@ access(all) fun main(address: Address): [UInt64] {
 }
 ```
 
-## Creating a **Marketplace for Any Generic NFT**
+## Creating a marketplace for any generic NFT
 
 The previous examples show how a simple marketplace can be created for a specific class of NFTs. However, users will want to have a marketplace where they can buy and sell **any** NFT they want, regardless of its type.
 

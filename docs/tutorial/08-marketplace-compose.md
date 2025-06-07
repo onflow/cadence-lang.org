@@ -24,7 +24,7 @@ tags:
   - tutorial
 ---
 
-In this tutorial, we're going to create a simplified marketplace that uses both the fungible and non-fungible token (NFTs) contracts that we built in previous tutorials.
+In this tutorial, we're going to create a simplified marketplace that uses both the fungible and non-fungible token (NFT) contracts that we built in previous tutorials.
 
 :::warning
 
@@ -32,9 +32,9 @@ This tutorial uses the simplified fungible and non-fungible tokens you built in 
 
 :::
 
-Marketplaces are a popular application of blockchain technology and smart contracts. People with digital collectibles such as NFTs need to be able to buy and sell them - either with the network token or their fungible tokens.
+Marketplaces are a popular application of blockchain technology and smart contracts. People with digital collectibles such as NFTs need to be able to buy and sell them — either with the network token or their fungible tokens.
 
-More than just a convenience, marketplaces demonstrate one of the most compelling arguments for developing digital property on blockchains. In web 2, each developer needed to build their own bespoke systems for buying, selling, trading, and storing digital property. Onchain, if you build digital property that adheres to the appropriate standards, your digital collectibles, items, etc. will **automatically appear on several marketplace apps** built by experts in marketplaces who have made them the focus of their attention and business.
+More than just a convenience, marketplaces demonstrate one of the most compelling arguments for developing digital property on blockchains. In web 2, each developer needed to build their own bespoke systems for buying, selling, trading, and storing digital property. Onchain, if you build digital property that adheres to the appropriate standards, your digital collectibles, items, etc., will **automatically appear on several marketplace apps** built by experts in marketplaces who have made them the focus of their attention and business.
 
 ## Objectives
 
@@ -50,15 +50,15 @@ To complete this tutorial, you must have completed the [Marketplace Setup Tutori
 
 ## Building with composability
 
-Now that **there are** contracts deployed for both fungible and non-fungible tokens, we can build a marketplace that uses both. We've picked the words **there are** in the prior sentence on purpose. It doesn't matter that you created these contracts. If they were deployed onchain, instead of in the ephemeral simulation in the playground, **anyone** could complete this tutorial to build a marketplace that works with your NFTs and tokens.
+Now that **there are** contracts deployed for both fungible and non-fungible tokens, we can build a marketplace that uses both. We've picked the words _there are_ in the prior sentence on purpose. It doesn't matter that you created these contracts. If they were deployed onchain, instead of in the ephemeral simulation in the playground, **anyone** could complete this tutorial to build a marketplace that works with your NFTs and tokens.
 
-It's one of the most powerful and useful properties of building onchain and is called **composability** - the ability for developers to leverage shared resources, such as code, digital property, and user bases, and use them as building blocks for new application.
+It's one of the most powerful and useful properties of building onchain and it's called _composability_ — the ability for developers to leverage shared resources, such as code, digital property, and user bases, and use them as building blocks for a new application.
 
-This isn't an entirely new concept - we're used to reusing code, open source projects, etc. But the degree and scale are much higher. For example, if you're building an onchain version of a web forum, you don't need to do anything to allow your users to have a profile picture beyond allowing them to select which PFP they own from the list of PFP collections you choose to incorporate into your app.
+This isn't an entirely new concept — we're used to reusing code, open source projects, etc. But the degree and scale are much higher. For example, if you're building an onchain version of a web forum, you don't need to do anything to allow your users to have a profile picture beyond allowing them to select which PFP they own from the list of PFP collections you choose to incorporate into your app.
 
-You're happy because you get a solution that works for your users for minimal effort and the PFP collection creator is happy because their work becomes more valuable and desirable the more places it can be used an seen. Everybody wins!
+You're happy because you get a solution that works for your users for minimal effort, and the PFP collection creator is happy because their work becomes more valuable and desirable the more places it can be used an seen. Everybody wins!
 
-Flow is designed to enable composability through interfaces, resources and capabilities.
+Flow is designed to enable composability through interfaces, resources and capabilities:
 
 - [Interfaces] allow projects to support any generic type as long as it supports a standard set of functionality specified by an interface.
 - [Resources] can be passed around and owned by accounts, contracts or even other resources, unlocking different use cases depending on where the resource is stored.
@@ -76,9 +76,9 @@ A traditional way to implement a marketplace is to have a central smart contract
 
 This approach is reasonable, but it centralizes the process and takes away options from the owners. A better option that's possible with Cadence is to allow users to maintain ownership of the NFTs that they are trying to sell while they are trying to sell them. Instead of taking a centralized approach, each user can list a sale from within their own account.
 
-They'll do this by using the marketplace contract you'll build to store an instance of a `@SaleCollection` resource in their account storage.
+They'll do this by using a marketplace contract you'll build to store an instance of a `@SaleCollection` resource in their account storage.
 
-Then, the seller, independently or through an app, can either provide a link to their sale to an application that can list it centrally on a website, or even to a central sale aggregator smart contract if they want the entire transaction to stay on-chain.
+Then, the seller, independently or through an app, can either provide a link to their sale to an application that can list it centrally on a website, or even to a central sale aggregator smart contract if they want the entire transaction to stay onchain.
 
 ### Validating setup
 
@@ -90,7 +90,7 @@ Remember, we only need to do this again to ensure that the ephemeral state of th
 
 :::
 
-You'll see similar to this this output if your accounts are set up correctly:
+The following output appears if your accounts are set up correctly:
 
 ```zsh
 s.8250c68d2bb3c5398d7f9eac7114a4ac1b7df1d0984d92058b9373f696a1d6a9.OwnerInfo(acct8Balance: 40.00000000, acct9Balance: 40.00000000, acct8IDs: [1], acct9IDs: [])
@@ -136,68 +136,70 @@ We're marking the addresses as optional, because there's some circumstances wher
 
 Next, we need to configure a [resource] that users can use to put their NFTs up for sale, and other users can use to then purchase those NFTs for fungible tokens. In it, you'll need to add:
 
-- A [capability] to access the owner's collection
-- A place to store the prices of NFTs for sale
-- A [capability] to deposit tokens into the sellers vault when an NFT is purchased
+- A [capability] to access the owner's collection.
+- A place to store the prices of NFTs for sale.
+- A [capability] to deposit tokens into the sellers vault when an NFT is purchased.
 
 You'll also need functions to:
 
-- Allow the owner to list an NFT for sale
-- Allow the owner to cancel a sale
-- Allow the owner to change the price
-- Allow a third party to buy the NFT, and deposit the purchase price in the seller's vault
+- Allow the owner to list an NFT for sale.
+- Allow the owner to cancel a sale.
+- Allow the owner to change the price.
+- Allow a third party to buy the NFT, and deposit the purchase price in the seller's vault.
 
 ### Definition and initialization
 
-Start by creating the resource definition:
+To define and initialize:
 
-```cadence
-access(all) resource SaleCollection  {
-    // TODO
-}
-```
+1. Create the resource definition:
 
-:::info[Reminder]
+   ```cadence
+   access(all) resource SaleCollection  {
+       // TODO
+   }
+   ```
 
-In this case, `access(all)` is giving public scope to the **definition** of the resource type, **not** any given instance of the resource or anything in one of those instances. It's good to make these public so that others can build contracts and apps that interact with yours.
+   :::info[Reminder]
 
-:::
+   In this case, `access(all)` is giving public scope to the **definition** of the resource type, **not** any given instance of the resource or anything in one of those instances. It's good to make these public so that others can build contracts and apps that interact with yours.
 
-In it, add a variable to store a capability for the owner's collection with the ability to withdraw from the collection:
+   :::
 
-:::info[Reminder]
+1. In it, add a variable to store a capability for the owner's collection with the ability to withdraw from the collection:
 
-You'll get errors until after you write the `init` function and assign values to these properties.
+   ```cadence
+   access(self) let ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>
+   ```
 
-:::
+   :::info[Reminder]
 
-```cadence
-access(self) let ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>
-```
+   You'll get errors until after you write the `init` function and assign values to these properties.
 
-Next, add a dictionary to relate NFT ids to the sale price for that NFT:
+   :::
 
-```cadence
-access(self) let prices: {UInt64: UFix64}
-```
+1. Add a dictionary to relate NFT ids to the sale price for that NFT:
 
-:::info[reminder]
+   ```cadence
+   access(self) let prices: {UInt64: UFix64}
+   ```
 
-`access(self)` limits access to the resource itself, from within the resource.
+   :::info[reminder]
 
-:::
+   `access(self)` limits access to the resource itself, from within the resource.
 
-Then, add a variable to store a capability for a sellers fungible token vault's receiver:
+   :::
 
-```cadence
-access(account) let ownerVault: Capability<&{ExampleToken.Receiver}>
-```
+1. Add a variable to store a capability for a sellers fungible token vault's receiver:
 
-### Resource-Owned Capabilities
+   ```cadence
+   access(account) let ownerVault: Capability<&{ExampleToken.Receiver}>
+   ```
+
+### Resource-owned capabilities
 
 You first learned about basic function and use of [capabilities] in the [capabilities tutorial]. They're links to private objects in account storage that specify and expose a subset of the resource they are linked to.
 
-With the marketplace contract, we are utilizing a new feature of capabilities - Capabilities can be stored anywhere! Lots of functionality is contained within resources, and developers will sometimes want to be able to access some of the functionality of resources from within different resources or contracts.
+With the marketplace contract, we are utilizing a new feature of capabilities — they can be stored anywhere! Lots of functionality is contained within resources, and developers will sometimes want to be able to access some of the functionality of resources from within different resources or contracts.
 
 We stored two different capabilities in the marketplace sale collection:
 
@@ -216,7 +218,7 @@ It is important to remember that control of a capability does not equal ownershi
 
 Additionally, these capabilities can be stored anywhere, but if a user decides that they no longer want the capability to be used, they can revoke it by getting the controller for the capability from their account with the `getControllers` method and delete the capability with `delete`.
 
-Here is an example that deletes all the controllers for a specified storage path:
+Here is an example that deletes all of the controllers for a specified storage path:
 
 ```cadence
 let controllers = self.account.capabilities.storage.getControllers(forPath: storagePath)
@@ -283,54 +285,55 @@ access(all) entitlement Owner
 
 :::info
 
-Strictly speaking, we're not actually going to use this entitlement. We're using it to "lock" the functionality, but we're not giving the entitlement to any other accounts. The owner doesn't need to use this "key" to unlock the functions limited with it - they automatically have access.
+Strictly speaking, we're not actually going to use this entitlement. We're using it to "lock" the functionality, but we're not giving the entitlement to any other accounts. The owner doesn't need to use this "key" to unlock the functions limited with it — they automatically have access.
 
 :::
 
-Add a function that the owner of the resource can use to list one of their tokens for sale, and `emit` an `event` that they've done so. Use a `pre`condition to return an error if they don't own the token they're trying to list. As before, this is probably the only place where this error will be useful, so it can be placed directly in the function:
+1. Add a function that the owner of the resource can use to list one of their tokens for sale, and `emit` an `event` that they've done so.
+1. Use a `pre`condition to return an error if they don't own the token they're trying to list. As before, this is probably the only place where this error will be useful, so it can be placed directly in the function:
 
-```cadence
-access(Owner) fun listForSale(tokenID: UInt64, price: UFix64) {
-    pre {
-        self.ownerCollection.borrow()!.idExists(id: tokenID):
-            "ExampleMarketplace.SaleCollection.listForSale: "
-            .concat("Cannot list token ID ").concat(tokenID.toString())
-            .concat(" . This NFT ID is not owned by the seller.")
-            .concat("Make sure an ID exists in the sellers NFT Collection")
-            .concat(" before trying to list it for sale")
-    }
-    // store the price in the price array
-    self.prices[tokenID] = price
+   ```cadence
+   access(Owner) fun listForSale(tokenID: UInt64, price: UFix64) {
+       pre {
+           self.ownerCollection.borrow()!.idExists(id: tokenID):
+               "ExampleMarketplace.SaleCollection.listForSale: "
+               .concat("Cannot list token ID ").concat(tokenID.toString())
+               .concat(" . This NFT ID is not owned by the seller.")
+               .concat("Make sure an ID exists in the sellers NFT Collection")
+               .concat(" before trying to list it for sale")
+      }
+      // store the price in the price array
+      self.prices[tokenID] = price
 
-    emit ForSale(id: tokenID, price: price, owner: self.owner?.address)
-}
-```
+      emit ForSale(id: tokenID, price: price, owner: self.owner?.address)
+   }
+   ```
 
-Then, add a function to allow changing the price. It should also `emit` the appropriate `event`.
+1. Add a function to allow changing the price. It should also `emit` the appropriate `event`:
 
-```cadence
-access(Owner) fun changePrice(tokenID: UInt64, newPrice: UFix64) {
-    self.prices[tokenID] = newPrice
+   ```cadence
+   access(Owner) fun changePrice(tokenID: UInt64, newPrice: UFix64) {
+       self.prices[tokenID] = newPrice
 
-    emit PriceChanged(id: tokenID, newPrice: newPrice, owner: self.owner?.address)
-}
-```
+       emit PriceChanged(id: tokenID, newPrice: newPrice, owner: self.owner?.address)
+   }
+   ```
 
-Finally, add a function that allows the owner to cancel their sale. You don't need to do anything with the token itself, it hasn't left the owners account!
+1. Add a function that allows the owner to cancel their sale. You don't need to do anything with the token itself, as it hasn't left the owners account:
 
-```cadence
-access(Owner) fun cancelSale(tokenID: UInt64) {
-    // remove the price
-    self.prices.remove(key: tokenID)
-    self.prices[tokenID] = nil
+   ```cadence
+   access(Owner) fun cancelSale(tokenID: UInt64) {
+       // remove the price
+       self.prices.remove(key: tokenID)
+       self.prices[tokenID] = nil
 
-    // Nothing needs to be done with the actual token because it is already in the owner's collection
-}
-```
+       // Nothing needs to be done with the actual token because it is already in the owner's collection
+   }
+   ```
 
 :::info
 
-Solidity devs take note here! In Cadence, you can build an NFT marketplace without needing to transfer NFTs to a third party or needing to give a third party permission to take the NFT.
+Solidity devs, take note here! In Cadence, you can build an NFT marketplace without needing to transfer NFTs to a third party or needing to give a third party permission to take the NFT.
 
 :::
 
@@ -353,13 +356,13 @@ access(all) fun purchase(
 
 :::warning
 
-You are **not** providing the purchaser's vault here - that's an anti-pattern. Instead, create a temporary vault and use that to transfer the tokens.
+You are **not** providing the purchaser's vault here — that's an anti-pattern. Instead, create a temporary vault and use that to transfer the tokens.
 
 :::
 
 You'll also want to use `pre`conditions to check and provide errors as appropriate for:
 
-- That the NFT with the provided ID is for sale.
+- The NFT with the provided ID is for sale.
 - The buyer has included the correct amount of tokens in the provided vault.
 - The buyer has the collection capability needed to receive the NFT.
 
@@ -468,7 +471,7 @@ access(all) fun purchase(tokenID: UInt64,
 
 ### Views
 
-Finally, add a couple of views so that others can read the prices for NFTs and which are for sale:
+Finally, add a couple of views so that others can read the prices for NFTs and which ones are for sale:
 
 ```cadence
 access(all) view fun idPrice(tokenID: UInt64): UFix64? {
@@ -482,7 +485,7 @@ access(all) view fun getIDs(): [UInt64] {
 
 ### Creating a `SaleCollection`
 
-Last, but not least, you need to add a contract-level function that allows users to create their own `SaleCollection` resource. It needs accept the same arguments as the `init` for the resource, pass them into the `create` call, and return the newly-created resource:
+Last, but not least, you need to add a contract-level function that allows users to create their own `SaleCollection` resource. It needs to accept the same arguments as the `init` for the resource, pass them into the `create` call, and return the newly-created resource:
 
 :::warning
 
@@ -502,7 +505,7 @@ access(all) fun createSaleCollection(
 
 ### Marketplace contract summary
 
-That's it! You've completed the contract needed to allow anyone who owns the NFTs and fungible tokens you've created to sell one, accepting payment in the other! This marketplace contract has resources that function similarly to the NFT `Collection` you built in [Non-Fungible Tokens], with a few differences and additions:
+That's it! You've completed the contract needed to allow anyone who owns the NFTs and fungible tokens you've created to sell one, accepting payment in the other! This marketplace contract has resources that function similarly to the NFT `Collection` you built in [Non-Fungible Tokens], with a few differences and additions.
 
 This marketplace contract has methods to add and remove NFTs, but instead of storing the NFT resource object in the sale collection, the user provides a capability to their main collection that allows the listed NFT to be withdrawn and transferred when it is purchased. When a user wants to put their NFT up for sale, they do so by providing the ID and the price to the `listForSale()` function.
 
@@ -510,7 +513,7 @@ Then, another user can call the `purchase()` function, sending an `ExampleToken.
 
 The owner of the sale saves a capability to their Fungible Token `Receiver` within the sale. This allows the sale resource to be able to immediately deposit the currency that was used to buy the NFT into the owners `Vault` when a purchase is made.
 
-Finally, marketplace contract includes appropriate `event`s that are emitted when important actions happen. External apps can monitor these events to know the state of the smart contract.
+Finally, a marketplace contract includes appropriate `event`s that are emitted when important actions happen. External apps can monitor these events to know the state of the smart contract.
 
 ### Deployment
 
@@ -522,7 +525,7 @@ Now that you've set up your user accounts, and deployed the contracts for the NF
 
 :::info
 
-One of the most useful features of Cadence is that transactions are code written in Cadence. You can use this to add functionality after deploying your contracts - you're not limited to only the functions you thought of when you wrote the contract.
+One of the most useful features of Cadence is that transactions are code written in Cadence. You can use this to add functionality after deploying your contracts — you're not limited to only the functions you thought of when you wrote the contract.
 
 :::
 
@@ -536,210 +539,215 @@ Depending on your app design, you might want to break these steps up into separa
 
 :::
 
-Start by importing the three contracts and adding a `prepare` statement with auth to `SaveValue`, `StorageCapabilities`, and `PublishCapability`:
+1. Import the three contracts and add a `prepare` statement with auth to `SaveValue`, `StorageCapabilities`, and `PublishCapability`:
 
-```cadence
-import ExampleToken from 0x06
-import IntermediateNFT from 0x07
-import BasicMarketplace from 0x0a
+   ```cadence
+   import ExampleToken from 0x06
+   import IntermediateNFT from 0x07
+   import BasicMarketplace from 0x0a
 
-transaction {
-    prepare(acct: auth(SaveValue, StorageCapabilities, PublishCapability) &Account) {
-        // TODO
-    }
-}
-```
+   transaction {
+       prepare(acct: auth(SaveValue, StorageCapabilities, PublishCapability) &Account) {
+           // TODO
+       }
+   }
+   ```
 
-In `prepare`, you need to:
+1. Complete the following in `prepare`:
 
-- Borrow a reference to the user's vault
-- Create an entitled capability to the user's NFT collection
-- Use these to to create a `SaleCollection` and store it in a constant
+   - Borrow a reference to the user's vault.
+   - Create an entitled capability to the user's NFT collection.
+   - Use these to to create a `SaleCollection` and store it in a constant.
 
-```cadence
-let receiver = acct.capabilities.get<&{ExampleToken.Receiver}>(ExampleToken.VaultPublicPath)
-let collectionCapability = acct.capabilities.storage.issue
-                            <auth(IntermediateNFT.Withdraw) &IntermediateNFT.Collection>
-                            (IntermediateNFT.CollectionStoragePath)
-let sale <- BasicMarketplace.createSaleCollection(ownerCollection: collectionCapability, ownerVault: receiver)
-```
+   ```cadence
+   let receiver = acct.capabilities.get<&{ExampleToken.Receiver}>(ExampleToken.VaultPublicPath)
+   let collectionCapability = acct.capabilities.storage.issue
+                               <auth(IntermediateNFT.Withdraw) &IntermediateNFT.Collection>
+                               (IntermediateNFT.CollectionStoragePath)
+   let sale <- BasicMarketplace.createSaleCollection(ownerCollection: collectionCapability, ownerVault: receiver)
+   ```
 
-Then, use your `sale` instance of the collection to create a sale. Afterwards, `move (<-)` it into account storage.
+1. Use your `sale` instance of the collection to create a sale. Afterwards, `move (<-)` it into account storage:
 
-```cadence
-sale.listForSale(tokenID: 1, price: 10.0)
-acct.storage.save(<-sale, to: /storage/NFTSale)
-```
+   ```cadence
+   sale.listForSale(tokenID: 1, price: 10.0)
+   acct.storage.save(<-sale, to: /storage/NFTSale)
+   ```
 
-:::tip
+   :::tip
 
-You might be tempted to change the order here to handle creating the `SaleCollection` and storing it first, then using it to create a sale.
+   You might be tempted to change the order here to handle creating the `SaleCollection` and storing it first, then using it to create a sale.
 
-This won't work because resources can only be moved - they can't be copied. Once you `move (<-)` `sale` to storage, `sale` isn't usable anymore.
+   This won't work because resources can only be moved — they can't be copied. Once you `move (<-)` `sale` to storage, `sale` is no longer usable.
 
-:::
+   :::
 
-Finally, create and publish a public capability so that others can use the public functions of this resource to find and purchase NFTs.
+1. Create and publish a public capability so that others can use the public functions of this resource to find and purchase NFTs:
 
-```cadence
-let publicCap = acct.capabilities.storage.issue<&BasicMarketplace.SaleCollection>(/storage/NFTSale)
-acct.capabilities.publish(publicCap, at: /public/NFTSale)
-```
+   ```cadence
+   let publicCap = acct.capabilities.storage.issue<&BasicMarketplace.SaleCollection>(/storage/NFTSale)
+   acct.capabilities.publish(publicCap, at: /public/NFTSale)
+   ```
 
-Call the transaction with account `0x08`.
+1. Call the transaction with account `0x08`.
 
 ### Checking for NFTs to purchase
 
-Let's create a script to ensure that the sale was created correctly. Add a new one called `GetSaleIDsAndPrices`. Import the contracts and stub out a script that accepts an `Address` as an argument and returns a `UInt64` array:
+Let's create a script to ensure that the sale was created correctly:
 
-```cadence
-import ExampleToken from 0x06
-import IntermediateNFT from 0x07
-import BasicMarketplace from 0x0a
+1. Add a new one called `GetSaleIDsAndPrices`. 
+1. Import the contracts and stub out a script that accepts an `Address` as an argument and returns a `UInt64` array:
 
-access(all)
-fun main(address: Address): [UInt64] {
-    // TODO
-}
-```
+   ```cadence
+   import ExampleToken from 0x06
+   import IntermediateNFT from 0x07
+   import BasicMarketplace from 0x0a
 
-In the script:
+   access(all)
+   fun main(address: Address): [UInt64] {
+      // TODO
+   }
+   ```
 
-- Use the `address` to get a public account object for that address.
-- Attempt to borrow a reference to the public capability for the `SaleCollection` in that account
-  - Panic and return an error if it's not found
-  - Call `getIDs` if it is, and return the list of NFTs for sale
+1. In the script:
 
-```cadence
-import ExampleToken from 0x06
-import IntermediateNFT from 0x07
-import BasicMarketplace from 0x0a
+   - Use the `address` to get a public account object for that address.
+   - Attempt to borrow a reference to the public capability for the `SaleCollection` in that account:
+      - Panic and return an error if it's not found.
+      - Call `getIDs` if it is, and return the list of NFTs for sale.
 
-access(all)
-fun main(address: Address): [UInt64] {
+   ```cadence
+   import ExampleToken from 0x06
+   import IntermediateNFT from 0x07
+   import BasicMarketplace from 0x0a
 
-    let account = getAccount(address)
+   access(all)
+   fun main(address: Address): [UInt64] {
 
-    let saleRef = account.capabilities.borrow<&BasicMarketplace.SaleCollection>(/public/NFTSale)
-        ?? panic("Could not borrow a reference to the SaleCollection capability for the address provided")
+       let account = getAccount(address)
 
-    return saleRef.getIDs()
-}
-```
+       let saleRef = account.capabilities.borrow<&BasicMarketplace.SaleCollection>(/public/NFTSale)
+           ?? panic("Could not borrow a reference to the SaleCollection capability for the address provided")
 
-Run the script. You should be part of the way there:
+       return saleRef.getIDs()
+   }
+   ```
 
-```zsh
-[1]
-```
+1. Run the script. You should be part of the way there:
 
-The script returns an array containing the one NFT for sale, but what about the prices? We added a function to return the price of a given NFT, but not a list or array.
+   ```zsh
+   [1]
+   ```
 
-We could update the contract since we own it (another power of Cadence), but even if we didn't, we could always add functionality via a script. Update your script to create a `struct` to return the data in, then fetch the list of IDs, loop through them to get the prices, and return an array with the prices:
+   The script returns an array containing the one NFT for sale, but what about the prices? We added a function to return the price of a given NFT, but not a list or array.
 
-```cadence
-import ExampleToken from 0x06
-import IntermediateNFT from 0x07
-import BasicMarketplace from 0x0a
+   We could update the contract since we own it (another power of Cadence), but even if we didn't, we could always add functionality via a script.
+   
+1. Update your script to create a `struct` to return the data in, then fetch the list of IDs, loop through them to get the prices, and return an array with the prices:
 
-access(all) struct Pair {
-    access(all) let id: UInt64
-    access(all) let value: UFix64
+   ```cadence
+   import ExampleToken from 0x06
+   import IntermediateNFT from 0x07
+   import BasicMarketplace from 0x0a
 
-    init(id: UInt64, value: UFix64) {
-        self.id = id
-        self.value = value
-    }
-}
+   access(all) struct Pair {
+       access(all) let id: UInt64
+       access(all) let value: UFix64
 
-access(all)
-fun main(address: Address): [Pair] {
+       init(id: UInt64, value: UFix64) {
+           self.id = id
+           self.value = value
+       }
+   }
 
-    let account = getAccount(address)
+   access(all)
+   fun main(address: Address): [Pair] {
 
-    let saleRef = account.capabilities.borrow<&BasicMarketplace.SaleCollection>(/public/NFTSale)
-        ?? panic("Could not borrow a reference to the SaleCollection capability for the address provided")
+       let account = getAccount(address)
 
-    let ids = saleRef.getIDs()
+       let saleRef = account.capabilities.borrow<&BasicMarketplace.SaleCollection>(/public/NFTSale)
+           ?? panic("Could not borrow a reference to the SaleCollection capability for the address provided")
 
-    let pricePairs: [Pair] = []
+       let ids = saleRef.getIDs()
 
-    for id in ids {
-        let pair = Pair(id: id, value: saleRef.idPrice(tokenID: id) ?? 0.0)
-        pricePairs.append(pair)
-    }
+       let pricePairs: [Pair] = []
 
-    return pricePairs
-}
-```
+       for id in ids {
+           let pair = Pair(id: id, value: saleRef.idPrice(tokenID: id) ?? 0.0)
+           pricePairs.append(pair)
+       }
+
+       return pricePairs
+   }
+   ```
 
 ## Purchasing an NFT
 
 Finally, you can add a transaction that a buyer can use to purchase the seller's NFT with their fungible tokens.
 
-Create a `transaction` called `PurchaseNFT`, import the contract, and stub it out:
+1. Create a `transaction` called `PurchaseNFT`, import the contract, and stub it out:
 
-```cadence
-import ExampleToken from 0x06
-import IntermediateNFT from 0x07
-import BasicMarketplace from 0x0a
+   ```cadence
+   import ExampleToken from 0x06
+   import IntermediateNFT from 0x07
+   import BasicMarketplace from 0x0a
 
-transaction(sellerAddress: Address, tokenID: UInt64, price: UFix64) {
+   transaction(sellerAddress: Address, tokenID: UInt64, price: UFix64) {
 
-    let collectionCapability: Capability<&IntermediateNFT.Collection>
-    let temporaryVault: @ExampleToken.Vault
+       let collectionCapability: Capability<&IntermediateNFT.Collection>
+       let temporaryVault: @ExampleToken.Vault
 
-    prepare(acct: auth(BorrowValue) &Account) {
-        // TODO
-    }
+       prepare(acct: auth(BorrowValue) &Account) {
+           // TODO
+       }
 
-    execute {
-        // TODO
-    }
-}
-```
+       execute {
+           // TODO
+       }
+   }
+   ```
 
-In `prepare`, you'll need to:
+1. Complete the following in `prepare`:
 
-- `get` the `collectionCapability` for the caller's NFT collection
-- `borrow` an authorized reference to the buyers token vault
-- Withdraw the purchase price from the buyers vault and `move (<-)` it into the temporary vault
+   - `get` the `collectionCapability` for the caller's NFT collection.
+   - `borrow` an authorized reference to the buyers token vault.
+   - Withdraw the purchase price from the buyers vault and `move (<-)` it into the temporary vault.
 
-```cadence
-self.collectionCapability = acct.capabilities.get<&IntermediateNFT.Collection>(IntermediateNFT.CollectionPublicPath)
+   ```cadence
+   self.collectionCapability = acct.capabilities.get<&IntermediateNFT.Collection>(IntermediateNFT.CollectionPublicPath)
 
-let vaultRef = acct
-    .storage.borrow<auth(ExampleToken.Withdraw) &ExampleToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
-    ?? panic("Could not borrow a reference to "
-                .concat("ExampleToken.Vault")
-                .concat(". Make sure the user has set up an account ")
-                .concat("with an ExampleToken Vault and valid capability."))
+   let vaultRef = acct
+       .storage.borrow<auth(ExampleToken.Withdraw) &ExampleToken.Vault>(from: /storage/CadenceFungibleTokenTutorialVault)
+       ?? panic("Could not borrow a reference to "
+                    .concat("ExampleToken.Vault")
+                    .concat(". Make sure the user has set up an account ")
+                    .concat("with an ExampleToken Vault and valid capability."))
 
-self.temporaryVault <- vaultRef.withdraw(amount: price)
-```
+   self.temporaryVault <- vaultRef.withdraw(amount: price)
+   ```
 
-In `execute`, you need to:
+1. Complete the following in `execute`:
 
-- Get a reference to the public account for the `sellerAddress`
-- `borrow` a reference to the seller's `SaleCollection`
-- Call `purchase` with the `tokenID`, buyers collection capability, and the temporary vault
+   - Get a reference to the public account for the `sellerAddress`.
+   - `borrow` a reference to the seller's `SaleCollection`.
+   - Call `purchase` with the `tokenID`, buyers collection capability, and the temporary vault.
 
-```cadence
-let seller = getAccount(sellerAddress)
+   ```cadence
+   let seller = getAccount(sellerAddress)
 
-let saleRef = seller.capabilities.get<&BasicMarketplace.SaleCollection>(/public/NFTSale)
-                    .borrow()
-    ?? panic("Could not borrow a reference to "
-                .concat("the seller's ExampleMarketplace.SaleCollection")
-                .concat(". Make sure the seller has set up an account ")
-                .concat("with an ExampleMarketplace SaleCollection and valid capability."))
+   let saleRef = seller.capabilities.get<&BasicMarketplace.SaleCollection>(/public/NFTSale)
+                       .borrow()
+       ?? panic("Could not borrow a reference to "
+                    .concat("the seller's ExampleMarketplace.SaleCollection")
+                    .concat(". Make sure the seller has set up an account ")
+                    .concat("with an ExampleMarketplace SaleCollection and valid capability."))
 
-saleRef.purchase(tokenID: tokenID, recipient: self.collectionCapability, buyTokens: <-self.temporaryVault)
-```
+   saleRef.purchase(tokenID: tokenID, recipient: self.collectionCapability, buyTokens: <-self.temporaryVault)
+   ```
 
-Call the transaction with account `0x09` to purchase the token with id `1` from `0x08` for `10.0` tokens.
+1. Call the transaction with account `0x09` to purchase the token with id `1` from `0x08` for `10.0` tokens.
 
-## Verifying the NFT Was Purchased Correctly
+## Verifying the NFT was purchased correctly
 
 You've already written the scripts you need to check for NFT ownership and token balances. Copy them over from your earlier projects, or use the ones below:
 
@@ -785,9 +793,9 @@ access(all) fun main(address: Address): [UInt64] {
 
 ## Creating a **Marketplace for Any Generic NFT**
 
-The previous examples show how a simple marketplace could be created for a specific class of NFTs. However, users will want to have a marketplace where they can buy and sell **any** NFT they want, regardless of its type.
+The previous examples show how a simple marketplace can be created for a specific class of NFTs. However, users will want to have a marketplace where they can buy and sell **any** NFT they want, regardless of its type.
 
-For an example of a completely decentralized example of a generic marketplace, check out the [NFT storefront repo]. This contract is already deployed to testnet and mainnet and can be used by anyone for any generic NFT sale!
+To learn more about a completely decentralized example of a generic marketplace, check out the [NFT storefront repo]. This contract is already deployed to testnet and mainnet and can be used by anyone for any generic NFT sale!
 
 ## Accepting payment in $FLOW
 
@@ -824,14 +832,17 @@ Reference solutions are functional, but may not be optimal.
 
 - [Reference Solution]
 
-<!-- Reference-style links.  Will not render on page. -->
+<!-- Reference-style links. Will not render on page. -->
 
 [NFT storefront repo]: https://github.com/onflow/nft-storefront
 [Marketplace Setup Tutorial]: ./07-marketplace-setup.md
+[marketplace setup]: ./07-marketplace-setup.md
 [Setup Reference Solution]: https://play.flow.com/463a9a08-deb0-455a-b2ed-4583ea6dcb64
 [Interfaces]: ../language/interfaces.mdx
 [Resources]: ../language/resources.mdx
+[Resource]: ../language/resources.mdx
 [Capabilities]: ../language/capabilities.md
+[capability]: ../language/capabilities.md
 [events]: ../language/events.md
 [preconditions]: ../language/functions.mdx#function-preconditions-and-postconditions
 [`.check()`]: ../language/accounts/capabilities.mdx#checking-the-existence-of-public-capabilities

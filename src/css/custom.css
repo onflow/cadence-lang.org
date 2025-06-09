@@ -497,3 +497,12 @@ footer {
     display: none !important;
   }
 }
+
+/* Ensure external link icon in navbar stays inline */
+.navbar__link svg,
+.navbar__link .navbar__external-link {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin-left: 0.25em;
+  margin-bottom: 0 !important;
+}

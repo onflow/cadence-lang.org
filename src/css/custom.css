@@ -107,7 +107,7 @@ workaround for using custom components in the navbar: https://github.com/faceboo
 /* Styles COPIED From Cadence-lang.org next.js site */
 
 :root {
-  --h1-size: min(3.4rem, max(8vw, 2.5rem));
+  --h1-size: min(2.2rem, max(8vw, 2.5rem));
 }
 
 html,

@@ -1,8 +1,11 @@
 ---
 title: Cadence Guide for Solidity Developers
 sidebar_label: Cadence Guide for Solidity Developers
-sidebar_position: 8
+sidebar_position: 3
 ---
+
+# Cadence Guide for Solidity Developers
+
 Cadence introduces a different way to approach smart contract development which may feel unfamiliar to Solidity
 developers. There are fundamental mindset and platform differences, and also several new language features that have no
 real equivalent in Solidity. This guide outlines high level design and conceptual aspects of Flow and Cadence that are
@@ -10,7 +13,7 @@ essential to understand, platform and integration differences, as well as detail
 common Solidity development tasks using Cadence idioms. We also provide details on how best to leverage Cadence's unique
 features and how to avoid common pitfalls that may come up while transitioning.
 
-# Conceptual foundations for Cadence
+## Conceptual foundations for Cadence
 
 A fundamental difference to get used to when adjusting to Cadence from Solidity is mindset. Security and
 interoperability on Ethereum are designed around addresses (or more specifically the account associated with an
@@ -47,11 +50,9 @@ In Cadence, your tokens are stored in your account, and not in a smart contract.
 these assets and how they behave, but those assets can be securely stored in a user’s account through the magic of
 Resources.
 
-
 There is only one account type in Cadence also with an account address, similar to an Externally-Owned-Account (EOA)
 address in Ethereum. However, unlike Ethereum contract-accounts, accounts in Cadence also store contract code. Accounts
 realize ownership on Flow in being the container where keys, Resources, and contracts are stored on-chain.
-
 
 ## Account
 
@@ -157,7 +158,6 @@ who the signer is before proceeding because the capability **IS** the authorizat
 
 The [capability-based security](https://en.wikipedia.org/wiki/Capability-based_security) model frames access in the
 opposite direction than the [access-based security](https://en.wikipedia.org/wiki/Access-control_list) model.
-
 
 ## Access control using Capabilities
 
@@ -491,6 +491,7 @@ which is iterable.
 ## Rich support for type utility functions
 
 Cadence offers numerous native-type utility functions to simplify development. For example, the String type provides:
+
 - utf8
 - length
 - concat()

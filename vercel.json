@@ -27,11 +27,6 @@
       "destination": "/docs/:path*"
     },
     {
-      "source": "/docs/language/values-and-types/:path*",
-      "destination": "/docs/language/values-and-types/index:path*",
-      "permanent": true
-    },
-    {
       "source": "/docs/language/intersection-types",
       "destination": "/docs/language/types-and-type-system/intersection-types",
       "permanent": true

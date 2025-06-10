@@ -1,6 +1,6 @@
 ---
 title: Interfaces
-sidebar_position: 12
+sidebar_position: 13
 ---
 
 An interface is an abstract type that specifies the behavior of types
@@ -48,113 +48,7 @@ some aspects of them will always hold.
 
 ## Interface Declaration
 
-Interfaces are declared using the `struct`, `resource`, or `contract` keyword,
-followed by the `interface` keyword,
-the name of the interface,
-and the requirements, which must be enclosed in opening and closing braces.
-
-Field requirements can be annotated to
-require the implementation to be a variable field, by using the `var` keyword;
-require the implementation to be a constant field, by using the `let` keyword;
-or the field requirement may specify nothing,
-in which case the implementation may either be a variable or a constant field.
-
-Field requirements and function requirements must specify the required level of access.
-The access must be at least be public, so the `access(all)` keyword must be provided.
-
-Interfaces can be used in types.
-This is explained in detail in the section [Interfaces in Types](#interfaces-in-types).
-For now, the syntax `{I}` can be read as the type of any value that implements the interface `I`.
-
-```cadence
-// Declare a resource interface for a fungible token.
-// Only resources can implement this resource interface.
-//
-access(all)
-resource interface FungibleToken {
-
-    // Require the implementing type to provide a field for the balance
-    // that is readable in all scopes (`access(all)`).
-    //
-    // Neither the `var` keyword, nor the `let` keyword is used,
-    // so the field may be implemented as either a variable
-    // or as a constant field.
-    //
-    access(all)
-    balance: Int
-
-    // Require the implementing type to provide an initializer that
-    // given the initial balance, must initialize the balance field.
-    //
-    init(balance: Int) {
-        pre {
-            balance >= 0:
-                "Balances are always non-negative"
-        }
-        post {
-            self.balance == balance:
-                "the balance must be initialized to the initial balance"
-        }
-
-        // NOTE: The declaration contains no implementation code.
-    }
-
-    // Require the implementing type to provide a function that is
-    // callable in all scopes, which withdraws an amount from
-    // this fungible token and returns the withdrawn amount as
-    // a new fungible token.
-    //
-    // The given amount must be positive and the function implementation
-    // must add the amount to the balance.
-    //
-    // The function must return a new fungible token.
-    // The type `{FungibleToken}` is the type of any resource
-    // that implements the resource interface `FungibleToken`.
-    //
-    access(all)
-    fun withdraw(amount: Int): @{FungibleToken} {
-        pre {
-            amount > 0:
-                "the amount must be positive"
-            amount <= self.balance:
-                "insufficient funds: the amount must be smaller or equal to the balance"
-        }
-        post {
-            self.balance == before(self.balance) - amount:
-                "the amount must be deducted from the balance"
-        }
-
-        // NOTE: The declaration contains no implementation code.
-    }
-
-    // Require the implementing type to provide a function that is
-    // callable in all scopes, which deposits a fungible token
-    // into this fungible token.
-    //
-    // No precondition is required to check the given token's balance
-    // is positive, as this condition is already ensured by
-    // the field requirement.
-    //
-    // The parameter type `{FungibleToken}` is the type of any resource
-    // that implements the resource interface `FungibleToken`.
-    //
-    access(all)
-    fun deposit(_ token: @{FungibleToken}) {
-        post {
-            self.balance == before(self.balance) + token.balance:
-                "the amount must be added to the balance"
-        }
-
-        // NOTE: The declaration contains no implementation code.
-    }
-}
-```
-
-Note that the required initializer and functions do not have any executable code.
-
-Struct and resource Interfaces can only be declared directly inside contracts,
-i.e. not inside of functions.
-Contract interfaces can only be declared globally and not inside contracts.
+See [interface declaration] for more information.
 
 ## Interface Implementation
 
@@ -1058,3 +952,7 @@ D
 B
 A
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[interface declaration]: ./pre-and-post-conditions.md#interface-declaration

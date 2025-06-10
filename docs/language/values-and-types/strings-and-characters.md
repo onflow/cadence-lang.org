@@ -217,7 +217,7 @@ The `String` type also provides the following functions:
 
   ```cadence
   let strings = ["hello", "world"]
-  String.join(strings, " ") // is "hello world"
+  String.join(strings, separator: " ") // is "hello world"
   ```
 
 `String`s are also indexable, returning a `Character` value.

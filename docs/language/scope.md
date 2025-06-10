@@ -1,6 +1,6 @@
 ---
 title: Scope
-sidebar_position: 8
+sidebar_position: 9
 ---
 
 Every function and block (`{` ... `}`) introduces a new scope for declarations.

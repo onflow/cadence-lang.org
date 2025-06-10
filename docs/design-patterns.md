@@ -1,6 +1,6 @@
 ---
 title: Cadence Design Patterns
-sidebar_position: 5
+sidebar_position: 7
 sidebar_label: Design Patterns
 ---
 

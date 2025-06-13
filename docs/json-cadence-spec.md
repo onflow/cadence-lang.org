@@ -1,7 +1,10 @@
 ---
 title: JSON-Cadence Data Interchange Format
-sidebar_label: JSON-Cadence format
+sidebar_label: JSON-Cadence Format
+sidebar_position: 12
 ---
+
+## Version
 
 > Version 0.3.1
 

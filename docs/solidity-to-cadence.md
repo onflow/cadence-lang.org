@@ -4,7 +4,7 @@ sidebar_label: Cadence Guide for Solidity Developers
 sidebar_position: 3
 ---
 
-Cadence introduces a different way to approach smart contract development, which may feel unfamiliar to Solidity developers. There are fundamental mindset and platform differences, and also several new language features that have no real equivalent in Solidity.
+Cadence introduces a different way to approach smart contract development, which may feel unfamiliar to Solidity developers. There are fundamental mindset and platform differences, and also several new language features that have no real equivalent in Solidity.  As a result, while you can make similar programs in Cadence as you could in Solidity, a direct translation from one to the other isn't possible - similar to how you could make a note-taking app in C or in JavaScript, but it wouldn't be possible to directly translate the C code into JavaScript.  You'd have to write an entirely new program for a new paradigm.
 
 This guide outlines high level design and conceptual aspects of Flow and Cadence that are essential to understand, platform and integration differences, as well as detailed guidance on how to perform certain common Solidity development tasks using Cadence idioms. We also provide details on how to best leverage Cadence's unique features and how to avoid common pitfalls that may come up while transitioning.
 

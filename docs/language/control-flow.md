@@ -179,7 +179,7 @@ This makes the switch statement safer and easier to use, avoiding the accidental
 
 Some other languages implicitly fall through to the block of code associated with the next case, so it is common to write cases with an empty block to handle multiple values in the same way.
 
-To prevent developers from writing switch statements that assume this behavior, blocks must have at least one statement. Empty blocks are invalid:
+To protect developers from writing switch statements that assume this behavior, blocks must have at least one statement. Empty blocks are invalid:
 
 ```cadence
 fun words(_ n: Int): [String] {

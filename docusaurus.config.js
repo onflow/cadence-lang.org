@@ -102,7 +102,7 @@ const config = {
         items: [
           {
             label: "Learn",
-            to: "/learn",
+            to: "/docs",
             position: "right",
           },
           {
@@ -121,16 +121,9 @@ const config = {
             position: "right",
           },
           {
-            type: "docSidebar",
-            sidebarId: "docSidebar",
+            label: "Language Reference",
             position: "right",
-            label: "Documentation",
-          },
-          {
-            type: "docsVersionDropdown",
-            position: "right",
-            dropdownActiveClassDisabled: true,
-            to: "/docs/next/intro",
+            to: "/docs/language",
           },
           {
             href: "https://github.com/onflow/cadence",
@@ -145,22 +138,6 @@ const config = {
             "aria-label": "Discord project",
           },
         ],
-      },
-      footer: {
-        style: "light",
-        links: [
-          {
-            title: "Got suggestions for this site? ",
-            items: [
-              {
-                label: "It's open-source!",
-                href: "https://github.com/onflow/cadence-lang.org",
-              },
-            ],
-          },
-        ],
-        copyright: `The source code of this site is licensed under the Apache License, Version 2.0.
-        Content is licensed under the Creative Commons Attribution 4.0 International License.`,
       },
       prism: {
         theme: lightCodeTheme,

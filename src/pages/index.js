@@ -92,7 +92,7 @@ export default function Home() {
                 and <strong>safety</strong> in smart contracts.
               </h2>
 
-              <Link className="cta" href="/learn">
+              <Link className="cta" href="/docs">
                 Get started <HiArrowRight/>
               </Link>
             </div>

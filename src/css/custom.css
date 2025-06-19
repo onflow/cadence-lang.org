@@ -423,13 +423,34 @@ a {
 }
 
 footer {
-  font-weight: 100;
-  color: rgba(130, 133, 138, 0.6);
+  font-weight: 400;
+  color: #444;
+  background: #f8f9fa;
   border-top: 1px solid #e5e7eb;
+  text-align: center;
+  padding: 2rem 1rem 1.5rem 1rem;
+  margin-top: 3rem;
+  font-size: 1.05rem;
 }
 
-.license {
+footer a {
+  color: #00c271;
+  font-weight: 500;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: #009e5c;
+  text-decoration: underline;
+}
+
+footer .license {
+  display: block;
+  margin: 1.5rem auto 0 auto;
   max-width: 52rem;
+  color: #666;
+  font-size: 0.98rem;
 }
 
 .arrow {

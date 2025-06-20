@@ -8,7 +8,7 @@ Resources are types that can only exist in **one** location at a time and **must
 
 Resources **must** be created (instantiated) by using the `create` keyword.
 
-At the end of a function that has resources (variables, constants, parameters) in scope, the resources **must** be either **moved** or **destroyed**.
+Before the closing bracket of a function that has resources created or moved into scope, those resources **must** explicitly be either **moved** to a valid storage location or **destroyed**.
 
 They are **moved** when used as an initial value for a constant or variable, when assigned to a different variable, when passed as an argument to a function, and when returned from a function.
 

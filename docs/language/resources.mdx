@@ -180,7 +180,8 @@ res.value
 Declare a function that has a resource parameter:
 
 ```cadence
-// This function is invalid, because it does not always use the resource parameter, which would cause a loss of the resource:
+// This function is invalid, because it does not always use the resource parameter,
+// which would cause a loss of the resource:
 access(all)
 fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool) {
     if destroyResource {

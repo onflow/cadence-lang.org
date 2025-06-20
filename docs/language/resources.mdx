@@ -90,7 +90,7 @@ Declare another, unrelated value of resource type `SomeResource`:
 {
     let c <- create SomeResource(value: 10)
 
-    // Invalid: `c` is not used before the end of the scope, but must be.
+    // Invalid: `c` is not moved or destroyed before the end of the scope, but must be.
     // It cannot be lost.
 }
 ```

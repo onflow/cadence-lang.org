@@ -405,85 +405,9 @@ fun test(x: Int) {
 }
 ```
 
-## Function Preconditions and Postconditions
+## Function pre-conditions and post-conditions
 
-Functions may have preconditions and may have postconditions.
-Preconditions and postconditions can be used to restrict the inputs (values for parameters)
-and output (return value) of a function.
-
-Preconditions must be true right before the execution of the function.
-Preconditions are part of the function and introduced by the `pre` keyword,
-followed by the condition block.
-
-Postconditions must be true right after the execution of the function.
-Postconditions are part of the function and introduced by the `post` keyword,
-followed by the condition block.
-Postconditions may only occur after preconditions, if any.
-
-A conditions block consists of one or more conditions.
-Conditions are expressions evaluating to a boolean.
-
-Conditions may be written on separate lines,
-or multiple conditions can be written on the same line,
-separated by a semicolon.
-This syntax follows the syntax for [statements](./syntax.md#semicolons).
-
-Following each condition, an optional description can be provided after a colon.
-The condition description is used as an error message when the condition fails.
-
-In postconditions, the special constant `result` refers to the result of the function.
-
-```cadence
-fun factorial(_ n: Int): Int {
-    pre {
-        // Require the parameter `n` to be greater than or equal to zero.
-        //
-        n >= 0:
-            "factorial is only defined for integers greater than or equal to zero"
-    }
-    post {
-        // Ensure the result will be greater than or equal to 1.
-        //
-        result >= 1:
-            "the result must be greater than or equal to 1"
-    }
-
-    if n < 1 {
-       return 1
-    }
-
-    return n * factorial(n - 1)
-}
-
-factorial(5)  // is `120`
-
-// Run-time error: The given argument does not satisfy
-// the precondition `n >= 0` of the function, the program aborts.
-//
-factorial(-2)
-```
-
-In postconditions, the special function `before` can be used
-to get the value of an expression just before the function is called.
-
-```cadence
-var n = 0
-
-fun incrementN() {
-    post {
-        // Require the new value of `n` to be the old value of `n`, plus one.
-        //
-        n == before(n) + 1:
-            "n must be incremented by 1"
-    }
-
-    n = n + 1
-}
-```
-
-Both preconditions and postconditions are considered [`view` contexts](#view-functions); 
-any operations that are not legal in functions with `view` annotations are also not allowed in conditions. 
-In particular, this means that if you wish to call a function in a condition, that function must be `view`. 
+See [function pre-condition and post-condition] for more information.
 
 ## View Functions
 
@@ -616,4 +540,8 @@ fun double(_ integer: Int): Int {
 let newIntegers = transform(function: double, integers: [1, 2, 3])
 // `newIntegers` is `[2, 4, 6]`
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[function pre-condition and post-condition]: ./pre-and-post-conditions.md#function-pre-conditions-and-post-conditions
 

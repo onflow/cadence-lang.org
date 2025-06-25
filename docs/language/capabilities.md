@@ -148,6 +148,8 @@ If the account has a capability with the given type published under the given pa
 
 If the account has no capability published under the given path, or if the given type is not a supertype of the capability's borrow type, the function returns an "invalid" capability with ID 0 that will always fail to `check` or `borrow`.
 
+## Borrowing public capabilities with `.borrow()`
+
 The convenience function `capabilities.borrow` obtains and borrows a public capability that was [published] before, in one step:
 
 ```cadence

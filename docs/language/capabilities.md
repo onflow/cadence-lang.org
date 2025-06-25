@@ -135,7 +135,7 @@ view fun exists(_ path: PublicPath): Bool
 
 If the account has a capability published under the given path, the function returns true; otherwise, it returns false.
 
-## Getting public capabilities
+## Getting public capabilities with `.get()`
 
 The function `capabilities.get` obtains a public capability that was [published] before:
 

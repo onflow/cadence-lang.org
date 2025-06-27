@@ -1,6 +1,6 @@
 ---
 title: Core Events
-sidebar_position: 22
+sidebar_position: 23
 ---
 
 Core events are events emitted directly from the FVM (Flow Virtual Machine).

@@ -1,6 +1,6 @@
 ---
 title: Transactions
-sidebar_position: 20
+sidebar_position: 21
 ---
 
 Transactions are objects that are signed with keys of one or more [accounts](./accounts/index.mdx)
@@ -124,24 +124,7 @@ as it requires access to the account storage, but perform the deposit in the `ex
 
 ### Pre-conditions
 
-Transaction pre-conditions are just like
-[pre-conditions of functions](./functions.mdx#function-preconditions-and-postconditions).
-
-Pre-conditions are optional and are declared in a `pre` block.
-They are executed after the `prepare` phase,
-and are used for checking if explicit conditions hold before executing the remainder of the transaction.
-The block can have zero or more conditions.
-
-For example, a pre-condition might check the balance before transferring tokens between accounts.
-
-```cadence
-pre {
-    sendingAccount.balance > 0
-}
-```
-
-If any of the pre-conditions fail,
-then the remainder of the transaction is not executed and it is completely reverted.
+See [pre-conditions] for more information.
 
 ### Execute phase
 
@@ -168,36 +151,11 @@ transaction {
 
 ### Post-conditions
 
-Transaction post-conditions are just like
-[post-conditions of functions](./functions.mdx#function-preconditions-and-postconditions).
+See [post-conditions] for more information.
 
-Post-conditions are optional and are declared in a `post` block.
-They are executed after the execution phase,
-and are used to verify that the transaction logic has been executed properly.
-The block can have zero or more conditions.
+### Using pre-conditions and post-conditions
 
-For example, a token transfer transaction can ensure that the final balance has a certain value:
-
-```cadence
-post {
-    signer.balance == 30.0: "Balance after transaction is incorrect!"
-}
-```
-
-If any of the post-conditions fail,
-then the transaction fails and is completely reverted.
-
-### Pre-conditions and post-conditions
-
-Another function of the pre-conditions and post-conditions
-is to describe the effects of a transaction on the involved accounts.
-They are essential for users to verify what a transaction does before submitting it.
-The conditions an easy way to introspect transactions before they are executed.
-
-For example, the software that a user uses to sign and send a transaction
-could analyze and interpret the transaction into a human-readable description, like
-"This transaction will transfer 30 tokens from A to B.
-The balance of A will decrease by 30 tokens and the balance of B will increase by 30 tokens."
+See [using pre-conditons and post-conditions] for more information.
 
 ## Summary
 
@@ -244,3 +202,9 @@ transaction {
     }
 }
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[pre-conditions]: ./pre-and-post-conditions.md#pre-conditions
+[post-conditions]: ./pre-and-post-conditions.md#post-conditions
+[using pre-conditons and post-conditions]: ./pre-and-post-conditions.md#using-pre-conditions-and-post-conditions

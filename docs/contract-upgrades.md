@@ -1,5 +1,6 @@
 ---
 title: Contract Upgrades with Incompatible Changes
+sidebar_position: 11
 ---
 
 ### Problem

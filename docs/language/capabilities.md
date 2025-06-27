@@ -1,6 +1,6 @@
 ---
 title: Capabilities
-sidebar_position: 11
+sidebar_position: 12
 ---
 
 Cadence supports [capability-based security] through the [object-capability model].

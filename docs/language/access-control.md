@@ -13,6 +13,12 @@ In Cadence, access control is used in two ways:
    
    Other accounts cannot read or write the objects in an account unless the owner of the account has granted them access by providing references to the objects.
    
+:::warning
+
+Remember that in this case, `private` refers to programmatic access to the data with a script or transaction.  It is **not safe** to store secret or private information in a user's account.  The raw data is still public and could be decoded.
+
+:::
+   
    This kind of access control is covered in [capabilities] and [capability management].
 
 1. Access control within contracts and objects, using access modifiers (`access` keyword).

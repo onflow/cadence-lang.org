@@ -708,14 +708,12 @@ struct Blockchain {
     access(all)
     fun deployContract(
         name: String,
-        code: String,
-        account: Account,
+        path: String,
         arguments: [AnyStruct]
     ): Error? {
         return self.backend.deployContract(
             name: name,
-            code: code,
-            account: account,
+            path: path,
             arguments: arguments
         )
     }
@@ -801,8 +799,7 @@ struct interface BlockchainBackend {
     access(all)
     fun deployContract(
         name: String,
-        code: String,
-        account: Account,
+        path: String,
         arguments: [AnyStruct]
     ): Error?
 
@@ -1113,11 +1110,9 @@ let account = blockchain.createAccount()
 
 access(all)
 fun testExample() {
-    let contractCode = Test.readFile("Foo.cdc")
     let err = blockchain.deployContract(
         name: "Foo",
-        code: contractCode,
-        account: account,
+        path: "./Foo.cdc",
         arguments: ["hello from args"],
     )
 
@@ -1199,8 +1194,7 @@ fun setup() {
     let contractCode = Test.readFile("Foo.cdc")
     let err = blockchain.deployContract(
         name: "Foo",
-        code: contractCode,
-        account: account,
+        path: "./Foo.cdc",
         arguments: ["hello from args"],
     )
 
@@ -1326,8 +1320,7 @@ fun setup() {
     let contractCode = Test.readFile("Foo.cdc")
     let err = blockchain.deployContract(
         name: "Foo",
-        code: contractCode,
-        account: account,
+        path: "./Foo.cdc",
         arguments: ["hello from args"],
     )
 

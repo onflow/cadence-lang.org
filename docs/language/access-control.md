@@ -1,5 +1,5 @@
 ---
-title: Access control
+title: Access Control
 sidebar_position: 10
 ---
 

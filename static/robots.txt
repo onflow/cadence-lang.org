@@ -34,4 +34,4 @@ User-agent: *
 Disallow: /
 
 # Sitemap
-Sitemap: https://developers.flow.com/sitemap.xml
+Sitemap: https://cadence-lang.org/sitemap.xml

@@ -259,7 +259,7 @@ remove A from r
 
 After the statement executes, the composite value on the right-hand side of `from` will no longer contain the attachment. If the value does not contain the attachment that appears after the `remove` keyword, this statement has no effect.
 
-Attachments can be removed from a type in any order, so users should take care not to design any attachments that rely on specific behaviors of other attachments, as there is no requirement that an attachment depend on another or that a type has a given attachment when another attachment is present.
+Attachments can be removed from a type in any order, so developers should take care not to design any attachments that rely on specific behaviors of other attachments, as there is no requirement that an attachment depend on another or that a type has a given attachment when another attachment is present.
 
 If a resource containing attachments is `destroy`ed, all of its attachments will be `destroy`ed in an arbitrary order.
 

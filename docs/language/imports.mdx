@@ -5,23 +5,37 @@ sidebar_position: 15
 
 Programs can import declarations (types, functions, variables, and so on) from other programs.
 
-Imports are declared using the `import` keyword.
+## Importing contracts
 
-It can either be followed by a location, which imports all declarations; or it can be followed by the names of the declarations that should be imported, followed by the `from` keyword, and then followed by the location.
+Imports are declared using the `import` keyword. You can import your contracts using **one** of the following three options:
 
-- If importing a local file, the location is a string literal, as well as the path to the file. Deployment of code with file imports requires usage of the [Flow CLI].
-- If importing an external type in a different account, the location is an address literal, as well as the address of the account where the declarations are deployed to and published.
+1. Import your contracts by name, which you must use if you're using the [Flow CLI]. For example:
 
-```cadence
-// Import the type `Counter` from a local file.
-//
-import Counter from "./examples/counter.cdc"
+   ```cadence
+   import "HelloWorld"
+   ```
 
-// Import the type `Counter` from an external account.
-//
-import Counter from 0x299F20A29311B9248F12
-```
+   This will automatically import the contract you have created in your project with the same name and save the configuration in `flow.json`. It doesn't matter if the contract has been deployed on a non-default account.
+
+1. Import your contracts by an address, which imports all declarations. Both [Flow playground] and [Flow runner] require importing by address.
+
+1. Import your contracts by the names of the declarations that should be imported, followed by the `from` keyword, and then followed by the address.
+
+   - If importing a local file, the location is a string literal, as well as the path to the file. Deployment of code with file imports requires usage of the [Flow CLI].
+   - If importing an external type in a different account, the location is an address literal, as well as the address of the account where the declarations are deployed to and published.
+
+   ```cadence
+   // Import the type `Counter` from a local file.
+   //
+   import Counter from "./examples/counter.cdc"
+
+   // Import the type `Counter` from an external account.
+   //
+   import Counter from 0x299F20A29311B9248F12
+   ```
 
 <!-- Relative links. Will not render on the page -->
 
 [Flow CLI]: https://developers.flow.com/tools/flow-cli/index.md
+[Flow playground]: https://play.flow.com/
+[Flow runner]: https://run.dnz.dev/

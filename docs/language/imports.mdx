@@ -15,7 +15,7 @@ Imports are declared using the `import` keyword. You can import your contracts u
    import "HelloWorld"
    ```
 
-   This will automatically import the contract you have created in your project with the same name and save the configuration in `flow.json`. It doesn't matter if the contract has been deployed on a non-default account.
+   This will automatically import the contract, based on the configuration found `flow.json`. It will automatically handle address changes between mainnet, testnet, and emulator, as long as those are present in `flow.json`.
 
 1. Import your contracts by an address, which imports all declarations. Both [Flow playground] and [Flow runner] require importing by address.
 

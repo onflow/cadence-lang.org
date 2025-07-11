@@ -3,25 +3,17 @@ title: Paths
 sidebar_position: 1
 ---
 
-Account storage stores objects under paths.
-Paths consist of a domain and an identifier.
+Account storage stores objects under paths. Paths consist of a domain and an identifier.
 
-Paths start with the character `/`, followed by the domain, the path separator `/`,
-and finally the identifier. The identifier must start with a letter and can only be followed by letters, numbers, or the underscore `_`. 
-For example, the path `/storage/test` has the domain `storage` and the identifier `test`.
+Paths start with the character `/`, followed by the domain, the path separator `/`, and finally the identifier. The identifier must start with a letter and can only be followed by letters, numbers, or the underscore `_`.  For example, the path `/storage/test` has the domain `storage` and the identifier `test`.
 
 There are two valid domains: `storage` and `public`.
 
-Paths in the storage domain have type `StoragePath`,
-and paths in the public domain have the type `PublicPath`.
-Both `StoragePath` and `PublicPath` are subtypes of `Path`.
+Paths in the storage domain have type `StoragePath`, and paths in the public domain have the type `PublicPath`. Both `StoragePath` and `PublicPath` are subtypes of `Path`.
 
-The `storage` domain stores storable objects, such as resources and structs.
-Objects stored under the `storage` domain are only accessible through account references
-which are authorized with a storage entitlement.
+The `storage` domain stores storable objects, such as resources and structs. Objects stored under the `storage` domain are only accessible through account references, which are authorized with a storage entitlement.
 
-The `public` domain stores capabilities,
-which are accessible by anyone.
+The `public` domain stores capabilities, which are accessible by anyone.
 
 ## Path functions
 

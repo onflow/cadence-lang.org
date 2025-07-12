@@ -3,10 +3,9 @@ title: Core Events
 sidebar_position: 22
 ---
 
-Core events are events emitted directly from the FVM (Flow Virtual Machine).
-The events have the same name on all networks and do not follow the standard naming (they have no address).
+Core events are events emitted directly from the Flow Virtual Machine (FVM). The events have the same name on all networks and do not follow the standard naming (they have no address).
 
-Refer to the [public key section](./crypto.mdx#public-keys) for more details on the information provided for account key events.
+Refer to the [public key section] for more details on the information provided for account key events.
 
 ### Account Created
 
@@ -148,9 +147,11 @@ event InboxValuePublished(provider: Address, recipient: Address, name: String, t
 | `name`      | `String`  | The name associated with the published value |
 | `type`      | `Type`    | The type of the published value              |
 
-To reduce the potential for spam,
-we recommend that user agents that display events do not display this event as-is to their users,
-and allow users to restrict whom they see events from.
+:::tip
+
+To reduce the potential for spam, we recommend that user agents that display events do not display this event as-is to their users, and allow users to restrict whom they see events from.
+
+:::
 
 ### Inbox Value Unpublished
 
@@ -168,9 +169,11 @@ event InboxValueUnpublished(provider: Address, name: String)
 | `provider` | `Address` | The address of the publishing account        |
 | `name`     | `String`  | The name associated with the published value |
 
-To reduce the potential for spam,
-we recommend that user agents that display events do not display this event as-is to their users,
-and allow users to restrict whom they see events from.
+:::tip
+
+To reduce the potential for spam, we recommend that user agents that display events do not display this event as-is to their users, and allow users to restrict whom they see events from.
+
+:::
 
 ### Inbox Value Claimed
 
@@ -189,6 +192,12 @@ event InboxValueClaimed(provider: Address, recipient: Address, name: String)
 | `recipient` | `Address` | The address of the claiming recipient        |
 | `name`      | `String`  | The name associated with the published value |
 
-To reduce the potential for spam,
-we recommend that user agents that display events do not display this event as-is to their users,
-and allow users to restrict whom they see events from.
+:::tip
+
+To reduce the potential for spam, we recommend that user agents that display events do not display this event as-is to their users, and allow users to restrict whom they see events from.
+
+:::
+
+<!-- Relative links. Will not render on the page -->
+
+[public key section]: ./crypto.mdx#public-keys

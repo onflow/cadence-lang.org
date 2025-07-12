@@ -35,7 +35,7 @@ contract Events {
 }
 ```
 
-### Emitting events
+## Emitting events
 
 To emit an event from a program, use the `emit` statement:
 
@@ -63,7 +63,12 @@ Please note the following restrictions when emitting events:
 - Events can only be invoked in an `emit` statement. This means events cannot be assigned to variables or used as function parameters.
 - Events can only be emitted from the location in which they are declared.
 
+### Destroy events
+
+It's possible to specify a special event to be automatically emitted when a resource is destroyed. See [destroying events] for more information.
+
 <!-- Relative links. Will not render on the page -->
 
 [function declaration]: ./functions.mdx#function-declarations
 [contract]: ./contracts.mdx
+[destroying events]: ./resources.mdx#destroy-events

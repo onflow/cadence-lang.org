@@ -3,14 +3,9 @@ title: Keys
 sidebar_position: 4
 ---
 
-Accounts have keys associated with them.
-When a key is added to an account,
-the key can be used to sign a [transaction](../transactions.md),
-which in turn gets access the account
-and can [perform write operations](./index.mdx#performing-write-operations) on it.
+Accounts have keys associated with them. When a key is added to an account, the key can be used to sign a [transaction], which in turn gets access to the account and can [perform write operations] on it.
 
-An account exposes its keys through the `keys` field,
-which has the type `Account.Keys`.
+An account exposes its keys through the `keys` field, which has the type `Account.Keys`.
 
 ## `Account.Keys`
 
@@ -24,7 +19,7 @@ struct Keys {
 
     /// Returns the key at the given index, if it exists, or nil otherwise.
     ///
-    /// Revoked keys are always returned, but they have `isRevoked` field set to true.
+    /// Revoked keys are always returned, but they have an `isRevoked` field set to true.
     access(all)
     view fun get(keyIndex: Int): AccountKey?
 
@@ -91,48 +86,37 @@ struct AccountKey {
 }
 ```
 
-A valid account key's `publicKey` field is a `PublicKey` of either the
-`ECDSA_P256` or `ECDSA_secp256k1` signature algorithm.
-Public keys of other signature algorithms supported by Cadence are
-not valid account public keys.
+A valid account key's `publicKey` field is a `PublicKey` of either the `ECDSA_P256` or `ECDSA_secp256k1` signature algorithm. Public keys of other signature algorithms supported by Cadence are not valid account public keys.
 
-Refer to the [public keys section](../crypto.mdx#public-keys)
-for more details on the creation and validity of public keys.
+Refer to the [public keys section] for more details on the creation and validity of public keys.
 
-A valid account key's `hashAlgorithm` field is either `SHA2_256` or `SHA3_256`.  
-All other hash algorithms supported by Cadence are
-not valid for hashing with an account key.
+A valid account key's `hashAlgorithm` field is either `SHA2_256` or `SHA3_256`. All other hash algorithms supported by Cadence are not valid for hashing with an account key.
 
-Refer to the [hash algorithms section](../crypto.mdx#hash-algorithms)
-for more details on hash algorithms.
+Refer to the [hash algorithms section] for more details on hash algorithms.
 
 ## Getting an account key
 
 The functions `keys.get` and `keys.forEach` allow retrieving the keys of an account.
 
-The `get` function allows retrieving a key with a specific index.
-The function returns the key if it exists, and `nil` otherwise.
+The `get` function allows retrieving a key with a specific index. The function returns the key if it exists, and `nil` otherwise:
 
 ```cadence
 access(all)
 view fun get(keyIndex: Int): AccountKey?
 ```
 
-The `forEach` function allows iterating over all keys of an account.
+The `forEach` function allows iterating over all keys of an account:
 
 ```cadence
 access(all)
 fun forEach(_ function: fun(AccountKey): Bool)
 ```
 
-For each key of the account, the `forEach` function calls the given callback, passing the key to it.
-When the callback function returns `true` the iteration continues,
-and when it returns `false`, iteration stops.
+For each key of the account, the `forEach` function calls the given callback, passing the key to it. When the callback function returns `true`, the iteration continues, and when it returns `false`, the iteration stops.
 
 :::warning
 
-The `keys.get` and `keys.forEach` functions include revoked keys,
-which have the `isRevoked` field set to `true`.
+The `keys.get` and `keys.forEach` functions include revoked keys, which have the `isRevoked` field set to `true`.
 
 :::
 
@@ -155,7 +139,7 @@ fun main() {
 
 ## Adding an account key
 
-The function `keys.add` allows a key to access an account.
+The function `keys.add` allows a key to access an account:
 
 ```cadence
 access(Keys | AddKey)
@@ -166,12 +150,9 @@ fun add(
 ): AccountKey
 ```
 
-Calling the `add` function requires access to an account via a reference which is authorized
-with the coarse-grained `Keys` entitlement (`auth(Keys) &Account`),
-or the fine-grained `AddKey` entitlement (`auth(AddKey) &Account`).
+Calling the `add` function requires access to an account via a reference, which is authorized with the coarse-grained `Keys` entitlement (`auth(Keys) &Account`), or the fine-grained `AddKey` entitlement (`auth(AddKey) &Account`).
 
-For example, to add a public key to an existing account,
-which signed the transaction:
+For example, to add a public key to an existing account that signed the transaction:
 
 ```cadence
 transaction(publicKey: [UInt8]) {
@@ -190,10 +171,7 @@ transaction(publicKey: [UInt8]) {
 }
 ```
 
-A more complex transaction, which creates an account,
-has the signer of the transaction pay for the account creation,
-and authorizes one key to access the account,
-could look like:
+A more complex transaction, which creates an account, has the signer of the transaction pay for the account creation, and authorizes one key to access the account, could look like:
 
 ```cadence
 transaction(publicKey: [UInt8]) {
@@ -216,19 +194,16 @@ transaction(publicKey: [UInt8]) {
 
 ## Revoking an account key
 
-The `revoke` function revokes a key from accessing an account.
-The function only marks the key at the given index as revoked, but never deletes it.
+The `revoke` function revokes a key from accessing an account. The function only marks the key at the given index as revoked, but never deletes it:
 
 ```cadence
 access(Keys | RevokeKey)
 fun revoke(keyIndex: Int): AccountKey?
 ```
 
-Calling the `revoke` function requires access to an account via a reference which is authorized
-with the coarse-grained `Keys` entitlement (`auth(Keys) &Account`),
-or the fine-grained `RevokeKey` entitlement (`auth(RevokeKey) &Account`).
+Calling the `revoke` function requires access to an account via a reference, which is authorized with the coarse-grained `Keys` entitlement (`auth(Keys) &Account`), or the fine-grained `RevokeKey` entitlement (`auth(RevokeKey) &Account`).
 
-For example, to revoke the third key of the account which signed the transaction:
+For example, to revoke the third key of the account that signed the transaction:
 
 ```cadence
 transaction {
@@ -238,3 +213,10 @@ transaction {
     }
 }
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[transaction]: ../transactions.md
+[perform write operations]: ./index.mdx#performing-write-operations
+[public keys section]: ../crypto.mdx#public-keys
+[hash algorithms section]: ../crypto.mdx#hash-algorithms

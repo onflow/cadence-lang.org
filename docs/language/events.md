@@ -61,7 +61,7 @@ contract Events {
 Please note the following restrictions when emitting events:
 
 - Events can only be invoked in an `emit` statement. This means events cannot be assigned to variables or used as function parameters.
-- Events can only be emitted from the location in which they are declared.
+- Events can only be emitted from the location in which they are declared.  You can not emit an event from an imported contract from a contract that imports it.
 
 ### Destroy events
 

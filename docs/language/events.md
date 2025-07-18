@@ -5,23 +5,17 @@ sidebar_position: 21
 
 Events are special values that can be emitted during the execution of a program.
 
-An event type can be declared with the `event` keyword.
+An event type can be declared with the `event` keyword:
 
 ```cadence
 event FooEvent(x: Int, y: Int)
 ```
 
-The syntax of an event declaration is similar to that of
-a [function declaration](./functions.mdx#function-declarations);
-events contain named parameters, each of which has an optional argument label.
+The syntax of an event declaration is similar to that of a [function declaration]; events contain named parameters, each of which has an optional argument label.
 
-Event parameters may only have a valid event parameter type.
-Valid types are boolean, string, integer, arrays and dictionaries of these types,
-and structures where all fields have a valid event parameter type.
-Resource types are not allowed, because when a resource is used as an argument, it is moved.
+Event parameters may only have a valid event parameter type. Valid types are boolean, string, integer, arrays, and dictionaries of these types, and structures where all fields have a valid event parameter type. Resource types are not allowed, because when a resource is used as an argument, it is moved.
 
-Events can only be declared within a [contract](./contracts.mdx) body.
-Events cannot be declared globally or within resource or struct types.
+Events can only be declared within a [contract] body. Events cannot be declared globally or within resource or struct types.
 
 ```cadence
 // Invalid: An event cannot be declared globally
@@ -39,10 +33,9 @@ contract Events {
     //
     event ResourceEvent(resourceField: @Vault)
 }
-
 ```
 
-### Emitting events
+## Emitting events
 
 To emit an event from a program, use the `emit` statement:
 
@@ -65,10 +58,17 @@ contract Events {
 }
 ```
 
-Emitting events has the following restrictions:
+Please note the following restrictions when emitting events:
 
-- Events can only be invoked in an `emit` statement.
+- Events can only be invoked in an `emit` statement. This means events cannot be assigned to variables or used as function parameters.
+- Events can only be emitted from the location in which they are declared.  You can not emit an event from an imported contract from a contract that imports it.
 
-  This means events cannot be assigned to variables or used as function parameters.
+### Destroy events
 
-- Events can only be emitted from the location in which they are declared.
+It's possible to specify a special event to be automatically emitted when a resource is destroyed. See [destroying events] for more information.
+
+<!-- Relative links. Will not render on the page -->
+
+[function declaration]: ./functions.mdx#function-declarations
+[contract]: ./contracts.mdx
+[destroying events]: ./resources.mdx#destroy-events

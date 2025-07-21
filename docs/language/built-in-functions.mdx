@@ -52,7 +52,7 @@ A transaction can atomically revert all of its action. This means that if you're
 
 The function usage remains safe when called by a trusted party that does not perform post-selection on the returned random numbers.
 
-This limitation is inherent to any smart contract platform that allows transactions to roll back atomically and cannot be solved through safe randomness alone. In cases where a non-trusted party can interact through their own transactions with smart contracts generating random numbers, it is recommended to use [commit-reveal schemes] as outlined in this [tentative example] (full tutorial coming soon).
+This limitation is inherent to any smart contract platform that allows transactions to roll back atomically and cannot be solved through safe randomness alone. In cases where a non-trusted party can interact through their own transactions with smart contracts generating random numbers, it is recommended to use [commit-reveal schemes].
 
 ## `RLP`
 

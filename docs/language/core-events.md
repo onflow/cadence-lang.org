@@ -1,6 +1,6 @@
 ---
 title: Core Events
-sidebar_position: 22
+sidebar_position: 23
 ---
 
 Core events are events emitted directly from the Flow Virtual Machine (FVM). The events have the same name on all networks and do not follow the standard naming (they have no address).

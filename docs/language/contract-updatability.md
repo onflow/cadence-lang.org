@@ -1,6 +1,6 @@
 ---
 title: Contract Updatability
-sidebar_position: 19
+sidebar_position: 20
 ---
 
 A [contract] is a collection of data (its state) and code (its functions) that lives in the contract storage area of an account. When a contract is _updated_, it is important to make sure that the changes introduced do not lead to runtime inconsistencies for already stored data.

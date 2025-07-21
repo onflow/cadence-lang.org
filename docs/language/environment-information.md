@@ -3,16 +3,13 @@ title: Environment Information
 sidebar_position: 24
 ---
 
-## Transaction Information
+## Transaction information
 
-To get the addresses of the signers of a transaction,
-use the `address` field of each signing `Account`
-that is passed to the transaction's `prepare` phase.
+To get the addresses of the signers of a transaction, use the `address` field of each signing `Account` that is passed to the transaction's `prepare` phase.
 
-There is currently no API that allows getting other transaction information.
-Please let us know if your use-case demands it by request this feature in an issue.
+There is currently no API that allows getting other transaction information. Please let us know if your use-case demands it by requesting this feature in an issue.
 
-## Block Information
+## Block information
 
 To get information about a block, the functions `getCurrentBlock` and `getBlock` can be used:
 
@@ -28,9 +25,7 @@ To get information about a block, the functions `getCurrentBlock` and `getBlock`
     view fun getBlock(at: UInt64): Block?
     ```
 
-  Returns the block at the given height.
-  If the block exists within the accessible range defined by `flow.DefaultTransactionExpiry - 10` (`590` blocks), it is returned successfully.
-  If the block at the given height does not exist or is outside the default transaction expiration range of `590` blocks below the current sealed block, the function returns `nil`.
+  Returns the block at the given height. If the block exists within the accessible range defined by `flow.DefaultTransactionExpiry - 10` (`590` blocks), it is returned successfully. If the block at the given height does not exist or is outside the default transaction expiration range of `590` blocks below the current sealed block, the function returns `nil`.
 
 The `Block` type contains the identifier, height, and timestamp:
 
@@ -65,10 +60,14 @@ struct Block {
     /// Unix timestamp of when the proposer claims it constructed the block.
     ///
     /// NOTE: It is included by the proposer, there are no guarantees on how much the time stamp can deviate from the true time the block was published.
-    /// Consider observing blocks’ status changes off-chain yourself to get a more reliable value.
+    /// Consider observing blocks' status changes off-chain yourself to get a more reliable value.
     ///
     access(all)
     let timestamp: UFix64
 }
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+
 

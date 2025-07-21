@@ -44,7 +44,7 @@ The random numbers returned are unpredictable (unpredictable for miners at block
 
 Nevertheless, developers need to be mindful to use `revertibleRandom()` correctly.
 
-:::warning
+:::danger
 
 A transaction can atomically revert all of its action. It is possible for a transaction submitted by an untrusted party to post-select favorable results and revert the transaction for unfavorable results.
 

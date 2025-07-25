@@ -2,14 +2,10 @@
 title: Accounts
 ---
 
-The type `Account` provides access to accounts,
-Accounts are only accessed through [references](../references.mdx),
-which might be [authorized](../references.mdx#authorized-references).
+The type `Account` provides access to accounts. Accounts are only accessed through [references], which might be [authorized].
 
-Account objects provide information about and allow the management of
-different aspects of the account, such as [account storage](./storage.mdx),
-[keys](./keys.mdx), [contracts](./contracts.mdx),
-and [capabilities](./capabilities.mdx).
+Account objects provide information about and allow the management of different aspects of the account, such as [account storage],
+[keys], [contracts], and [capabilities].
 
 ```cadence
 access(all)
@@ -72,47 +68,33 @@ entitlement mapping AccountMapping {
 }
 ```
 
-## Account access
+## Accessing an account
 
-### Performing read operations
+The following sections describe how to perform read and write operation to view account details.
 
-Access to an `&Account` means having "read access" to it.
-For example, the `address` and `balance` fields have the `access(all)` modifier,
-so are always accessible, which is safe because this information is public,
-and the fields are read-only.
+### Read operations
 
-Any code can get a "read-only" reference to an account (`&Account`)
-at a given address by using the built-in `getAccount` function:
+Access to an `&Account` means having _read access_ to it. For example, the `address` and `balance` fields have the `access(all)` modifier, so they are always accessible, which is safe because this information is public, and the fields are read-only.
+
+Any code can get a read-only reference to an account (`&Account`) at a given address by using the built-in `getAccount` function:
 
 ```cadence
 view fun getAccount(_ address: Address): &Account
 ```
 
-### Performing write operations
+### Write operations
 
-Access to an authorized account reference (`auth(...) &Account`)
-means having certain "write access" to it.
+Access to an authorized account reference (`auth(...) &Account`) means having a certain **write access** to it.
 
-[Entitlements](../access-control.md#entitlements) authorize access to accounts.
-Cadence provides both coarse-grained and fine-grained entitlements,
-which decide what management functions are accessible on the account.
+[Entitlements] authorize access to accounts. Cadence provides both coarse-grained and fine-grained entitlements, which decide what management functions are accessible on the account.
 
-For example, the coarse-grained entitlement `Storage` grants access to all
-storage related functions, such as `save` and `load`, which save a value to storage,
-and load a value from storage respectively.
+For example, the coarse-grained entitlement `Storage` grants access to all storage related functions, such as `save` and `load`, which save a value to storage, and load a value from storage respectively.
 
-The fine-grained entitlement `AddKey` for instance,
-grants access to only the `add` function of the `Account.Keys` value,
-that is, it grants access to adding a key to the account.
+The fine-grained entitlement `AddKey`, for instance, grants access to only the `add` function of the `Account.Keys` value — that is, it grants access to adding a key to the account.
 
-An authorized account reference like `auth(Storage, AddKey) &Account`
-therefore provides read access, as well as write access to storage,
-and the ability to add a new key to that account.
+An authorized account reference like `auth(Storage, AddKey) &Account` therefore provides read access, as well as write access to storage, and the ability to add a new key to that account.
 
-[Signed transactions](../transactions.md) can get authorized account references
-for each signer of the transaction that signs as an authorizer.
-The `prepare` phase of the transaction can specify exactly which entitlements
-it needs to perform its work.
+[Signed transactions] can get authorized account references for each signer of the transaction that signs as an authorizer. The `prepare` phase of the transaction can specify exactly which entitlements it needs to perform its work.
 
 For example, a transaction that deploys a contract to an account can be written as follows:
 
@@ -124,45 +106,30 @@ transaction {
 }
 ```
 
-Here, the transaction requests an authorized reference with the `AddContract` entitlement.
-That means that the transaction is entitled to add a contract to the account,
-but is not able to add another key to the account, for example.
+In this example, the transaction requests an authorized reference with the `AddContract` entitlement. That means that the transaction is entitled to add a contract to the account, but is not able to add another key to the account, for example.
 
-Script can get any kind of access to any account, using the built-in `getAuthAccount` function:
+The following Script can get any kind of access to any account, using the built-in `getAuthAccount` function:
 
 ```cadence
 view fun getAuthAccount<T: &Account>(_ address: Address): T
 ```
 
-This function is only available in scripts.
-Though scripts can perform write operations,
-they discard their changes upon completion.
-Attempting to use this function outside of a script,
-for example in a transaction,
-causes a type error.
+This function is only available in scripts. Though scripts can perform write operations, they discard their changes upon completion. Attempting to use this function outside of a script (e.g., in a transaction) causes a type error.
 
 ## Creating an account
 
-The `Account` constructor allows creating new accounts.
-The function requires a reference to a _payer_ account,
-which should pay for the account creation.
+The `Account` constructor allows the creation of new accounts. The function requires a reference to a _payer_ account, which should pay for the account creation.
 
-The payer account must have enough funds to be able to create an account.
-If the account does not have the required funds, the program aborts.
+The payer account must have enough funds to be able to create an account. If the account does not have the required funds, the program aborts.
 
-The constructor returns a reference to the new account
-which has all coarse-grained account entitlements
-(it has the type `auth(Storage, Contracts, Keys, Inbox, Capabilities) &Account`).
-This provides write access to all parts fo the new account,
-for example, storage, contracts, and keys.
+The constructor returns a reference to the new account, which has all coarse-grained account entitlements (it has the type `auth(Storage, Contracts, Keys, Inbox, Capabilities)  Account`). This provides write access to all parts fo the new account (e.g., storage, contracts, and keys):
 
 ```cadence
 fun Account(payer: auth(BorrowValue | Storage) &Account):
 	auth(Storage, Contracts, Keys, Inbox, Capabilities) &Account
 ```
 
-For example, the following transaction creates a new account
-and has the signer of the transaction pay for it:
+For example, the following transaction creates a new account and has the signer of the transaction pay for it:
 
 ```cadence
 transaction {
@@ -171,3 +138,14 @@ transaction {
     }
 }
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[references]: ../references.mdx
+[authorized]: ../references.mdx#authorized-references
+[account storage]: ./storage.mdx
+[keys]: ./keys.mdx
+[contracts]: ../contracts.mdx
+[capabilities]: ../capabilities.md
+[Entitlements]: ../access-control.md#entitlements
+[Signed transactions]: ../transactions.md

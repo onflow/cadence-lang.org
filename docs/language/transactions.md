@@ -109,7 +109,7 @@ prepare(signer: auth(Storage) &Account) {
 
 As a best practice, only use the `prepare` phase to define and execute logic
 that requires [write access](./accounts/index.mdx#performing-write-operations) to the signing accounts,
-and *move all other logic elsewhere*.
+and _move all other logic elsewhere_.
 
 Modifications to accounts can have significant implications,
 so keep this phase clear of unrelated logic.
@@ -124,15 +124,7 @@ as it requires access to the account storage, but perform the deposit in the `ex
 
 ### Pre-conditions
 
-Transaction pre-conditions are just like
-[pre-conditions of functions](./functions.mdx#function-preconditions-and-postconditions).
-
-Pre-conditions are optional and are declared in a `pre` block.
-They are executed after the `prepare` phase,
-and are used for checking if explicit conditions hold before executing the remainder of the transaction.
-The block can have zero or more conditions.
-
-For example, a pre-condition might check the balance before transferring tokens between accounts.
+Pre-conditions are optional and are declared in a `pre` block and are executed after the `prepare` phase. For example, a pre-condition might check the balance before transferring tokens between accounts:
 
 ```cadence
 pre {
@@ -140,8 +132,9 @@ pre {
 }
 ```
 
-If any of the pre-conditions fail,
-then the remainder of the transaction is not executed and it is completely reverted.
+If any of the pre-conditions fail, then the remainder of the transaction is not executed and it is completely reverted.
+
+See [pre-conditions] for more information.
 
 ### Execute phase
 
@@ -187,17 +180,7 @@ post {
 If any of the post-conditions fail,
 then the transaction fails and is completely reverted.
 
-### Pre-conditions and post-conditions
-
-Another function of the pre-conditions and post-conditions
-is to describe the effects of a transaction on the involved accounts.
-They are essential for users to verify what a transaction does before submitting it.
-The conditions an easy way to introspect transactions before they are executed.
-
-For example, the software that a user uses to sign and send a transaction
-could analyze and interpret the transaction into a human-readable description, like
-"This transaction will transfer 30 tokens from A to B.
-The balance of A will decrease by 30 tokens and the balance of B will increase by 30 tokens."
+See [post-conditions] for details.
 
 ## Summary
 
@@ -244,3 +227,9 @@ transaction {
     }
 }
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[pre-conditions]: ./pre-and-post-conditions.md#pre-conditions
+[post-conditions]: ./pre-and-post-conditions.md#post-conditions
+[using pre-conditons and post-conditions]: ./pre-and-post-conditions.md#using-pre-conditions-and-post-conditions

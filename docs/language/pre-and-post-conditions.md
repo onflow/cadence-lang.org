@@ -76,7 +76,7 @@ fun incrementN() {
 
 Both pre-conditions and post-conditions are considered [`view` contexts]; any operations that are not legal in functions with `view` annotations are also not allowed in conditions. In particular, this means that if you wish to call a function in a condition, that function must be `view`.
 
-## Transaction Pre-conditions
+## Transaction pre-conditions
 
 Transaction pre-conditions function in the same way as [pre-conditions of functions].
 
@@ -92,7 +92,7 @@ pre {
 
 If any of the pre-conditions fail, then the remainder of the transaction is not executed and it is completely reverted.
 
-## Transaction Post-conditions
+## Transaction post-conditions
 
 Transaction post-conditions are just like [post-conditions of functions].
 

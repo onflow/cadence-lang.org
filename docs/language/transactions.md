@@ -3,20 +3,17 @@ title: Transactions
 sidebar_position: 21
 ---
 
-Transactions are objects that are signed with keys of one or more [accounts](./accounts/index.mdx)
-and are sent to the chain to interact with it and perform state changes.
+Transactions are objects that are signed with keys of one or more [accounts] and are sent to the chain to interact with it and perform state changes.
 
-Transaction can [import](./imports.mdx) any number of types from any account using the import syntax.
+Transactions can [import] any number of types from any account using the import syntax:
 
 ```cadence
 import FungibleToken from 0x01
 ```
 
-A transaction is declared using the `transaction` keyword
-and its contents are contained in curly braces.
+A transaction is declared using the `transaction` keyword and its contents are contained in curly braces.
 
-The body of the transaction can declare local variables
-that are valid throughout the whole of the transaction.
+The body of the transaction can declare local variables that are valid throughout the whole of the transaction:
 
 ```cadence
 transaction {
@@ -29,11 +26,9 @@ transaction {
 
 ## Transaction parameters
 
-Transactions can have parameters.
-Transaction parameters are declared like function parameters.
-The arguments for the transaction are passed along with the transaction.
+Transactions can have parameters and they are declared like function parameters. The arguments for the transaction are passed along with the transaction.
 
-Transaction parameters are accessible throughout the whole of the transaction.
+Transaction parameters are accessible throughout the whole of the transaction:
 
 ```cadence
 // Declare a transaction which has one parameter named `amount`
@@ -46,14 +41,9 @@ transaction(amount: UFix64) {
 
 ## Transaction phases
 
-Transactions are executed in four phases:
-preparation, pre-conditions, execution, and post-conditions, in that order.
-The preparation and execution phases are blocks of code that execute sequentially.
-The pre-conditions and post-condition are just like
-[conditions in functions](./functions.mdx#function-preconditions-and-postconditions).
+Transactions are executed in four phases: preparation, pre-conditions, execution, and post-conditions, in that order. The preparation and execution phases are blocks of code that execute sequentially. The pre-conditions and post-condition are just like [conditions in functions].
 
-The following empty Cadence transaction has no logic,
-but demonstrates the syntax for each phase, in the order these phases are executed:
+The following empty Cadence transaction has no logic, but demonstrates the syntax for each phase, in the order these phases are executed:
 
 ```cadence
 transaction {
@@ -75,22 +65,17 @@ transaction {
 }
 ```
 
-Although optional, each phase serves a specific purpose when executing a transaction
-and it is recommended that developers use these phases when creating their transactions.
+Although optional, each phase serves a specific purpose when executing a transaction. It's recommended that developers use these phases when creating their transactions.
 
 ### Prepare phase
 
-The `prepare` phase is used when the transaction needs access
-to the accounts which signed (authorized) the transaction.
+The `prepare` phase is used when the transaction needs access to the accounts that signed (authorized) the transaction.
 
 Access to the signing accounts is **only possible inside the `prepare` phase**.
 
-For each signer of the transaction,
-a [reference](./references.mdx) to the signing account is passed as an argument to the `prepare` phase.
-The reference may be authorized, requesting certain [access to the account](./accounts/index.mdx#account-access).
+For each signer of the transaction, a [reference] to the signing account is passed as an argument to the `prepare` phase. The reference may be authorized, requesting certain [access to the account].
 
-For example, if the transaction has two signers,
-the prepare **must** have two parameters of type `&Account`.
+For example, if the transaction has two signers, the prepare **must** have two parameters of type `&Account`:
 
 ```cadence
 prepare(signer1: &Account, signer2: &Account) {
@@ -98,8 +83,7 @@ prepare(signer1: &Account, signer2: &Account) {
 }
 ```
 
-For instance, to request write access to an [account's storage](./accounts/storage.mdx),
-the transaction can request an authorized reference:
+For instance, to request write access to an [account's storage], the transaction can request an authorized reference:
 
 ```cadence
 prepare(signer: auth(Storage) &Account) {
@@ -107,20 +91,13 @@ prepare(signer: auth(Storage) &Account) {
 }
 ```
 
-As a best practice, only use the `prepare` phase to define and execute logic
-that requires [write access](./accounts/index.mdx#performing-write-operations) to the signing accounts,
-and _move all other logic elsewhere_.
+As a best practice, only use the `prepare` phase to define and execute logic that requires [write access] to the signing accounts, and _move all other logic elsewhere_.
 
-Modifications to accounts can have significant implications,
-so keep this phase clear of unrelated logic.
-This ensures that users can easily read and understand the logic of the transaction
-and how it affects their account.
+Modifications to accounts can have significant implications, so keep this phase clear of unrelated logic. This ensures that users can easily read and understand the logic of the transaction and how it affects their account.
 
-The prepare phase serves a similar purpose as the
-[initializer of a composite](./types-and-type-system/composite-types.mdx#composite-type-fields).
+The prepare phase serves a similar purpose as the [initializer of a composite].
 
-For example, if a transaction performs a token transfer, put the withdrawal in the `prepare` phase,
-as it requires access to the account storage, but perform the deposit in the `execute` phase.
+For example, if a transaction performs a token transfer, put the withdrawal in the `prepare` phase since it requires access to the account storage, but perform the deposit in the `execute` phase.
 
 ### Pre-conditions
 
@@ -138,11 +115,9 @@ See [pre-conditions] for more information.
 
 ### Execute phase
 
-The `execute` block executes the main logic of the transaction.
-This phase is optional, but it is a best practice to add your main transaction logic in the section,
-so it is explicit.
+The `execute` block executes the main logic of the transaction. This phase is optional, but it is a best practice to add your main transaction logic in this section so it is explicit.
 
-It is impossible to access the references to the transaction's signing accounts in the `execute` phase.
+It is impossible to access the references to the transaction's signing accounts in the `execute` phase:
 
 ```cadence
 transaction {
@@ -161,13 +136,9 @@ transaction {
 
 ### Post-conditions
 
-Transaction post-conditions are just like
-[post-conditions of functions](./functions.mdx#function-preconditions-and-postconditions).
+Transaction post-conditions are just like [post-conditions of functions].
 
-Post-conditions are optional and are declared in a `post` block.
-They are executed after the execution phase,
-and are used to verify that the transaction logic has been executed properly.
-The block can have zero or more conditions.
+Post-conditions are optional and are declared in a `post` block. They are executed after the execution phase and are used to verify that the transaction logic has been executed properly. The block can have zero or more conditions.
 
 For example, a token transfer transaction can ensure that the final balance has a certain value:
 
@@ -177,20 +148,15 @@ post {
 }
 ```
 
-If any of the post-conditions fail,
-then the transaction fails and is completely reverted.
+If any of the post-conditions fail, then the transaction fails and is completely reverted.
 
 See [post-conditions] for details.
 
 ## Summary
 
-Transactions use phases to make the transaction's code / intent more readable.
-They provide a way for developers to separate the transaction logic.
-Transactions also provide a way to check the state prior / after transaction execution,
-to prevent the transaction from running, or reverting changes made by the transaction if needed.
+Transactions use phases to make the transaction's code/intent more readable. They provide a way for developers to separate the transaction logic. Transactions also provide a way to check the state prior/after transaction execution, to prevent the transaction from running, or reverting changes made by the transaction if needed.
 
-The following is a brief summary of how to use the `prepare`, `pre`, `execute`,
-and `post` blocks in a transaction to implement the transaction's phases:
+The following is a brief summary of how to use the `prepare`, `pre`, `execute`, and `post` blocks in a transaction to implement the transaction's phases:
 
 ```cadence
 transaction {
@@ -230,6 +196,15 @@ transaction {
 
 <!-- Relative links. Will not render on the page -->
 
-[pre-conditions]: ./pre-and-post-conditions.md#pre-conditions
-[post-conditions]: ./pre-and-post-conditions.md#post-conditions
+[access to the account]: ./accounts/index.mdx#accessing-an-account
+[account's storage]: ./accounts/storage.mdx
+[accounts]: ./accounts/index.mdx
+[conditions in functions]: ./pre-and-post-conditions.md#function-pre-conditions-and-post-conditions
+[import]: ./imports.mdx
+[initializer of a composite]: ./types-and-type-system/composite-types.mdx#composite-type-fields
+[post-conditions of functions]: ./pre-and-post-conditions.md#transaction-post-conditions
+[post-conditions]: ./pre-and-post-conditions.md#transaction-post-conditions
+[pre-conditions]: ./pre-and-post-conditions.md#transaction-pre-conditions
+[reference]: ./references.mdx
 [using pre-conditons and post-conditions]: ./pre-and-post-conditions.md#using-pre-conditions-and-post-conditions
+[write access]: ./accounts/index.mdx#write-operations

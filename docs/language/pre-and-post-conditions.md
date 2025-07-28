@@ -3,7 +3,9 @@ title: Pre- and Post-Conditions
 sidebar_position: 7
 ---
 
-Pre-conditions and post-conditions are a unique and powerful feature of Cadence that allow you to specify conditions for execution that must be met for transactions and functions. If they're not met execution stops and the transaction is reverted. One use is to define specific inputs and outputs for a transaction that make it easy to see what will be transferred, regardless of how complex the transaction execution becomes. This property is particularly useful in using code written by an AI. To mock out an example:
+Pre-conditions and post-conditions are a unique and powerful feature of Cadence that allow you to specify conditions for execution that must be met for transactions and functions. If they're not met, execution stops and the transaction is reverted. One use is to define specific inputs and outputs for a transaction that make it easy to see what will be transferred, regardless of how complex the transaction execution becomes. This property is particularly useful in using code written by an AI.
+
+To mock out an example:
 
 > **Pre-condition**: The user has 50 Flow.
 
@@ -15,15 +17,11 @@ Pre-conditions and post-conditions are a unique and powerful feature of Cadence 
 
 Functions may have pre-conditions and may have post-conditions. They can be used to restrict the inputs (values for parameters) and output (return value) of a function.
 
-Pre-conditions must be true right before the execution of the function. They are part of the function and introduced by the `pre` keyword, followed by the condition block.
-
-Post-conditions must be true right after the execution of the function. Post-conditions are part of the function and introduced by the `post` keyword, followed by the condition block.
-
-A conditions block consists of one or more conditions. Conditions are expressions evaluating to a boolean.
-
-Conditions may be written on separate lines, or multiple conditions can be written on the same line, separated by a semicolon. This syntax follows the syntax for [statements].
-
-Following each condition, an optional description can be provided after a colon. The condition description is used as an error message when the condition fails.
+- Pre-conditions must be true right before the execution of the function. They are part of the function and introduced by the `pre` keyword, followed by the condition block.
+- Post-conditions must be true right after the execution of the function. Post-conditions are part of the function and introduced by the `post` keyword, followed by the condition block.
+- A conditions block consists of one or more conditions. Conditions are expressions evaluating to a boolean.
+- Conditions may be written on separate lines, or multiple conditions can be written on the same line, separated by a semicolon. This syntax follows the syntax for [statements].
+- Following each condition, an optional description can be provided after a colon. The condition description is used as an error message when the condition fails.
 
 In post-conditions, the special constant `result` refers to the result of the function:
 
@@ -110,11 +108,11 @@ If any of the post-conditions fail, then the transaction fails and is completely
 
 ## Pre- and post-conditions in interfaces
 
-[Interfaces] can also define pre- and post-conditions. Please see the [interfaces] section for more details.
+Interfaces can also define pre- and post-conditions. See the [interfaces] article for more information.
 
 <!-- Relative links. Will not render on the page -->
 
-[Interfaces]: ./interfaces.mdx
+[interfaces]: ./interfaces.mdx
 [pre-conditions of functions]: #function-pre-conditions-and-post-conditions
 [post-conditions of functions]: #function-pre-conditions-and-post-conditions
 [statements]: ./syntax.md#semicolons

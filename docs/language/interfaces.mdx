@@ -3,80 +3,54 @@ title: Interfaces
 sidebar_position: 14
 ---
 
-An interface is an abstract type that specifies the behavior of types
-that *implement* the interface.
-Interfaces declare the required functions and fields,
-the access control for those declarations,
-and preconditions and postconditions that implementing types need to provide.
+An interface is an abstract type that specifies the behavior of types that **implement** the interface. Interfaces declare the required functions and fields, the access control for those declarations, and [pre-conditions and post-conditions] that implementing types need to provide.
 
 There are three kinds of interfaces:
 
-- **Structure interfaces**: implemented by [structures](./types-and-type-system/composite-types.mdx#structures)
-- **Resource interfaces**: implemented by [resources](./types-and-type-system/composite-types.mdx#resources)
-- **Contract interfaces**: implemented by [contracts](./contracts.mdx)
+- **Structure interfaces** — implemented by [structures]
+- **Resource interfaces** — implemented by [resources]
+- **Contract interfaces** — implemented by [contracts]
 
 Structure, resource, and contract types may implement multiple interfaces.
 
 There is no support for event and enum interfaces.
 
-Nominal typing applies to composite types that implement interfaces.
-This means that a type only implements an interface
-if it has explicitly declared the conformance,
-the composite type does not implicitly conform to an interface,
-even if it satisfies all requirements of the interface.
+Nominal typing applies to composite types that implement interfaces. This means that a type only implements an interface if it has explicitly declared the conformance; the composite type does not implicitly conform to an interface, even if it satisfies all requirements of the interface.
 
-Interfaces consist of the function and field requirements
-that a type implementing the interface must provide implementations for.
-Interface requirements, and therefore also their implementations,
-must always be at least public.
+Interfaces consist of the function and field requirements that a type implementing the interface must provide implementations for. Interface requirements, and therefore also their implementations, must always be at least public.
 
-Variable field requirements may be annotated
-to require them to be publicly settable.
+Variable field requirements may be annotated to require them to be publicly settable.
 
-Function requirements consist of the name of the function,
-parameter types, an optional return type,
-and optional preconditions and postconditions.
+Function requirements consist of the name of the function, parameter types, an optional return type, and optional [pre-conditions and post-conditions].
 
-Field requirements consist of the name and the type of the field.
-Field requirements may optionally declare a getter requirement and a setter requirement,
-each with preconditions and postconditions.
+Field requirements consist of the name and the type of the field. Field requirements may optionally declare a _getter_ requirement and a _setter_ requirement, each with pre-conditions and post-conditions.
 
-Calling functions with preconditions and postconditions on interfaces
-instead of concrete implementations can improve the security of a program,
-as it ensures that even if implementations change,
-some aspects of them will always hold.
+Calling functions with pre-conditions and post-conditions on interfaces instead of concrete implementations can improve the security of a program, as it ensures that even if implementations change, some aspects of them will always hold.
 
-## Interface Declaration
+## Interface declaration
 
-Interfaces are declared using the `struct`, `resource`, or `contract` keyword,
-followed by the `interface` keyword,
-the name of the interface,
-and the requirements, which must be enclosed in opening and closing braces.
+Interfaces are declared using the `struct`, `resource`, or `contract` keyword, followed by the `interface` keyword, the name of the interface, and the requirements, which must be enclosed in opening and closing braces.
 
-Field requirements can be annotated to
-require the implementation to be a variable field, by using the `var` keyword;
-require the implementation to be a constant field, by using the `let` keyword;
-or the field requirement may specify nothing,
-in which case the implementation may either be a variable or a constant field.
+Field requirements can be annotated to:
 
-Field requirements and function requirements must specify the required level of access.
-The access must be at least be public, so the `access(all)` keyword must be provided.
+- require the implementation to be a variable field by using the `var` keyword; 
+- require the implementation to be a constant field by using the `let` keyword;
+- or, the field requirement may specify nothing, in which case the implementation may either be a variable or a constant field.
 
-Interfaces can be used in types.
-This is explained in detail in the section [Interfaces in Types](#interfaces-in-types).
-For now, the syntax `{I}` can be read as the type of any value that implements the interface `I`.
+Field requirements and function requirements must specify the required level of access. The access must be at least public, so the `access(all)` keyword must be provided.
+
+Interfaces can be used in types. This is explained in detail in [Interfaces in types]. For now, the syntax `{I}` can be read as the type of any value that implements the interface `I`.
+
+Declare a resource interface for a fungible token. Only resources can implement this resource interface:
 
 ```cadence
-// Declare a resource interface for a fungible token.
-// Only resources can implement this resource interface.
-//
 access(all)
 resource interface FungibleToken {
 
     // Require the implementing type to provide a field for the balance
     // that is readable in all scopes (`access(all)`).
     //
-    // Neither the `var` keyword, nor the `let` keyword is used,
+    // Neither the `var` keyword nor the `let` keyword is used,
     // so the field may be implemented as either a variable
     // or as a constant field.
     //
@@ -104,7 +78,7 @@ resource interface FungibleToken {
     // this fungible token and returns the withdrawn amount as
     // a new fungible token.
     //
-    // The given amount must be positive and the function implementation
+    // The given amount must be positive, and the function implementation
     // must add the amount to the balance.
     //
     // The function must return a new fungible token.
@@ -150,40 +124,30 @@ resource interface FungibleToken {
 }
 ```
 
-Note that the required initializer and functions do not have any executable code.
+:::note
 
-Struct and resource Interfaces can only be declared directly inside contracts,
-i.e. not inside of functions.
-Contract interfaces can only be declared globally and not inside contracts.
+The required initializer and functions do not have any executable code.
 
-## Interface Implementation
+:::
 
-Declaring that a type implements (conforms) to an interface
-is done in the type declaration of the composite type (e.g., structure, resource):
-The kind and the name of the composite type is followed by a colon (`:`)
-and the name of one or more interfaces that the composite type implements.
+Struct and resource interfaces can only be declared directly inside contracts (i.e., not inside of functions). Contract interfaces can only be declared globally and not inside contracts.
 
-This will tell the checker to enforce any requirements from the specified interfaces
-onto the declared type.
+## Interface implementation
 
-A type implements (conforms to) an interface if it declares
-the implementation in its signature, provides field declarations
-for all fields required by the interface,
-and provides implementations for all functions required by the interface.
+Declaring that a type implements (conforms) to an interface is performed in the type declaration of the composite type (e.g., structure, resource): the kind and the name of the composite type is followed by a colon (`:`) and the name of one or more interfaces that the composite type implements.
 
-The field declarations in the implementing type must match the field requirements
-in the interface in terms of name, type, and declaration kind (e.g. constant, variable)
-if given. For example, an interface may require a field with a certain name and type,
-but leaves it to the implementation what kind the field is.
+This will tell the checker to enforce any requirements from the specified interfaces onto the declared type.
 
-The function implementations must match the function requirements in the interface
-in terms of name, parameter argument labels, parameter types, and the return type.
+A type implements (conforms to) an interface if it declares the implementation in its signature, provides field declarations for all fields required by the interface, and provides implementations for all functions required by the interface.
+
+The field declarations in the implementing type must match the field requirements in the interface in terms of name, type, and declaration kind (e.g., constant, variable), if given. For example, an interface may require a field with a certain name and type, but leaves it to the implementation what kind the field it is.
+
+The function implementations must match the function requirements in the interface in terms of name, parameter argument labels, parameter types, and the return type.
+
+Declare a resource named `ExampleToken` that implements the `FungibleToken` interface:
 
 ```cadence
-// Declare a resource named `ExampleToken` that has to implement
-// the `FungibleToken` interface.
-//
-// It has a variable field named `balance`, that can be written
+// It has a variable field named `balance`, which can be written
 // by functions of the type, but outer scopes can only read it.
 //
 access(all)
@@ -234,7 +198,7 @@ resource ExampleToken: FungibleToken {
     //
     // NOTE: the type of the parameter is `{FungibleToken}`,
     // i.e., any resource that implements the resource interface `FungibleToken`,
-    // so any other token – however, we want to ensure that only tokens
+    // so any other token — however, we want to ensure that only tokens
     // of the same type can be deposited.
     //
     // This implementation satisfies the required postconditions.
@@ -252,14 +216,17 @@ resource ExampleToken: FungibleToken {
         }
     }
 }
+```
 
-// Declare a constant which has type `ExampleToken`,
-// and is initialized with such an example token.
-//
+Declare a constant that has type `ExampleToken`, and is initialized with such an example token:
+
+```cadence
 let token <- create ExampleToken(balance: 100)
+```
 
-// Withdraw 10 units from the token.
-//
+Withdraw 10 units from the token:
+
+```cadence
 // The amount satisfies the precondition of the `withdraw` function
 // in the `FungibleToken` interface.
 //
@@ -273,8 +240,11 @@ let withdrawn <- token.withdraw(amount: 10)
 //
 // `token.balance` is `90`
 // `withdrawn.balance` is `10`
+```
 
-// Deposit the withdrawn token into another one.
+Deposit the withdrawn token into another one:
+
+```cadence
 let receiver: @ExampleToken <- // ...
 receiver.deposit(<-withdrawn)
 
@@ -290,12 +260,9 @@ token.withdraw(amount: 100)
 token.withdraw(amount: 90)
 ```
 
-The access level for variable fields in an implementation
-may be less restrictive than the interface requires.
-For example, an interface may require a field to be
-at least contract-accessible (i.e. the `access(contract)` modifier is used),
-and an implementation may provide a variable field which is public,
-(the `access(all)` modifier is used).
+The access level for variable fields in an implementation may be less restrictive than the interface requires.
+
+For example, an interface may require a field to be at least contract accessible (i.e., the `access(contract)` modifier is used), and an implementation may provide a variable field which is public (the `access(all)` modifier is used):
 
 ```cadence
 access(all)
@@ -322,18 +289,15 @@ struct AnImplementation: AnInterface {
 }
 ```
 
-## Interfaces in Types
+## Interfaces in types
 
-Interfaces can be used in types: The type `{I}` is the type of all objects
-that implement the interface `I`.
+Interfaces can be used in types: the type `{I}` is the type of all objects that implement the interface `I`.
 
-This is called a [intersection type](./types-and-type-system/intersection-types.md):
-Only the functionality (members and functions) of the interface can be used
-when accessing a value of such a type.
+This is called an [intersection type]: only the functionality (members and functions) of the interface can be used when accessing a value of such a type.
+
+Declare an interface named `Shape`:
 
 ```cadence
-// Declare an interface named `Shape`.
-//
 // Require implementing types to provide a field which returns the area,
 // and a function which scales the shape by a given factor.
 //
@@ -346,9 +310,11 @@ struct interface Shape {
     access(all)
     fun scale(factor: Int)
 }
+```
 
-// Declare a structure named `Square` the implements the `Shape` interface.
-//
+Declare a structure named `Square` that implements the `Shape` interface:
+
+```cadence
 access(all)
 struct Square: Shape {
     // In addition to the required fields from the interface,
@@ -357,7 +323,7 @@ struct Square: Shape {
     access(all)
     var length: Int
 
-    // Provided the field `area`  which is required to conform
+    // Provided the field `area`, which is required to conform
     // to the interface `Shape`.
     //
     // Since `area` was not declared as a constant, variable,
@@ -373,7 +339,7 @@ struct Square: Shape {
         self.length = length
     }
 
-    // Provided the implementation of the function `scale`
+    // Provided the implementation of the function `scale`,
     // which is required to conform to the interface `Shape`.
     //
     access(all)
@@ -381,9 +347,11 @@ struct Square: Shape {
         self.length = self.length * factor
     }
 }
+```
 
-// Declare a structure named `Rectangle` that also implements the `Shape` interface.
-//
+Declare a structure named `Rectangle` that also implements the `Shape` interface:
+
+```cadence
 access(all)
 struct Rectangle: Shape {
 
@@ -393,7 +361,7 @@ struct Rectangle: Shape {
     access(all)
     var height: Int
 
-    // Provided the field `area  which is required to conform
+    // Provided the field `area`, which is required to conform
     // to the interface `Shape`.
     //
     access(all)
@@ -407,7 +375,7 @@ struct Rectangle: Shape {
         self.height = height
     }
 
-    // Provided the implementation of the function `scale`
+    // Provided the implementation of the function `scale`,
     // which is required to conform to the interface `Shape`.
     //
     access(all)
@@ -416,17 +384,19 @@ struct Rectangle: Shape {
         self.height = self.height * factor
     }
 }
+```
 
-// Declare a constant that has type `Shape`, which has a value that has type `Rectangle`.
-//
+Declare a constant that has type `Shape`, which has a value with type `Rectangle`:
+
+```cadence
 var shape: {Shape} = Rectangle(width: 10, height: 20)
 ```
 
 Values implementing an interface are assignable to variables that have the interface as their type.
 
+Assign a value of type `Square` to the variable `shape` that has type `Shape`:
+
 ```cadence
-// Assign a value of type `Square` to the variable `shape` that has type `Shape`.
-//
 shape = Square(length: 30)
 
 // Invalid: cannot initialize a constant that has type `Rectangle`.
@@ -435,14 +405,11 @@ shape = Square(length: 30)
 let rectangle: Rectangle = Square(length: 10)
 ```
 
-Fields declared in an interface can be accessed
-and functions declared in an interface
-can be called on values of a type that implements the interface.
+Fields declared in an interface can be accessed and functions declared in an interface can be called on values of a type that implements the interface:
+
+Declare a constant which has the type `Shape` and is initialized with a value that has type `Rectangle`:
 
 ```cadence
-// Declare a constant which has the type `Shape`.
-// and is initialized with a value that has type `Rectangle`.
-//
 let shape: {Shape} = Rectangle(width: 2, height: 3)
 
 // Access the field `area` declared in the interface `Shape`.
@@ -456,22 +423,19 @@ shape.scale(factor: 3)
 shape.area  // is `54`
 ```
 
-## Interface Nesting
+## Interface nesting
 
 :::warning[🚧 Status]
 
-Currently only contracts and contract interfaces support nested interfaces.
+Currently, only contracts and contract interfaces support nested interfaces.
 
 :::
 
-Interfaces can be arbitrarily nested.
-Declaring an interface inside another does not require implementing types
-of the outer interface to provide an implementation of the inner interfaces.
+Interfaces can be arbitrarily nested. Declaring an interface inside another does not require implementing types of the outer interface to provide an implementation of the inner interfaces.
+
+Declare a resource interface `OuterInterface`, which declares a nested structure interface named `InnerInterface`:
 
 ```cadence
-// Declare a resource interface `OuterInterface`, which declares
-// a nested structure interface named `InnerInterface`.
-//
 // Resources implementing `OuterInterface` do not need to provide
 // an implementation of `InnerInterface`.
 //
@@ -481,27 +445,27 @@ resource interface OuterInterface {
 
     struct interface InnerInterface {}
 }
+```
 
-// Declare a resource named `SomeOuter` that implements the interface `OuterInterface`.
-//
+Declare a resource named `SomeOuter` that implements the interface `OuterInterface`:
+
+```cadence
 // The resource is not required to implement `OuterInterface.InnerInterface`.
 //
 resource SomeOuter: OuterInterface {}
-
-// Declare a structure named `SomeInner` that implements `InnerInterface`,
-// which is nested in interface `OuterInterface`.
-//
-struct SomeInner: OuterInterface.InnerInterface {}
-
 ```
 
-Contract interfaces may also declare [events](./events.md),
-which also do not require implementing types of the outer interface to "implement" the event.
-The event can be emitted in the declaring interface, in a condition or in a default implementation of a function. E.g.
+Declare a structure named `SomeInner` that implements `InnerInterface`, which is nested in interface `OuterInterface`:
 
 ```cadence
-// Declare a contract interface
-//
+struct SomeInner: OuterInterface.InnerInterface {}
+```
+
+Contract interfaces may also declare [events], which also do not require implementing types of the outer interface to _implement_ the event. The event can be emitted in the declaring interface, in a condition or in a default implementation of a function.
+
+For example, declare a contract interface:
+
+```cadence
 contract interface ContractInterface {
     // some event declaration
     //
@@ -529,17 +493,13 @@ contract ImplementingContract: ContractInterface {
 }
 ```
 
-## Interface Default Functions
+## Interface default functions
 
-Interfaces can provide default functions:
-If the concrete type implementing the interface does not provide an implementation
-for the function required by the interface,
-then the interface's default function is used in the implementation.
+Interfaces can provide default functions: if the concrete type implementing the interface does not provide an implementation for the function required by the interface, then the interface's default function is used in the implementation.
+
+Declare a struct interface `Container`, which declares a default function `getCount`:
 
 ```cadence
-// Declare a struct interface `Container`,
-// which declares a default function `getCount`.
-//
 struct interface Container {
 
     let items: [AnyStruct]
@@ -548,9 +508,11 @@ struct interface Container {
         return self.items.length
     }
 }
+```
 
-// Declare a concrete struct named `Numbers` that implements the interface `Container`.
-//
+Declare a concrete struct named `Numbers` that implements the interface `Container`:
+
+```cadence
 // The struct does not implement the function `getCount` of the interface `Container`,
 // so the default function for `getCount` is used.
 //
@@ -566,16 +528,11 @@ let numbers = Numbers()
 numbers.getCount()  // is 0
 ```
 
-Interfaces cannot provide default initializers.
-
-Only one conformance may provide a default function.
+Interfaces cannot provide default initializers, and only one conformance may provide a default function.
 
 ## Interface inheritance
 
-An interface can inherit from (conform to) other interfaces of the same kind.
-For example, a resource interface can inherit from another resource interface, but cannot inherit from a struct interface.
-When an interface inherits from another, all the fields, functions, and types of the parent interface are implicitly
-available to the inheriting interface.
+An interface can inherit from (conform to) other interfaces of the same kind. For example, a resource interface can inherit from another resource interface, but cannot inherit from a struct interface. When an interface inherits from another, all the fields, functions, and types of the parent interface are implicitly available to the inheriting interface:
 
 ```cadence
 access(all)
@@ -592,8 +549,7 @@ resource interface Vault: Receiver {
 }
 ```
 
-In the example above, `Vault` inherits `Receiver`. Anyone implementing the `Vault` interface would also have to
-implement the `Receiver` interface.
+In the example above, `Vault` inherits `Receiver`. Anyone implementing the `Vault` interface would also have to implement the `Receiver` interface.
 
 ```cadence
 access(all)
@@ -611,11 +567,19 @@ resource MyVault: Vault {
 ### Duplicate interface members
 
 When an interface implements another interface, it is possible for the two interfaces to have members with the same name.
-The following sections explain how these ambiguities are resolved for different scenarios.
 
-#### Fields
+The following sections describe how these ambiguities are resolved for different scenarios, including:
 
-If two fields with identical names have identical types, then it will be valid.
+- Fields
+- Functions
+- Functions with conditions
+- Default functions
+- Conditions with default functions
+- Types and event definitions
+
+**Fields**
+
+If two fields with identical names have identical types, then it will be valid:
 
 ```cadence
 access(all)
@@ -626,13 +590,13 @@ resource interface Receiver {
 
 access(all)
 resource interface Vault: Receiver {
-    // `id` field has the same type as the `Receiver.id`. Hence this is valid.
+    // `id` field has the same type as the `Receiver.id`. Hence, this is valid.
     access(all)
     var id: UInt64
 }
 ```
 
-Otherwise, interface conformance is not valid.
+Otherwise, interface conformance is not valid:
 
 ```cadence
 access(all)
@@ -643,15 +607,15 @@ resource interface Receiver {
 
 access(all)
 resource interface Vault: Receiver {
-    // `id` field has a different type than the `Receiver.id`. Hence this is invalid.
+    // `id` field has a different type than the `Receiver.id`. Hence, this is invalid.
     access(all)
     var id: UInt64
 }
 ```
 
-#### Functions
+**Functions**
 
-If two functions with identical names also have identical signatures, that is valid.
+If two functions with identical names also have identical signatures, that is valid:
 
 ```cadence
 access(all)
@@ -664,13 +628,13 @@ access(all)
 resource interface Vault: Receiver {
     // `deposit` function has the same signature as the `Receiver.deposit`.
     // Also none of them have any default implementations.
-    // Hence this is valid.
+    // Hence, this is valid.
     access(all)
     fun deposit(_ something: @AnyResource)
 }
 ```
 
-If the signatures of the two functions are different, then the interface conformance is not valid.
+If the signatures of the two functions are different, then the interface conformance is not valid:
 
 ```cadence
 access(all)
@@ -688,12 +652,9 @@ resource interface Vault: Receiver {
 }
 ```
 
-#### Functions with conditions
+**Functions with conditions**
 
-If the two functions with identical names and signatures have pre/post conditions, then it will still be valid.
-However, the pre/post conditions are linearized (refer to the [linearizing conditions section](#linearizing-conditions))
-to determine the order of the execution of the conditions.
-Given the pre/post conditions are `view` only, the order of execution would not have an impact on the conditions.
+If the two functions with identical names and signatures have [pre/post-conditions], then it will still be valid. However, the pre/post-conditions are linearized (see [Linearizing conditions] for more information) to determine the order of the execution of the conditions. Given the pre/post-conditions are `view` only, the order of execution would not have an impact on the conditions:
 
 ```cadence
 access(all)
@@ -708,7 +669,7 @@ access(all)
 resource interface Vault: Receiver {
     // `deposit` function has the same signature as the `Receiver.deposit`.
     // Having pre/post condition is valid.
-    // Both conditions would be executed, in a pre-determined order.
+    // Both conditions would be executed in a pre-determined order.
     access(all)
     fun deposit(_ something: @AnyResource) {
         pre{ self.balance > 50 }
@@ -716,9 +677,9 @@ resource interface Vault: Receiver {
 }
 ```
 
-#### Default functions
+**Default functions**
 
-An interface can provide a default implementation to an inherited function.
+An interface can provide a default implementation to an inherited function:
 
 ```cadence
 access(all)
@@ -737,7 +698,7 @@ resource interface Vault: Receiver {
 }
 ```
 
-However, an interface cannot override an inherited default implementation of a function.
+However, an interface cannot override an inherited default implementation of a function:
 
 ```cadence
 access(all)
@@ -758,7 +719,7 @@ resource interface Vault: Receiver {
 }
 ```
 
-It is also invalid to have two or more inherited default implementations for an interface.
+It is also invalid to have two or more inherited default implementations for an interface:
 
 ```cadence
 access(all)
@@ -782,8 +743,7 @@ access(all)
 resource interface Vault: Receiver, Provider {}
 ```
 
-Having said that, there can be situations where the same default function can be available via different
-inheritance paths.
+Having said that, there can be situations where the same default function can be available via different inheritance paths:
 
 ```cadence
 access(all)
@@ -806,15 +766,11 @@ access(all)
 resource interface Vault: Receiver, Provider {}
 ```
 
-In the above example, `Logger.log()` default function is visible to the `Vault` interface via both `Receiver` and `Provider`.
-Even though it is available from two different interfaces, they are both referring to the same
-default implementation.
-Therefore, the above code is valid.
+In the above example, the `Logger.log()` default function is visible to the `Vault` interface via both `Receiver` and `Provider`. Even though it is available from two different interfaces, they are both referring to the same default implementation. Therefore, the above code is valid.
 
-#### Conditions with Default functions
+**Conditions with default functions**
 
-A more complex situation is where a default function is available via one inheritance path and a pre/post condition
-is available via another inheritance path.
+A more complex situation is when a default function is available via one inheritance path and a pre/post-condition is available via another inheritance path:
 
 ```cadence
 access(all)
@@ -838,15 +794,11 @@ access(all)
 resource interface Vault: Receiver, Provider {}
 ```
 
-In such situations, all rules applicable for default functions inheritance as well as condition inheritance
-would be applied.
-Thus, the default function from coming from the `Receiver` interface, and the condition comes from the `Provider`
-interface would be made available for the inherited interface.
+In these situations, all rules applicable for the default functions inheritance as well as condition inheritance would be applied. Thus, the default function coming from the `Receiver` interface, and the condition coming from the `Provider` interface, would be made available for the inherited interface.
 
-#### Types and event definitions
+**Types and event definitions**
 
-Type and event definitions would also behave similarly to the default functions.
-Inherited interfaces can override type definitions and event definitions.
+Type and event definitions would also behave similarly to the default functions. Inherited interfaces can override type definitions and event definitions:
 
 ```cadence
 access(all)
@@ -870,10 +822,9 @@ contract MyToken: NonFungibleToken {
 }
 ```
 
-If a user needed to access the `Foo` struct coming from the super interface `Token`, then they can
-access it using the fully qualified name. e.g: `let foo: Token.Foo`.
+If a user needed to access the `Foo` struct coming from the super interface `Token`, then they can access it using the fully qualified name (e.g., `let foo: Token.Foo`).
 
-However, it is not allowed to have two or more inherited type/events definitions with identical names for an interface.
+However, it is not allowed to have two or more inherited type/event definitions with identical names for an interface:
 
 ```cadence
 access(all)
@@ -893,8 +844,8 @@ access(all)
 contract NonFungibleToken: Token, Collectible {
 }
 ```
-Similar to default functions, there can be situations where the same type/event definition can be available
-via different inheritance paths.
+
+Similar to default functions, there can be situations where the same type/event definition can be available via different inheritance paths:
 
 ```cadence
 access(all)
@@ -914,14 +865,9 @@ access(all)
 contract interface NonFungibleToken: Token, Collectible {}
 ```
 
-In the above example, `Logger.Foo` type definition is visible to the `NonFungibleToken` interface via both `Token`
-and `Collectible`.
-Even though it is available from two different interfaces, they are both referring to the same
-type definition.
-Therefore, the above code is valid.
+In the above example, `Logger.Foo` type definition is visible to the `NonFungibleToken` interface via both `Token` and `Collectible`. Even though it is available from two different interfaces, they are both referring to the same type definition. Therefore, the above code is valid.
 
-However, if at least one of the interfaces in the middle of the chain also overrides the type definition `Foo`,
-then the code becomes invalid, as there are multiple implementations present now, which leads to ambiguity.
+However, if at least one of the interfaces in the middle of the chain also overrides the type definition `Foo`, then the code becomes invalid, as there are multiple implementations present now, which leads to ambiguity:
 
 ```cadence
 access(all)
@@ -947,15 +893,13 @@ access(all)
 resource interface NonFungibleToken: Token, Provider {}
 ```
 
+### Linearizing conditions
 
-### Linearizing Conditions
+As mentioned in [Functions with conditions], it is required to linearize the function conditions to determine the order in which pre/post-conditions are executed. This is accomplished by linearizing the interfaces, and hence conditions, in a **depth-first pre-ordered manner, without duplicates**.
 
-As mentioned in the [functions with conditions](#functions-with-conditions) section, it would be required to linearize
-the function conditions, to determine the order in which pre- and post-conditions are executed.
-This is done by linearizing the interfaces, and hence conditions, in a **depth-first pre-ordered manner, without duplicates**.
+For example, consider an interface inheritance hierarchy as follows:
 
-For example, consider an interface inheritance hierarchy as below:
-```
+```text
        A
       / \
      B   C
@@ -1003,7 +947,7 @@ struct interface E {
 }
 ```
 
-Any concrete type implementing interface `A` would be equivalent to implementing all interfaces from `A` to `E`, linearized.
+Any concrete type implementing interface `A` would be equivalent to implementing all interfaces from `A` to `E`, linearized:
 
 ```cadence
 struct Foo: A {
@@ -1014,9 +958,8 @@ struct Foo: A {
 }
 ```
 
-The linearized interface order would be: [A, B, D, E, C].
+The linearized interface order would be: [A, B, D, E, C]. In other words, it's the same as having:
 
-i.e: same as having:
 ```cadence
 struct Foo: A, B, D, C, E {
     access(all)
@@ -1026,17 +969,16 @@ struct Foo: A, B, D, C, E {
 }
 ```
 
-Thus, invoking `test` method of `Foo` would first invoke the pre-conditions of [A, B, D, E, C], in that particular order,
-and eventually runs the pre-condition of the concrete implementation `Foo`.
+Thus, invoking the `test` method of `Foo` would first invoke the pre-conditions of [A, B, D, E, C], in that particular order, and eventually run the pre-condition of the concrete implementation `Foo`:
 
 ```cadence
 let foo = Foo()
 foo.test()
 ```
 
-Above will print:
+The above then prints:
 
-```
+```bash
 A
 B
 D
@@ -1045,12 +987,9 @@ C
 Foo
 ```
 
-Similarly, for post-conditions, the same linearization of interfaces would be used, and the post-conditions are executed
-in the reverse order.
-For example, replacing the `pre` conditions in the above example with `post` conditions with the exact same content would
-result in an output similar to:
+Similarly, for post-conditions, the same linearization of interfaces would be used, and the post-conditions are executed in the reverse order. For example, replacing the `pre` conditions in the above example with `post` conditions with the exact same content would result in an output similar to:
 
-```
+```bash
 Foo
 C
 E
@@ -1058,3 +997,16 @@ D
 B
 A
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[structures]: ./types-and-type-system/composite-types.mdx#structures
+[resources]: ./types-and-type-system/composite-types.mdx#resources
+[contracts]: ./contracts.mdx
+[Interfaces in types]: #interfaces-in-types
+[intersection type]: ./types-and-type-system/intersection-types.md
+[events]: ./events.md
+[Linearizing conditions]: #linearizing-conditions
+[Functions with conditions]: #duplicate-interface-members
+[pre-conditions and post-conditions]: ./pre-and-post-conditions.md
+[pre/post-conditions]: ./pre-and-post-conditions.md

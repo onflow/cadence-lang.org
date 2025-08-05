@@ -636,31 +636,6 @@ resource Token {
 }
 ```
 
-### `pub`
-
-The `pub` keyword is an access modifier in Cadence that makes declarations publicly accessible. When applied to variables, functions, or other declarations, pub allows them to be accessed from outside the current scope, such as from other contracts or accounts. The pub keyword is commonly used for public interfaces, events, and functions that need to be called by external code. Public declarations are essential for creating reusable, composable smart contracts that can interact with each other.
-
-```cadence
-access(all) contract MyContract {
-    pub var publicVariable: String // publicly accessible
-    pub fun publicFunction() { } // publicly callable
-    pub event PublicEvent() // publicly emittable
-}
-```
-
-### `priv`
-
-The `priv` keyword is an access modifier in Cadence that makes declarations private to the current scope. When applied to variables, functions, or other declarations, priv restricts access to only the current contract, resource, or struct. Private declarations are useful for internal implementation details that shouldn't be exposed to external code, helping to maintain encapsulation and prevent unauthorized access to sensitive data or functions.
-
-```cadence
-access(all) contract MyContract {
-    priv var privateVariable: String // private to contract
-    priv fun privateFunction() { } // private to contract
-}
-```
-
-This comprehensive glossary covers the essential symbols, keywords, functions, and concepts in Cadence, providing developers with a complete reference for understanding and working with the language's unique resource-oriented programming model.
-
 <!-- Relative links. Will not render on the page -->
 
 [arithmetic operators]: ./operators/arithmetic-logical-operators.md#arithmetic-operators

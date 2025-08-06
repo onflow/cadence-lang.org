@@ -33,8 +33,8 @@ The `@` (at) symbol is a crucial resource type annotation in Cadence that indica
 
 ```cadence
 resource NFT {
-    pub var id: UInt64
-    pub var metadata: String
+    access(all) var id: UInt64
+    access(all) var metadata: String
 }
 
 let myNFT: @NFT <- create NFT(id: 1, metadata: "Rare item")
@@ -90,7 +90,7 @@ The [`<-` (move operator)] is essential for resource management in Cadence, expl
 
 ```cadence
 resource Token {
-    pub var amount: UInt64
+    access(all) var amount: UInt64
 }
 
 let token <- create Token(amount: 100) // resource creation
@@ -104,7 +104,7 @@ The [`<-!` (force-assignment move operator)] is a specialized move operator that
 
 ```cadence
 resource NFT {
-    pub var id: UInt64
+    access(all) var id: UInt64
 }
 
 var myNFT: @NFT? <- nil
@@ -118,7 +118,7 @@ The [`<->` (swap operator)] exchanges two resources between variables without re
 
 ```cadence
 resource Coin {
-    pub var value: UInt64
+    access(all) var value: UInt64
 }
 
 let coinA: @Coin <- create Coin(value: 10)
@@ -215,15 +215,15 @@ The `resource` keyword declares resource types in Cadence, which are unique, non
 
 ```cadence
 resource NFT {
-    pub var id: UInt64
-    pub var owner: Address
+    access(all) var id: UInt64
+    access(all) var owner: Address
     
     init(id: UInt64, owner: Address) {
         self.id = id
         self.owner = owner
     }
     
-    pub fun transfer(to: Address) {
+    access(all) fun transfer(to: Address) {
         self.owner = to
     }
 }
@@ -235,9 +235,9 @@ The `struct` keyword declares structure types in Cadence, which are composite ty
 
 ```cadence
 struct Metadata {
-    pub var name: String
-    pub var description: String
-    pub var tags: [String]
+    access(all) var name: String
+    access(all) var description: String
+    access(all) var tags: [String]
     
     init(name: String, description: String, tags: [String]) {
         self.name = name
@@ -253,12 +253,12 @@ The `contract` keyword declares smart contracts in Cadence, which are the primar
 
 ```cadence
 access(all) contract MyContract {
-    pub resource NFT {
-        pub var id: UInt64
+    access(all) resource NFT {
+        access(all) var id: UInt64
         init(id: UInt64) { self.id = id }
     }
     
-    pub fun mintNFT(id: UInt64): @NFT {
+    access(all) fun mintNFT(id: UInt64): @NFT {
         return <- create NFT(id: id)
     }
 }
@@ -270,14 +270,14 @@ The `interface` keyword declares interface types in Cadence, which define a cont
 
 ```cadence
 access(all) interface Transferable {
-    pub fun transfer(to: Address)
-    pub var owner: Address
+    access(all) fun transfer(to: Address)
+    access(all) var owner: Address
 }
 
 access(all) resource NFT: Transferable {
-    pub var owner: Address
+    access(all) var owner: Address
     
-    pub fun transfer(to: Address) {
+    access(all) fun transfer(to: Address) {
         self.owner = to
     }
 }
@@ -294,7 +294,7 @@ access(all) enum Status {
     case completed
     case failed(reason: String)
     
-    pub fun isActive(): Bool {
+    access(all) fun isActive(): Bool {
         return self == .active
     }
 }
@@ -308,7 +308,7 @@ The `create` keyword is used to instantiate new resources in Cadence, calling th
 
 ```cadence
 resource Token {
-    pub var amount: UInt64
+    access(all) var amount: UInt64
     init(amount: UInt64) { self.amount = amount }
 }
 
@@ -322,7 +322,7 @@ The `destroy` keyword is used to explicitly destroy resources in Cadence, perman
 
 ```cadence
 resource Token {
-    pub var amount: UInt64
+    access(all) var amount: UInt64
     init(amount: UInt64) { self.amount = amount }
 }
 
@@ -336,10 +336,10 @@ The `.borrow` function provides temporary access to a resource without moving it
 
 ```cadence
 resource NFT {
-    pub var id: UInt64
-    pub var metadata: String
+    access(all) var id: UInt64
+    access(all) var metadata: String
     
-    pub fun updateMetadata(newMetadata: String) {
+    access(all) fun updateMetadata(newMetadata: String) {
         self.metadata = newMetadata
     }
 }
@@ -356,8 +356,8 @@ The `.link` function creates a capability that provides controlled access to a r
 
 ```cadence
 resource NFT {
-    pub var id: UInt64
-    pub fun transfer(to: Address) { /* transfer logic */ }
+    access(all) var id: UInt64
+    access(all) fun transfer(to: Address) { /* transfer logic */ }
 }
 
 let nft: @NFT <- create NFT(id: 1)
@@ -394,7 +394,7 @@ The `account.storage.save` function stores a value or resource in account storag
 
 ```cadence
 resource NFT {
-    pub var id: UInt64
+    access(all) var id: UInt64
     init(id: UInt64) { self.id = id }
 }
 
@@ -608,8 +608,8 @@ The `init` keyword declares initializer functions in Cadence, which are special 
 
 ```cadence
 resource NFT {
-    pub var id: UInt64
-    pub var owner: Address
+    access(all) var id: UInt64
+    access(all) var owner: Address
     
     init(id: UInt64, owner: Address) {
         self.id = id
@@ -624,13 +624,13 @@ The `self` keyword refers to the current instance of a type within its methods a
 
 ```cadence
 resource Token {
-    pub var balance: UInt64
+    access(all) var balance: UInt64
     
-    pub fun transfer(amount: UInt64) {
+    access(all) fun transfer(amount: UInt64) {
         self.balance = self.balance - amount // access own property
     }
     
-    pub fun getBalance(): UInt64 {
+    access(all) fun getBalance(): UInt64 {
         return self.balance // return own property
     }
 }

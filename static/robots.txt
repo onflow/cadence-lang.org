@@ -2,7 +2,7 @@
 
 # Allow all bots by default
 User-agent: *
-Allow: /
+Disallow:
 
 # Sitemap
 Sitemap: https://cadence-lang.org/sitemap.xml

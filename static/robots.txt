@@ -1,37 +1,8 @@
 # algolia: 98E1096D4FD67E70
 
-# Allow search engines
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-# Allow LLM bots
-User-agent: GPTBot
-Allow: /
-
-User-agent: CCBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-# Block all other bots by default
+# Allow all bots by default
 User-agent: *
-Disallow: /
+Allow: /
 
 # Sitemap
 Sitemap: https://cadence-lang.org/sitemap.xml

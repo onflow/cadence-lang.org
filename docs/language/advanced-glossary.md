@@ -161,6 +161,106 @@ fun double(_ x: Int): Int { return x * 2 } // no argument label
 let result = double(5) // no label needed
 ```
 
+## Punctuation marks
+
+### `.` (dot/period)
+
+The `.` (dot) symbol serves multiple purposes in Cadence syntax. It's primarily used for member access, allowing you to access properties, methods, and nested types of objects and types. The dot operator is used to call functions on objects, access struct and resource fields, and navigate through nested structures. Dots are also used in decimal numbers to separate the integer and fractional parts, and in qualified type names to specify the namespace or module where a type is defined.
+
+```cadence
+let length = "hello".length // member access
+let balance = token.balance // property access
+token.transfer(amount: 10) // method call
+let decimal = 3.14 // decimal number
+let nft: MyContract.NFT // qualified type name
+```
+
+### `,` (comma)
+
+The `,` (comma) symbol is used to separate multiple items in lists, function parameters, type parameters, and other multi-item contexts in Cadence. Commas separate function arguments, array elements, dictionary key-value pairs, and type parameters in generic declarations. They're also used to separate multiple variable declarations in a single statement and to separate multiple return values in tuple types. Proper comma usage is essential for clear, readable code structure.
+
+```cadence
+fun add(a: Int, b: Int, c: Int): Int { return a + b + c } // function parameters
+let array = [1, 2, 3, 4, 5] // array elements
+let dict = {"key1": "value1", "key2": "value2"} // dictionary pairs
+let a, b, c = 1, 2, 3 // multiple declarations
+let tuple: (Int, String, Bool) // tuple type
+```
+
+### `()` (parentheses)
+
+The `()` (parentheses) symbol has multiple uses in Cadence syntax. They're used to group expressions and control operator precedence in mathematical and logical expressions. Parentheses are required around function parameters and function calls, and they're used to create tuple types and values. They also serve to group conditions in control flow statements and to create type annotations for function types. Parentheses are essential for disambiguating complex expressions and ensuring proper evaluation order.
+
+```cadence
+let result = (a + b) * c // expression grouping
+fun calculate(x: Int, y: Int): Int { return x + y } // function parameters
+let tuple = (1, "hello", true) // tuple creation
+let functionType: (Int, Int) -> Int // function type
+if (condition1 && condition2) { /* code */ } // grouped condition
+```
+
+### `<>` (angle brackets)
+
+The `<>` (angle brackets) symbol is used for generic type parameters in Cadence, allowing you to create flexible, reusable code that can work with different types. Angle brackets specify type parameters when declaring generic functions, structs, resources, or interfaces. They're also used when calling generic functions to explicitly specify the type arguments, and in capability types to specify the type of resource that can be accessed through the capability. Angle brackets enable type-safe generic programming patterns.
+
+```cadence
+struct Container<T> {
+    access(all) var value: T
+    init(value: T) { self.value = value }
+}
+
+fun identity<T>(_ value: T): T { return value } // generic function
+let container = Container<Int>(value: 42) // type parameter
+let capability: Capability<&NFT> // capability type
+```
+
+### `{}` (curly brackets)
+
+The `{}` (curly brackets) symbol is used to define code blocks, scopes, and composite data structures in Cadence. They're used to group statements in functions, control flow statements, and resource/struct definitions. Curly brackets are also used to create dictionary literals and to define the body of functions, initializers, and methods. They establish the scope for variable declarations and control the lifetime of local variables and borrowed references.
+
+```cadence
+fun example() {
+    let localVar = 42 // code block
+    if condition {
+        // nested block
+    }
+}
+
+resource NFT {
+    access(all) var id: UInt64 // resource definition
+    init(id: UInt64) {
+        self.id = id // initializer block
+    }
+}
+
+let dict = {"key": "value"} // dictionary literal
+```
+
+### `[]` (square brackets)
+
+The `[]` (square brackets) symbol is used for array operations and type annotations in Cadence. They're used to create array literals, access array elements by index, and specify array types in type annotations. Square brackets are also used in dictionary key access and to specify the size of fixed-size arrays. They're essential for working with collections and implementing array-based data structures and algorithms.
+
+```cadence
+let array = [1, 2, 3, 4, 5] // array literal
+let firstElement = array[0] // array access
+let arrayType: [String] // array type annotation
+let fixedArray: [Int; 5] // fixed-size array
+let dict = {"key": "value"}
+let value = dict["key"] // dictionary access
+```
+
+### `` ` `` (backtick)
+
+The `` ` `` (backtick) symbol is _not_ used in Cadence syntax. 
+
+When working with string declartions, use double quotes (`" "`) instead:
+
+```cadence
+let s = `hello`  // Error: use double quotes for strings
+let s = "hello"  
+```
+
+
 ## Keywords and access control
 
 ### `access`

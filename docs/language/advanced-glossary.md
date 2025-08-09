@@ -189,7 +189,7 @@ let tuple: (Int, String, Bool) // tuple type
 
 ### `()` (parentheses)
 
-The `()` (parentheses) symbol has multiple uses in Cadence syntax. They're used to group expressions and control operator precedence in mathematical and logical expressions. Parentheses are required around function parameters and function calls, and they're used to create tuple types and values. They also serve to group conditions in control flow statements and to create type annotations for function types. Parentheses are essential for disambiguating complex expressions and ensuring proper evaluation order.
+The `()` (parentheses) symbol has multiple uses in Cadence syntax. They're used to group expressions and control operator precedence in mathematical and logical expressions. Parentheses are required around function parameters in function calls, and they're used to create tuple types and values. They also serve to group conditions in control flow statements and to create type annotations for function types. Parentheses are essential for disambiguating complex expressions and ensuring proper evaluation order.
 
 ```cadence
 let result = (a + b) * c // expression grouping

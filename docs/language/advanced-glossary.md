@@ -201,17 +201,35 @@ if (condition1 && condition2) { /* code */ } // grouped condition
 
 ### `<>` (angle brackets)
 
-The `<>` (angle brackets) symbol is used for generic type parameters in Cadence, allowing you to create flexible, reusable code that can work with different types. Angle brackets specify type parameters when declaring generic functions, structs, resources, or interfaces. They're also used when calling generic functions to explicitly specify the type arguments, and in capability types to specify the type of resource that can be accessed through the capability. Angle brackets enable type-safe generic programming patterns.
+Angle brackets (`<>`) are _not_ used for generics like in many other languages — Cadence still doesn't have traditional generic functions or structs — but they _are_ used in a few specific syntactic contexts related to type parameters and type instantiation. Specifically, angle brackets are used to specify type parameters for certain built-in or standard library types that are type constructors. Angle brackets are also used to specify the borrow type when working with capabilities and when specifying the authorized type with some Cadence APIs. You can also use angle brackets to define explicit element types for collections when the compiler can't infer them.
 
 ```cadence
-struct Container<T> {
-    access(all) var value: T
-    init(value: T) { self.value = value }
-}
+// FungibleToken.Vault is a generic composite type in the standard interface.
+// <ExampleToken.Vault> tells Cadence the concrete vault type to use:
 
-fun identity<T>(_ value: T): T { return value } // generic function
-let container = Container<Int>(value: 42) // type parameter
-let capability: Capability<&NFT> // capability type
+let vault: FungibleToken.Vault<ExampleToken.Vault>
+
+// The Capability<...> is a generic capability type:
+let cap: Capability<&ExampleToken.Vault{FungibleToken.Receiver}>
+
+// Inside <...>, you define the type that will be borrowed when 
+// using the capability. For example:
+let receiverCap: Capability<&ExampleToken.Vault{FungibleToken.Receiver}>
+    = account.getCapability<&ExampleToken.Vault{FungibleToken.Receiver}>(/public/receiver)
+
+// No < > = Cadence infers; With < > = you're explicitly
+// telling it the type:
+let vaultRef = account
+    .getCapability<&ExampleToken.Vault{FungibleToken.Receiver}>(/public/receiver)
+    .borrow()
+let numbers: [Int] = []
+let moreNumbers = [] as [Int]
+
+// The type annotation uses square brackets for collections, 
+// but when inside other parameterized types, < > is used:
+let dict: {String: Int} = {}
+let capDict: {String: Capability<&ExampleToken.Vault>} = {}
+// Here, the < > is within Capability<...> inside the dictionary value type.
 ```
 
 ### `{}` (curly brackets)
@@ -251,9 +269,9 @@ let value = dict["key"] // dictionary access
 
 ### `` ` `` (backtick)
 
-The `` ` `` (backtick) symbol is _not_ used in Cadence syntax. 
+The `` ` `` (backtick) symbol is _not_ used and has no syntactic meaning at all in Cadence syntax. 
 
-When working with string declartions, use double quotes (`" "`) instead:
+When working with string declarations, use double quotes (`" "`) instead:
 
 ```cadence
 let s = `hello`  // Error: use double quotes for strings

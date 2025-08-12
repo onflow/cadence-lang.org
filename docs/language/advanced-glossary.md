@@ -712,7 +712,7 @@ fun mintNFT(id: UInt64): @NFT {
 }
 ```
 
-## Advanced features
+## Composite type keywords
 
 ### `init`
 

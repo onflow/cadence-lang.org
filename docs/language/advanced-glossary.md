@@ -195,7 +195,7 @@ if (condition1 && condition2) { /* code */ } // grouped condition
 
 ### `<>` (angle brackets)
 
-Angle brackets (`<>`) are _not_ used for generics like in many other languages — Cadence still doesn't have traditional generic functions or structs — but they _are_ used in a few specific syntactic contexts related to type parameters and type instantiation. Specifically, angle brackets are used to specify type parameters for certain built-in or standard library types that are type constructors. Angle brackets are also used to specify the borrow type when working with capabilities and when specifying the authorized type with some Cadence APIs. You can also use angle brackets to define explicit element types for collections when the compiler can't infer them.
+Angle brackets (`<>`) are _not_ used for generics like in many other languages — Cadence doesn't have traditional generic functions or structs — but they _are_ used in a few specific syntactic contexts related to type parameters and type instantiation. Specifically, angle brackets are used to specify type parameters for certain built-in or standard library types that are type constructors. Angle brackets are also used to specify the borrow type when working with capabilities and when specifying the authorized type with some Cadence APIs. You can also use angle brackets to define explicit element types for collections when the compiler can't infer them.
 
 ```cadence
 // FungibleToken.Vault is a generic composite type in the standard interface.

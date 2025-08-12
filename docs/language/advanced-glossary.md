@@ -8,12 +8,6 @@ This comprehensive glossary provides detailed explanations and code examples for
 
 Use this guide as a complete reference to navigate Cadence's syntax, resource management, access control, and blockchain-specific features.
 
-:::tip
-
-To search for a term, press <kbd>CTRL</kbd>/<kbd>⌘</kbd> + <kbd>F</kbd> and type in the symbol, keyword, or concept you want to look up.
-
-:::
-
 ## Symbols and operators
 
 ### `&` (ampersand)

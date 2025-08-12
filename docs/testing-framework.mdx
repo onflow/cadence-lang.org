@@ -1191,7 +1191,6 @@ fun setup() {
         "Foo": account.address
     }))
 
-    let contractCode = Test.readFile("Foo.cdc")
     let err = blockchain.deployContract(
         name: "Foo",
         path: "./Foo.cdc",

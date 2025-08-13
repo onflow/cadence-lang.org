@@ -1,51 +1,33 @@
 ---
-title: 10. Composable Resources
+title: Composable Resources
 ---
 
 In this tutorial, we're going to walk through how resources can own other resources by creating, deploying, and moving composable NFTs.
 
----
+## Getting started
 
-:::info[Action]
+This tutorial only includes example code. It does not have an associated playground project. You are still welcome to copy this code and paste it to the playground to test it out though!
 
-This tutorial just includes example code. It does not have an associated playground project.
-You are still welcome to copy this code and paste it to the playground to test it out though!
+We'll cover how _Resources own other resources_, which is a powerful feature in the world of blockchain and smart contracts.
 
-:::
-
-Resources owning other resources is a powerful feature in the world of blockchain and smart contracts.
-
-**Before proceeding with this tutorial**, we recommend following the instructions in [Getting Started](./01-first-steps.md), 
-[Hello, World!](./02-hello-world.md),
-and [Resources](./03-resources.md) to learn about the Playground and Cadence.
+**Before proceeding with this tutorial**, we recommend following the instructions in [Getting Started], [Hello World], and [Resources] to learn about the Playground and Cadence.
 
 
-## Resources Owning Resources
+## Resources owning resources
 
----
-
-The NFT collections talked about in [Non-Fungible Tokens](./05-non-fungible-tokens-1.md) are examples of resources that own other resources.
-We have a resource, the NFT collection, that has ownership of the NFT resources that are stored within it.
-The owner and anyone with a reference can move these resources around,
-but they still belong to the collection while they are in it and the code defined in the collection has ultimate control over the resources.
+The NFT collections talked about in [Non-Fungible Tokens] are examples of resources that own other resources. We have a resource, the NFT collection, that has ownership of the NFT resources that are stored within it. The owner and anyone with a reference can move these resources around, but they still belong to the collection while they are in it, and the code defined in the collection has ultimate control over the resources.
 
 When the collection is moved or destroyed, all of the NFTs inside of it are moved or destroyed with it.
 
-If the owner of the collection transferred the whole collection resource to another user's account,
-all of the tokens will move to the other user's account with it. The tokens don't stay in the original owner's account.
-This is like handing someone your wallet instead of just a dollar bill. It isn't a common action, but certainly is possible.
+If the owner of the collection transferred the whole collection resource to another user's account, all of the tokens will move to the other user's account with it. The tokens don't stay in the original owner's account. This is like handing someone your wallet instead of just a dollar bill. It isn't a common action, but certainly it's possible.
 
-References cannot be created for resources that are stored in other resources.
-The owning resource has control over it and therefore controls the type of access that external calls have on the stored resource.
+References cannot be created for resources that are stored in other resources. The owning resource has control over it and, therefore, controls the type of access that external calls have on the stored resource.
 
-## Resources Owning Resources: An Example
-
----
+### Example
 
 The NFT collection is a simple example of how resources can own other resources, but innovative and more powerful versions can be made.
 
-An important feature of CryptoKitties (and other applications on the Ethereum blockchain) is that any developer can make new experiences around the existing application.
-Even though the original contract didn't include specific support for CryptoKitty accessories (like hats), an independent developer was still able to make hats that Kitties from the original contract could use.
+An important feature of CryptoKitties (and other applications on the Ethereum blockchain) is that any developer can make new experiences around the existing application. Even though the original contract didn't include specific support for CryptoKitty accessories (like hats), an independent developer was still able to make hats that Kitties from the original contract could use.
 
 Here is a basic example of how we can replicate this feature in Cadence:
 
@@ -133,16 +115,16 @@ access(all) contract KittyVerse {
 
 These definitions show how a Kitty resource could own hats.
 
-The hats are stored in a variable in the Kitty resource.
+The hats are stored in a variable in the Kitty resource:
 
 ```cadence
     // place where the Kitty hats are stored
     access(all) var items: @{String: KittyHat}
 ```
 
-A Kitty owner can take the hats off the Kitty and transfer them individually. Or the owner can transfer a Kitty that owns a hat, and the hat will go along with the Kitty.
+A Kitty owner can take the hats off the Kitty and transfer them individually. Or, the owner can transfer a Kitty that owns a hat, and the hat will go along with the Kitty.
 
-Here is a transaction to create a `Kitty` and a `KittyHat`, store the hat in the Kitty, then store it in your account storage.
+Here is a transaction to create a `Kitty` and a `KittyHat`, store the hat in the Kitty, then store it in your account storage:
 
 ```cadence create_kitty.cdc
 import KittyVerse from 0x06
@@ -177,7 +159,7 @@ transaction {
 }
 ```
 
-Now we can run a transaction to move the Kitty along with its hat, remove the cowboy hat from the Kitty, then make the Kitty tip its hat.
+Now, we can run a transaction to move the Kitty along with its hat, remove the cowboy hat from the Kitty, and then make the Kitty tip its hat:
 
 ```cadence tip_hat.cdc
 import KittyVerse from 0x06
@@ -211,24 +193,25 @@ transaction {
 
 If you were to run this transaction, you should see something like this output:
 
-```
+```bash
 > "Howdy Y'all"
 > "Greetings, fellow aristocats!"
 ```
 
 Whenever the Kitty is moved, its hats are implicitly moved along with it. This is because the hats are owned by the Kitty.
 
-## The Future is Meow! Extensibility is coming!
+## What's next
 
----
+The above is a simple example of composable resources. We had to explicitly say that a Kitty could own a Hat in this example, but Cadence now supports more powerful ways of achieving resource extensibility, where developers can declare types that separate resources can own, even if the owning resource never specified the ownership possibility in the first place.
 
-The above is a simple example of composable resources.
-We had to explicitly say that a Kitty could own a Hat in this example,
-but Cadence now supports more powerful ways of achieving resource extensibility
-where developers can declare types that separate resources can own
-even if the owning resource never specified the ownership possibility in the first place.
+This feature is called [Attachments], and you should check out the documentation to learn about this powerful feature.
 
-This feature is called [Attachments](https://cadence-lang.org/docs/language/attachments)
-and you should check out the documentation to learn about this powerful feature!
+Practice what you've learned in the Flow Playground!
 
-Practice what you're learned in the Flow Playground!
+<!-- Reference-style links. Will not render on page. -->
+
+[Attachments]: ../language/attachments.mdx
+[Getting Started]: ./01-first-steps.md
+[Hello World]: ./02-hello-world.md
+[Non-Fungible Tokens]: ./05-non-fungible-tokens-1.md
+[Resources]: ./03-resources.md

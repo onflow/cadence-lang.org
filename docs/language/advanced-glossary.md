@@ -272,6 +272,10 @@ let s = `hello`  // Error: use double quotes for strings
 let s = "hello"  
 ```
 
+### Whitespace
+
+Whitespace has no semantic meaning in Cadence syntax. It is used only to separate tokens.
+
 
 ## Keywords and access control
 

@@ -263,6 +263,27 @@ Attachments can be removed from a type in any order, so developers should take c
 
 If a resource containing attachments is `destroy`ed, all of its attachments will be `destroy`ed in an arbitrary order.
 
+## Attachment iteration
+
+Attachments can be iterated over using the `forEachAttachment` function, a built-in function provided on types which support attachments. The signature is as follows:
+
+```cadence
+// for a struct
+fun forEachAttachment(fun(&AnyStructAttachment)){}
+// for a resource
+fun forEachAttachment(fun(&AnyResourceAttachment)){} 
+```
+
+The function takes a single argument, a callback function that accepts a reference to an attachment of the appropriate type. The callback function is called for each attachment present on the value, in an unspecified order.
+
+For example, to iterate over all attachments on a resource `r`:
+
+```cadence
+r.forEachAttachment(fun(attachmentRef: &AnyResourceAttachment) {
+    // Do something with each attachment
+})
+```
+
 <!-- Relative links. Will not render on the page -->
 
 [access control]: ./access-control.md

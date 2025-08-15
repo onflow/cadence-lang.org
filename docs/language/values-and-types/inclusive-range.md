@@ -127,5 +127,8 @@ A value of type `InclusiveRange<T>`, where `T` is a number type, has the followi
     contains = range.contains(11)
     ```
 
-<!-- Relative links. Will not render on the page -->
+## Usage in loops
+See [Ranges in loops] for more information.
 
+<!-- Relative links. Will not render on the page -->
+[Ranges in loops]: ../control-flow.md#ranges-in-loops

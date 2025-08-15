@@ -547,6 +547,44 @@ The following functions can only be used on variable-sized arrays. It is invalid
     numbers.removeLast()
     ```
 
+-
+    ```cadence
+    access(all)
+    fun toConstantSized<[T; N]>(): [T; N]?
+    ```
+
+    Converts a variable-sized array to a constant-sized array if the number of elements matches the target size `N` and the original variable-sized array has type `T`. Available if `T` is not resource-kinded.
+
+    Returns nil if the number of elements does not match the target size `N`.
+
+    ```cadence
+    // Declare an array of integers.
+    let numbers = [42, 23]
+
+    // Change to a constant-sized array
+    let numbersConst = numbers.toConstantSized<[Int; 2]>()
+    // numbersConst has the type [Int; 2]?
+    ```
+
+## Constant-size array functions
+
+-
+    ```cadence
+    access(all)
+    fun toVariableSized(): [T]
+    ```
+
+    Converts a constant-sized array to a variable-sized array of the same type `T`. Available if `T` is not resource-kinded.
+
+    ```cadence
+    // Declare an array of integers.
+    let numbers: [Int16; 3] = [1, 2, 3]
+
+    // Change to a constant-sized array
+    let numbersVar = numbers.toVariableSized()
+    // numbersVar has the type [Int]
+    ```
+
 <!-- Relative links. Will not render on the page -->
 
 [mutates]: ../access-control.md

@@ -103,6 +103,18 @@ let boolean = something as! Bool
 // Run-time error
 ```
 
+## Implicit casting
+
+Cadence provides support no support for implicit casting (coercion). 
+
+```cadence
+let value: UInt8 = 1
+
+// invalid: implicit cast
+let intValue: Int = value
+```
+
+
 <!-- Relative links. Will not render on the page -->
 
 [conditional downcasting operator `as?`]: #conditional-downcasting-operator-as

@@ -116,6 +116,48 @@ All fixed-point types support the following functions:
     let negativeNumber: Fix64? = Fix64.fromBigEndianBytes([255, 255, 255, 255, 250, 10, 31, 0]) // ok, -1
     ```
 
+## Number type casting
+
+When casting between number types (e.g. `Int` to `UInt`, `Fix64` to `Int`) you cannot use the [casting operators] (`as`, `as?` and `as!`), you must explicitly call the constructor of the desired type (e.g. `UInt(_)`). 
+
+```cadence
+let value: UInt8 = 1
+
+let intValue: Int? = value as? Int 
+// intValue is `nil` and has type `Int?`
+
+let validInt: Int = Int(value)
+// validInt is `1` and has type `Int`
+```
+
+When casting from a larger number type to a smaller one (narrowing), the cast will succeed if the value can be represented in the smaller type. If it cannot an error will be thrown indicating overflow or underflow. Casting to a larger number type will always succeed.
+
+```cadence
+let intValue: Int16 = 256
+
+let uintValue: UInt8 = UInt8(intValue)
+// error: overflow, UInt8 has max value of `255`
+
+let validUInt: UInt16 = UInt16(intValue)
+// validUInt is `256` and has type `UInt16`
+
+let largerIntValue: Int = Int(intValue)
+// largerIntValue is `256` and has type `Int`
+```
+
+You can cast from integer types to fixed point types and vice versa by calling the constructor as well. The same conditions as narrowing applies, an error will be thrown if the value cannot be represented in the range.
+
+```cadence
+let intValue: Int = -1
+
+let fixValue: Fix64 = Fix64(intValue)
+// fixValue is `-1.00000000` and has type `Fix64`
+
+let ufixValue: UFix64 = UFix64(intValue)
+// error: underflow, UFix64 has min value `0.0`
+```
+
 <!-- Relative links. Will not render on the page -->
 
 [optional]: ./anystruct-anyresource-opts-never.md#optionals
+[casting operators]: ../operators/casting-operators

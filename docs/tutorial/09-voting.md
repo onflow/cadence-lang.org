@@ -6,16 +6,6 @@ In this tutorial, we're going to deploy a contract that allows users to vote on 
 
 ---
 
-:::info
-
-Open the starter code for this tutorial in the Flow Playground:
-<a
-href="https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff"
-target="\_blank"
-
-> https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff > </a>
-> The tutorial will be asking you to take various actions to interact with this code.
-
 With the advent of blockchain technology and smart contracts, it has become popular to try to create decentralized voting mechanisms that allow large groups of users to vote completely on chain. This tutorial will provide an example for how this might be achieved by using a resource-oriented programming model.
 
 We'll take you through these steps to get comfortable with the Voting contract.
@@ -25,6 +15,8 @@ We'll take you through these steps to get comfortable with the Voting contract.
 3. Use a transaction with multiple signers to directly transfer the `Ballot` resource to another account.
 4. Record and cast your vote in the central Voting contract
 5. Read the results of the vote
+
+Open the starter code for this tutorial in the [Flow Playground](https://play.flow.com/e8e2af39-370d-4a52-9f0b-bfb3b12c7eff)
 
 ## A Voting Contract in Cadence
 

@@ -65,7 +65,7 @@ transaction {
 }
 ```
 
-Although optional, each phase serves a specific purpose when executing a transaction. It's recommended that developers use these phases when creating their transactions.
+Although optional, each phase serves a specific purpose when executing a transaction. It's recommended that developers use these phases when creating their transactions. These phases **must** be defined in this order. 
 
 ### Prepare phase
 

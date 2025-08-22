@@ -126,7 +126,7 @@ entitlement UnpublishCapability
 
 ## Checking the existence of public capabilities
 
-The function `capabilities.check` determines if a public capability was [published] at the given path before:
+The function `capabilities.exists` determines if a public capability was [published] at the given path before:
 
 ```cadence
 access(all)

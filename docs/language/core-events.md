@@ -198,6 +198,123 @@ To reduce the potential for spam, we recommend that user agents that display eve
 
 :::
 
+### Storage Capability Controller Issued
+
+Event that is emitted when a storage capability controller is created and issued to an account.
+
+Event name: `flow.StorageCapabilityControllerIssued`
+
+```cadence
+access(all)
+event StorageCapabilityControllerIssued(id: UInt64, address: Address, type: Type, path: Path)
+```
+
+| Field     | Type      | Description                                                                   |
+| --------- | --------- | ----------------------------------------------------------------------------- |
+| `id`      | `UInt64`  | The ID of the issued capability controller                                    |
+| `address` | `Address` | The address of the account which the controller targets                       |
+| `type`    | `Type`    | The kind of reference that can be obtained with capabilities from this controller |
+| `path`    | `Path`    | The storage path this controller manages                                      |
+
+### Account Capability Controller Issued
+
+Event that is emitted when an account capability controller is created and issued to an account.
+
+Event name: `flow.AccountCapabilityControllerIssued`
+
+```cadence
+access(all)
+event AccountCapabilityControllerIssued(id: UInt64, address: Address, type: Type)
+```
+
+| Field     | Type      | Description                                                                   |
+| --------- | --------- | ----------------------------------------------------------------------------- |
+| `id`      | `UInt64`  | The ID of the issued capability controller                                    |
+| `address` | `Address` | The address of the account which the controller targets                       |
+| `type`    | `Type`    | The kind of reference that can be obtained with capabilities from this controller |
+
+### Storage Capability Controller Deleted
+
+Event that is emitted when a storage capability controller is deleted.
+
+Event name: `flow.StorageCapabilityControllerDeleted`
+
+```cadence
+access(all)
+event StorageCapabilityControllerDeleted(id: UInt64, address: Address)
+```
+
+| Field     | Type      | Description                                                                   |
+| --------- | --------- | ----------------------------------------------------------------------------- |
+| `id`      | `UInt64`  | The ID of the issued capability controller                                    |
+| `address` | `Address` | The address of the account which the controller targets                       |
+
+### Account Capability Controller Deleted
+
+Event that is emitted when an account capability controller is deleted.
+
+Event name: `flow.AccountCapabilityControllerDeleted`
+
+```cadence
+access(all)
+event AccountCapabilityControllerDeleted(id: UInt64, address: Address)
+```
+
+| Field     | Type      | Description                                                                   |
+| --------- | --------- | ----------------------------------------------------------------------------- |
+| `id`      | `UInt64`  | The ID of the issued capability controller                                    |
+| `address` | `Address` | The address of the account which the controller targets                       |
+
+### Storage Capability Controller Target Changed
+
+Event that is emitted when a storage capability controller's path is changed.
+
+Event name: `flow.StorageCapabilityControllerTargetChanged`
+
+```cadence
+access(all)
+event StorageCapabilityControllerTargetChanged(id: UInt64, address: Address, path: Path)
+```
+
+| Field     | Type      | Description                                                                   |
+| --------- | --------- | ----------------------------------------------------------------------------- |
+| `id`      | `UInt64`  | The ID of the issued capability controller                                    |
+| `address` | `Address` | The address of the account which the controller targets                       |
+| `path`    | `Path`    | The new path this controller manages                                          |
+
+### Capability Published
+
+Event that is emitted when a capability is published.
+
+Event name: `flow.CapabilityPublished`
+
+```cadence
+access(all)
+event CapabilityPublished(address: Address, path: Path, capability: Capability)
+```
+
+| Field        | Type         | Description                                                                   |
+| ------------ | ------------ | ----------------------------------------------------------------------------- |
+| `address`    | `Address`    | The address of the account which the capability targets                       |
+| `path`       | `Path`       | The path this capability is published at                                     |
+| `capability` | `Capability` | The published capability                                                      |
+
+### Capability Unpublished
+
+Event that is emitted when a capability is unpublished.
+
+Event name: `flow.CapabilityUnpublished`
+
+```cadence
+access(all)
+event CapabilityUnpublished(address: Address, path: Path)
+```
+
+| Field        | Type         | Description                                                                   |
+| ------------ | ------------ | ----------------------------------------------------------------------------- |
+| `address`    | `Address`    | The address of the account which the capability targeted                       |
+| `path`       | `Path`       | The path this capability was published at                                     |
+
 <!-- Relative links. Will not render on the page -->
 
 [public key section]: ./crypto.mdx#public-keys

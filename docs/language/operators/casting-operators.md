@@ -125,7 +125,12 @@ For example, to convert a `UInt8` value to an `Int` value:
 ```cadence
 let value: UInt8 = 1 
 let intValue = Int(value)
+```
+
+See [number type casting] for more information.
+
 
 <!-- Relative links. Will not render on the page -->
 
 [conditional downcasting operator `as?`]: #conditional-downcasting-operator-as
+[number type casting]: ../values-and-types/fixed-point-nums-ints.md#number-type-casting

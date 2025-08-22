@@ -43,7 +43,6 @@ The `:` (colon) symbol serves multiple purposes in Cadence syntax. It's primaril
 let value: Int = 42 // type annotation
 fun calculate(x: Int, y: Int): Int { return x + y } // parameter and return types
 let result = condition ? value1 : value2 // ternary operator
-access(contract) var privateData: String // access modifier
 ```
 
 ### `=` (equals)
@@ -122,7 +121,7 @@ coinA <-> coinB // now coinA has value 20, coinB has value 10
 
 ### `+`, `-`, `*`, `%` (arithmetic operators)
 
-The [arithmetic operators] `+`, `-`, `*`, and `%` perform standard mathematical operations on numeric types in Cadence. The plus operator (`+`) adds two values, the minus operator (`-`) subtracts the right operand from the left, the asterisk operator (`*`) multiplies two values, and the percentage sign (`%`) returns the remainder of division. These operators work with all numeric types including `Int`, `UInt`, `Int8`, `UInt8`, and so on, and follow standard operator precedence rules. Cadence also supports compound assignment operators like `+=`, `-=`, `*=`, and `%=` for more concise code.
+The [arithmetic operators] `+`, `-`, `*`, and `%` perform standard mathematical operations on numeric types in Cadence. The plus operator (`+`) adds two values, the minus operator (`-`) subtracts the right operand from the left, the asterisk operator (`*`) multiplies two values, and the percentage sign (`%`) returns the remainder of division. These operators work with all numeric types including `Int`, `UInt`, `Int8`, `UInt8`, and so on, and follow standard operator precedence rules. Cadence also supports compound assignment operators like `+=`, `-=`, `*=`, and `%=` for more concise code. Cadence does not support the increment/decrement operators `++`, `--`.
 
 ```cadence
 let sum = 5 + 3 // addition
@@ -155,6 +154,15 @@ fun double(_ x: Int): Int { return x * 2 } // no argument label
 let result = double(5) // no label needed
 ```
 
+### `;` (semicolon)
+
+The `;` (semicolon) symbol is used as a separator between declarations and statements. A semicolon can be placed after any declaration and statement, but can be omitted between declarations if only one statement appears on the line.
+
+    ```cadence
+    let d = 1; var e = 2 // separate declarations
+    sum += 1; diff -= 1 // separate statements
+    ```
+
 ## Punctuation marks
 
 ### `.` (dot/period)
@@ -183,19 +191,18 @@ let tuple: (Int, String, Bool) // tuple type
 
 ### `()` (parentheses)
 
-The `()` (parentheses) symbol has multiple uses in Cadence syntax. They're used to group expressions and control operator precedence in mathematical and logical expressions. Parentheses are required around function parameters in function calls, and they're used to create tuple types and values. They also serve to group conditions in control flow statements and to create type annotations for function types. Parentheses are essential for disambiguating complex expressions and ensuring proper evaluation order.
+The `()` (parentheses) symbol has multiple uses in Cadence syntax. They're used to group expressions and control operator precedence in mathematical and logical expressions. Parentheses are required around function parameters in function calls. They also serve to group conditions in control flow statements and to create type annotations for function types. Parentheses are essential for disambiguating complex expressions and ensuring proper evaluation order.
 
 ```cadence
 let result = (a + b) * c // expression grouping
 fun calculate(x: Int, y: Int): Int { return x + y } // function parameters
-let tuple = (1, "hello", true) // tuple creation
 let functionType: (Int, Int) -> Int // function type
 if (condition1 && condition2) { /* code */ } // grouped condition
 ```
 
 ### `<>` (angle brackets)
 
-Angle brackets (`<>`) are _not_ used for generics like in many other languages — Cadence doesn't have traditional generic functions or structs — but they _are_ used in a few specific syntactic contexts related to type parameters and type instantiation. Specifically, angle brackets are used to specify type parameters for certain built-in or standard library types that are type constructors. Angle brackets are also used to specify the borrow type when working with capabilities and when specifying the authorized type with some Cadence APIs. You can also use angle brackets to define explicit element types for collections when the compiler can't infer them.
+Angle brackets (`<>`) are _not_ used for generics like in many other languages — Cadence doesn't have traditional generic functions or structs — but they _are_ used in a few specific syntactic contexts related to type parameters and type instantiation. Specifically, angle brackets are used to specify type parameters for certain built-in or standard library types that are type constructors. Angle brackets are also used to specify the borrow type when working with capabilities and when specifying the authorized type with some Cadence APIs. You can also use angle brackets to define explicit element types for collections.
 
 ```cadence
 // FungibleToken.Vault is a generic composite type in the standard interface.
@@ -401,14 +408,13 @@ access(all) resource NFT: Transferable {
 
 ### `enum`
 
-The `enum` keyword declares enumeration types in Cadence, which define a set of named constant values. Enums can contain simple cases or cases with associated values, and they provide [type safety] by ensuring only valid enum values can be used. Enums are commonly used for representing states, types, or categories in a program, and they can include functions that operate on the enum values. The enum keyword helps create more readable and maintainable code by replacing magic numbers or strings with meaningful named constants.
+The `enum` keyword declares enumeration types in Cadence, which define a set of named constant values. Enums can contain simple cases, and they provide [type safety] by ensuring only valid enum values can be used. Enums are commonly used for representing states, types, or categories in a program. The enum keyword helps create more readable and maintainable code by replacing magic numbers or strings with meaningful named constants.
 
 ```cadence
-access(all) enum Status {
+access(all) enum Status: UInt8 {
     case pending
     case active
     case completed
-    case failed(reason: String)
     
     access(all) fun isActive(): Bool {
         return self == .active

@@ -76,3 +76,21 @@ Enum cases can be compared using the equality operators `==` and `!=`.
    ```cadence
    Color.red != Color.blue  // is `true`
    ```
+
+1. Use an enum as part of a control flow statement.
+
+    ```cadence
+    fun applyPaint(_ paint: Color): String {
+        // Directly test the value of the enum paint
+        switch paint {
+        case Color.red:
+            return "red"
+        case Color.blue:
+            return "blue"
+        case Color.green:
+            return "green"
+        default
+            return "unsupported color"
+        }
+    }
+    ```

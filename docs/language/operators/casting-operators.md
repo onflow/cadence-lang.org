@@ -127,7 +127,7 @@ let value: UInt8 = 1
 let intValue = Int(value)
 ```
 
-See [number type casting] for more information.
+See [Number type casting] for more information.
 
 
 <!-- Relative links. Will not render on the page -->

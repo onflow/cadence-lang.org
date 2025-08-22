@@ -105,7 +105,7 @@ let boolean = something as! Bool
 
 ## Implicit casting
 
-Cadence provides support no support for implicit casting (coercion). 
+Cadence does not allow implicit casting (coercion). 
 
 ```cadence
 let value: UInt8 = 1
@@ -114,6 +114,17 @@ let value: UInt8 = 1
 let intValue: Int = value
 ```
 
+Instead, conversion must be explicitly performed by calling a conversion function.
+Cadence provides a conversion function for each number type. The functions have the same name as the type, accept any number, and return the number type. 
+If the value cannot be converted, the function panics.
+
+For example, for the type `Int`, the conversion function `fun Int(_ number: Number): Int` is provided.
+
+For example, to convert a `UInt8` value to an `Int` value:
+
+```cadence
+let value: UInt8 = 1 
+let intValue = Int(value)
 
 <!-- Relative links. Will not render on the page -->
 

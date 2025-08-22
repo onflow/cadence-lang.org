@@ -132,7 +132,7 @@ let validInt: Int = Int(value)
 // validInt is `1` and has type `Int`
 ```
 
-When casting from a larger number type to a smaller one (narrowing), the cast will succeed if the value can be represented in the smaller type. If it cannot an error will be thrown indicating overflow or underflow. Casting to a larger number type will always succeed.
+When converting from a larger number type to a smaller one (narrowing), the conversion will succeed if the value can be represented in the smaller type. If it cannot an error will be thrown indicating overflow or underflow. Converting to a larger number type will always succeed.
 
 ```cadence
 let intValue: Int16 = 256
@@ -147,7 +147,7 @@ let largerIntValue: Int = Int(intValue)
 // largerIntValue is `256` and has type `Int`
 ```
 
-Casting from integer types to fixed point types and vice versa is supported by calling the conversion functions as well. The same conditions as narrowing applies, an error will be thrown if the value cannot be represented in the range.
+Converting from integer types to fixed point types and vice versa is supported by calling the conversion functions as well. The same conditions as narrowing applies, an error will be thrown if the value cannot be represented in the range.
 
 ```cadence
 let intValue: Int = -1

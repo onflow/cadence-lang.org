@@ -213,7 +213,7 @@ event StorageCapabilityControllerIssued(id: UInt64, address: Address, type: Type
 | --------- | --------- | ----------------------------------------------------------------------------- |
 | `id`      | `UInt64`  | The ID of the issued capability controller                                    |
 | `address` | `Address` | The address of the account which the controller targets                       |
-| `type`    | `Type`    | The kind of reference that be obtained with capabilities from this controller |
+| `type`    | `Type`    | The kind of reference that can be obtained with capabilities from this controller |
 | `path`    | `Path`    | The storage path this controller manages                                      |
 
 ### Account Capability Controller Issued
@@ -231,7 +231,7 @@ event AccountCapabilityControllerIssued(id: UInt64, address: Address, type: Type
 | --------- | --------- | ----------------------------------------------------------------------------- |
 | `id`      | `UInt64`  | The ID of the issued capability controller                                    |
 | `address` | `Address` | The address of the account which the controller targets                       |
-| `type`    | `Type`    | The kind of reference that be obtained with capabilities from this controller |
+| `type`    | `Type`    | The kind of reference that can be obtained with capabilities from this controller |
 
 ### Storage Capability Controller Deleted
 

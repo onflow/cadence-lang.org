@@ -118,7 +118,7 @@ All fixed-point types support the following functions:
 
 ## Number type casting
 
-When casting between number types (e.g. `Int` to `UInt`, `Fix64` to `Int`) you cannot use the [casting operators] (`as`, `as?` and `as!`), you must explicitly call the constructor of the desired type (e.g. `UInt(_)`). 
+When casting between number types (e.g. `Int` to `UInt`, `Fix64` to `Int`), [casting operators] (`as`, `as?` and `as!`) cannot be used, and instead, the constructor of the desired type (e.g. `UInt(_)`) must be used. 
 
 ```cadence
 let value: UInt8 = 1

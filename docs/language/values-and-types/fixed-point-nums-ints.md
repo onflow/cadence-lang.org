@@ -118,7 +118,9 @@ All fixed-point types support the following functions:
 
 ## Number type casting
 
-When casting between number types (e.g. `Int` to `UInt`, `Fix64` to `Int`), [casting operators] (`as`, `as?` and `as!`) cannot be used, and instead, the constructor of the desired type (e.g. `UInt(_)`) must be used. 
+Casting between number types (e.g. `Int` to `UInt`, `Fix64` to `Int`) using the [casting operators] (`as`, `as?` and `as!`) is not supported.
+
+To convert between number types, the conversion functions ((e.g. `UInt(_)`)) must be used. These conversion functions have the same name as the desired type.
 
 ```cadence
 let value: UInt8 = 1
@@ -145,7 +147,7 @@ let largerIntValue: Int = Int(intValue)
 // largerIntValue is `256` and has type `Int`
 ```
 
-You can cast from integer types to fixed point types and vice versa by calling the constructor as well. The same conditions as narrowing applies, an error will be thrown if the value cannot be represented in the range.
+Casting from integer types to fixed point types and vice versa is supported by calling the conversion functions as well. The same conditions as narrowing applies, an error will be thrown if the value cannot be represented in the range.
 
 ```cadence
 let intValue: Int = -1

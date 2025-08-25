@@ -224,7 +224,7 @@ Now that you've published the capability with `public` `access`, **anyone** who 
    let helloAccount = getAccount(0x06)
    ```
    - Addresses are **not** strings and thus do **not** have quotes around them.
-1. Use `borrow` to borrow the public capability for your `Create Link` transaction saved in `/public/HelloAssetTutoral`.
+1. Use `borrow` to borrow the public capability for your `Create Link` transaction saved in `/public/HelloAssetTutorial`.
    - Your script should return `helloReference.hello()`.
    - You've already borrowed something before. Try to implement this on your own. **Hint:** this time, you're borrowing a `capability` from the account, **not** something from `storage`. Don't forget to handle the case where the object can't be found!
    <dl><dd><em>You should end up with a script similar to:</em></dd></dl>

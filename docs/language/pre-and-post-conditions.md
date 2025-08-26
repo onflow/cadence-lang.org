@@ -22,6 +22,7 @@ Functions may have pre-conditions and may have post-conditions. They can be used
 - A conditions block consists of one or more conditions. Conditions are expressions evaluating to a boolean.
 - Conditions may be written on separate lines, or multiple conditions can be written on the same line, separated by a semicolon. This syntax follows the syntax for [statements].
 - Following each condition, an optional description can be provided after a colon. The condition description is used as an error message when the condition fails.
+- All conditions **must** appear as the first statements in a function definition and pre-conditions **must** be defined before post-conditions. 
 
 In post-conditions, the special constant `result` refers to the result of the function:
 

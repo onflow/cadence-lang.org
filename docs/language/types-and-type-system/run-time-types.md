@@ -119,6 +119,7 @@ view fun DictionaryType(key: Type, value: Type): Type?
 // returns `nil` if `type` is not a reference type
 view fun CapabilityType(_ type: Type): Type?
 view fun ReferenceType(entitlements: [String], type: Type): Type?
+view fun InclusiveRangeType(_ type: Type): Type?
 ```
 
 ## Asserting the type of a value

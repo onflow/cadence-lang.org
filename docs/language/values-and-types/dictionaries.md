@@ -295,7 +295,26 @@ Dictionary keys must be hashable and equatable.
 
 Most of the built-in types, like booleans and integers, are hashable and equatable, so can be used as keys in dictionaries.
 
+A comprehensive list of valid dictionary key types:
+- [Address]
+- [Bool]
+- [Character]
+- [Enum]
+- [Numbers]
+- [Paths]
+- [Runtime-types]
+- [String]
+
+
 <!-- Relative links. Will not render on the page -->
 
 [optional]: ./anystruct-anyresource-opts-never.md#optionals
 [mutates]: ../access-control.md
+[Address]: ./addresses-functions.md
+[Enum]: ../enumerations.md
+[Bool]: ./booleans-numlits-ints.md#booleans
+[Character]: ./strings-and-characters.md
+[String]: ./strings-and-characters.md
+[Runtime-types]: ../types-and-type-system/run-time-types.md
+[Numbers]: ./booleans-numlits-ints.md#numeric-literals
+[Paths]: ../accounts/paths.mdx

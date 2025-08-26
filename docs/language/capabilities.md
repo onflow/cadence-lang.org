@@ -124,7 +124,7 @@ entitlement PublishCapability
 entitlement UnpublishCapability
 ```
 
-## Checking the existence of public capabilities
+## Checking the existence of public capabilities with `.exists()`
 
 The function `capabilities.exists` determines if a public capability was [published] at the given path before:
 

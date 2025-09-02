@@ -6,25 +6,25 @@ sidebar_label: Anti-Patterns
 
 This is an opinionated list of issues that can be improved if they are found in Cadence code intended for production.
 
+The following sections present a design anti-pattern problem, a recommended solution, and an example where applicable.
+
 ## Avoid using fully authorized account references as a function parameter
 
-### Problem
+**Problem**
 
-A developer may choose to authenticate or perform operations for their users by using the users' account reference or addresses.
-In order to do this, they might add a parameter to a function which has an authorized account reference type (`auth(...) &Account`),
-as an authorized account reference can only be obtained by signing a transaction.
+A developer may choose to authenticate or perform operations for their users by using the users' account reference or addresses. In order to do this, they might add a parameter to a function that has an authorized account reference type (`auth(...) &Account`), as an authorized account reference can only be obtained by signing a transaction.
 
-If it is a fully authorized account reference, this is problematic,
-as the fully-authorized account reference allows access to some sensitive operations on the account,
-for example, to write to storage, which provides the opportunity for bad actors to take advantage of.
+If it is a fully-authorized account reference, this is problematic, as the fully-authorized account reference allows access to some sensitive operations on the account, for example, to write to storage, which provides the opportunity for bad actors to take advantage of it.
 
-### Example:
+**Example**
+
+:::warning
+
+The following is bad code and is shown for illustrative purposes. Do _not_ copy!
+
+:::
 
 ```cadence
-...
-// BAD CODE
-// DO NOT COPY
-
 // Imagine this code is in a contract that uses a `auth(Storage) &Account` parameter
 // to authenticate users to transfer NFTs
 
@@ -55,69 +55,53 @@ fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
     let vaultRef = owner.borrow<&FlowToken.Vault>(/storage/flowTokenVault)!
     let stolenTokens <- vaultRef.withdraw(amount: 0.1)
 
-    // deposit the stolen funds in the contract owners vault
+    // deposit the stolen funds in the contract owner's vault
     // BAD
     contractVault.deposit(from: <-stolenTokens)
 }
-...
 ```
 
-### Solution
+**Solution**
 
-Projects should find other ways to authenticate users, such as using resources and capabilities as authentication objects.
-They should also expect to perform most storage and linking operations within transaction bodies
-rather than inside contract utility functions.
+Projects should find other ways to authenticate users, such as using resources and capabilities as authentication objects. They should also expect to perform most storage and linking operations within transaction bodies rather than inside contract utility functions.
 
-There are some scenarios where using an authorized account reference (`auth(...) &Account`) is necessary,
-such as a cold storage multi-sig,
-but those cases are rare and should only be used if it is a very restricted subset
-of account functionality that is required.
+There are some scenarios where using an authorized account reference (`auth(...) &Account`) is necessary, such as a cold storage multi-sig, but those cases are rare and should only be used if it is a very restricted subset of account functionality that is required.
 
 ## Public functions and fields should be avoided
 
-### Problem
+**Problem**
 
-Be sure to keep track of access modifiers when structuring your code, and make public only what should be public.
-Accidentally exposed fields can be a security hole.
+Be sure to keep track of access modifiers when structuring your code, and make public only what should be public. Accidentally exposed fields can be a security hole.
 
-### Solution
+**Solution**
 
-When writing your smart contract, look at every field and function and make sure
-that require access through an [entitlement](./language/access-control.md#entitlements) (`access(E)`),
-or use a non-public [access modifier](./language/access-control.md) like `access(self)`, `access(contract)`, or `access(account)`,
-unless otherwise needed.
+When writing your smart contract, look at every field and function and make sure that they require access through an [entitlement] (`access(E)`), or use a non-public [access modifier] like `access(self)`, `access(contract)`, or `access(account)`, unless otherwise needed.
 
-## Capability-Typed public fields are a security hole
+## Capability-typed public fields are a security hole
 
-This is a specific case of "Public Functions And Fields Should Be Avoided", above.
+This is a specific case of _Public functions and fields should be avoided_, as mentioned [above].
 
-### Problem
+**Problem**
 
-The values of public fields can be copied. Capabilities are value types,
-so if they are used as a public field, anyone can copy it from the field
-and call the functions that it exposes.
-This almost certainly is not what you want if a capability
-has been stored as a field on a contract or resource in this way.
+The values of public fields can be copied. Capabilities are value types, so if they are used as a public field, anyone can copy them from the field and call the functions that it exposes. This almost certainly is not what you want if a capability has been stored as a field on a contract or resource in this way.
 
-### Solution
+**Solution**
 
 For public access to a capability, place it in an accounts public area so this expectation is explicit.
 
 ## Public admin resource creation functions are unsafe
 
-This is a specific case of "Public Functions And Fields Should Be Avoided", above.
+This is a specific case of _Public functions and fields should be avoided_, as mentioned [above].
 
-### Problem
+**Problem**
 
-A public function on a contract that creates a resource can be called by any account.
-If that resource provides access to admin functions then the creation function should not be public.
+A public function on a contract that creates a resource can be called by any account. If that resource provides access to admin functions, then the creation function should not be public.
 
-### Solution
+**Solution**
 
-To fix this, a single instance of that resource should be created in the contract's initializer,
-and then a new creation function can be potentially included within the admin resource, if necessary.
+To fix this, a single instance of that resource should be created in the contract's initializer, and then a new creation function can be potentially included within the admin resource, if necessary.
 
-### Example
+**Example**
 
 ```cadence
 // Pseudo-code
@@ -174,23 +158,17 @@ contract Currency {
 
 This is another example of the risks of having publicly accessible parts to your smart contract.
 
-### Problem
+**Problem**
 
-Data structure definitions in Cadence currently must be declared as public so that they can be used by anyone.
-Structs do not have the same restrictions that resources have on them,
-which means that anyone can create a new instance of a struct without going through any authorization.
+Data structure definitions in Cadence currently must be declared as public so that they can be used by anyone. Structs do not have the same restrictions that resources have on them, which means that anyone can create a new instance of a struct without going through any authorization.
 
-### Solution
+**Solution**
 
-Any contract state-modifying operations related to the creation of structs
-should be contained in resources instead of the initializers of structs.
+Any contract state-modifying operations related to the creation of structs should be contained in resources instead of the initializers of structs.
 
-### Example
+**Example**
 
-This used to be a bug in the NBA Top Shot smart contract, so we'll use that as an example.
-Before, when it created a new play,
-[it would initialize the play record with a struct,](https://github.com/dapperlabs/nba-smart-contracts/blob/55645478594858a6830e4ab095034068ef9753e9/contracts/TopShot.cdc#L155-L158)
-which increments the number that tracks the play IDs and emits an event:
+This used to be a bug in the NBA Top Shot smart contract, so we'll use that as an example. Before, when it created a new play, it would [initialize the play record with a struct], which increments the number that tracks the play IDs and emits an event:
 
 ```cadence
 // Simplified Code
@@ -222,14 +200,9 @@ contract TopShot {
 }
 ```
 
-This is a risk because anyone can create the `Play` struct as many times as they want,
-which could increment the `nextPlayID` field to the max `UInt32` value,
-effectively preventing new plays from being created. It also would emit bogus events.
+This is a risk because anyone can create the `Play` struct as many times as they want, which could increment the `nextPlayID` field to the max `UInt32` value, effectively preventing new plays from being created. It would also emit bogus events.
 
-This bug was fixed by
-[instead updating the contract state in the admin function](https://github.com/dapperlabs/nba-smart-contracts/blob/master/contracts/TopShot.cdc#L682-L685)
-that creates the plays.
-
+This bug was fixed by instead [updating the contract state in the admin function] that creates the plays.
 
 ```cadence
 // Update contract state in admin resource functions
@@ -273,3 +246,11 @@ contract TopShot {
     }
 }
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[above]: #public-functions-and-fields-should-be-avoided
+[entitlement]: ./language/access-control.md#entitlements
+[access modifier]: ./language/access-control.md
+[initialize the play record with a struct]: https://github.com/dapperlabs/nba-smart-contracts/blob/55645478594858a6830e4ab095034068ef9753e9/contracts/TopShot.cdc#L155-L158
+[updating the contract state in the admin function]: https://github.com/dapperlabs/nba-smart-contracts/blob/master/contracts/TopShot.cdc#L682-L685

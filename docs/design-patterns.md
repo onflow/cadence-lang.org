@@ -4,40 +4,31 @@ sidebar_position: 5
 sidebar_label: Design Patterns
 ---
 
-This is a selection of software design patterns developed by core Flow developers
-while writing Cadence code for deployment to Flow Mainnet.
+This article provides a selection of software design patterns developed by core Flow developers while writing Cadence code for deployment to Flow Mainnet.
 
-Many of these design patters apply to most other programming languages, but some are specific to Cadence.
+Many of these design patterns apply to most other programming languages, but some are specific to Cadence.
 
-[Design patterns](https://en.wikipedia.org/wiki/Software_design_pattern) are building blocks for software development.
-They may provide a solution to a problem that you encounter when writing smart contracts in Cadence.
-If they do not clearly fit, these patterns may not be the right solution for a given situation or problem.
-They are not meant to be rules to be followed strictly, especially where a better solution presents itself.
+## What are design patterns?
 
-# General
+[Design patterns] are building blocks for software development. They may provide a solution to a problem that you encounter when writing smart contracts in Cadence. If they do not clearly fit, these patterns may not be the right solution for a given situation or problem. They are not meant to be rules to be followed strictly, especially where a better solution presents itself.
 
-These are general patterns to follow when writing smart contracts.
+The following sections present a design pattern problem, a recommended solution, and an example where applicable. We recommend using the following general patterns when writing smart contracts.
 
-## Use named value fields for constants instead of hard-coding
+## Use named value fields for constants instead of hardcoding them
 
-### Problem
+**Problem**
 
-Your contracts, resources, and scripts all have to refer to the same value.
-A number, a string, a storage path, etc.
-Entering these values manually in transactions and scripts is a potential source of error.
-See [Wikipedia's page on magic numbers](https://en.wikipedia.org/wiki/Magic_number_(programming))
+All of Your contracts, resources, and scripts must refer to the same value, whether it's a number, a string, a storage path, or another type. Entering these values manually in transactions and scripts is a potential source of error. See [Wikipedia's page on magic numbers] to learn more.
 
-### Solution
+**Solution**
 
-Add a public (`access(all)`), constant (`let`) field, e.g. a `Path` , to the contract responsible for the value,
-and set it in the contract's initializer.
-Refer to that value via this public field rather than specifying it manually.
+Add a public (`access(all)`) and a constant (`let`) field (e.g., a `Path`) to the contract responsible for the value, and set it in the contract's initializer. Refer to that value via this public field rather than specifying it manually.
 
-Example Snippet:
+Example snippet:
 
 ```cadence
 
-// BAD Practice: Do not hard code storage paths
+// BAD Practice: Do not hardcode storage paths
 access(all)
 contract NamedFields {
 
@@ -71,23 +62,19 @@ contract NamedFields {
 
 ```
 
-[Example Code](https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L779)
+- [Example code]
 
-## Script-Accessible public field/function
+## Script-accessible public field/function
 
-Data availability is important in a blockchain environment.
-It is useful to publicize information about your smart contract and the assets it controls
-so other smart contracts and apps can easily query it.
+Data availability is important in a blockchain environment. It is useful to publicize information about your smart contract and the assets it controls so other smart contracts and apps can easily query it.
 
-### Problem
+**Problem**
 
-Your contract, resource, or struct has a field or resource that will need to be read and used on or off-chain, often in bulk.
+Your contract, resource, or struct has a field or resource that will need to be read and used on or offchain, often in bulk.
 
-### Solution
+**Solution**
 
-Make sure that the field can be accessed from a script.
-This saves the time and fees required to read a property using a transaction.
-Making the field or function `access(all)` and exposing it via a `/public/` capability will allow this.
+Make sure that the field can be accessed from a script. This saves the time and fees required to read a property using a transaction. Making the field or function `access(all)` and exposing it via a `/public/` capability will allow this.
 
 Be careful not to expose any data or functionality that should be kept private when doing so.
 
@@ -103,27 +90,19 @@ access(all)
 let totalSupply: UFix64
 ```
 
-## Script-Accessible report
+## Script-accessible report
 
-### Problem
+**Problem**
 
-Your contract has a resource that you wish to access fields of.
-Resources are often stored in private places and are hard to access.
-Additionally, scripts cannot return resources to the external context,
-so a struct must be used to hold the data.
+Your contract has a resource from which you wish to access. Resources are often stored in private places and are hard to access. Additionally, scripts cannot return resources to the external context, so a struct must be used to hold the data.
 
-### Solution
+**Solution**
 
-Return a reference to a resource if the data from a single resource is all that is needed.
-Otherwise, declare a struct to hold the data that you wish to return from the script.
-Write a function that fills out the fields of this struct with the data
-from the resource that you wish to access.
-Then call this on the resource that you wish to access the fields of in a script,
-and return the struct from the script.
+Return a reference to a resource if the data from a single resource is all that is needed. Otherwise, declare a struct to hold the data that you wish to return from the script. Write a function that fills out the fields of this struct with the data from the resource that you wish to access. Then, call this on the resource that you wish to access the fields from in a script, and return the struct from the script.
 
-See [Script-Accessible public field/function](#script-accessible-public-fieldfunction), above, for how best to expose this capability.
+See [Script-Accessible public field/function], above, for how best to expose this capability.
 
-### Example
+**Example**
 
 ```cadence
 access(all)
@@ -209,44 +188,37 @@ fun main(account: Address): AContract.BReportStruct {
 
 ## Init singleton
 
-### Problem
+**Problem**
 
-An admin resource must be created and delivered to a specified account.
-There should not be a function to do this, as that would allow anyone to create an admin resource.
+An admin resource must be created and delivered to a specified account. There should not be a function to do this, as that would allow anyone to create an admin resource.
 
-### Solution
+**Solution**
 
-Create any one-off resources in the contract's initializer
-and deliver them to an address or `&Account` specified as an argument.
+Create any one-off resources in the contract's initializer and deliver them to an address or `&Account` specified as an argument.
 
-See how this is done in the LockedTokens contract initializer:
+Learn more about how this is accomplished in the LockedTokens contract initializer:
 
-[LockedTokens.cdc](https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L765-L780)
+- [LockedTokens.cdc]
 
 and in the transaction that is used to deploy it:
 
-[admin_deploy_contract.cdc](https://github.com/onflow/flow-core-contracts/blob/master/transactions/lockedTokens/admin/admin_deploy_contract.cdc)
+- [admin_deploy_contract.cdc]
 
+## Use descriptive names for fields, paths, functions, and variables
 
-## Use descriptive names for fields, paths, functions and variables
+**Problem**
 
-### Problem
+Smart contracts often are vitally important pieces of a project and often have many other smart contracts and applications that rely on them. Therefore, they need to be clearly written and easy to understand.
 
-Smart contracts often are vitally important pieces of a project and often have many other
-smart contracts and applications that rely on them.
-Therefore, they need to be clearly written and easy to understand.
+**Solution**
 
-### Solution
+All fields, functions, types, variables, and so on, must have names that clearly describe what they are used for:
 
-All fields, functions, types, variables, etc., need to have names that clearly describe what they are used for.
+- `account`/`accounts` is better than `array`/`element`
+- `providerAccount` / `tokenRecipientAccount` is better than `acct1` / `acct2`
+- `/storage/bestPracticesDocsCollectionPath` is better than `/storage/collection`
 
-`account` / `accounts` is better than `array` / `element`.
-
-`providerAccount` / `tokenRecipientAccount` is better than `acct1` / `acct2`.
-
-`/storage/bestPracticesDocsCollectionPath` is better than `/storage/collection`
-
-### Example
+**Example**
 
 ```cadence
 // BAD: Unclear naming
@@ -292,23 +264,21 @@ contract TaxUtilities {
 
 For example, use `accounts` rather than `account` for an array of accounts.
 
-This signals that the field or variable is not scalar.
-It also makes it easier to use the singular form for a variable name during iteration.
+This signals that the field or variable is not scalar. It also makes it easier to use the singular form for a variable name during iteration.
 
 ## Use transaction post-conditions when applicable
 
-### Problem
+**Problem**
 
-Transactions can contain any amount of valid Cadence code and access many contracts and accounts.
-The power of resources and capabilities means that there may be some behaviors of programs that are not expected.
+Transactions can contain any amount of valid Cadence code and access many contracts and accounts. The power of resources and capabilities means that there may be some behaviors of programs that are not expected.
 
-### Solution
+**Solution**
 
-It is usually safe to include post-conditions in transactions to verify the intended outcome.
+It is usually safe to include [post-conditions] in transactions to verify the intended outcome.
 
-### Example
+**Example**
 
-This could be used when purchasing an NFT to verify that the NFT was deposited in your account's collection.
+This could be used when purchasing an NFT to verify that the NFT was deposited in your account's collection:
 
 ```cadence
 // Pseudo-code
@@ -324,48 +294,34 @@ transaction {
         let temporaryVault <- vaultRef.withdraw(amount: 10.0)
         let self.buyerCollectionRef = acct.storage.borrow(from: /storage/Collection)
 
-        // purchase, supplying the buyers collection reference
+        // purchase, supplying the buyer's collection reference
         saleRef.purchase(tokenID: 1, recipient: self.buyerCollectionRef, buyTokens: <-temporaryVault)
 
     }
     post {
         // verify that the buyer now owns the NFT
-        self.buyerCollectionRef.idExists(1) == true: "Bought NFT ID was not deposited into the buyers collection"
+        self.buyerCollectionRef.idExists(1) == true: "Bought NFT ID was not deposited into the buyer's collection"
     }
 }
 ```
 
-## Avoid unnecessary load and save storage operations, prefer in-place mutations
+## Avoid unnecessary load and save storage operations — use in-place mutations instead
 
-### Problem
+**Problem**
 
-When modifying data in account storage, `load()` and `save()` are costly operations:
-All data is unnecessarily moved out of the account, then moved back into the account.
-This can quickly cause your transaction to reach its limits.
+When modifying data in account storage, `load()` and `save()` are costly operations: all data is unnecessarily moved out of the account, then moved back into the account. This can quickly cause your transaction to reach its limits.
 
-This also applies to nested, stored in fields, arrays, and dictionaries:
-Moving objects out of containers and moving them back into the container,
-just to modify the object, is just as costly.
+This also applies to nested, stored in fields, arrays, and dictionaries: moving objects out of containers and moving them back into the container, just to modify the object, is just as costly.
 
-For example, a collection contains a dictionary of NFTs.
-There is no need to move the whole dictionary out of the field,
-update the dictionary on the stack (e.g., adding or removing an NFT),
-and then move the whole dictionary back to the field:
-the dictionary can be updated in-place, which is easier and more efficient.
-The same goes for a more complex data structure like a dictionary of nested resources:
-Each resource can be updated in-place by taking a reference to the nested object instead of loading and saving.
+For example, a collection contains a dictionary of NFTs. There is no need to move the whole dictionary out of the field, update the dictionary on the stack (e.g., adding or removing an NFT), and then move the whole dictionary back to the field: the dictionary can be updated in place, which is easier and more efficient. The same goes for a more complex data structure such as a dictionary of nested resources: each resource can be updated in place by taking a reference to the nested object instead of loading and saving.
 
-### Solution
+**Solution**
 
-For making modifications to values in storage or accessing stored objects,
-`borrow()` should always be used to access them instead of `load` or `save` unless absolutely necessary.
-`borrow()` returns a reference to the object at the storage path instead of having to load the entire object.
-This reference can be assigned to or can be used to access fields or call methods on stored objects.
+For making modifications to values in storage or accessing stored objects, `borrow()` should always be used to access them instead of `load` or `save`, unless absolutely necessary. `borrow()` returns a reference to the object at the storage path instead of having to load the entire object. This reference can be assigned to or can be used to access fields or call methods on stored objects.
 
-Fields and value in containers, such as in arrays and dictionaries,
-can be borrowed using a reference expression (`&v as &T`).
+Fields and value in containers, such as in arrays and dictionaries, can be borrowed using a reference expression (`&v as &T`).
 
-### Example
+**Example**
 
 ```cadence
 // BAD: Loads and stores a resource to use it
@@ -406,57 +362,27 @@ transaction {
 }
 ```
 
-# Capabilities
+## Capabilities and capability bootstrapping
 
-## Capability bootstrapping
+**Problem**
 
-### Problem
+An account must be given a [capability] to an object stored in another account. To create (_issue_) the capability, the transaction must be signed by a key that has access to the target account.
 
-An account must be given a [capability](./language/capabilities.md) to an object stored in another account.
-To create (issue) the capability, the transaction must be signed by a key which has access to the target account.
+To transfer/deliver the capability to the other account, the transaction also needs write access to that one. It is not as easy to produce a single transaction that is authorized by two accounts as it is to produce a typical transaction, which is authorized by one account.
 
-To transfer / deliver the capability to the other account, the transaction also needs write access to that one.
-It is not as easy to produce a single transaction which is authorized by two accounts
-as it is to produce a typical transaction which is authorized by one account.
+This prevents a single transaction from fetching the capability from one account and delivering it to the other.
 
-This prevents a single transaction from fetching the capability
-from one account and delivering it to the other.
+**Solution**
 
-### Solution
+The solution to the bootstrapping problem in Cadence is provided by the [Inbox API].
 
-The solution to the bootstrapping problem in Cadence is provided by the
-[Inbox API](./language/accounts/inbox.mdx).
+Account A (which we will call the provider) creates the capability they wish to send to account B (which we will call the recipient), and stores this capability on their account in a place where the recipient can access it using the `Inbox.publish` function on their account. They choose a name for the capability that the recipient can later use to identify it, and specify the recipient's address when calling `publish`. This call to `publish` will emit an `InboxValuePublished` event that the recipient can listen for offchain to know that the Capability is ready for them to claim.
 
-Account A (which we will call the provider) creates the capability they wish to send to account B
-(which we will call the recipient),
-and stores this capability on their account in a place where the recipient can access it
-using the `Inbox.publish` function on their account.
-They choose a name for the capability that the recipient can later use to identify it,
-and specify the recipient's address when calling `publish`.
-This call to `publish` will emit an `InboxValuePublished` event
-that the recipient can listen for off-chain to know that the Capability is ready for them to claim.
+The recipient can then later use the `Inbox.claim` function to securely claim the capability from the provider's account. They must provide the name and type with which the capability was published, as well as the address of the provider's account (all of this information is available in the `InboxValuePublished` event emitted on `publish`). This will remove the capability from the provider's account and emit an `InboxValueClaimed` event that the provider can listen for offchain.
 
-The recipient then later can use the `Inbox.claim` function to securely claim the capability
-from the provider's account.
-They must provide the name and type with which the capability was published,
-as well as the address of the provider's account
-(all of this information is available in the `InboxValuePublished` event emitted on `publish`).
-This will remove the capability from the provider's account and emit an `InboxValueClaimed` event
-that the provider can listen for off-chain.
+One important caveat to this is that the published capability is stored on the provider's account until the recipient claims it, so the provider can also use the `Inbox.unpublish` function to remove the capability from their account if they no longer wish to pay for storage for it. This also requires the name and type that the capability was published, and emits an `InboxValueUnpublished` event that the recipient can listen for offchain.
 
-One important caveat to this is that the published capability is stored on the provider's account
-until the recipient claims it,
-so the provider can also use the `Inbox.unpublish` function to remove the capability from their account
-if they no longer wish to pay for storage for it.
-This also requires the name and type which the capability was published,
-and emits an `InboxValueUnpublished` event that the recipient can listen for off-chain.
-
-It is also important to note that the recipient becomes the owner of the capability object
-once they have claimed it, and can thus store it or copy it anywhere they have access to.
-This means providers should only publish capabilities to recipients they trust to use them properly,
-or limit the type with which the capability is authorized
-in order to only give recipients access to the functionality
-that the provider is willing to allow them to copy.
+It is also important to note that the recipient becomes the owner of the capability object once they have claimed it, and can thus store it or copy it anywhere they have access to. This means providers should only publish capabilities to recipients they trust to use them properly, or limit the type with which the capability is authorized in order to only give recipients access to the functionality that the provider is willing to allow them to copy.
 
 ```cadence
 import "BasicNFT"
@@ -501,17 +427,17 @@ transaction(provider: Address, name: String) {
 }
 ```
 
-## Check for existing capability before publishing new one
+## Check for an existing capability before publishing a new one
 
-### Problem
+**Problem**
 
-When publishing a capability, a capability might be already be published at the specified path.
+When publishing a capability, a capability might already be published at a specified path.
 
-### Solution
+**Solution**
 
 Check if a capability is already published at the given path.
 
-### Example
+**Example**
 
 ```cadence
 transaction {
@@ -529,14 +455,13 @@ transaction {
 }
 ```
 
-## Capability Revocation
+## Capability revocation
 
-### Problem
+**Problem**
 
-A capability provided by one account to a second account must able to be revoked
-by the first account without the co-operation of the second.
+A capability provided by one account to a second account must be able to be revoked by the first account without the co-operation of the second.
 
-### Solution
+**Solution**
 
 If the capability is a storage capability:
 
@@ -567,3 +492,15 @@ transaction(capabilityID: UInt64) {
     }
 }
 ```
+
+<!-- Relative links. Will not render on the page -->
+
+[Design patterns]: https://en.wikipedia.org/wiki/Software_design_pattern
+[Wikipedia's page on magic numbers]: https://en.wikipedia.org/wiki/Magic_number_(programming)
+[Example code]: https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L779
+[Script-Accessible public field/function]: #script-accessible-public-fieldfunction
+[LockedTokens.cdc]: https://github.com/onflow/flow-core-contracts/blob/71ea0dfe843da873d52c6a983e7c8f44a4677b26/contracts/LockedTokens.cdc#L765-L780
+[admin_deploy_contract.cdc]: https://github.com/onflow/flow-core-contracts/blob/master/transactions/lockedTokens/admin/admin_deploy_contract.cdc
+[capability]: ./language/capabilities.md
+[Inbox API]: ./language/accounts/inbox.mdx
+[post-conditions]: ./language/pre-and-post-conditions.md

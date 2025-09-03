@@ -6,6 +6,8 @@ sidebar_label: Improvements & New Features
 
 ## 💫 New features
 
+Cadence 1.0 was released in October of 2024.  This page provides a historical reference of changes.
+
 <details>
 
 <summary>View Functions added ([FLIP 1056])</summary>

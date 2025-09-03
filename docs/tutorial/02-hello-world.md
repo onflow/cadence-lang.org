@@ -273,7 +273,7 @@ Reference solutions are functional, but may not be optimal.
 [variable]: ../language/constants-and-variables.md
 [type annotation]: ../language/types-and-type-system/type-annotations.md
 [Composite Types]: ../language/types-and-type-system/composite-types.mdx
-[multiple controllers]: https://www.coindesk.comwhat-is-a-multisignature-crypto-wallet
+[multiple controllers]: https://www.coindesk.com/learn/what-is-a-multisig-wallet
 [contract area]: ../language/accounts/contracts
 [update]: ../language/contract-updatability.md
 [account storage]: ../language/accounts/storage.mdx

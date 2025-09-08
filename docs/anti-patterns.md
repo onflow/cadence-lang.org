@@ -18,13 +18,9 @@ If it is a fully-authorized account reference, this is problematic, as the fully
 
 **Example**
 
-:::warning
-
-The following is bad code and is shown for illustrative purposes. Do _not_ copy!
-
-:::
-
 ```cadence
+// BAD CODE
+// DO NOT COPY
 // Imagine this code is in a contract that uses a `auth(Storage) &Account` parameter
 // to authenticate users to transfer NFTs
 

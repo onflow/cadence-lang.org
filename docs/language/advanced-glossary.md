@@ -213,7 +213,7 @@ let vault: FungibleToken.Vault<ExampleToken.Vault>
 // The Capability<...> is a generic capability type:
 let cap: Capability<&ExampleToken.Vault{FungibleToken.Receiver}>
 
-// Inside <...>, you define the type that will be borrowed when 
+// Inside <...>, you define the type that will be borrowed when
 // using the capability. For example:
 let receiverCap: Capability<&ExampleToken.Vault{FungibleToken.Receiver}>
     = account.getCapability<&ExampleToken.Vault{FungibleToken.Receiver}>(/public/receiver)
@@ -226,7 +226,7 @@ let vaultRef = account
 let numbers: [Int] = []
 let moreNumbers = [] as [Int]
 
-// The type annotation uses square brackets for collections, 
+// The type annotation uses square brackets for collections,
 // but when inside other parameterized types, < > is used:
 let dict: {String: Int} = {}
 let capDict: {String: Capability<&ExampleToken.Vault>} = {}
@@ -270,19 +270,18 @@ let value = dict["key"] // dictionary access
 
 ### `` ` `` (backtick)
 
-The `` ` `` (backtick) symbol is _not_ used and has no syntactic meaning at all in Cadence syntax. 
+The `` ` `` (backtick) symbol is _not_ used and has no syntactic meaning at all in Cadence syntax.
 
 When working with string declarations, use double quotes (`" "`) instead:
 
 ```cadence
 let s = `hello`  // Error: use double quotes for strings
-let s = "hello"  
+let s = "hello"
 ```
 
 ### Whitespace
 
 Whitespace has no semantic meaning in Cadence syntax. It is used only to separate tokens.
-
 
 ## Keywords and access control
 
@@ -340,12 +339,12 @@ The `resource` keyword declares resource types in Cadence, which are unique, non
 resource NFT {
     access(all) var id: UInt64
     access(all) var owner: Address
-    
+
     init(id: UInt64, owner: Address) {
         self.id = id
         self.owner = owner
     }
-    
+
     access(all) fun transfer(to: Address) {
         self.owner = to
     }
@@ -361,7 +360,7 @@ struct Metadata {
     access(all) var name: String
     access(all) var description: String
     access(all) var tags: [String]
-    
+
     init(name: String, description: String, tags: [String]) {
         self.name = name
         self.description = description
@@ -380,7 +379,7 @@ access(all) contract MyContract {
         access(all) var id: UInt64
         init(id: UInt64) { self.id = id }
     }
-    
+
     access(all) fun mintNFT(id: UInt64): @NFT {
         return <- create NFT(id: id)
     }
@@ -399,27 +398,54 @@ access(all) interface Transferable {
 
 access(all) resource NFT: Transferable {
     access(all) var owner: Address
-    
+
     access(all) fun transfer(to: Address) {
         self.owner = to
     }
 }
 ```
 
+### `attachment`
+
+The `attachment` keyword declares [attachment types] in Cadence, which allow developers to extend struct or resource types (even ones they did not create) with new functionality without requiring the original author to plan for the intended behavior. Attachments are declared using the syntax `attachment <Name> for <Type>: <Conformances> { ... }` and can only be declared with `all` access. The attachment's kind (struct or resource) is automatically determined by the type it extends. Attachments are not first-class values and cannot exist independently of their base value, but they can be created using `attach` expressions, accessed via type indexing, and removed using `remove` statements.
+
+```cadence
+access(all) resource R {
+    access(all) let x: Int
+    init(x: Int) { self.x = x }
+}
+
+access(all) attachment A for R {
+    access(all) let derivedX: Int
+    init(scalar: Int) {
+        self.derivedX = base.x * scalar
+    }
+}
+
+// Creating and using attachments
+let r <- create R(x: 5)
+let r2 <- attach A(scalar: 3) to <-r
+let attachmentRef = r2[A] // access attachment via type indexing
+```
+
 ### `enum`
 
-The `enum` keyword declares enumeration types in Cadence, which define a set of named constant values. Enums can contain simple cases, and they provide [type safety] by ensuring only valid enum values can be used. Enums are commonly used for representing states, types, or categories in a program. The enum keyword helps create more readable and maintainable code by replacing magic numbers or strings with meaningful named constants.
+The `enum` keyword declares [enumeration] types in Cadence, which define a set of named constant values. Enums can contain simple cases, and they provide [type safety] by ensuring only valid enum values can be used. Enums are commonly used for representing states, types, or categories in a program. The enum keyword helps create more readable and maintainable code by replacing magic numbers or strings with meaningful named constants.
 
 ```cadence
 access(all) enum Status: UInt8 {
+
+    access(all)
     case pending
+
+    access(all)
     case active
+
+    access(all)
     case completed
-    
-    access(all) fun isActive(): Bool {
-        return self == .active
-    }
 }
+
+let status: Status = Status.active
 ```
 
 ## Resource management functions
@@ -460,7 +486,7 @@ The `.borrow` function provides temporary access to a resource without moving it
 resource NFT {
     access(all) var id: UInt64
     access(all) var metadata: String
-    
+
     access(all) fun updateMetadata(newMetadata: String) {
         self.metadata = newMetadata
     }
@@ -732,7 +758,7 @@ The `init` keyword declares initializer functions in Cadence, which are special 
 resource NFT {
     access(all) var id: UInt64
     access(all) var owner: Address
-    
+
     init(id: UInt64, owner: Address) {
         self.id = id
         self.owner = owner
@@ -747,11 +773,11 @@ The `self` keyword refers to the current instance of a type within its methods a
 ```cadence
 resource Token {
     access(all) var balance: UInt64
-    
+
     access(all) fun transfer(amount: UInt64) {
         self.balance = self.balance - amount // access own property
     }
-    
+
     access(all) fun getBalance(): UInt64 {
         return self.balance // return own property
     }
@@ -778,9 +804,11 @@ resource Token {
 [reference]: ./references.mdx
 [references]: ./references.mdx
 [resource]: ./resources.mdx
+[enumeration]: ./enumerations.md
 [swapping operator `<->`]: ./operators/assign-move-force-swap.md#swapping-operator--
 [`<->` (swap operator)]: ./operators/assign-move-force-swap.md#swapping-operator--
 [ternary operations]: ./operators/bitwise-ternary-operators.md#ternary-conditional-operator
 [ternary conditional operators]: ./operators/bitwise-ternary-operators.md#ternary-conditional-operator
 [ternary conditional expressions]: ./operators/bitwise-ternary-operators.md#ternary-conditional-operator
 [type safety]: ./types-and-type-system/type-safety.md
+[attachment types]: ./attachments.mdx

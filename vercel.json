@@ -55,6 +55,11 @@
       "source": "/docs/language/type-safety",
       "destination": "/docs/language/types-and-type-system/type-safety",
       "permanent": true
+    },
+    {
+      "source": "/docs/language/glossary",
+      "destination": "/docs/language/syntax",
+      "permanent": true
     }
   ]
 }

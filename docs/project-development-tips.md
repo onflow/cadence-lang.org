@@ -55,7 +55,7 @@ The project should also have a clear plan of succession in case the original own
 
 As projects like NBA Topshot have shown, when a blockchain product becomes successful others can and will build on top of what you are doing. Whether that is analytics, tools, or other value adds that could help grow your project ecosystem, composability is key and that depends on open source development. If there isn't already an open source repo, builders should strongly consider creating one.
 
-Builders can start from the [Flow open source template] and make sure all of their repo is set up with some initial documentation for what the repo is for before any code is written. External developers and users should have an easily accessible home page to go to to understand any given project.
+Builders can start by initializing their projects with [Flow CLI] and the `flow init` command. and make sure all of their repo is set up with some initial documentation for what the repo is for before any code is written. External developers and users should have an easily accessible home page to go to to understand any given project.
 
 The repo should also have some sort of high-level design document that lays out the intended design and architecture of the smart contract. The project leads should determine what is best for them to include in the document, but some useful things to include are basic user stories, the architecture of the smart contracts, and any questions that still need to be answered about it.
 
@@ -174,9 +174,9 @@ If you have any feedback about these guidelines, please create an issue in the `
 [FungibleToken]: https://github.com/onflow/flow-ft
 [NFT StoreFront]: https://github.com/onflow/nft-storefront
 [here]: ./index.md
-[Flow open source template]: https://github.com/onflow/open-source-template
 [Cadence Documentation Generator]: https://github.com/onflow/cadence-tools/tree/master/docgen
 [Cadence Testing Framework]: ./testing-framework.mdx
+[Flow CLI]: https://developers.flow.com/build/tools/flow-cli
 [Flow JS Testing]: ./testing-framework.mdx
 [Overflow]: https://github.com/bjartek/overflow
 [See the flow fungible token repo]: https://github.com/onflow/flow-ft/tree/master/tests

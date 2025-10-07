@@ -17,6 +17,17 @@ socialImageTitle: Cadence First Steps
 socialImageDescription: Take your first steps to learn the Cadence smart contract programming language.
 ---
 
+<div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%' }}>
+  <iframe 
+    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+    src="https://www.youtube.com/embed/Mtqs4JHjiyI" 
+    title="YouTube video player" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen
+  ></iframe>
+</div>
+
 Welcome to our series of guides that get you up to speed on [Cadence] as quickly as possible! In this program, we jump right into making meaningful projects. Don't worry, we'll point you to the important parts of the language reference as each concept is introduced.
 
 This series makes use of the [Flow Playground], an online IDE that enables you to easily write and test Cadence code in a simulated environment.

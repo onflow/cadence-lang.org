@@ -18,6 +18,17 @@ socialImageTitle: Hello World
 socialImageDescription: Write your own Hello World smart contract in Cadence.
 ---
 
+<div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%' }}>
+  <iframe 
+    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+    src="https://www.youtube.com/embed/bAvlVE7Wd7w" 
+    title="YouTube video player" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen
+  ></iframe>
+</div>
+
 It's time to write your own "Hello World" contract. In this instance, the contract accomplishes the following:
 
 1. Create and initialize a smart contract with a single field of type `String`.

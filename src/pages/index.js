@@ -111,6 +111,17 @@ export default function Home() {
             <p>
               Together, we are working to build a programming language to empower everyone to push the boundaries of smart contracts and on-chain logic.
             </p>
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%' }}>
+              <iframe 
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                src="https://www.youtube.com/embed/6SE8bvTmmQc?si=DTMmGOHf3wyqIDTF" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
+            </div>
             <p>
               Announced in 2020, the Cadence programming language introduced a new paradigm of resource-oriented programming.
               By leveraging the power of resources, Cadence brings exciting new ideas to the world of smart contracts.

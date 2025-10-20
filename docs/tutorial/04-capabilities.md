@@ -72,7 +72,7 @@ Next, you'll write a script that anyone can use that links to borrow a [referenc
 
 ## Creating capabilities and references to stored resources
 
-Continue working with your code from the previous tutorial. Alternately, open a fresh copy here: [play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6].
+Continue working with your code from the previous tutorial. Alternately, open a fresh copy here: [https://play.flow.com/8b28da4e-0235-499f-8653-1f55e1b3b725].
 
 If you started with the playground linked above, be sure to deploy the `HelloResource` contract with account `0x06` and call the `Create Hello` transaction, also with `0x06`.
 
@@ -323,4 +323,4 @@ Reference solutions are functional, but may not be optimal.
 [Cadence Best Practices document]: ../design-patterns.md
 [Anti-patterns document]: ../anti-patterns.md
 [Reference Solution]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6
-[play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6
+[https://play.flow.com/8b28da4e-0235-499f-8653-1f55e1b3b725]: https://play.flow.com/8b28da4e-0235-499f-8653-1f55e1b3b725

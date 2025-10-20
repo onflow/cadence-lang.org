@@ -1,9 +1,6 @@
 ---
-archived: false
-draft: false
 title: Capabilities and Entitlements
 description: An introduction to capabilities, entitlements, and how they interact with resources in Cadence
-date: 2024-12-11
 meta:
   keywords:
     - tutorial
@@ -18,8 +15,6 @@ tags:
   - reference
   - cadence
   - tutorial
-socialImageTitle: Cadence Resources
-socialImageDescription: Capability smart contract image.
 ---
 
 This tutorial builds on your understanding of [accounts] and [resources]. You'll learn how to interact with resources using [capabilities] and [entitlements].

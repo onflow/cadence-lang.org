@@ -543,5 +543,5 @@ Reference solutions are functional, but may not be optimal.
 [nil-coalescing operator (`??`)]: ../language/operators/optional-operators.md#nil-coalescing-operator-
 [Non-Fungible Token Contract]: https://github.com/onflow/flow-nft/blob/master/contracts/NonFungibleToken.cdc#L115-L121
 [Generic NFT Transfer transaction]: https://github.com/onflow/flow-nft/blob/master/transactions/generic_transfer_with_address_and_type.cdc#L46-L50
-[Reference Solution]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6
+[Reference Solution]: https://play.flow.com/8b28da4e-0235-499f-8653-1f55e1b3b725
 [play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1]: https://play.flow.com/b999f656-5c3e-49fa-96f2-5b0a4032f4f1

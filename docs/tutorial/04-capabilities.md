@@ -1,9 +1,6 @@
 ---
-archived: false
-draft: false
-title: Capabilities
-description: An introduction to capabilities and how they interact with resources in Cadence
-date: 2024-12-11
+title: Capabilities and Entitlements
+description: An introduction to capabilities, entitlements, and how they interact with resources in Cadence
 meta:
   keywords:
     - tutorial
@@ -12,19 +9,19 @@ meta:
     - Resources
     - Capabilities
     - Capability
+    - Entitlement
+    - Entitlements
 tags:
   - reference
   - cadence
   - tutorial
-socialImageTitle: Cadence Resources
-socialImageDescription: Capability smart contract image.
 ---
 
 This tutorial builds on your understanding of [accounts] and [resources]. You'll learn how to interact with resources using [capabilities] and [entitlements].
 
 :::tip[Reminder]
 
-In Cadence, resources are a composite type like a struct or a class, but with some **special rules**:
+In Cadence, resources are a composite type like a `struct` or a class in other languages, but with some **special rules**:
 
 - Each instance of a resource can only exist in exactly one location and cannot be copied.
 - Resources must be explicitly moved from one location to another when accessed.
@@ -48,11 +45,13 @@ If you're working on an app that allows users to exchange tokens, you'll want di
 
 :::info
 
-In Cadence, users have complete control over their storage, and their storage is tied directly to their accounts.  This feature allows amazing benefits including peer-to-peer transfers of property and it being impossible to accidentally burn an asset by sending it to an unused address.  The one mixed blessing is that you can't airdrop tokens or NFTs without the recipient signing a transaction.  Less spam, but you'll need to use a claim mechanism if the recipient doesn't already have a vault for your asset.
+In Cadence, users have complete control over their storage, and their storage is tied directly to their accounts. This feature allows amazing benefits including peer-to-peer transfers of property and it being impossible to accidentally burn an asset by sending it to an unused address. The one mixed blessing is that you can't airdrop tokens or NFTs without the recipient signing a transaction. Less spam, but you'll need to use a claim mechanism if the recipient doesn't already have a vault for your asset.
 
 :::
 
 Capabilities and entitlements are what allows for this detailed control of access to owned assets. They allow a user to indicate which of the functionality of their account and owned objects should be accessible to themselves, their trusted friends, and the public.
+
+![Capabilities and Entitlements](./capabilities-entitlements.jpg)
 
 For example, a user might want to allow a friend of theirs to use some of their money to spend. In this case, they could create an entitled capability that gives the friend access to only this part of their account, instead of having to hand over full control.
 
@@ -68,7 +67,7 @@ Next, you'll write a script that anyone can use that links to borrow a [referenc
 
 ## Creating capabilities and references to stored resources
 
-Continue working with your code from the previous tutorial. Alternately, open a fresh copy here: [play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6].
+Continue working with your code from the previous tutorial. Alternately, open a fresh copy here: [https://play.flow.com/8b28da4e-0235-499f-8653-1f55e1b3b725].
 
 If you started with the playground linked above, be sure to deploy the `HelloResource` contract with account `0x06` and call the `Create Hello` transaction, also with `0x06`.
 
@@ -78,20 +77,24 @@ To prepare:
 
 1. Create a new transaction called `Create Link`.
 1. Import `HelloResource` and stub out a `transaction` with a `prepare` phase.
+
    - Cadence allows for static analysis of imported contracts. You'll get errors in the transactions and scripts that import `HelloResource` from `0x06` if you haven't deployed that contract.
+
    ```cadence create_link.cdc
    import HelloResource from 0x06
-   
+
    transaction {
      prepare() {
        // TODO
      }
    }
    ```
+
 1. Pass an `&Account` reference into `prepare` with the capabilities needed to give the `transaction` the ability to create and publish a capability:
+
    ```cadence create_link.cdc
    import HelloResource from 0x06
-   
+
    transaction {
      prepare(account: auth(
        IssueStorageCapabilityController,
@@ -210,40 +213,46 @@ Now that you've published the capability with `public` `access`, **anyone** who 
 
 1. Create a script called `GetGreeting`.
 1. Import `HelloResource` and give it public `access`. To avoid syntax errors while writing the function, you may wish to add a temporary and obvious `return` value:
+
    ```cadence GetGreeting.cdc
    import HelloResource from 0x06
-   
+
    access(all) fun main(): String {
      // TODO
      return "TODO";
    }
    ```
+
    - You'll need a reference to the public account object for the `0x06` account to be able to access public capabilities within it.
+
 1. Use `getAccount` to get a reference to account `0x06`. Hardcode it for now:
    ```cadence
    let helloAccount = getAccount(0x06)
    ```
    - Addresses are **not** strings and thus do **not** have quotes around them.
 1. Use `borrow` to borrow the public capability for your `Create Link` transaction saved in `/public/HelloAssetTutorial`.
+
    - Your script should return `helloReference.hello()`.
    - You've already borrowed something before. Try to implement this on your own. **Hint:** this time, you're borrowing a `capability` from the account, **not** something from `storage`. Don't forget to handle the case where the object can't be found!
    <dl><dd><em>You should end up with a script similar to:</em></dd></dl>
+
    ```cadence GetGreeting.cdc
    import HelloResource from 0x06
-   
+
    access(all) fun main(): String {
        let helloAccount = getAccount(0x06)
-   
+
        let helloReference = helloAccount
            .capabilities
            .borrow<&HelloResource.HelloAsset>(/public/HelloAssetTutorial)
            ?? panic("Could not borrow a reference to the HelloAsset capability")
-   
+
        return helloReference.hello()
    }
    ```
+
 1. Use `Execute` to execute your script.
-   <dl><dd><em>You'll see `"Hello, World!"` logged to the console.</em></dd></dl> 
+   <dl><dd><em>You'll see `"Hello, World!"` logged to the console.</em></dd></dl>
 
 Note that scripts don't need any authorization and can only access public information. You've enabled the user to make this capability public through the transaction you wrote and they signed. **Anyone** can write their own scripts to interact with your contracts this way!
 
@@ -309,4 +318,4 @@ Reference solutions are functional, but may not be optimal.
 [Cadence Best Practices document]: ../design-patterns.md
 [Anti-patterns document]: ../anti-patterns.md
 [Reference Solution]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6
-[play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6]: https://play.flow.com/6f74fe85-465d-4e4f-a534-1895f6a3c0a6
+[https://play.flow.com/8b28da4e-0235-499f-8653-1f55e1b3b725]: https://play.flow.com/8b28da4e-0235-499f-8653-1f55e1b3b725

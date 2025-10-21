@@ -21,7 +21,7 @@ This tutorial builds on your understanding of [accounts] and [resources]. You'll
 
 :::tip[Reminder]
 
-In Cadence, resources are a composite type like a struct or a class, but with some **special rules**:
+In Cadence, resources are a composite type like a `struct` or a class in other languages, but with some **special rules**:
 
 - Each instance of a resource can only exist in exactly one location and cannot be copied.
 - Resources must be explicitly moved from one location to another when accessed.

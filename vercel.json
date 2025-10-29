@@ -19,96 +19,54 @@
   ],
   "rewrites": [
     {
-      "source": "/docs/cadence-migration-guide/:path*",
-      "destination": "/md/cadence-migration-guide/:path*.md",
+      "source": "/docs/:path*",
+      "destination": "/md/docs/:path*.md",
       "has": [
-        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
+        { "type": "header", "key": "accept", "value": "text/markdown" }
       ]
     },
     {
-      "source": "/docs/cadence-migration-guide/:path*",
-      "destination": "/md/cadence-migration-guide/:path*.md",
+      "source": "/docs/:path*",
+      "destination": "/md/docs/:path*.md",
       "has": [
-        { "type": "query", "key": "format", "value": "md" }
+        { "type": "header", "key": "accept", "value": "text/plain" }
       ]
     },
     {
-      "source": "/docs/language/:path*",
-      "destination": "/md/language/:path*.md",
-      "has": [
-        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
-      ]
-    },
-    {
-      "source": "/docs/language/:path*",
-      "destination": "/md/language/:path*.md",
-      "has": [
-        { "type": "query", "key": "format", "value": "md" }
-      ]
-    },
-    {
-      "source": "/docs/tutorial/:path*",
-      "destination": "/md/tutorial/:path*.md",
-      "has": [
-        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
-      ]
-    },
-    {
-      "source": "/docs/tutorial/:path*",
-      "destination": "/md/tutorial/:path*.md",
+      "source": "/docs/:path*",
+      "destination": "/md/docs/:path*.md",
       "has": [
         { "type": "query", "key": "format", "value": "md" }
       ]
     },
     {
       "source": "/docs/:path*.md",
-      "destination": "/md/:path*.md"
+      "destination": "/md/docs/:path*.md"
     },
     {
-      "source": "/docs/:path*",
-      "destination": "/md/:path*.md",
+      "source": "/docs",
+      "destination": "/md/docs.md",
       "has": [
-        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
+        { "type": "header", "key": "accept", "value": "text/markdown" }
       ]
     },
     {
-      "source": "/docs/:path*",
-      "destination": "/md/:path*.md",
+      "source": "/docs",
+      "destination": "/md/docs.md",
+      "has": [
+        { "type": "header", "key": "accept", "value": "text/plain" }
+      ]
+    },
+    {
+      "source": "/docs",
+      "destination": "/md/docs.md",
       "has": [
         { "type": "query", "key": "format", "value": "md" }
       ]
     },
     {
-      "source": "/:path((?!md/).+)\\.md",
-      "destination": "/md/:path.md"
-    },
-    {
-      "source": "/docs/cadence-migration-guide/:path*",
-      "destination": "/md/cadence-migration-guide/:path*.md",
-      "has": [
-        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
-      ]
-    },
-    {
-      "source": "/docs/language/:path*",
-      "destination": "/md/language/:path*.md",
-      "has": [
-        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
-      ]
-    },
-    {
-      "source": "/docs/tutorial/:path*",
-      "destination": "/md/tutorial/:path*.md",
-      "has": [
-        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
-      ]
-    },
-    {
-      "source": "/docs/:path*",
-      "destination": "/md/:path*.md",
-      "has": [
-        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
-      ]
+      "source": "/docs.md",
+      "destination": "/md/docs/:path*.md"
     }
   ],
   "redirects": [

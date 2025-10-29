@@ -1,6 +1,14 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/md/(.*\\.(md|mdx))",
+      "headers": [
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/docs/cadence-migration-guide/:path*",
@@ -45,6 +53,20 @@
       ]
     },
     {
+      "source": "/docs/:path*",
+      "destination": "/md/:path*",
+      "has": [
+        { "type": "header", "key": "accept", "value": "text/markdown" }
+      ]
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/md/:path*",
+      "has": [
+        { "type": "query", "key": "format", "value": "md" }
+      ]
+    },
+    {
       "source": "/:path((?!md/).+)\\.md",
       "destination": "/md/:path.md"
     },
@@ -65,6 +87,13 @@
     {
       "source": "/docs/tutorial/:path*",
       "destination": "/md/tutorial/:path*",
+      "has": [
+        { "type": "header", "key": "accept", "value": "text/plain" }
+      ]
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/md/:path*",
       "has": [
         { "type": "header", "key": "accept", "value": "text/plain" }
       ]

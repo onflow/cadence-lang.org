@@ -5,13 +5,15 @@
     {
       "source": "/md/(.*\\.md)",
       "headers": [
-        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     },
     {
       "source": "/md/(.*\\.mdx)",
       "headers": [
-        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     }
   ],
@@ -20,7 +22,7 @@
       "source": "/docs/cadence-migration-guide/:path*",
       "destination": "/md/cadence-migration-guide/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/markdown" }
+        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
       ]
     },
     {
@@ -34,7 +36,7 @@
       "source": "/docs/language/:path*",
       "destination": "/md/language/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/markdown" }
+        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
       ]
     },
     {
@@ -48,7 +50,7 @@
       "source": "/docs/tutorial/:path*",
       "destination": "/md/tutorial/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/markdown" }
+        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
       ]
     },
     {
@@ -59,10 +61,14 @@
       ]
     },
     {
+      "source": "/docs/:path*.md",
+      "destination": "/md/:path*.md"
+    },
+    {
       "source": "/docs/:path*",
       "destination": "/md/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/markdown" }
+        { "type": "header", "key": "accept", "value": ".*text/markdown.*" }
       ]
     },
     {
@@ -80,28 +86,28 @@
       "source": "/docs/cadence-migration-guide/:path*",
       "destination": "/md/cadence-migration-guide/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/plain" }
+        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
       ]
     },
     {
       "source": "/docs/language/:path*",
       "destination": "/md/language/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/plain" }
+        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
       ]
     },
     {
       "source": "/docs/tutorial/:path*",
       "destination": "/md/tutorial/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/plain" }
+        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
       ]
     },
     {
       "source": "/docs/:path*",
       "destination": "/md/:path*",
       "has": [
-        { "type": "header", "key": "accept", "value": "text/plain" }
+        { "type": "header", "key": "accept", "value": ".*text/plain.*" }
       ]
     }
   ],

@@ -1,20 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
-import Head from 'next/head';
+import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import { FcLock, FcIdea, FcChargeBattery, FcMindMap } from 'react-icons/fc';
 import { HiArrowRight, HiArrowSmDown } from 'react-icons/hi';
-import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import Lottie from "lottie-react";
-import securityAnimation from "./security.json";
-import debuggingAnimation from "./debugging.json";
-import composabilityAnimation from "./composability.json";
-import powerAnimation from "./power.json";
-import learnAnimation from "./learn.json";
 
 import styles from './index.module.css';
 import Logo from '@site/static/img/logo.svg';
@@ -52,8 +45,6 @@ function cadence(Prism) {
 
 cadence.displayName = 'cadence'
 
-SyntaxHighlighter.registerLanguage('cadence', cadence)
-
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
@@ -71,18 +62,19 @@ function HomepageHeader() {
 
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
+
   return (
     <Layout
       title={`Hello from ${siteConfig.title}`}
       description="Cadence is a resource-oriented programming language that introduces new features to smart contract programming that help developers ensure that their code is safe, secure, clear, and approachable.">
+      <Head>
+        <title>Cadence</title>
+      </Head>
       <main>
 
       <div className="content-wrapper">
           <div className="feature">
             <div>
-            <Head>
-              <title>Cadence</title>
-            </Head>
               <Logo title="Cadence" className="logo" width="18em" height="4em" />
               <h2>
                 Forge the future of decentralized apps.
@@ -98,12 +90,21 @@ export default function Home() {
             </div>
 
             <div style={{maxWidth: "30rem"}}>
-              <SyntaxHighlighter
-                className="code"
-                language="cadence"
-                style={tomorrow}
-                showLineNumbers={true}
-              >{example}</SyntaxHighlighter>
+              <BrowserOnly>
+                {() => {
+                  const { PrismAsyncLight: SyntaxHighlighter } = require('react-syntax-highlighter');
+                  const { tomorrow } = require('react-syntax-highlighter/dist/cjs/styles/prism');
+                  SyntaxHighlighter.registerLanguage('cadence', cadence);
+                  return (
+                    <SyntaxHighlighter
+                      className="code"
+                      language="cadence"
+                      style={tomorrow}
+                      showLineNumbers={true}
+                    >{example}</SyntaxHighlighter>
+                  );
+                }}
+              </BrowserOnly>
             </div>
           </div>
 
@@ -158,9 +159,7 @@ export default function Home() {
                   instead of preventing security footguns and attacks.
                 </p>
               </div>
-              <div>
-                <Lottie animationData={securityAnimation} />
-              </div>
+              <div />
             </div>
 
             <div className="feature alternate">
@@ -181,9 +180,7 @@ export default function Home() {
                   without requiring the original author of the type to plan or account for the intended behavior.
                 </p>
               </div>
-              <div>
-                <Lottie animationData={composabilityAnimation} />
-              </div>
+              <div />
             </div>
 
             <div className="feature">
@@ -196,9 +193,7 @@ export default function Home() {
                   and examples enable developers to start creating programs quickly and effectively.
                 </p>
               </div>
-              <div>
-              <Lottie animationData={learnAnimation} />
-              </div>
+              <div />
             </div>
 
             <div className="feature alternate">
@@ -215,9 +210,7 @@ export default function Home() {
                   or adding and sending funds with just one approval.
                 </p>
               </div>
-              <div>
-               <Lottie animationData={powerAnimation} />
-              </div>
+              <div />
             </div>
 
             <div className="feature">
@@ -234,9 +227,7 @@ export default function Home() {
                   unit & integration tests using Cadence.
                 </p>
               </div>
-              <div>
-                <Lottie animationData={debuggingAnimation} />
-              </div>
+              <div />
             </div>
 
           </div>

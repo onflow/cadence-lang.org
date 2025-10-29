@@ -1,6 +1,74 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/md/(.*\\.md)",
+      "headers": [
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/md/(.*\\.mdx)",
+      "headers": [
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/docs/:path*",
+      "destination": "/md/docs/:path*.md",
+      "has": [
+        { "type": "header", "key": "accept", "value": "text/markdown" }
+      ]
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/md/docs/:path*.md",
+      "has": [
+        { "type": "header", "key": "accept", "value": "text/plain" }
+      ]
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/md/docs/:path*.md",
+      "has": [
+        { "type": "query", "key": "format", "value": "md" }
+      ]
+    },
+    {
+      "source": "/docs/:path*.md",
+      "destination": "/md/docs/:path*.md"
+    },
+    {
+      "source": "/docs",
+      "destination": "/md/docs.md",
+      "has": [
+        { "type": "header", "key": "accept", "value": "text/markdown" }
+      ]
+    },
+    {
+      "source": "/docs",
+      "destination": "/md/docs.md",
+      "has": [
+        { "type": "header", "key": "accept", "value": "text/plain" }
+      ]
+    },
+    {
+      "source": "/docs",
+      "destination": "/md/docs.md",
+      "has": [
+        { "type": "query", "key": "format", "value": "md" }
+      ]
+    },
+    {
+      "source": "/docs.md",
+      "destination": "/md/docs.md"
+    }
+  ],
   "redirects": [
     {
       "source": "/docs/cadence_migration_guide/:path*",

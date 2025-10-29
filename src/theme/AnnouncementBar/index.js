@@ -6,6 +6,10 @@ import AnnouncementBarContent from '@theme/AnnouncementBar/Content';
 import styles from './styles.module.css';
 export default function AnnouncementBar() {
   const {announcementBar} = useThemeConfig();
+  // If announcement bar is not configured, do not render and avoid using the hook
+  if (!announcementBar) {
+    return null;
+  }
   const {isActive, close} = useAnnouncementBar();
   if (!isActive) {
     return null;

@@ -1,8 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 require("dotenv").config();
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const {themes} = require("prism-react-renderer");
 
 const theme = require("shiki/themes/nord.json");
 const { remarkCodeHike } = require("@code-hike/mdx");
@@ -27,8 +26,11 @@ const config = {
   organizationName: "Flow", // Usually your GitHub org/user name.
   projectName: "Cadence", // Usually your repo name.
 
-  onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -91,6 +93,15 @@ const config = {
 
   themes: [hasTypesense && "docusaurus-theme-search-typesense"].filter(Boolean),
 
+  plugins: [
+    [
+      require.resolve("./plugins/markdown-export"),
+      {
+        docsDir: undefined, // Will default to siteDir/docs
+      },
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -140,8 +151,8 @@ const config = {
         ],
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: themes.github,
+        darkTheme: themes.dracula,
       },
       typesense: hasTypesense && {
         // Replace this with the name of your index/collection.

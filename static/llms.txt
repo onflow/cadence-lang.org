@@ -1,0 +1,136 @@
+# Cadence Language Documentation
+
+> Cadence is a resource-oriented programming language designed for smart contract development on Flow. It introduces new features that help developers ensure their code is safe, secure, clear, and approachable.
+>
+> **Resource-Oriented Programming**: Cadence pairs linear types with object capabilities to create a secure and declarative model for digital ownership. Resources ensure that assets can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted.
+>
+> **Key Features**:
+> - **Type Safety**: Strong static type system that prevents important classes of erroneous behavior at compile-time
+> - **Resource Safety**: Resources are enforced by the runtime, ensuring assets cannot be duplicated or lost
+> - **Design by Contract**: Built-in pre-conditions and post-conditions for functions and transactions
+> - **Capability-Based Security**: Access control enforced by the type system, restricting access to only authorized parties
+> - **128-bit Fixed-Point Arithmetic**: Financial precision for currency and asset operations
+> - **Contract Upgradability**: Built-in support for contract updates while maintaining data integrity
+>
+> Cadence's syntax is inspired by modern languages like Swift, Kotlin, and TypeScript, making it familiar to developers while introducing powerful new paradigms for smart contract development.
+
+This document offers comprehensive resources for learning and developing with Cadence.
+
+## Markdown Access for AI Agents
+
+All documentation is available in Markdown format for AI agents:
+- **All pages support content negotiation**: Request any page with `Accept: text/markdown` or `Accept: text/plain` header to receive Markdown instead of HTML
+- **Query parameter alternative**: Append `?format=md` to any URL to get the Markdown version
+- **Complete documentation in one file**: [llms-full.txt](https://cadence-lang.org/llms-full.txt) - All Cadence documentation in a single Markdown file
+- **Direct markdown paths**: All `.md` and `.mdx` files are available at `/md/` prefix paths
+
+## Core Documentation
+- [Cadence Language Documentation](https://cadence-lang.org/): Main documentation hub for the Cadence programming language
+- [Language Reference](https://cadence-lang.org/docs/language): Complete reference documentation for Cadence syntax, semantics, and type system
+- [Syntax and Glossary](https://cadence-lang.org/docs/language/syntax): Syntax and glossary for language keywords, punctuation, and formatting
+
+## Getting Started
+- [First Steps](https://cadence-lang.org/docs/tutorial/01-first-steps): Introduction to Cadence and Flow Playground
+- [Hello World](https://cadence-lang.org/docs/tutorial/02-hello-world): Your first Cadence program
+- [Resources](https://cadence-lang.org/docs/tutorial/03-resources): Deep dive into resource-oriented programming
+- [Capabilities](https://cadence-lang.org/docs/tutorial/04-capabilities): Capability-based security and access control
+- [Non-Fungible Tokens (Part 1)](https://cadence-lang.org/docs/tutorial/05-non-fungible-tokens-1): Building NFTs with Cadence
+- [Non-Fungible Tokens (Part 2)](https://cadence-lang.org/docs/tutorial/05-non-fungible-tokens-2): Advanced NFT patterns
+- [Fungible Tokens](https://cadence-lang.org/docs/tutorial/06-fungible-tokens): Creating fungible tokens
+- [Marketplace Setup](https://cadence-lang.org/docs/tutorial/07-marketplace-setup): Building an NFT marketplace
+- [Marketplace Compose](https://cadence-lang.org/docs/tutorial/08-marketplace-compose): Composing marketplace functionality
+- [Voting](https://cadence-lang.org/docs/tutorial/09-voting): Implementing a voting system
+
+## Language Reference
+
+### Core Concepts
+- [Syntax](https://cadence-lang.org/docs/language/syntax): Cadence syntax reference
+- [Contracts](https://cadence-lang.org/docs/language/contracts): Declaring and deploying contracts
+- [Resources](https://cadence-lang.org/docs/language/resources): Resource types and ownership
+- [Capabilities](https://cadence-lang.org/docs/language/capabilities): Capability-based security model
+- [Interfaces](https://cadence-lang.org/docs/language/interfaces): Defining and implementing interfaces
+- [Enumerations](https://cadence-lang.org/docs/language/enumerations): Enum types in Cadence
+- [Functions](https://cadence-lang.org/docs/language/functions): Function declarations and calls
+- [Transactions](https://cadence-lang.org/docs/language/transactions): Transaction structure and execution
+- [References](https://cadence-lang.org/docs/language/references): Reference types and borrowing
+
+### Accounts and Storage
+- [Accounts](https://cadence-lang.org/docs/language/accounts): Account structure and management
+- [Account Storage](https://cadence-lang.org/docs/language/accounts/storage): Storing resources and data in accounts
+- [Account Keys](https://cadence-lang.org/docs/language/accounts/keys): Managing account keys and signatures
+- [Account Paths](https://cadence-lang.org/docs/language/accounts/paths): Storage paths and domain separation
+- [Account Capabilities](https://cadence-lang.org/docs/language/accounts/capabilities): Publishing and linking capabilities
+- [Account Contracts](https://cadence-lang.org/docs/language/accounts/contracts): Deploying contracts to accounts
+- [Account Inbox](https://cadence-lang.org/docs/language/accounts/inbox): Inbox for cross-account communication
+
+### Type System
+- [Types and Type System](https://cadence-lang.org/docs/language/types-and-type-system): Overview of Cadence's type system
+- [Type Safety](https://cadence-lang.org/docs/language/type-safety): Static type checking
+- [Type Inference](https://cadence-lang.org/docs/language/type-inference): Automatic type deduction
+- [Type Annotations](https://cadence-lang.org/docs/language/type-annotations): Explicit type declarations
+- [Type Hierarchy](https://cadence-lang.org/docs/language/type-hierarchy): Type relationships and inheritance
+- [Composite Types](https://cadence-lang.org/docs/language/types-and-type-system/composite-types): Structs and resources
+- [Intersection Types](https://cadence-lang.org/docs/language/types-and-type-system/intersection-types): Multiple interface conformance
+- [Run-time Types](https://cadence-lang.org/docs/language/types-and-type-system/run-time-types): Dynamic type information
+
+### Values and Types
+- [Values and Types](https://cadence-lang.org/docs/language/values-and-types): Primitive types and values
+- [Booleans, Numeric Literals, and Integers](https://cadence-lang.org/docs/language/values-and-types/booleans-numlits-ints): Integer types
+- [Fixed-Point Numbers](https://cadence-lang.org/docs/language/values-and-types/fixed-point-nums-ints): Fixed-point arithmetic for currency
+- [Strings and Characters](https://cadence-lang.org/docs/language/values-and-types/strings-and-characters): String handling
+- [Arrays](https://cadence-lang.org/docs/language/values-and-types/arrays): Array types and operations
+- [Dictionaries](https://cadence-lang.org/docs/language/values-and-types/dictionaries): Dictionary/map types
+- [Optionals and Never](https://cadence-lang.org/docs/language/values-and-types/anystruct-anyresource-opts-never): Optional types and top types
+- [Addresses](https://cadence-lang.org/docs/language/values-and-types/addresses-functions): Address types and functions
+
+### Operators
+- [Operators](https://cadence-lang.org/docs/language/operators): Operator overview
+- [Arithmetic and Logical Operators](https://cadence-lang.org/docs/language/operators/arithmetic-logical-operators): Math and logic operators
+- [Comparison Operators](https://cadence-lang.org/docs/language/operators/comparison-operators): Comparison and equality
+- [Assignment Operators](https://cadence-lang.org/docs/language/operators/assign-move-force-swap): Assignment and movement
+- [Casting Operators](https://cadence-lang.org/docs/language/operators/casting-operators): Type casting
+- [Optional Operators](https://cadence-lang.org/docs/language/operators/optional-operators): Optional unwrapping
+- [Operator Precedence](https://cadence-lang.org/docs/language/operators/prescedence-associativity): Precedence and associativity
+
+### Advanced Features
+- [Control Flow](https://cadence-lang.org/docs/language/control-flow): Conditionals, loops, and control structures
+- [Scope](https://cadence-lang.org/docs/language/scope): Variable scope and lifetime
+- [Constants and Variables](https://cadence-lang.org/docs/language/constants-and-variables): Declaration and initialization
+- [Pre and Post Conditions](https://cadence-lang.org/docs/language/pre-and-post-conditions): Design by contract
+- [Events](https://cadence-lang.org/docs/language/events): Event emission and handling
+- [Core Events](https://cadence-lang.org/docs/language/core-events): Flow blockchain core events
+- [Imports](https://cadence-lang.org/docs/language/imports): Importing contracts and types
+- [Access Control](https://cadence-lang.org/docs/language/access-control): Access modifiers and visibility
+- [Built-in Functions](https://cadence-lang.org/docs/language/built-in-functions): Standard library functions
+- [Crypto](https://cadence-lang.org/docs/language/crypto): Cryptographic functions
+- [Environment Information](https://cadence-lang.org/docs/language/environment-information): Block and transaction metadata
+- [Attachments](https://cadence-lang.org/docs/language/attachments): Resource attachments pattern
+- [Contract Updatability](https://cadence-lang.org/docs/language/contract-updatability): Upgrading contracts
+
+## Design Patterns & Best Practices
+- [Design Patterns](https://cadence-lang.org/docs/design-patterns): Common Cadence patterns and idioms
+- [Security Best Practices](https://cadence-lang.org/docs/security-best-practices): Secure coding guidelines
+- [Anti-Patterns](https://cadence-lang.org/docs/anti-patterns): What to avoid when writing Cadence
+- [Contract Upgrades](https://cadence-lang.org/docs/contract-upgrades): Strategies for upgrading contracts
+- [Project Development Tips](https://cadence-lang.org/docs/project-development-tips): Development workflow and best practices
+
+## Migration Guides
+- [Cadence Migration Guide](https://cadence-lang.org/docs/cadence-migration-guide): Overview of migration resources
+- [Core Contracts Guide](https://cadence-lang.org/docs/cadence-migration-guide/core-contracts-guide): Migrating core contract patterns
+- [Fungible Token Guide](https://cadence-lang.org/docs/cadence-migration-guide/ft-guide): Migrating fungible tokens
+- [NFT Guide](https://cadence-lang.org/docs/cadence-migration-guide/nft-guide): Migrating non-fungible tokens
+- [Cadence Improvements](https://cadence-lang.org/docs/cadence-migration-guide/improvements): Recent language improvements
+- [Solidity to Cadence](https://cadence-lang.org/docs/solidity-to-cadence): Comparing Solidity and Cadence
+
+## Testing & Tooling
+- [Testing Framework](https://cadence-lang.org/docs/testing-framework): Unit testing in Cadence
+- [Measuring Time](https://cadence-lang.org/docs/measuring-time): Time and date handling
+- [JSON Cadence Specification](https://cadence-lang.org/docs/json-cadence-spec): JSON representation of Cadence types
+
+## Why Cadence
+- [Why Cadence](https://cadence-lang.org/docs/why): Design philosophy and motivation
+
+## Developer Resources
+- [Flow Playground](https://play.onflow.org/): Interactive Cadence development environment
+- [Cadence GitHub Repository](https://github.com/onflow/cadence): Cadence language implementation
+- [Flow Documentation](https://developers.flow.com/): Flow blockchain documentation

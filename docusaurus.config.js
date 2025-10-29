@@ -91,6 +91,15 @@ const config = {
 
   themes: [hasTypesense && "docusaurus-theme-search-typesense"].filter(Boolean),
 
+  plugins: [
+    [
+      require.resolve("./plugins/markdown-export"),
+      {
+        docsDir: undefined, // Will default to siteDir/docs
+      },
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({

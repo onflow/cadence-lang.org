@@ -146,8 +146,8 @@ export default function Home() {
               ></iframe>
             </div>
             <p>
-              Introduced in 2020, Cadence pioneered <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming</a>—a paradigm designed specifically for handling valuable digital assets.
-              Unlike traditional smart contract languages where assets live in centralized contract storage, Cadence ensures user assets stay in their own accounts, dramatically reducing attack surfaces and eliminating entire classes of DeFi vulnerabilities.
+              Cadence pioneers <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming</a>—a paradigm designed specifically for handling valuable digital assets.
+              Unlike traditional smart contract languages where assets are piled in centralized contract storage, Cadence ensures user assets stay in their own accounts. The result is dramatically reduced attack surfaces and the elimination of entire classes of DeFi vulnerabilities.  
             </p>
             <p>
               With features like <a href="https://developers.flow.com/blockchain-development-tutorials/forte/flow-actions">Flow Actions</a> and <a href="https://developers.flow.com/blockchain-development-tutorials/forte/scheduled-transactions/scheduled-transactions-introduction">Scheduled Transactions</a>, developers can build sophisticated DeFi experiences that feel native to their users.
@@ -162,23 +162,44 @@ export default function Home() {
         <div className="features">
           <div className="content-wrapper">
 
+            <div className="feature alternate">
+              <div>
+                <h3><FcChargeBattery/>Complex DeFi Operations, Simple User Experiences</h3>
+                <p>
+                  In Cadence, transactions are first-class citizens. Write detailed, customized transactions that interact with multiple contracts atomically, either all succeed or all fail. No need to deploy intermediary contracts or build complex multi-call patterns.
+                </p>
+                <p>
+                  Want to check a user's staking position across three protocols, claim rewards from two pools, swap tokens, and restake—all in one operation? Write it as a transaction. This level of composability and customization simply isn't possible on other platforms where you're limited to pre-deployed contract functions.
+                </p>
+                <p>
+                  Cadence scripts provide native data availability—query any on chain data directly from state without external indexers or APIs. Build sophisticated analytics and user experiences that other chains cannot offer.
+                </p>
+                <p>
+                  This transactional flexibility is what makes Consumer DeFi possible. Complex financial operations that feel simple, all while maintaining security and atomicity.
+                </p>
+              </div>
+              <div>
+               <Lottie animationData={powerAnimation} />
+              </div>
+            </div>
+
             <div className="feature">
               <div>
                 <h3><FcLock/> Built for DeFi Security</h3>
                 <p>
-                  In DeFi, security isn't optional. Cadence's <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming paradigm</a> fundamentally changes how assets are stored and protected.
+                  In DeFi, security isn't optional. The <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming paradigm</a> in Cadence fundamentally changes how assets are stored and protected.
                 </p>
                 <p>
                   <strong>User assets stay in user accounts, not in contract storage.</strong> This architectural decision dramatically reduces attack surfaces.
-                  Unlike Solidity where exploits can drain entire protocols in one transaction, Cadence's model makes attacks exponentially harder. Attackers must target individual accounts one at a time, with no easy list of vulnerable targets.
+                  Unlike Solidity where exploits can drain entire protocols in one transaction, the Cadence model makes attacks exponentially harder. Attackers must target individual accounts one at a time, with no easy list of vulnerable targets.
                 </p>
                 <p>
                   Resources guarantee that assets can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted.
-                  Combined with a strong static type system, <a href="https://cadence-lang.org/docs/language/functions#function-preconditions-and-postconditions">design by contract</a>,
+                  Combined with a strong static type system, <a href="https://cadence-lang.org/docs/language/functions#function-preconditions-and-postconditions">enforced business logic</a>,
                   and <a href="https://cadence-lang.org/docs/language/capabilities">capability-based access control</a>, Cadence eliminates entire classes of DeFi vulnerabilities including reentrancy attacks.
                 </p>
                 <p>
-                  Build financial applications with confidence. Cadence's safety guarantees let you focus on creating value, not patching vulnerabilities.
+                  Build financial applications with confidence. Cadence provides safety guarantees that let you focus on creating value, not patching vulnerabilities.
                 </p>
               </div>
               <div>
@@ -194,11 +215,11 @@ export default function Home() {
                 </p>
                 <p>
                   <a href="https://developers.flow.com/blockchain-development-tutorials/forte/flow-actions">Flow Actions</a> allow you to bundle complex multi-step DeFi operations into one-click experiences.
-                  <a href="https://developers.flow.com/blockchain-development-tutorials/forte/scheduled-transactions/scheduled-transactions-introduction">Scheduled Transactions</a> enable native on-chain automation. Recurring payments, DCA strategies, and portfolio rebalancing execute directly from user wallets, no backend servers required.
+                  <a href="https://developers.flow.com/blockchain-development-tutorials/forte/scheduled-transactions/scheduled-transactions-introduction">{" "}Scheduled Transactions</a> enable native on-chain automation. Recurring payments, DCA strategies, and portfolio rebalancing execute directly from user wallets, no backend servers required.  
                 </p>
                 <p>
                   <a href="https://cadence-lang.org/docs/language/interfaces">Interfaces</a> and <a href="https://cadence-lang.org/docs/language/attachments">attachments</a> make protocols truly composable.
-                  Extend existing assets with new DeFi functionality without requiring permission from the original creators.
+                  Build new DeFi functionality on top of any token standard, creating composable building blocks that work together seamlessly.
                 </p>
               </div>
               <div>
@@ -210,7 +231,7 @@ export default function Home() {
               <div>
                 <h3><FcIdea/> Built for Scale: Fast, Cheap, and Ready for Millions</h3> 
                 <p>
-                  Consumer DeFi needs infrastructure that can handle millions of users without breaking the bank. Cadence delivers on both fronts with near instant transaction finality and costs measured in fractions of a cents, not dollars.
+                  Cadence is designed for speed. Intuitive syntax, comprehensive testing frameworks, and powerful abstractions mean you spend less time debugging and more time building. Development cycles that took months in Solidity take days in Cadence.
                 </p>
                 <p>
                   The development time has been reduced from months to days, enabling rapid iteration and faster time-to-market for DeFi products. Ship faster, test in production with confidence, and capture market opportunities before your competitors.
@@ -220,26 +241,6 @@ export default function Home() {
               <Lottie animationData={learnAnimation} />
               </div>
             </div>
-
-            <div className="feature alternate">
-              <div>
-                <h3><FcChargeBattery/>Complex DeFi Operations, Simple User Experiences</h3>
-                <p>
-                  Cadence transactions can perform multiple operations atomically—all succeed or all fail. This enables sophisticated DeFi workflows to feel as simple as a single click for users, while maintaining security and composability.
-                </p>
-                <p>
-                  Deploy capital across multiple yield strategies in one transaction. Swap, stake, and deposit into a lending pool—all atomic, all secure.
-                  Approve a token spend limit and execute the trade simultaneously, eliminating the frustrating multi-step approval flows that plague other chains.
-                </p>
-                <p>
-                  This transactional power is what makes Consumer DeFi possible. Complex financial operations that just work, every time.
-                </p>
-              </div>
-              <div>
-               <Lottie animationData={powerAnimation} />
-              </div>
-            </div>
-
 
           </div>
         </div>

@@ -19,38 +19,57 @@ import learnAnimation from "./learn.json";
 import styles from './index.module.css';
 import Logo from '@site/static/img/logo.svg';
 
-const example = `access(all)
-resource Vault {
-    access(all)
-    var balance: UFix64
+const example = `import "DeFiActions"
+import "FlowTransactionScheduler"
 
-    init(balance: UFix64) {
-        self.balance = balance
-    }
+// Schedule recurring yield compounding
+transaction(stakingPid: UInt64, intervalDays: UInt64) {
+    prepare(signer: auth(Storage) &Account) {
+        // Compose DeFi actions atomically:
+        // Claim rewards → Swap → Restake
+        let rewardsSource = StakingConnectors.PoolRewardsSource(
+            userCertificate: signer.capabilities
+                .get<&StakingPool>(publicPath),
+            pid: stakingPid
+        )
 
-    access(all)
-    fun withdraw(amount: UFix64): @Vault {
-        self.balance = self.balance - amount
-        return <- create Vault(balance: amount)
-    }
+        let swapper = SwapConnectors.TokenSwapper(
+            source: rewardsSource,
+            targetToken: "FLOW"
+        )
 
-    access(all)
-    fun deposit(from: @Vault) {
-        self.balance = self.balance + from.balance
-        destroy from
+        let stakeSink = StakingConnectors.PoolStakeSink(
+            pool: stakingPool,
+            source: swapper
+        )
+
+        // Schedule to run every N days
+        let future = getCurrentBlock().timestamp
+            + (intervalDays * 86400.0)
+
+        FlowTransactionScheduler.schedule(
+            action: stakeSink,
+            timestamp: future,
+            recurring: true
+        )
     }
 }`
 
 function cadence(Prism) {
   Prism.languages.cadence = {
+    comment: {
+      pattern: /\/\/.*/,
+      greedy: true
+    },
     string: {
       pattern: /"[^"]*"/,
       greedy: true
     },
     keyword:
-      /\b(?:access|all|fun|resource|create|let|destroy|return|self|var|init|from)\b/,
+      /\b(?:access|all|fun|resource|create|let|destroy|return|self|var|init|from|import|transaction|prepare|auth|Storage|Account|true|false)\b/,
     'class-name': /\b[A-Z][A-Za-z_\d]*\b/,
     function: /\b[a-z_]\w*(?=\s*\()/i,
+    number: /\b\d+\.?\d*\b/,
   }
 }
 

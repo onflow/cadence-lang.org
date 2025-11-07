@@ -97,7 +97,7 @@ export default function Home() {
   return (
     <Layout
       title={`${siteConfig.title} - Build the Future of Consumer DeFi`}
-      description="Cadence is the safest, most composable language for building DeFi applications that reach millions.">
+      description="Ship Consumer DeFi products faster. Cadence delivers the security, automation, and tooling to build financial apps that millions trust.">
       <main>
 
       <div className="content-wrapper">

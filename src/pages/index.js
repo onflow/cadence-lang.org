@@ -5,7 +5,6 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
-import { FcLock, FcIdea, FcChargeBattery, FcMindMap } from 'react-icons/fc';
 import { HiArrowRight, HiArrowSmDown } from 'react-icons/hi';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
@@ -102,7 +101,7 @@ export default function Home() {
 
       <div className="content-wrapper">
           <div className="feature">
-            <div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignSelf: 'stretch' }}>
             <Head>
               <title>Cadence</title>
             </Head>
@@ -118,9 +117,38 @@ export default function Home() {
               <Link className="cta" href="/docs">
                 Get started <HiArrowRight/>
               </Link>
+              
+              <div style={{ 
+                position: 'relative', 
+                paddingBottom: '56.25%', 
+                height: 0, 
+                overflow: 'hidden', 
+                width: '100%', 
+                marginTop: 'auto', 
+                flexShrink: 0,
+                borderRadius: '1rem',
+                boxShadow: '1px 2px 4px rgba(45, 45, 45, 0.4)'
+              }}>
+                <iframe
+                  style={{ 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    width: '100%', 
+                    height: '100%',
+                    borderRadius: '1rem'
+                  }}
+                  src="https://www.youtube.com/embed/6SE8bvTmmQc?si=DTMmGOHf3wyqIDTF"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen
+                ></iframe>
+              </div>
             </div>
 
-            <div style={{maxWidth: "30rem"}}>
+            <div style={{maxWidth: "50rem", minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
               <SyntaxHighlighter
                 className="code"
                 language="cadence"
@@ -130,23 +158,19 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{maxWidth: "58rem", marginTop: "-1rem"}}>
+          <div style={{maxWidth: "58rem", marginTop: "2rem"}}>
             <p>
               Cadence is powering the next generation of Consumer DeFi, bringing institutional-grade security and consumer-friendly experiences to financial applications that serve millions.
             </p>
-            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%' }}>
-              <iframe
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                src="https://www.youtube.com/embed/6SE8bvTmmQc?si=DTMmGOHf3wyqIDTF"
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen
-              ></iframe>
-            </div>
+            <ul style={{ margin: '1.5rem 0', paddingLeft: '1.5rem' }}>
+              <li style={{ marginBottom: '0.75rem' }}>User assets stay in user accounts, delivering better-than-fintech security without centralized risk.</li>
+              <li style={{ marginBottom: '0.75rem' }}>Atomic transactions create seamless, one-click experiences that feel native to everyday users.</li>
+              <li style={{ marginBottom: '0.75rem' }}>Always-on automation runs 24/7/365, enabling recurring payments and strategies that work while you sleep.</li>
+              <li style={{ marginBottom: '0.75rem' }}>Real-time settlement in seconds, not days, making DeFi faster than traditional financial rails.</li>
+              <li style={{ marginBottom: '0.75rem' }}>Open and composable by design, enabling global financial apps that work together seamlessly.</li>
+            </ul>
             <p>
-              Cadence pioneers <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming</a>—a paradigm designed specifically for handling valuable digital assets.
+              Cadence pioneers <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming</a>—designed specifically to handle valuable digital assets.
               Unlike traditional smart contract languages where assets are piled in centralized contract storage, Cadence ensures user assets stay in their own accounts. The result is dramatically reduced attack surfaces and the elimination of entire classes of DeFi vulnerabilities.  
             </p>
             <p>
@@ -164,18 +188,18 @@ export default function Home() {
 
             <div className="feature alternate">
               <div>
-                <h3><FcChargeBattery/>Complex DeFi Operations, Simple User Experiences</h3>
+                <h3>Complex DeFi Operations, Simple User Experiences</h3>
                 <p>
-                  In Cadence, transactions are first-class citizens. Write detailed, customized transactions that interact with multiple contracts atomically, either all succeed or all fail. No need to deploy intermediary contracts or build complex multi-call patterns.
+                  In Cadence, transactions are first-class citizens. Write customized transactions that interact with multiple contracts atomically, either all succeed or all fail. No need for intermediary contracts or complex multi-call patterns.
                 </p>
                 <p>
-                  Want to check a user's staking position across three protocols, claim rewards from two pools, swap tokens, and restake—all in one operation? Write it as a transaction. This level of composability and customization simply isn't possible on other platforms where you're limited to pre-deployed contract functions.
+                  Check staking positions, claim rewards, swap tokens, and restake all in one operation by writing a transaction.
                 </p>
                 <p>
-                  Cadence scripts provide native data availability—query any on chain data directly from state without external indexers or APIs. Build sophisticated analytics and user experiences that other chains cannot offer.
+                  Cadence scripts provide native data availability, querying on-chain data directly without external indexers. Build sophisticated analytics and experiences other chains cannot offer.
                 </p>
                 <p>
-                  This transactional flexibility is what makes Consumer DeFi possible. Complex financial operations that feel simple, all while maintaining security and atomicity.
+                  This flexibility makes Consumer DeFi possible. Complex operations feel simple while maintaining security and atomicity.
                 </p>
               </div>
               <div>
@@ -185,18 +209,12 @@ export default function Home() {
 
             <div className="feature">
               <div>
-                <h3><FcLock/> Built for DeFi Security</h3>
+                <h3>Built for DeFi Security</h3>
                 <p>
-                  In DeFi, security isn't optional. The <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming paradigm</a> in Cadence fundamentally changes how assets are stored and protected.
+                  In DeFi, security isn't optional. The <a href="https://cadence-lang.org/docs/language/resources">resource-oriented programming paradigm</a> in Cadence fundamentally changes how assets are stored and protected. <strong>User assets stay in user accounts, not in contract storage.</strong>
                 </p>
                 <p>
-                  <strong>User assets stay in user accounts, not in contract storage.</strong> This architectural decision dramatically reduces attack surfaces.
-                  Unlike Solidity where exploits can drain entire protocols in one transaction, the Cadence model makes attacks exponentially harder. Attackers must target individual accounts one at a time, with no easy list of vulnerable targets.
-                </p>
-                <p>
-                  Resources guarantee that assets can only exist in one location at a time, cannot be copied, and cannot be accidentally lost or deleted.
-                  Combined with a strong static type system, <a href="https://cadence-lang.org/docs/language/functions#function-preconditions-and-postconditions">enforced business logic</a>,
-                  and <a href="https://cadence-lang.org/docs/language/capabilities">capability-based access control</a>, Cadence eliminates entire classes of DeFi vulnerabilities including reentrancy attacks.
+                  Resources guarantee assets can only exist in one location, cannot be copied, and cannot be accidentally lost. Combined with a strong static type system, <a href="https://cadence-lang.org/docs/language/functions#function-preconditions-and-postconditions">enforced business logic</a>, and <a href="https://cadence-lang.org/docs/language/capabilities">capability-based access control</a>, Cadence eliminates entire classes of DeFi vulnerabilities including reentrancy attacks.
                 </p>
                 <p>
                   Build financial applications with confidence. Cadence provides safety guarantees that let you focus on creating value, not patching vulnerabilities.
@@ -209,17 +227,17 @@ export default function Home() {
 
             <div className="feature alternate">
               <div>
-                <h3><FcMindMap/>Composable DeFi Primitives</h3>
+                <h3>Composable DeFi Primitives</h3>
                 <p>
-                  Build sophisticated financial products by composing powerful primitives. <a href="https://cadence-lang.org/docs/language/resources">Resources</a> stored in users' accounts can flow freely between contracts, enabling seamless integration of lending, staking, swapping, and yield strategies in a single user experience.
+                  Compose powerful primitives to build sophisticated financial products. <a href="https://cadence-lang.org/docs/language/resources">Resources</a> stored in users' accounts can flow freely between contracts, which allows seamless integration of lending, swapping, and yield strategies in a single user experience.
                 </p>
                 <p>
                   <a href="https://developers.flow.com/blockchain-development-tutorials/forte/flow-actions">Flow Actions</a> allow you to bundle complex multi-step DeFi operations into one-click experiences.
-                  <a href="https://developers.flow.com/blockchain-development-tutorials/forte/scheduled-transactions/scheduled-transactions-introduction">{" "}Scheduled Transactions</a> enable native on-chain automation. Recurring payments, DCA strategies, and portfolio rebalancing execute directly from user wallets, no backend servers required.  
+                  <a href="https://developers.flow.com/blockchain-development-tutorials/forte/scheduled-transactions/scheduled-transactions-introduction">{" "}Scheduled Transactions</a> turn on native onchain automation. Recurring payments, DCA strategies, and portfolio rebalancing execute directly from user wallets, no backend servers required.  
                 </p>
                 <p>
                   <a href="https://cadence-lang.org/docs/language/interfaces">Interfaces</a> and <a href="https://cadence-lang.org/docs/language/attachments">attachments</a> make protocols truly composable.
-                  Build new DeFi functionality on top of any token standard, creating composable building blocks that work together seamlessly.
+                  Build new DeFi functionality on top of any token standard to create composable building blocks that work together seamlessly.
                 </p>
               </div>
               <div>
@@ -229,12 +247,12 @@ export default function Home() {
 
             <div className="feature">
               <div>
-                <h3><FcIdea/> Built for Scale: Fast, Cheap, and Ready for Millions</h3> 
+                <h3>Learn the Best Language for Consumer DeFi</h3> 
                 <p>
-                  Cadence is designed for speed. Intuitive syntax, comprehensive testing frameworks, and powerful abstractions mean you spend less time debugging and more time building. Development cycles that took months in Solidity take days in Cadence.
+                  Cadence is purpose-built for consumer DeFi applications. Its intuitive syntax and resource-oriented design make it the ideal language for building financial products that millions of users trust.
                 </p>
                 <p>
-                  The development time has been reduced from months to days, enabling rapid iteration and faster time-to-market for DeFi products. Ship faster, test in production with confidence, and capture market opportunities before your competitors.
+                  Learn a language designed from the ground up by smart contract developers for smart contract developers. With comprehensive documentation, powerful testing frameworks, and a supportive community, you'll be building production-ready consumer DeFi apps faster than with traditional smart contract languages.
                 </p>
               </div>
               <div>

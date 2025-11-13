@@ -149,13 +149,26 @@ export default function Home() {
   useLayoutEffect(() => {
     const updateHeight = () => {
       if (leftColumnRef.current) {
-        setCodeBoxHeight(leftColumnRef.current.offsetHeight);
+        // Use requestAnimationFrame to ensure layout is complete
+        requestAnimationFrame(() => {
+          if (leftColumnRef.current) {
+            setCodeBoxHeight(leftColumnRef.current.offsetHeight);
+          }
+        });
       }
     };
 
+    // Initial measurement
     updateHeight();
+    
+    // Also measure after a small delay to catch any async layout changes
+    const timeoutId = setTimeout(updateHeight, 0);
+    
     window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', updateHeight);
+    };
   }, []);
 
   return (
@@ -219,10 +232,11 @@ export default function Home() {
               display: 'flex', 
               flexDirection: 'column',
               overflow: 'hidden',
-              height: codeBoxHeight ? `${codeBoxHeight}px` : 'auto',
+              height: codeBoxHeight ? `${codeBoxHeight}px` : 0,
               borderRadius: '1rem',
               opacity: codeBoxHeight ? 1 : 0,
-              transition: 'opacity 0.1s ease-in'
+              visibility: codeBoxHeight ? 'visible' : 'hidden',
+              transition: codeBoxHeight ? 'opacity 0.15s ease-in' : 'none'
             }}>
               <div style={{
                 flex: 1,

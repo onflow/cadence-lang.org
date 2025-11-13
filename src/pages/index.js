@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Head from 'next/head';
 import Link from '@docusaurus/Link';
@@ -29,16 +29,6 @@ import "SwapConnectors"
 // Schedule daily yield compounding with Flow Actions
 transaction(stakingPoolId: UInt64, executionEffort: UInt64) {
     prepare(signer: auth(Storage, Capabilities) &Account) {
-        // Setup transaction scheduler manager
-        if signer.storage.borrow<&AnyResource>(from: FlowTransactionSchedulerUtils.managerStoragePath) == nil {
-            let manager <- FlowTransactionSchedulerUtils.createManager()
-            signer.storage.save(<-manager, to: FlowTransactionSchedulerUtils.managerStoragePath)
-        }
-        
-        let manager = signer.storage.borrow<auth(FlowTransactionSchedulerUtils.Owner)
-            &{FlowTransactionSchedulerUtils.Manager}>(
-            from: FlowTransactionSchedulerUtils.managerStoragePath
-        ) ?? panic("Could not borrow Manager")
 
         // Compose DeFi actions atomically: Claim → Zap → Restake
         let operationID = DeFiActions.createUniqueIdentifier()
@@ -73,11 +63,19 @@ transaction(stakingPoolId: UInt64, executionEffort: UInt64) {
             uniqueID: operationID
         )
 
-        // Schedule to run daily (86400 seconds = 24 hours)
-        let nextExecution = getCurrentBlock().timestamp + 86400.0
+        // Setup transaction scheduler manager
+        if signer.storage.borrow<&AnyResource>(
+            from: FlowTransactionSchedulerUtils.managerStoragePath) == nil {
+            let manager <- FlowTransactionSchedulerUtils.createManager()
+            signer.storage.save(<-manager, to: FlowTransactionSchedulerUtils.managerStoragePath)
+        }
         
+        let manager = signer.storage.borrow<auth(FlowTransactionSchedulerUtils.Owner)
+            &{FlowTransactionSchedulerUtils.Manager}>(
+            from: FlowTransactionSchedulerUtils.managerStoragePath
+        ) ?? panic("Could not borrow Manager")
+
         // Estimate and pay fees
-        let priority = FlowTransactionScheduler.Priority.Medium
         let estimate = FlowTransactionScheduler.estimate(
             data: nil,
             timestamp: nextExecution,
@@ -98,8 +96,8 @@ transaction(stakingPoolId: UInt64, executionEffort: UInt64) {
         manager.schedule(
             handlerCap: handlerCap,
             data: nil,
-            timestamp: nextExecution,
-            priority: priority,
+            timestamp: getCurrentBlock().timestamp + 86400.0, // 24 hours
+            priority: FlowTransactionScheduler.Priority.Medium,
             executionEffort: executionEffort,
             fees: <-fees
         )
@@ -145,6 +143,21 @@ function HomepageHeader() {
 
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
+  const leftColumnRef = useRef(null);
+  const [codeBoxHeight, setCodeBoxHeight] = useState(null);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (leftColumnRef.current) {
+        setCodeBoxHeight(leftColumnRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
   return (
     <Layout
       title={`${siteConfig.title} - Build the Future of Consumer DeFi`}
@@ -152,8 +165,8 @@ export default function Home() {
       <main>
 
       <div className="content-wrapper">
-          <div className="feature">
-            <div style={{ display: 'flex', flexDirection: 'column', alignSelf: 'stretch' }}>
+          <div className="feature" style={{ alignItems: 'flex-start' }}>
+            <div ref={leftColumnRef} style={{ display: 'flex', flexDirection: 'column', flex: '0 0 auto' }}>
             <Head>
               <title>Cadence</title>
             </Head>
@@ -176,7 +189,7 @@ export default function Home() {
                 height: 0, 
                 overflow: 'hidden', 
                 width: '100%', 
-                marginTop: 'auto', 
+                marginTop: '2rem',
                 flexShrink: 0,
                 borderRadius: '1rem',
                 boxShadow: '1px 2px 4px rgba(45, 45, 45, 0.4)'
@@ -200,13 +213,28 @@ export default function Home() {
               </div>
             </div>
 
-            <div style={{maxWidth: "50rem", minWidth: 0, alignSelf: 'stretch', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
-              <SyntaxHighlighter
-                className="code"
-                language="cadence"
-                style={tomorrow}
-                showLineNumbers={true}
-              >{example}</SyntaxHighlighter>
+            <div style={{
+              maxWidth: "50rem", 
+              minWidth: 0,
+              display: 'flex', 
+              flexDirection: 'column',
+              overflow: 'hidden',
+              height: codeBoxHeight ? `${codeBoxHeight}px` : 'auto',
+              borderRadius: '1rem'
+            }}>
+              <div style={{
+                flex: 1,
+                overflow: 'auto',
+                minHeight: 0,
+                maxHeight: '100%'
+              }}>
+                <SyntaxHighlighter
+                  className="code"
+                  language="cadence"
+                  style={tomorrow}
+                  showLineNumbers={true}
+                >{example}</SyntaxHighlighter>
+              </div>
             </div>
           </div>
 

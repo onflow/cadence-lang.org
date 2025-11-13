@@ -19,37 +19,89 @@ import styles from './index.module.css';
 import Logo from '@site/static/img/logo.svg';
 
 const example = `import "DeFiActions"
+import "FlowToken"
 import "FlowTransactionScheduler"
+import "FlowTransactionSchedulerUtils"
+import "IncrementFiStakingConnectors"
+import "IncrementFiPoolLiquidityConnectors"
+import "SwapConnectors"
 
-// Schedule recurring yield compounding
-transaction(stakingPid: UInt64, intervalDays: UInt64) {
-    prepare(signer: auth(Storage) &Account) {
-        // Compose DeFi actions atomically:
-        // Claim rewards → Swap → Restake
-        let rewardsSource = StakingConnectors.PoolRewardsSource(
-            userCertificate: signer.capabilities
-                .get<&StakingPool>(publicPath),
-            pid: stakingPid
+// Schedule daily yield compounding with Flow Actions
+transaction(stakingPoolId: UInt64, executionEffort: UInt64) {
+    prepare(signer: auth(Storage, Capabilities) &Account) {
+        // Setup transaction scheduler manager
+        if signer.storage.borrow<&AnyResource>(from: FlowTransactionSchedulerUtils.managerStoragePath) == nil {
+            let manager <- FlowTransactionSchedulerUtils.createManager()
+            signer.storage.save(<-manager, to: FlowTransactionSchedulerUtils.managerStoragePath)
+        }
+        
+        let manager = signer.storage.borrow<auth(FlowTransactionSchedulerUtils.Owner)
+            &{FlowTransactionSchedulerUtils.Manager}>(
+            from: FlowTransactionSchedulerUtils.managerStoragePath
+        ) ?? panic("Could not borrow Manager")
+
+        // Compose DeFi actions atomically: Claim → Zap → Restake
+        let operationID = DeFiActions.createUniqueIdentifier()
+        
+        // Source: Claim staking rewards
+        let rewardsSource = IncrementFiStakingConnectors.PoolRewardsSource(
+            userCertificate: signer.capabilities.storage
+                .issue<&StakingPool>(/storage/userCertificate),
+            pid: stakingPoolId,
+            uniqueID: operationID
         )
-
-        let swapper = SwapConnectors.TokenSwapper(
+        
+        // Swapper: Convert single reward token → LP tokens
+        let zapper = IncrementFiPoolLiquidityConnectors.Zapper(
+            token0Type: Type<@FlowToken.Vault>(),
+            token1Type: Type<@RewardToken.Vault>(),
+            stableMode: false,
+            uniqueID: operationID
+        )
+        
+        // Compose: Wrap rewards source with zapper
+        let lpSource = SwapConnectors.SwapSource(
+            swapper: zapper,
             source: rewardsSource,
-            targetToken: "FLOW"
+            uniqueID: operationID
+        )
+        
+        // Sink: Restake LP tokens back into pool
+        let poolSink = IncrementFiStakingConnectors.PoolSink(
+            pid: stakingPoolId,
+            staker: signer.address,
+            uniqueID: operationID
         )
 
-        let stakeSink = StakingConnectors.PoolStakeSink(
-            pool: stakingPool,
-            source: swapper
+        // Schedule to run daily (86400 seconds = 24 hours)
+        let nextExecution = getCurrentBlock().timestamp + 86400.0
+        
+        // Estimate and pay fees
+        let priority = FlowTransactionScheduler.Priority.Medium
+        let estimate = FlowTransactionScheduler.estimate(
+            data: nil,
+            timestamp: nextExecution,
+            priority: priority,
+            executionEffort: executionEffort
         )
-
-        // Schedule to run every N days
-        let future = getCurrentBlock().timestamp
-            + (intervalDays * 86400.0)
-
-        FlowTransactionScheduler.schedule(
-            action: stakeSink,
-            timestamp: future,
-            recurring: true
+        
+        let feeVault = signer.storage.borrow<auth(FungibleToken.Withdraw) 
+            &FlowToken.Vault>(from: /storage/flowTokenVault)!
+        let fees <- feeVault.withdraw(amount: estimate.flowFee ?? 0.0) as! @FlowToken.Vault
+        
+        // Get handler capability
+        let handlerCap = signer.capabilities.storage
+            .issue<auth(FlowTransactionScheduler.Execute) 
+                &{FlowTransactionScheduler.TransactionHandler}>(/storage/RestakeHandler)
+        
+        // Schedule recurring execution
+        manager.schedule(
+            handlerCap: handlerCap,
+            data: nil,
+            timestamp: nextExecution,
+            priority: priority,
+            executionEffort: executionEffort,
+            fees: <-fees
         )
     }
 }`

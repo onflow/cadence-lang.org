@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 import Head from 'next/head';
 import Link from '@docusaurus/Link';
@@ -146,7 +146,7 @@ export default function Home() {
   const leftColumnRef = useRef(null);
   const [codeBoxHeight, setCodeBoxHeight] = useState(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateHeight = () => {
       if (leftColumnRef.current) {
         setCodeBoxHeight(leftColumnRef.current.offsetHeight);
@@ -220,7 +220,9 @@ export default function Home() {
               flexDirection: 'column',
               overflow: 'hidden',
               height: codeBoxHeight ? `${codeBoxHeight}px` : 'auto',
-              borderRadius: '1rem'
+              borderRadius: '1rem',
+              opacity: codeBoxHeight ? 1 : 0,
+              transition: 'opacity 0.1s ease-in'
             }}>
               <div style={{
                 flex: 1,
@@ -238,7 +240,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{maxWidth: "58rem", marginTop: "2rem"}}>
+          <div style={{maxWidth: "80rem", marginTop: "2rem", marginLeft: "auto", marginRight: "auto"}}>
             <p>
               Cadence is powering the next generation of Consumer DeFi, bringing institutional-grade security and consumer-friendly experiences to financial applications that serve millions.
             </p>

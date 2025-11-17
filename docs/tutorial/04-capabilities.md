@@ -42,7 +42,7 @@ After completing this tutorial, you'll be able to:
 
 Let's look at why you would want to use capabilities and entitlements to expand and secure access to resources in a real-world context. A real user's account and stored objects will contain functions and fields that need varying levels of access scope and privacy.
 
-If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want anybody to be able to call the function to give you tokens (`access(all)`), you would of course want to ensure that any features or functions that access privileged functionality like withdrawing tokens from an account can only be called by the owner, (`access(Owner)`). <-The `Owner` specification in this case is an [entitlement], and it is vitally important that you understand this concept in order to secure your Cadence code.
+If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want anybody to be able to call the function to give you tokens (`access(all)`), you would of course want to ensure that any features or functions that access privileged functionality like withdrawing tokens from an account can only be called by the owner, (`access(Owner)`). The `Owner` specification in this case is an [entitlement], and it is vitally important that you understand this concept in order to secure your Cadence code.
 
 :::info
 

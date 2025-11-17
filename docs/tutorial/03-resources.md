@@ -179,7 +179,7 @@ We've already imported the `HelloResource` contract for you and stubbed out a `t
 
 To prepare:
 
-1. Create a `prepare` phase with the `SaveValue` authorization [entitlement] to the user's account.
+1. Create a `prepare` phase with the `SaveValue` authorization [entitlement] to the user's account. Entitlements will be covered later, but this basically enables the transaction to save values or objects anywhere in account storage.
 1. Use `create` to create a new instance of the `HelloAsset`.
 1. Save the new resource in the user's account.
 1. Inside the `transaction`, stub out the `prepare` phase with the authorization [entitlement]:
@@ -213,7 +213,7 @@ Paths in the storage domain have type `StoragePath`, and paths in the public dom
 
 Paths are **not** strings and do **not** have quotes around them.
 
-Use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`:
+Nex, please use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`:
 
 ```cadence
 acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)
@@ -364,6 +364,7 @@ In real applications, you need to check the location path you are storing in to 
        // Existing code...
    }
    ```
+   This [entitlement] makes it so you can borrow a reference to a value in the account's storage in addition to being able to save a value.
 1. Add a `transaction`-level (similar to contract-level or class-level) variable to store a result `String`.
 
    - Similar to a class-level variable in other languages, these go at the top, inside the `transaction` scope, but not inside anything else. They are accessible in both the `prepare` and `execute` statements of a transaction:

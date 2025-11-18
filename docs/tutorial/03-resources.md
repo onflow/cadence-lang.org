@@ -213,7 +213,7 @@ Paths in the storage domain have type `StoragePath`, and paths in the public dom
 
 Paths are **not** strings and do **not** have quotes around them.
 
-Nex, please use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`:
+Next, use the account reference with the `SaveValue` authorization [entitlement] to move the new resource into storage located in `/storage/HelloAssetTutorial`:
 
 ```cadence
 acct.storage.save(<-newHello, to: /storage/HelloAssetTutorial)

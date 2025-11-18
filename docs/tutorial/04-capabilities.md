@@ -161,7 +161,7 @@ let capability = account
 
 The capability says that whoever borrows a reference from this capability has access to the fields and methods that are specified by the type and entitlements in `<>`. The specified type has to be a subtype of the object type being linked to, meaning that it cannot contain any fields or functions that the linked object doesn't have.
 
-A reference is referred to by the `&` symbol. Here, the capability references the `HelloAsset` object, so we specify `<&HelloResource.HelloAsset>` as the type, which gives access to **EVERY access(all) field and function** in the `HelloAsset` object.
+A reference is referred to by the `&` symbol. Here, the capability references the `HelloAsset` object, so we specify `<&HelloResource.HelloAsset>` as the type, which gives access to **EVERY `access(all)` field and function** in the `HelloAsset` object.
 
 The argument to the `issue` function is the path to the object in storage that it is linked to. When a capability is issued, a [capability controller] is created for it in `account.capabilities`. This controller allows the creator of the capability to have fine-grained control over the capability.
 

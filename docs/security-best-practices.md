@@ -12,7 +12,7 @@ Some practices listed below might overlap with advice in the [Cadence Anti-Patte
 
 Do not use the `access(all)` modifier on fields and functions unless absolutely necessary. Prefer `access(self)`, `access(contract)`, `access(account)`, or `access(SomeEntitlement)`. Unintentionally declaring fields or functions as `access(all)` can expose vulnerabilities in your code.
 
-When writing definitions for contracts, structs, or resources, start by declaring all your fields and functions as `access(self)`. If there is a function that needs to be accessible by external code, only declare it as `access(all)` if it is a `view` function or you have a specific use case where anyone should be able to use it:
+When writing definitions for contracts, structs, or resources, start by declaring all your fields and functions as `access(self)`. If there is a function that needs to be accessible by external code, only declare it as `access(all)` if it is a `view` function:
 
 ```cadence
 /// Simplified Bank Account implementation

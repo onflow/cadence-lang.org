@@ -179,7 +179,7 @@ We've already imported the `HelloResource` contract for you and stubbed out a `t
 
 To prepare:
 
-1. Create a `prepare` phase with the `SaveValue` authorization [entitlement] to the user's account. Entitlements will be covered later, but this basically enables the transaction to save values or objects anywhere in account storage.
+1. Create a `prepare` phase with the `SaveValue` authorization [entitlement] to the user's account. This authorizes the transaction to save values or objects anywhere in account storage.  You'll learn more about entitlements in the next lesson.
 1. Use `create` to create a new instance of the `HelloAsset`.
 1. Save the new resource in the user's account.
 1. Inside the `transaction`, stub out the `prepare` phase with the authorization [entitlement]:

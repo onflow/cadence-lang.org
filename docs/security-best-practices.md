@@ -10,9 +10,9 @@ Some practices listed below might overlap with advice in the [Cadence Anti-Patte
 
 ## Access Control
 
-Do not use the `access(all)` modifier on fields and functions unless absolutely necessary. Prefer `access(self)`, `access(contract)`, `access(account)`, or `access(SomeEntitlement)`. Unintentionally declaring fields as `access(all)` can expose vulnerabilities in your code.
+Do not use the `access(all)` modifier on fields and functions unless absolutely necessary. Prefer `access(self)`, `access(contract)`, `access(account)`, or `access(SomeEntitlement)`. Unintentionally declaring fields or functions as `access(all)` can expose vulnerabilities in your code.
 
-When writing definitions for contracts, structs, or resources, start by declaring all your fields and functions as `access(self)`. If there is a function that needs to be accessible by external code, only declare it as `access(all)` if it is a `view` function. This is okay because `view` means that the function only reads from the stored state and does not modify it in any way:
+When writing definitions for contracts, structs, or resources, start by declaring all your fields and functions as `access(self)`. If there is a function that needs to be accessible by external code, only declare it as `access(all)` if it is a `view` function or you have a specific use case where anyone should be able to use it:
 
 ```cadence
 /// Simplified Bank Account implementation
@@ -23,6 +23,7 @@ access(all) resource BankAccount {
     access(self) var balance: UFix64
 
     /// It is okay to make this function access(all) because it is a view function
+    /// and all blockchain data is public
     access(all) view fun getBalance(): UFix64 {
         return self.balance
     }

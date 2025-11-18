@@ -42,7 +42,7 @@ After completing this tutorial, you'll be able to:
 
 Let's look at why you would want to use capabilities and entitlements to expand and secure access to resources in a real-world context. A real user's account and stored objects will contain functions and fields that need varying levels of access scope and privacy.
 
-If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want anybody to be able to call the function to give you tokens (`access(all)`), you would of course want to ensure that any features or functions that access privileged functionality like withdrawing tokens from an account can only be called by the owner, (`access(Owner)`). The `Owner` specification in this case is an [entitlement], and it is vitally important that you understand this concept in order to secure your Cadence code.
+If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want anybody to be able to call the function to give you tokens (`access(all)`), you would of course want to ensure that any features or functions that access privileged functionality like withdrawing tokens from an account are only able to be called by the owner, (`access(Owner)`). The `Owner` specification in this case is an [entitlement], and it is vitally important that you use entitlements correctly in order to secure the digital property created and managed in your contracts and transactions.
 
 :::info
 
@@ -57,14 +57,16 @@ Capabilities and entitlements are what allows for this detailed control of acces
 For example, a user might want to allow a friend of theirs to use some of their money to spend. In this case, they could create an object that gives the friend access to only this part of their account, instead of having to hand over full control of their account.
 
 :::info
-Remember in the last tutorial in transactions, accounts were accessed through an `&Account` object with certain specifications about which functionality the transaction was allowed to access? like `auth(BorrowValue, SaveValue)`? This is an example of this concept, entitlements, but entitlements can apply to accounts, resources, and structs!
+
+In the last tutorial, you wrote transactions to access an account with `&Account` object containing specifications about which functionality the transaction was allowed to access,  such as `auth(BorrowValue, SaveValue)`. When you wrote that transaction, you were using entitlements.  They can also apply to accounts, resources, and structs!
+
 :::
 
 Another example is when a user authenticates a trading app for the first time, the trading app could ask the user for an object that allows the app to access the trading functionality of a user's account so that the app doesn't need to ask the user for a signature every time it wants to do a trade. The user can choose to empower the app, and that app alone, for this functionality and this functionality alone.
 
 ## Access resources with capabilities
 
-As a smart contract developer, you need explicit permission from the owner of an account to access its [storage]. Capabilities allow an account owner to grant access to objects stored in their private account storage. They are kind of like a copy of the object in that they allow you to access all the `access(all)` fields and functions, but aren't exactly a copy because they are a different type than the object itself.
+As a smart contract developer, you need explicit permission from the owner of an account to access its [storage]. Capabilities allow an account owner to grant access to objects stored in their private account storage. Think of them as a pointer to the object that allows you to access all the `access(all)` fields and functions in that object.
 
 First, you'll write a transaction in which you'll issue a new capability using the `issue` function. This capability creates a link to the user's `HelloAsset` resource object. It then publishes that link to the account's public space, so others can access it.
 

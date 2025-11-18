@@ -38,6 +38,14 @@ access(all)
 fun test() {}
 ```
 
+:::danger
+
+If you prefix a function with `access(all)`, you are likely granting complete and open access for **anyone using any account to call that function.** It is critical that you properly use [entitlements] to restrict sensitive functions to the accounts that need access.
+
+For example, if you create a vault for your users and give the `withdraw` function `access(all)`, anyone can drain that vault if they know where to find it.
+
+:::
+
 ## Types of access control
 
 There are five levels of access control:

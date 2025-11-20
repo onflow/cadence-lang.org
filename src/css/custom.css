@@ -166,6 +166,7 @@ code {
 
 .content-wrapper {
   max-width: 80rem;
+  margin: 0 auto;
   padding-left: max(env(safe-area-inset-left), 1.5rem);
   padding-right: max(env(safe-area-inset-right), 1.5rem);
 }
@@ -284,8 +285,14 @@ h2 strong {
 
 .code {
   border-radius: 1rem;
-  font-size: 0.9rem !important;
+  font-size: 0.73rem !important;
   box-shadow: 1px 2px 4px rgba(45, 45, 45, 0.4);
+  margin: 0 !important;
+}
+
+.code pre {
+  margin: 0 !important;
+  padding: 1rem !important;
 }
 
 h3 {
@@ -477,9 +484,9 @@ footer .license {
   }
 
   .feature {
-    gap: 6rem;
+    gap: 3rem;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .feature.alternate {

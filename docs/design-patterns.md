@@ -501,36 +501,23 @@ transaction(provider: Address, name: String) {
 }
 ```
 
-## Check for existing capabilities before issuing or publishing new ones
+## Check for existing capability before publishing new one
 
 ### Problem
 
-When issuing or publishing a capability, a capability might be already be issued or published at the specified path for the desired capability type.
+When publishing a capability, a capability might be already be published at the specified path.
 
 ### Solution
 
-Check if a capability is already issued and/or published at the given paths.
+Check if a capability is already published at the given path.
 
 ### Example
 
 ```cadence
 transaction {
     prepare(signer: auth(Capabilities) &Account) {
-        var capability: Capability<&ExampleToken.Vault>? = nil
-
-        // get the capability to the vault at the given storage path if it exists
-        let vaultCaps = account.capabilities.storage.getControllers(forPath: /storage/exampleTokenVault)
-        for cap in vaultCaps {
-            if let cap = cap as? Capability<&ExampleToken.Vault> {
-                capability = cap
-                break
-            }
-        }
-
-        if capability == nil {
-            // issue a new capability to the vault since it wasn't found
-            capability = account.capabilities.storage.issue<&ExampleToken.Vault>(/storage/exampleTokenVault)
-        }
+        let capability = signer.capabilities.storage
+            .issue<&ExampleToken.Vault>(/storage/exampleTokenVault)
 
         let publicPath = /public/exampleTokenReceiver
 

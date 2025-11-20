@@ -34,15 +34,14 @@ In Cadence, resources are a composite type like a `struct` or a class in other l
 After completing this tutorial, you'll be able to:
 
 - Interact with [resources] created using transactions.
-- Use entitlements to secure the privileged functionality in your resources that would be vulnerable otherwise.
-- Write transactions to create [capabilities] that extend resource access scope from the owner to anyone (`public`).
+- Write transactions to create [capabilities] to extend resource access scope from the owner to anyone (`public`).
 - Write and execute a script that interacts with the resource through the capability.
 
 ## Use cases for capabilities and entitlements
 
-Let's look at why you would want to use capabilities and entitlements to expand and secure access to resources in a real-world context. A real user's account and stored objects will contain functions and fields that need varying levels of access scope and privacy.
+Let's look at why you would want to use capabilities and entitlements to expand access to resources in a real-world context. A real user's account and stored objects will contain functions and fields that need varying levels of access scope and privacy.
 
-If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want anybody to be able to call the function to give you tokens (`access(all)`), you would of course want to ensure that any features or functions that access privileged functionality like withdrawing tokens from an account are only able to be called by the owner, (`access(Owner)`). The `Owner` specification in this case is an [entitlement], and it is vitally important that you use entitlements correctly in order to secure the digital property created and managed in your contracts and transactions.
+If you're working on an app that allows users to exchange tokens, you'll want different features available in different use cases. While you definitely want to make a feature like withdrawing tokens from an account only accessible by the owner of the tokens, your app should allow anybody to deposit tokens.
 
 :::info
 
@@ -54,23 +53,17 @@ Capabilities and entitlements are what allows for this detailed control of acces
 
 ![Capabilities and Entitlements](./capabilities-entitlements.jpg)
 
-For example, a user might want to allow a friend of theirs to use some of their money to spend. In this case, they could create an object that gives the friend access to only this part of their account, instead of having to hand over full control of their account.
+For example, a user might want to allow a friend of theirs to use some of their money to spend. In this case, they could create an entitled capability that gives the friend access to only this part of their account, instead of having to hand over full control.
 
-:::info
-
-In the last tutorial, you wrote transactions to access an account with `&Account` object containing specifications about which functionality the transaction was allowed to access,  such as `auth(BorrowValue, SaveValue)`. When you wrote that transaction, you were using entitlements.  They can also apply to accounts, resources, and structs!
-
-:::
-
-Another example is when a user authenticates a trading app for the first time, the trading app could ask the user for an object that allows the app to access the trading functionality of a user's account so that the app doesn't need to ask the user for a signature every time it wants to do a trade. The user can choose to empower the app, and that app alone, for this functionality and this functionality alone.
+Another example is when a user authenticates a trading app for the first time, the trading app could ask the user for a capability object that allows the app to access the trading functionality of a user's account so that the app doesn't need to ask the user for a signature every time it wants to do a trade. The user can choose to empower the app, and that app alone, for this functionality and this functionality alone.
 
 ## Access resources with capabilities
 
-As a smart contract developer, you need explicit permission from the owner of an account to access its [storage]. Capabilities allow an account owner to grant access to objects stored in their private account storage. Think of them as a pointer to the object that allows you to access all the `access(all)` fields and functions in that object.
+As a smart contract developer, you need explicit permission from the owner of an account to access its [storage]. Capabilities allow an account owner to grant access to specific fields and functions on objects stored in their account.
 
 First, you'll write a transaction in which you'll issue a new capability using the `issue` function. This capability creates a link to the user's `HelloAsset` resource object. It then publishes that link to the account's public space, so others can access it.
 
-Next, you'll write a script that accesses that public capability and calls its `hello()` function.
+Next, you'll write a script that anyone can use that links to borrow a [reference] to the underlying object and call the `hello()` function.
 
 ## Creating capabilities and references to stored resources
 
@@ -97,7 +90,7 @@ To prepare:
    }
    ```
 
-1. Pass an `&Account` reference into `prepare` with the [entitlements] needed to give the `transaction` the ability to create and publish a capability:
+1. Pass an `&Account` reference into `prepare` with the capabilities needed to give the `transaction` the ability to create and publish a capability:
 
    ```cadence create_link.cdc
    import HelloResource from 0x06
@@ -112,7 +105,7 @@ To prepare:
    }
    ```
 
-The [`IssueStorageCapabilityController`] entitlement allows the transaction to [issue] a new capability, which includes storing that capability to the user's account. [`PublishCapability`] allows the transaction to [publish] a capability and make it available to other users — in this case, we'll make it public.
+The [`IssueStorageCapabilityController`] allows the transaction to [issue] a new capability, which includes storing that capability to the user's account. [`PublishCapability`] allows the transaction to [publish] a capability and make it available to other users — in this case, we'll make it public.
 
 ### Capability-based access control
 
@@ -126,8 +119,7 @@ We create capabilities to accomplish this, and the account owner must sign a tra
 
 Every capability has a `borrow` method, which creates a reference to the object that the capability is linked to. This reference is used to read fields or call methods on the object they reference, **as if the owner of the reference had the actual object**.
 
-It is important to remember that someone else who has access to a capability cannot move or destroy the object that the capability is linked to! They can access **ALL `access(all)` fields and functions** though, which is why privileged functionality must be protected by [entitlements]. 
-In addition to the `access(all)` fields, the holder of the capability can access entitled fields and functions but only if the owner has explicitly declared them in the type specification and authorization level of the [issue] method.
+It is important to remember that someone else who has access to a capability cannot move or destroy the object that the capability is linked to! They can only access fields that the owner has explicitly declared in the type specification and authorization level of the [issue] method.
 
 ### Issuing the capability
 
@@ -148,7 +140,7 @@ In our capability example, we had the user sign a transaction that gave public a
 
 When you're writing real transactions, follow the principle of giving minimal access. While the capability cannot move or destroy an object, **it might be able to mutate data inside of it** in a way that the owner does not desire.
 
-For example, if you added a function to allow the owner of the resource to change the greeting message, this code would open that function up to anyone and everyone! This is why those functions need to be protected by [entitlements]!
+For example, if you added a function to allow the owner of the resource to change the greeting message, this code would open that function up to anyone and everyone!
 
 :::
 
@@ -161,7 +153,7 @@ let capability = account
 
 The capability says that whoever borrows a reference from this capability has access to the fields and methods that are specified by the type and entitlements in `<>`. The specified type has to be a subtype of the object type being linked to, meaning that it cannot contain any fields or functions that the linked object doesn't have.
 
-A reference is referred to by the `&` symbol. Here, the capability references the `HelloAsset` object, so we specify `<&HelloResource.HelloAsset>` as the type, which gives access to **EVERY `access(all)` field and function** in the `HelloAsset` object.
+A reference is referred to by the `&` symbol. Here, the capability references the `HelloAsset` object, so we specify `<&HelloResource.HelloAsset>` as the type, which gives access to **everything** in the `HelloAsset` object.
 
 The argument to the `issue` function is the path to the object in storage that it is linked to. When a capability is issued, a [capability controller] is created for it in `account.capabilities`. This controller allows the creator of the capability to have fine-grained control over the capability.
 

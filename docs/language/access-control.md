@@ -12,20 +12,18 @@ In Cadence, access control is used in two ways:
    A user is not able to access an object unless they own the object or have a reference to that object. This means that nothing is truly public by default.
    
    Other accounts cannot read or write the objects in an account unless the owner of the account has granted them access by providing references to the objects.
-
-    This kind of access control is covered in [capabilities] and [capability management].
-
-2. Access control within contracts and objects, using access modifiers (`access` keyword).
-
-This page covers the second part of access control, using access modifiers.
    
 :::warning
 
-Remember that in this case, `private` refers to programmatic access to the data with a script or transaction.  It is **not safe** to store secret or private information in a user's account.  The raw data is still public and could be decoded by reading the public blockchain data directly.
+Remember that in this case, `private` refers to programmatic access to the data with a script or transaction.  It is **not safe** to store secret or private information in a user's account.  The raw data is still public and could be decoded.
 
 :::
+   
+   This kind of access control is covered in [capabilities] and [capability management].
 
-## The `access` keyword
+1. Access control within contracts and objects, using access modifiers (`access` keyword).
+
+This page covers the second part of access control, using access modifiers.
    
 All declarations, such as [functions], [composite types], and fields, must be prefixed with an access modifier using the `access` keyword.
 
@@ -38,14 +36,6 @@ access(all)
 fun test() {}
 ```
 
-:::danger
-
-If you prefix a function with `access(all)`, you are likely granting complete and open access for **anyone using any account to call that function.** It is critical that you properly use [entitlements] to restrict sensitive functions to the accounts that need access.
-
-For example, if you create a vault for your users and give the `withdraw` function `access(all)`, anyone can drain that vault if they know where to find it.
-
-:::
-
 ## Types of access control
 
 There are five levels of access control:
@@ -56,11 +46,9 @@ There are five levels of access control:
    
    For example, a public field in a type can be accessed on an instance of the type in an outer scope.
 
-- **Entitled access** — the declaration is only accessible/visible to the owner/holder of the object, or to [references] that are authorized to the required [entitlements].
+- **Entitled access** — the declaration is only accessible/visible to the owner of the object, or to [references] that are authorized to the required [entitlements].
 
    A declaration is made accessible through entitlements by using the `access(E)` syntax, where `E` is a set of one or more entitlements, or a single [entitlement mapping].
-
-   An entitled field acts like an `access(all)` field ONLY if the caller actually holds the concrete resource object and not just a reference to it. In that case, an authorized reference is needed.
    
    A reference is considered authorized to an entitlement if that entitlement appears in the `auth` portion of the reference type.
    

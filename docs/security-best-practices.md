@@ -12,7 +12,7 @@ Some practices listed below might overlap with advice in the [Cadence Anti-Patte
 
 Do not use the `access(all)` modifier on fields and functions unless absolutely necessary. Prefer `access(self)`, `access(contract)`, `access(account)`, or `access(SomeEntitlement)`. Unintentionally declaring fields or functions as `access(all)` can expose vulnerabilities in your code.
 
-When writing definitions for contracts, structs, or resources, start by declaring all your fields and functions as `access(self)`. If there is a function that needs to be accessible by external code, only declare it as `access(all)` if it is a `view` function:
+When writing definitions for contracts, structs, or resources, start by declaring all your fields and functions as `access(self)`. If there is a function that needs to be accessible by external code, only declare it as `access(all)` if it is a `view` function or if you definitely want it to be accessible by anyone in the network.
 
 ```cadence
 /// Simplified Bank Account implementation
@@ -30,7 +30,7 @@ access(all) resource BankAccount {
 }
 ```
 
-If there are any functions that modify state that also need to be callable from external code, use [entitlements] for the access modifiers for those functions:
+If there are any functions that modify privileged state that also need to be callable from external code, use [entitlements] for the access modifiers for those functions:
 
 ```cadence
 /// Simplified Vault implementation
@@ -39,7 +39,6 @@ access(all) resource BankAccount {
 
     /// Declare Entitlements for state-modifying functions
     access(all) entitlement Owner
-    access(all) entitlement Depositor
 
     /// Fields should default to access(self) just to be safe
     access(self) var balance: UFix64
@@ -58,10 +57,9 @@ access(all) resource BankAccount {
         return <-create BankAccount(balance: amount)
     }
 
-    /// This is also state-modifying, so it should also be restricted with entitlements
-    /// In this case, we can use two entitlements to be more specific
-    /// about who can access (Owner OR Depositor)
-    access(Owner | Depositor) fun depositToAccount(_ from: @BankAccount) {
+    /// This is also state-modifying, but we intend for it to be callable by anyone
+    /// so we can make it access(all)
+    access(all) fun depositToAccount(_ from: @BankAccount) {
         self.updateBalance(self.balance + from.getBalance())
         destroy from
     }

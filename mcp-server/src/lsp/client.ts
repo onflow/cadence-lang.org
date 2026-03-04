@@ -31,6 +31,8 @@ export interface LSPClientOptions {
   flowCommand?: string;
   network?: string;
   cwd?: string;
+  /** Path to a standalone LSP binary (e.g. lsp-v2). If set, spawns it directly instead of `flow cadence language-server`. */
+  lspBinary?: string;
 }
 
 export class CadenceLSPClient extends EventEmitter {
@@ -43,6 +45,7 @@ export class CadenceLSPClient extends EventEmitter {
   private flowCommand: string;
   private network: string;
   private cwd?: string;
+  private lspBinary?: string;
 
   constructor(flowCommandOrOpts: string | LSPClientOptions = 'flow') {
     super();
@@ -53,6 +56,7 @@ export class CadenceLSPClient extends EventEmitter {
       this.flowCommand = flowCommandOrOpts.flowCommand ?? 'flow';
       this.network = flowCommandOrOpts.network ?? 'mainnet';
       this.cwd = flowCommandOrOpts.cwd;
+      this.lspBinary = flowCommandOrOpts.lspBinary;
     }
   }
 
@@ -65,12 +69,21 @@ export class CadenceLSPClient extends EventEmitter {
 
   private async _initialize(): Promise<void> {
     try {
-      this.process = spawn(this.flowCommand, ['cadence', 'language-server', '--enable-flow-client=false'], {
-        stdio: ['pipe', 'pipe', 'pipe'],
-        ...(this.cwd ? { cwd: this.cwd } : {}),
-      });
+      if (this.lspBinary) {
+        // Spawn standalone LSP binary (v2) — root-dir defaults to CWD
+        this.process = spawn(this.lspBinary, [], {
+          stdio: ['pipe', 'pipe', 'pipe'],
+          ...(this.cwd ? { cwd: this.cwd } : {}),
+        });
+      } else {
+        // Spawn via Flow CLI (v1)
+        this.process = spawn(this.flowCommand, ['cadence', 'language-server', '--enable-flow-client=false'], {
+          stdio: ['pipe', 'pipe', 'pipe'],
+          ...(this.cwd ? { cwd: this.cwd } : {}),
+        });
+      }
     } catch (e: any) {
-      throw new Error(`Failed to start Flow CLI: ${e.message}`);
+      throw new Error(`Failed to start LSP: ${e.message}`);
     }
 
     // Handle spawn error (e.g. executable not found)
@@ -337,10 +350,12 @@ export type FlowNetwork = (typeof VALID_NETWORKS)[number];
 export class LSPManager {
   private clients = new Map<string, CadenceLSPClient>();
   private flowCommand: string;
+  private lspBinary?: string;
   private depsWorkspaces = new Map<string, DepsWorkspace>();
 
-  constructor(flowCommand = 'flow') {
+  constructor(flowCommand = 'flow', lspBinary?: string) {
     this.flowCommand = flowCommand;
+    this.lspBinary = lspBinary;
   }
 
   async getClient(network: FlowNetwork = 'mainnet'): Promise<CadenceLSPClient> {
@@ -349,7 +364,12 @@ export class LSPManager {
 
     // Start LSP client inside the DepsWorkspace so it finds flow.json
     const ws = await this.getDepsWorkspace(network);
-    client = new CadenceLSPClient({ flowCommand: this.flowCommand, network, cwd: ws.getDir() });
+    client = new CadenceLSPClient({
+      flowCommand: this.flowCommand,
+      network,
+      cwd: ws.getDir(),
+      lspBinary: this.lspBinary,
+    });
     await client.ensureInitialized();
     this.clients.set(network, client);
     return client;

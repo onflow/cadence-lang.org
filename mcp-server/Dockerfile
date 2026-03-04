@@ -1,9 +1,21 @@
+# Stage 1: Build Cadence LSP v2 binary
+FROM golang:1.25-bookworm AS lsp-builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends git gcc libc-dev && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+RUN git clone --depth 1 --branch rewrite/lsp-v2 https://github.com/Outblock/cadence-tools.git .
+
+WORKDIR /build/languageserver
+RUN CGO_ENABLED=1 go build -o /lsp-v2 ./cmd/lsp-v2/
+
+# Stage 2: Runtime
 FROM oven/bun:1
 
 USER root
 WORKDIR /app
 
-# Install Flow CLI to /usr/local/bin
+# Install Flow CLI to /usr/local/bin (still needed for `flow dependencies install`)
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl ca-certificates \
     && curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh | sh \
@@ -14,6 +26,10 @@ RUN apt-get update \
     && apt-get remove -y curl \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
+
+# Copy LSP v2 binary from builder
+COPY --from=lsp-builder /lsp-v2 /usr/local/bin/lsp-v2
+RUN chmod +x /usr/local/bin/lsp-v2
 
 # Copy and install deps
 COPY mcp-server/package.json mcp-server/bun.lock ./mcp-server/
@@ -36,6 +52,7 @@ WORKDIR /app/mcp-server
 
 ENV PORT=3001
 ENV FLOW_CMD=/usr/local/bin/flow
+ENV LSP_BINARY=/usr/local/bin/lsp-v2
 EXPOSE 3001
 
 CMD ["bun", "src/http.ts"]

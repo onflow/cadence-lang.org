@@ -4,6 +4,7 @@ FROM golang:1.25-bookworm AS lsp-builder
 RUN apt-get update && apt-get install -y --no-install-recommends git gcc libc-dev && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
+# Cache bust: update this comment to force fresh clone — v3
 RUN git clone --depth 1 --branch rewrite/lsp-v2 https://github.com/Outblock/cadence-tools.git .
 
 WORKDIR /build/languageserver

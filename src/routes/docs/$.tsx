@@ -11,6 +11,7 @@ import {
   DocsTitle,
 } from 'fumadocs-ui/layouts/docs/page';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
+import type { AnchorHTMLAttributes } from 'react';
 import { baseOptions } from '@/lib/layout.shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
@@ -83,6 +84,27 @@ const serverLoader = createServerFn({
     };
   });
 
+const FumadocsLink = defaultMdxComponents.a;
+
+function createResolvedLink(pageUrl: string) {
+  return function ResolvedLink({
+    href,
+    ...props
+  }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+    let resolved = href;
+    if (href && (href.startsWith('./') || href.startsWith('../'))) {
+      try {
+        const base = new URL(pageUrl, 'https://p.com');
+        const target = new URL(href, base);
+        resolved = target.pathname + target.hash;
+      } catch {
+        // keep original href on parse failure
+      }
+    }
+    return <FumadocsLink href={resolved} {...props} />;
+  };
+}
+
 const clientLoader = browserCollections.docs.createClientLoader({
   component(
     { toc, frontmatter, default: MDX },
@@ -126,7 +148,14 @@ const clientLoader = browserCollections.docs.createClientLoader({
           <ViewOptions markdownUrl={markdownUrl} githubUrl={githubUrl} />
         </div>
         <DocsBody>
-          <MDX components={{ ...defaultMdxComponents }} />
+          <MDX
+            components={{
+              ...defaultMdxComponents,
+              a: props.pageUrl
+                ? createResolvedLink(props.pageUrl)
+                : defaultMdxComponents.a,
+            }}
+          />
         </DocsBody>
       </DocsPage>
     );

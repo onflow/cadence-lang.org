@@ -37,6 +37,10 @@ Cadence is designed for AI-native development with three integrations:
 
 ### MCP Quick Start
 
+**One-click install:**
+- [Install in Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=cadence&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIm1jcC1yZW1vdGUiLCJodHRwczovL2NhZGVuY2UtbWNwLnVwLnJhaWx3YXkuYXBwL21jcCJdfQ==)
+- [Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%20%22cadence%22%2C%20%22config%22%3A%20%7B%22type%22%3A%20%22http%22%2C%20%22url%22%3A%20%22https%3A%2F%2Fcadence-mcp.up.railway.app%2Fmcp%22%7D%7D)
+
 **Claude Code:**
 ```bash
 claude mcp add cadence-mcp -- npx -y mcp-remote https://cadence-mcp.up.railway.app/mcp
@@ -54,7 +58,36 @@ claude mcp add cadence-mcp -- npx -y mcp-remote https://cadence-mcp.up.railway.a
 }
 ```
 
+**OpenCode (alternative):**
+```json
+{
+  "mcp": {
+    "cadence": {
+      "type": "remote",
+      "url": "https://cadence-mcp.up.railway.app/mcp"
+    }
+  }
+}
+```
+
+**Local stdio server (requires Flow CLI):**
+```bash
+npx @outblock/cadence-mcp
+```
+
 **MCP Tools:** `search_docs`, `get_doc`, `browse_docs`, `cadence_check`, `cadence_hover`, `cadence_definition`, `cadence_symbols`. All LSP tools support mainnet/testnet imports.
+
+### Agent-Specific Setup
+
+| Agent | Setup |
+|---|---|
+| **Claude Code** | `npx skills add outblock/cadence-lang.org` + MCP above |
+| **Claude Desktop** | MCP config in `claude_desktop_config.json` |
+| **Cursor** | Skills + `.cursor/rules` file + MCP |
+| **Antigravity** | Skills (auto-reads `SKILL.md`) + MCP config |
+| **OpenCode** | Skills + MCP config |
+| **Codex** | Skills + `AGENTS.md` instructions |
+| **Gemini CLI** | Skills + `GEMINI.md` instructions |
 
 ---
 
@@ -834,33 +867,4 @@ Cadence supports in-place upgrades for additive changes: adding new fields (with
 2. Delete the contract from the account.
 3. Deploy the new contract.
 
-> ⚠️ If any user account holds `structs` or `resources` from the old contract version, those will **fail to load** and crash any transaction that touches them. Only do this before any users have received such objects.
-
-**Always communicate upgrades in advance** — at least one week before deploying, share the proposed transaction and branch/commit hash with the community.
-
----
-
-## 16. Cadence 1.0 Key Changes Summary
-
-Cadence 1.0 (Crescendo upgrade, September 2024) introduced breaking changes. Key highlights:
-
-| Change | Impact |
-|---|---|
-| **View functions** | `view` keyword enforces no mutations; required in pre/post conditions. |
-| **Interface inheritance** | Interfaces can inherit from other interfaces of the same kind. |
-| **Entitlements** | Replace restricted types; control access via `access(E)` and `auth(E) &T`. |
-| **`pub`/`priv` removed** | Use `access(all)` and `access(self)` instead. |
-| **Intersection types** | `{I1, I2}` replaces `AnyStruct{I1, I2}` restricted types. |
-| **Account API** | `AuthAccount`/`PublicAccount` replaced by `&Account` with entitlements. |
-| **Capability Controllers** | Replace linking-based API; use `capabilities.storage.issue`, `publish`, `getController`. |
-| **Resource reference invalidation** | References invalidated when referenced resource is moved. |
-| **Force destruction** | `destroy` methods removed; resources destroyed implicitly; use `ResourceDestroyed` event. |
-| **Token standards** | `FungibleToken.Vault`, `NonFungibleToken.NFT`, `NonFungibleToken.Collection` are now interfaces (`@{Type}`). |
-
-### Emulator Import Addresses (Cadence 1.0)
-
-| Contract | Emulator | Testing Framework |
-|---|---|---|
-| `FungibleToken` | `0xee82856bf20e2aa6` | `0x0000000000000002` |
-| `NonFungibleToken` | `0xf8d6e0586b0a20c7` | `0x0000000000000001` |
-| `MetadataViews` |
+> ⚠️ If any user account holds `structs` or `resources` from the old contract version, those will **fail to

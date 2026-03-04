@@ -71,6 +71,7 @@ export class CadenceLSPClient extends EventEmitter {
     try {
       if (this.lspBinary) {
         // Spawn standalone LSP binary (v2) — root-dir defaults to CWD
+        console.error(`[LSP] spawning v2 binary: ${this.lspBinary} cwd=${this.cwd}`);
         this.process = spawn(this.lspBinary, [], {
           stdio: ['pipe', 'pipe', 'pipe'],
           ...(this.cwd ? { cwd: this.cwd } : {}),
@@ -409,8 +410,12 @@ export class LSPManager {
   /** Check code for diagnostics, transparently handling address imports */
   async checkCode(code: string, network: FlowNetwork = 'mainnet', filename = 'check.cdc'): Promise<Diagnostic[]> {
     const prepared = await this.prepareCode(code, network, filename);
+    console.error(`[LSPManager] checking code (${prepared.code.length} bytes), uri=${prepared.uri}`);
+    console.error(`[LSPManager] rewritten code preview: ${prepared.code.substring(0, 200)}`);
     const client = await this.getClient(network);
-    return client.checkCode(prepared.code, filename);
+    const diags = await client.checkCode(prepared.code, filename);
+    console.error(`[LSPManager] got ${diags.length} diagnostics`);
+    return diags;
   }
 
   /** Get hover info, transparently handling address imports */
@@ -546,6 +551,7 @@ class DepsWorkspace {
   /** Install dependencies for contracts not yet cached */
   async installDeps(imports: { name: string; address: string }[]): Promise<void> {
     const missing = imports.filter((i) => !this.installedContracts.has(i.name));
+    console.error(`[DepsWorkspace] installDeps: ${imports.length} total, ${missing.length} missing, dir=${this.dir}`);
     if (missing.length === 0) return;
 
     for (const dep of missing) {

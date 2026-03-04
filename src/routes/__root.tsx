@@ -1,8 +1,10 @@
 import {
   createRootRoute,
   HeadContent,
+  Link,
   Outlet,
   Scripts,
+  useRouter,
 } from '@tanstack/react-router';
 import * as React from 'react';
 import appCss from '@/styles/app.css?url';
@@ -45,6 +47,7 @@ export const Route = createRootRoute({
       : [],
   }),
   component: RootComponent,
+  notFoundComponent: NotFound,
 });
 
 function RootComponent() {
@@ -52,6 +55,102 @@ function RootComponent() {
     <RootDocument>
       <Outlet />
     </RootDocument>
+  );
+}
+
+function NotFound() {
+  const router = useRouter();
+  const currentUrl =
+    typeof window !== 'undefined' ? window.location.href : '';
+
+  const issueTitle = encodeURIComponent(`404: Broken link — ${currentUrl}`);
+  const issueBody = encodeURIComponent(
+    `## Broken Link Report\n\nI followed a link that resulted in a 404 error.\n\n**URL:** ${currentUrl}\n\n**Steps to reproduce:**\n1. Navigate to ${currentUrl}\n\n**Expected:** A valid page\n**Actual:** 404 Not Found\n\n---\n*Reported automatically via the 404 page.*`,
+  );
+  const githubIssueUrl = `https://github.com/onflow/cadence/issues/new?title=${issueTitle}&body=${issueBody}&labels=documentation`;
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--bg)] px-6 text-center">
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        aria-hidden
+      >
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-[120px]"
+          style={{ background: 'var(--accent)' }}
+        />
+      </div>
+      <div className="relative z-10 flex flex-col items-center gap-6 max-w-lg">
+        <div
+          className="font-mono font-bold select-none leading-none"
+          style={{
+            fontSize: 'clamp(80px, 20vw, 140px)',
+            color: 'var(--accent)',
+            textShadow:
+              '0 0 60px color-mix(in srgb, var(--accent) 40%, transparent)',
+          }}
+        >
+          404
+        </div>
+        <h1
+          className="text-2xl font-semibold"
+          style={{ color: 'var(--foreground)' }}
+        >
+          Page not found
+        </h1>
+        <p
+          className="text-base leading-relaxed"
+          style={{ color: 'var(--muted)' }}
+        >
+          The page you're looking for doesn't exist or was moved. If you
+          followed a link from another page, it may be broken.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center gap-3 mt-2 w-full">
+          <Link
+            to="/docs"
+            className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border transition-colors"
+            style={{
+              background: 'var(--accent)',
+              color: 'var(--bg)',
+              borderColor: 'var(--accent)',
+            }}
+          >
+            Go to Docs
+          </Link>
+          <button
+            onClick={() => router.history.back()}
+            className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border transition-colors"
+            style={{
+              background: 'transparent',
+              color: 'var(--foreground)',
+              borderColor: 'var(--border)',
+            }}
+          >
+            ← Go Back
+          </button>
+        </div>
+        <a
+          href={githubIssueUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm border transition-colors mt-1"
+          style={{
+            color: 'var(--muted)',
+            borderColor: 'var(--border)',
+            background: 'transparent',
+          }}
+        >
+          Report broken link
+        </a>
+        <Link
+          to="/"
+          className="text-sm transition-colors"
+          style={{ color: 'var(--muted)' }}
+        >
+          ← Back to cadence-lang.org
+        </Link>
+      </div>
+    </div>
   );
 }
 

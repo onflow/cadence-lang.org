@@ -10,7 +10,7 @@ async function main() {
   // Shared LSP manager
   let lspManager: LSPManager | undefined;
   try {
-    lspManager = new LSPManager(process.env.FLOW_CMD || 'flow');
+    lspManager = new LSPManager(process.env.FLOW_CMD || 'flow', process.env.LSP_BINARY || undefined);
     await lspManager.getClient('mainnet');
     console.log('[cadence-mcp] LSP initialized');
   } catch (e) {

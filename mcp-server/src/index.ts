@@ -7,7 +7,7 @@ async function main() {
   // Try to start LSP manager if Flow CLI is available
   let lspManager: LSPManager | undefined;
   try {
-    lspManager = new LSPManager(process.env.FLOW_CMD || 'flow');
+    lspManager = new LSPManager(process.env.FLOW_CMD || 'flow', process.env.LSP_BINARY || undefined);
     // Pre-warm mainnet client
     await lspManager.getClient('mainnet');
     console.error('[cadence-mcp] LSP initialized (Flow CLI found)');

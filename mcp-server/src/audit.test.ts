@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test';
-import { securityScan, formatScanResult, fetchContractSource, toManifest, type ScanResult, type AccountContractFetcher } from './audit.js';
+import { securityScan, formatScanResult, fetchContractSource, toManifest, executeScript, type ScanResult, type AccountContractFetcher } from './audit.js';
 
 describe('securityScan', () => {
   it('detects access(all) on state fields', () => {
@@ -274,6 +274,37 @@ describe('toManifest', () => {
     expect(manifest.totalSize).toBe(15);
     expect(manifest.contracts[0].size).toBe(10);
     expect(manifest.contracts[1].size).toBe(5);
+  });
+});
+
+describe('executeScript', () => {
+  it('returns error for invalid script', async () => {
+    const result = await executeScript('invalid cadence code', 'mainnet', []);
+    // Should return an error (either flow not found or script error)
+    expect(result.error).toBeDefined();
+  });
+
+  it('writes temp file and cleans up', async () => {
+    const { join } = await import('node:path');
+    const { existsSync } = await import('node:fs');
+    const { tmpdir } = await import('node:os');
+    const { readdir } = await import('node:fs/promises');
+
+    // Count cadence-mcp temp dirs before
+    const tmpBase = tmpdir();
+    const dirsBefore = (await readdir(tmpBase)).filter((d) => d.startsWith('cadence-mcp-'));
+
+    // Execute (will fail since flow CLI probably not configured, but that's fine)
+    await executeScript('access(all) fun main(): Int { return 42 }', 'mainnet', []);
+
+    // Temp file should be cleaned up (dir may remain but .cdc file should be gone)
+    const dirsAfter = (await readdir(tmpBase)).filter((d) => d.startsWith('cadence-mcp-'));
+    for (const dir of dirsAfter) {
+      if (!dirsBefore.includes(dir)) {
+        const scriptPath = join(tmpBase, dir, 'script.cdc');
+        expect(existsSync(scriptPath)).toBe(false);
+      }
+    }
   });
 });
 

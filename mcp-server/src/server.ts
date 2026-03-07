@@ -2,7 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { searchDocs, getDoc, docsAvailable, browseDoc } from './search.js';
 import { CadenceLSPClient, LSPManager, VALID_NETWORKS, type FlowNetwork } from './lsp/client.js';
-import { fetchContractSource, toManifest, fetchSingleContractCode, securityScan, formatScanResult } from './audit.js';
+import { fetchContractSource, toManifest, fetchSingleContractCode, securityScan, formatScanResult, executeScript } from './audit.js';
 
 const networkSchema = z
   .enum(VALID_NETWORKS)
@@ -329,6 +329,42 @@ export async function createServer(lspOrManager?: CadenceLSPClient | LSPManager)
           {
             type: 'text' as const,
             text: parts.join('\n'),
+          },
+        ],
+      };
+    },
+  );
+
+  server.tool(
+    'cadence_execute_script',
+    'Execute a read-only Cadence script on Flow network. Scripts can query on-chain state like balances, contract data, and account info. Cannot modify state.',
+    {
+      code: z.string().describe('Cadence script code to execute (must have a `access(all) fun main()` entry point)'),
+      network: networkSchema,
+      args: z
+        .array(z.string())
+        .optional()
+        .default([])
+        .describe('Script arguments in Flow CLI format: ["Type:Value", ...], e.g. ["Address:0x1654653399040a61", "UFix64:10.0"]'),
+    },
+    async ({ code, network, args }) => {
+      const result = await executeScript(code, network, args);
+      if (result.error) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Script execution failed:\n${result.error}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: result.value,
           },
         ],
       };

@@ -1,4 +1,7 @@
 import { execFile } from 'node:child_process';
+import { writeFile, unlink, mkdtemp } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { extractAddressImports, type FlowNetwork } from './lsp/client.js';
 
 // --- Types ---
@@ -320,6 +323,72 @@ export function securityScan(code: string): ScanResult {
 /**
  * Format scan results as readable text.
  */
+// --- Script Execution ---
+
+export interface ScriptResult {
+  value: string;
+  error?: undefined;
+}
+
+export interface ScriptError {
+  value?: undefined;
+  error: string;
+}
+
+/** Function signature for executing scripts (injectable for testing) */
+export type ScriptExecutor = (
+  code: string,
+  args: string[],
+  network: FlowNetwork,
+) => Promise<ScriptResult | ScriptError>;
+
+/**
+ * Execute a read-only Cadence script on-chain via `flow scripts execute`.
+ * Args use Flow CLI format: ["Type:Value", ...], e.g. ["Address:0x1654653399040a61", "UFix64:10.0"]
+ */
+export async function executeScript(
+  code: string,
+  network: FlowNetwork,
+  args: string[] = [],
+  flowCommand = 'flow',
+): Promise<ScriptResult | ScriptError> {
+  const tmpDir = await mkdtemp(join(tmpdir(), 'cadence-mcp-'));
+  const scriptFile = join(tmpDir, 'script.cdc');
+
+  try {
+    await writeFile(scriptFile, code, 'utf-8');
+
+    const cliArgs = ['scripts', 'execute', scriptFile, '--network', network, '--output', 'json'];
+    for (const arg of args) {
+      cliArgs.push('--arg', arg);
+    }
+
+    const stdout = await new Promise<string>((resolve, reject) => {
+      execFile(
+        flowCommand,
+        cliArgs,
+        { timeout: 30000, maxBuffer: 5 * 1024 * 1024 },
+        (error, stdout, stderr) => {
+          if (error) {
+            reject(new Error(stderr || error.message));
+          } else {
+            resolve(stdout);
+          }
+        },
+      );
+    });
+
+    // Flow CLI --output json returns the result value
+    const trimmed = stdout.trim();
+    return { value: trimmed };
+  } catch (e: any) {
+    return { error: e.message };
+  } finally {
+    // Clean up temp files
+    await unlink(scriptFile).catch(() => {});
+  }
+}
+
 export function formatScanResult(result: ScanResult): string {
   const lines: string[] = [];
 

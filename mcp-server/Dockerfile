@@ -4,9 +4,11 @@ FROM golang:1.25-bookworm AS lsp-builder
 RUN apt-get update && apt-get install -y --no-install-recommends git gcc libc-dev && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
-# ADD fetches latest commit info — if it changed, Docker invalidates the cache
-ADD https://api.github.com/repos/Outblock/cadence-tools/commits/master /tmp/lsp-commit.json
-RUN git clone --depth 1 --branch master https://github.com/Outblock/cadence-tools.git . && git log --oneline -1
+# Pin the LSP build to the Cadence Tools commit that includes the v2.1.2 completion fixes.
+ADD https://api.github.com/repos/Outblock/cadence-tools/commits/dc78ce7104a73f74929ab2f580726f7700f93ef7 /tmp/lsp-commit.json
+RUN git clone https://github.com/Outblock/cadence-tools.git . \
+    && git checkout dc78ce7104a73f74929ab2f580726f7700f93ef7 \
+    && git log --oneline -1
 
 WORKDIR /build/languageserver
 RUN CGO_ENABLED=1 go build -o /lsp-v2 ./cmd/lsp-v2/

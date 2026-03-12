@@ -5,8 +5,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends git gcc libc-de
 
 WORKDIR /build
 # ADD fetches latest commit info — if it changed, Docker invalidates the cache
-ADD https://api.github.com/repos/Outblock/cadence-tools/commits/rewrite/lsp-v2 /tmp/lsp-commit.json
-RUN git clone --depth 1 --branch rewrite/lsp-v2 https://github.com/Outblock/cadence-tools.git . && git log --oneline -1
+ADD https://api.github.com/repos/Outblock/cadence-tools/commits/master /tmp/lsp-commit.json
+RUN git clone --depth 1 --branch master https://github.com/Outblock/cadence-tools.git . && git log --oneline -1
 
 WORKDIR /build/languageserver
 RUN CGO_ENABLED=1 go build -o /lsp-v2 ./cmd/lsp-v2/

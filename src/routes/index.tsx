@@ -304,34 +304,6 @@ const heroCommands: HeroCommand[] = [
     hasClientSelect: true,
     hasModeSelect: true,
   },
-  {
-    key: "llms.txt",
-    label: "llms.txt",
-    copyText: "curl -s https://cadence-lang.org/llms.txt",
-    render: () => (
-      <>
-        <span className={S.cmd}>curl</span>{" "}
-        <span className={S.flag}>-s</span>{" "}
-        <span className={S.url}>https://cadence-lang.org/llms.txt</span>
-      </>
-    ),
-    hint: "Fetch Cadence context for LLMs",
-    href: "/llms.txt",
-  },
-  {
-    key: "llms-full.txt",
-    label: "llms-full.txt",
-    copyText: "curl -s https://cadence-lang.org/llms-full.txt",
-    render: () => (
-      <>
-        <span className={S.cmd}>curl</span>{" "}
-        <span className={S.flag}>-s</span>{" "}
-        <span className={S.url}>https://cadence-lang.org/llms-full.txt</span>
-      </>
-    ),
-    hint: "Fetch full Cadence documentation for LLMs",
-    href: "/llms-full.txt",
-  },
 ];
 
 function Home() {

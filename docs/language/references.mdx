@@ -9,14 +9,25 @@ References are **copied** (i.e., they are value types).
 
 References have the type `&T`, where `T` is the type of the referenced object.
 
-References are created using the `&` operator. The reference type must be explicitly provided, for example, through a type annotation on a variable declaration or a type assertion using the `as` operator:
+Cadence has two kinds of references with different binding semantics:
+- [Ephemeral References](#ephemeral-references)
+- [Storage References](#storage-references)
+
+## Ephemeral references
+
+Ephemeral references are created by taking a reference to a value on the stack.
+They are "value-bound", in the sense that the reference tracks a specific value instance.
+If the reference is to a resource, then the reference gets invalidated when the resource gets moved.
+Refer to the [Reference Validity](#reference-validity) section for more details.
+
+Ephemeral references are created using the `&` operator. The reference type must be explicitly provided, for example, through a type annotation on a variable declaration or a type assertion using the `as` operator:
 
    ```cadence
    let hello = "Hello"
    ```
 
 1. Create a reference to the `String` `hello`.
-1. Provide the reference type `&String` using a type assertion:
+2. Provide the reference type `&String` using a type assertion:
 
    ```cadence
    let helloRef = &hello as &String
@@ -24,8 +35,8 @@ References are created using the `&` operator. The reference type must be explic
    helloRef.length // is `5`
    ```
 
-1. Create another reference to the `String` `hello`.
-1. Provide the reference type `&String` using a type annotation instead:
+3. Create another reference to the `String` `hello`.
+4. Provide the reference type `&String` using a type annotation instead:
 
    ```cadence
    let alsoHelloRef: &String = &hello
@@ -34,6 +45,21 @@ References are created using the `&` operator. The reference type must be explic
    //
    let unknownRef = &hello
    ```
+
+
+## Storage references
+
+Storage references are created by borrowing from an account storage.
+They are bound to a path, not a value instance.
+This means that the reference resolves to whatever value currently exists at the target storage path.
+Storage references function similarly to symbolic links in a filesystem: they point to a location, not to a specific object.
+
+As such, the validity of a storage reference depends on the value stored at the path.
+A storage reference does **not** get invalidated when the underlying value is changed or removed,
+as long as a compatible value exists at the path when the reference is used.
+Refer to the [Reference Validity](#reference-validity) section for more details.
+
+## Common characteristics
 
 The reference type must be a supertype of the referenced object's type:
 
@@ -337,7 +363,11 @@ insertableAndRemovableArrayRef[2] = "John"        // OK
 
 ## Reference validity
 
-Ephemeral references stay valid throughout the course of the program. However, **references to resources** can become invalid during the execution of a program if the referenced resource is moved or destroyed after taking the reference.
+### Ephemeral references
+
+Ephemeral references stay alive throughout the course of the program.
+However, **ephemeral references to resources** can become invalid during the execution of a program if the referenced resource
+is moved or destroyed after taking the reference.
 
 ```cadence
 let r <-create R()
@@ -346,14 +376,14 @@ let r <-create R()
 let ref = &r as &R
 
 // Then transfer the resource into an account.
-// This will invalidate all the references taken to the resource `r`.
+// This will invalidate all the ephemeral references taken to the resource `r`.
 account.storage.save(<-r, to: /storage/r)
 
 // Static error, since the referenced resource has been moved.
 ref.id = 2
 ```
 
-A reference is invalidated upon the first transfer of the underlying resource, regardless of the origin and the destination.
+An ephemeral reference is invalidated upon the first transfer of the underlying resource, regardless of the origin and the destination.
 
 ```cadence
 let ref = &r as &R
@@ -365,11 +395,49 @@ let r2 <- r
 ref.id = 2
 ```
 
-:::tip
+### Storage references
 
-Invalidations of storage references are not statically caught, but only at run-time.
+Similar to ephemeral references, storage references also stay alive throughout the course of the program.
+However, the validity of a storage reference depends on the value stored at the path to which the reference was taken.
 
-:::
+```cadence
+resource interface I {}
+
+resource R: I {}
+
+// Store an instance of `R` at the path `/storage/r`.
+account.storage.save(<- create R(), to: /storage/r)
+
+// Borrow a storage reference to the same path, as `R`.
+let rRef = account.storage.borrow<&R>(from: /storage/r)
+
+// Borrow a storage reference to the same path, as interface type `{I}`.
+let iRef = account.storage.borrow<&{I}>(from: /storage/r)
+
+
+// Remove the value
+destroy <- account.storage.load(from: /storage/r)
+
+// Both references are invalid now, as there is no value satisfying the borrow type.
+let id1 = rRef.id   // Error
+let id2 = iRef.id   // Error
+
+
+// Store a different value at the same path.
+// This new value is a subtype of the interface type `{I}`.
+
+resource T: I {}
+
+account.storage.save(<- create T(), to: /storage/r)
+
+// Now this makes `rRef` invalid, since it was borrowed as type `R`,
+// but the value stored is now of type `T`.
+let id1 = rRef.id   // Error
+
+// But the reference `iRef` remains valid, since it was borrowed as type `{I}`,
+// and the value stored is now of type `T`, which is a subtype of `{I}`.
+let id2 = iRef.id   // Valid
+```
 
 ## Dereferencing values
 

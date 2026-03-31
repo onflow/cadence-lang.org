@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && bun scripts/generate-sitemap.ts",
-    "start": "node .output/server/index.mjs",
+    "start": "bun .output/server/index.mjs",
     "preview": "vite preview",
     "types:check": "fumadocs-mdx && tsc --noEmit"
   },

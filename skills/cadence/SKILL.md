@@ -20,6 +20,10 @@ Use this skill whenever you are **writing, reviewing, debugging, or auditing Cad
 | Testing framework | https://cadence-lang.org/docs/testing-framework |
 | Flow NFT Standard | https://github.com/onflow/flow-nft |
 | Flow FT Standard | https://github.com/onflow/flow-ft |
+| Core Contracts | https://github.com/onflow/flow-core-contracts |
+| EVM Bridge | https://github.com/onflow/flow-evm-bridge |
+| Hybrid Custody | https://github.com/onflow/hybrid-custody |
+| NFT Storefront | https://github.com/onflow/nft-storefront |
 
 > **Tip:** Append `.mdx` to any `cadence-lang.org` doc URL to get raw markdown.
 
@@ -174,8 +178,8 @@ destroy t2     // must explicitly destroy if not stored
 | `access(all)` | Everyone (public read, callable by anyone) |
 | `access(self)` | Only within the type itself |
 | `access(contract)` | Same contract |
-| `access(account)` | Same account |
-| `access(E)` | Callers holding entitlement `E` |
+| `access(account)` | Contracts within the same account |
+| `access(E)` | Either callers holding the actual object or callers holding a reference to the object authorized with entitlement `E` |
 
 ### Entitlements Pattern
 
@@ -206,7 +210,7 @@ access(all) resource Vault {
 // Getting an entitled reference
 let vaultRef = signer.storage
     .borrow<auth(Withdraw) &Vault>(from: /storage/vault)
-    ?? panic("Could not borrow Vault")
+    ?? panic("Could not borrow Vault from /storage/vault — capability may be revoked or vault not saved")
 ```
 
 ### References
@@ -217,7 +221,7 @@ let authRef: auth(Withdraw) &Vault = &myVault   // entitled reference
 
 // From storage
 let r = signer.storage.borrow<auth(Withdraw) &Vault>(from: /storage/vault)
-    ?? panic("No vault found")
+    ?? panic("No Vault found at /storage/vault — ensure the account has a vault saved")
 ```
 
 ### Matching Access Modifiers Required for Interface Implementations
@@ -260,11 +264,11 @@ signer.capabilities.publish(receiverCap, at: /public/receiver)
 // 4. Borrow from another account
 let receiver = getAccount(address).capabilities
     .borrow<&{FungibleToken.Receiver}>(/public/receiver)
-    ?? panic("Account has no receiver capability")
+    ?? panic("Account ".concat(address.toString()).concat(" has no FungibleToken.Receiver capability at path /public/receiver"))
 
 // 5. Revoke when needed
 let controller = signer.capabilities.storage
-    .getController(byCapabilityID: capID) ?? panic("Controller not found")
+    .getController(byCapabilityID: capID) ?? panic("No StorageCapabilityController found for capability ID ".concat(capID.toString()))
 controller.delete()
 
 // Issue an entitled capability (grants Withdraw to holder)
@@ -293,14 +297,14 @@ if !capability.check() {
 transaction(amount: UFix64, recipient: Address) {
 
     // Declare fields shared across phases
-    let vaultRef: auth(FungibleToken.Withdraw) &FungibleToken.Vault
+    let vaultRef: auth(FungibleToken.Withdraw) &{FungibleToken.Vault}
 
     // Access accounts — the ONLY phase with account access
     prepare(signer: auth(BorrowValue) &Account) {
         self.vaultRef = signer.storage
-            .borrow<auth(FungibleToken.Withdraw) &FungibleToken.Vault>(
+            .borrow<auth(FungibleToken.Withdraw) &{FungibleToken.Vault}>(
                 from: /storage/vault
-            ) ?? panic("No vault found")
+            ) ?? panic("Could not borrow FungibleToken.Vault from /storage/vault for signer")
     }
 
     pre  { amount > 0.0: "Amount must be positive" }
@@ -309,7 +313,7 @@ transaction(amount: UFix64, recipient: Address) {
         let tokens <- self.vaultRef.withdraw(amount: amount)
         let receiver = getAccount(recipient).capabilities
             .borrow<&{FungibleToken.Receiver}>(/public/receiver)
-            ?? panic("Recipient has no receiver")
+            ?? panic("Account ".concat(recipient.toString()).concat(" has no FungibleToken.Receiver capability at /public/receiver"))
         receiver.deposit(from: <- tokens)
     }
 
@@ -452,7 +456,7 @@ transaction(recipient: Address, name: String) {
         getAccount(recipient).capabilities
             .borrow<&BasicNFT.Collection>(BasicNFT.CollectionPublicPath)
             ?.deposit(token: <- nft)
-            ?? panic("Recipient has no collection")
+            ?? panic("Account ".concat(recipient.toString()).concat(" has no BasicNFT.Collection capability at ").concat(BasicNFT.CollectionPublicPath.toString()))
     }
 }
 
@@ -463,14 +467,14 @@ transaction(recipient: Address, nftID: UInt64) {
         self.withdrawRef = signer.storage
             .borrow<auth(BasicNFT.Withdraw) &BasicNFT.Collection>(
                 from: BasicNFT.CollectionStoragePath
-            ) ?? panic("No collection")
+            ) ?? panic("Could not borrow BasicNFT.Collection from signer's storage at ".concat(BasicNFT.CollectionStoragePath.toString()))
     }
     execute {
         let nft <- self.withdrawRef.withdraw(id: nftID)
         getAccount(recipient).capabilities
             .borrow<&BasicNFT.Collection>(BasicNFT.CollectionPublicPath)
             ?.deposit(token: <- nft)
-            ?? panic("Recipient has no collection")
+            ?? panic("Account ".concat(recipient.toString()).concat(" has no BasicNFT.Collection capability at ").concat(BasicNFT.CollectionPublicPath.toString()))
     }
 }
 ```
@@ -770,7 +774,7 @@ transaction(receiver: Address, name: String) {
 
         let controller = signer.capabilities.storage
             .getController(byCapabilityID: capability.id)
-            ?? panic("Controller not found")
+            ?? panic("No StorageCapabilityController found for capability ID ".concat(capability.id.toString()))
         controller.setTag(name)
 
         signer.inbox.publish(capability, name: name, recipient: receiver)

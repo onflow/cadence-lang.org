@@ -86,7 +86,12 @@ const serverLoader = createServerFn({
 
 const FumadocsLink = defaultMdxComponents.a;
 
-function createResolvedLink(pageUrl: string) {
+function normalizeDocsRoute(pathname: string) {
+  if (pathname === '/docs/index') return '/docs';
+  return pathname.replace(/\/index$/, '');
+}
+
+function createResolvedLink(docPath: string) {
   return function ResolvedLink({
     href,
     ...props
@@ -94,9 +99,9 @@ function createResolvedLink(pageUrl: string) {
     let resolved = href;
     if (href && (href.startsWith('./') || href.startsWith('../'))) {
       try {
-        const base = new URL(pageUrl, 'https://p.com');
+        const base = new URL(`/docs/${docPath.replace(/^\/+/, '')}`, 'https://p.com');
         const target = new URL(href, base);
-        resolved = target.pathname + target.hash;
+        resolved = normalizeDocsRoute(target.pathname) + target.search + target.hash;
       } catch {
         // keep original href on parse failure
       }
@@ -108,10 +113,13 @@ function createResolvedLink(pageUrl: string) {
 const clientLoader = browserCollections.docs.createClientLoader({
   component(
     { toc, frontmatter, default: MDX },
-    props: { className?: string; pageUrl?: string },
+    props: { className?: string; pageUrl?: string; docPath?: string },
   ) {
     const markdownUrl = `${props.pageUrl}.mdx`;
-    const githubUrl = `https://github.com/onflow/cadence-lang.org/blob/main/content/docs${props.pageUrl?.replace('/docs', '') || ''}.mdx`;
+    const githubDocPath = props.docPath
+      ? `${props.docPath}.mdx`
+      : `${props.pageUrl?.replace('/docs', '') || ''}.mdx`;
+    const githubUrl = `https://github.com/onflow/cadence-lang.org/blob/main/content/docs/${githubDocPath.replace(/^\/+/, '')}`;
 
     const jsonLd = {
       '@context': 'https://schema.org',
@@ -151,8 +159,8 @@ const clientLoader = browserCollections.docs.createClientLoader({
           <MDX
             components={{
               ...defaultMdxComponents,
-              a: props.pageUrl
-                ? createResolvedLink(props.pageUrl)
+              a: props.docPath
+                ? createResolvedLink(props.docPath)
                 : defaultMdxComponents.a,
             }}
           />
@@ -184,6 +192,7 @@ function Page() {
           {clientLoader.useContent(data.path, {
             className: '',
             pageUrl: data.url,
+            docPath: data.path,
           })}
         </Suspense>
       </DocsLayout>

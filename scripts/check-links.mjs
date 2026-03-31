@@ -2,235 +2,346 @@
 
 /**
  * Link checker for cadence-lang.org
- * Crawls the local dev server and reports broken internal links.
+ * Crawls the local dev server and reports broken same-origin links.
  *
  * Usage:
  *   1. Start dev server: npm run dev
  *   2. Run: node scripts/check-links.mjs [--base http://localhost:3000] [--start /docs]
  */
 
-const BASE = process.argv.includes('--base')
-  ? process.argv[process.argv.indexOf('--base') + 1]
-  : 'http://localhost:3000';
+function getArgValue(flag, fallback) {
+  const index = process.argv.indexOf(flag);
+  return index !== -1 && process.argv[index + 1]
+    ? process.argv[index + 1]
+    : fallback;
+}
 
-const START = process.argv.includes('--start')
-  ? process.argv[process.argv.indexOf('--start') + 1]
-  : '/docs';
+function normalizePathname(pathname) {
+  const normalized = pathname.replace(/\/{2,}/g, '/');
+  if (normalized === '/') return normalized;
+  return normalized.replace(/\/+$/, '') || '/';
+}
 
-const visited = new Set();
-const queue = [START];
-const broken = [];
-const anchorsToCheck = [];
+const BASE_URL = new URL(getArgValue('--base', 'http://localhost:3000'));
+const SITE_URL = new URL(getArgValue('--site-origin', 'https://cadence-lang.org'));
+const START = getArgValue('--start', '/docs');
+const INTERNAL_ORIGINS = new Set([BASE_URL.origin, SITE_URL.origin]);
+
+function buildTargetKey(url) {
+  return `${normalizePathname(url.pathname)}${url.search}`;
+}
+
+function decodeFragment(fragment) {
+  if (!fragment) return null;
+
+  try {
+    return decodeURIComponent(fragment);
+  } catch {
+    return fragment;
+  }
+}
+
+function normalizeHref(href, currentPath) {
+  const trimmed = href.trim();
+  if (!trimmed) return null;
+  if (/^(?:mailto|tel|javascript|data|blob):/i.test(trimmed)) return null;
+
+  try {
+    const currentUrl = new URL(currentPath, BASE_URL);
+    const resolved = new URL(trimmed, currentUrl);
+
+    if (!INTERNAL_ORIGINS.has(resolved.origin)) return null;
+
+    return {
+      href: trimmed,
+      targetPath: buildTargetKey(resolved),
+      anchor: decodeFragment(resolved.hash.slice(1)),
+    };
+  } catch {
+    return null;
+  }
+}
+
+const fetchCache = new Map();
+const crawledPages = new Set();
+const queuedTargets = new Set();
+const pendingTargets = [];
+const linkTargets = new Map();
+const anchorTargets = new Map();
 const pageAnchors = new Map();
 
-async function fetchPage(path) {
-  const url = `${BASE}${path}`;
-  try {
-    const res = await fetch(url, { redirect: 'follow' });
-    return { status: res.status, html: res.ok ? await res.text() : '' };
-  } catch {
-    return { status: 0, html: '' };
+function queueTarget(targetPath) {
+  if (queuedTargets.has(targetPath)) return;
+  queuedTargets.add(targetPath);
+  pendingTargets.push(targetPath);
+}
+
+function addRef(map, key, ref) {
+  if (!map.has(key)) {
+    map.set(key, new Map());
   }
+
+  const refs = map.get(key);
+  const refKey = `${ref.source} -> ${ref.href}`;
+  refs.set(refKey, ref);
+}
+
+async function fetchTarget(targetPath) {
+  if (fetchCache.has(targetPath)) {
+    return fetchCache.get(targetPath);
+  }
+
+  const promise = (async () => {
+    const requestUrl = new URL(targetPath, BASE_URL);
+
+    try {
+      const res = await fetch(requestUrl, { redirect: 'follow' });
+      const finalUrl = new URL(res.url);
+      const contentType = (res.headers.get('content-type') || '').toLowerCase();
+      const isSameOrigin = finalUrl.origin === BASE_URL.origin;
+      const isCandidateHtml = isSameOrigin && contentType.includes('text/html');
+      const html = isCandidateHtml ? await res.text() : '';
+      const isNotFound =
+        isCandidateHtml &&
+        html.includes('<title>404 — Page Not Found | Cadence</title>') &&
+        html.includes('This page could not be found.');
+      const isHtml = isCandidateHtml && res.ok && !isNotFound;
+
+      return {
+        requestedPath: targetPath,
+        resolvedPath: isSameOrigin ? buildTargetKey(finalUrl) : null,
+        status: isNotFound ? 404 : res.status,
+        redirectedOutsideOrigin: !isSameOrigin,
+        isNotFound,
+        isHtml,
+        html,
+      };
+    } catch {
+      return {
+        requestedPath: targetPath,
+        resolvedPath: null,
+        status: 0,
+        redirectedOutsideOrigin: false,
+        isNotFound: false,
+        isHtml: false,
+        html: '',
+      };
+    }
+  })();
+
+  fetchCache.set(targetPath, promise);
+  return promise;
 }
 
 function extractLinks(html) {
   const links = [];
-  const re = /href="([^"]+)"/g;
-  let m;
-  while ((m = re.exec(html)) !== null) {
-    links.push(m[1]);
+  const re = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)')/gi;
+  let match;
+
+  while ((match = re.exec(html)) !== null) {
+    links.push(match[1] ?? match[2]);
   }
+
   return links;
 }
 
-function extractIds(html) {
-  const ids = new Set();
-  const re = /\bid="([^"]+)"/g;
-  let m;
-  while ((m = re.exec(html)) !== null) {
-    ids.add(m[1]);
+function extractAnchors(html) {
+  const anchors = new Set();
+  const re = /\b(?:id|name)\s*=\s*(?:"([^"]+)"|'([^']+)')/gi;
+  let match;
+
+  while ((match = re.exec(html)) !== null) {
+    anchors.add(match[1] ?? match[2]);
   }
-  return ids;
-}
 
-function isInternal(href) {
-  return href.startsWith('/') || href.startsWith('#');
-}
-
-function normalizePath(href) {
-  const [path, anchor] = href.split('#');
-  return { path: path || null, anchor: anchor || null };
+  return anchors;
 }
 
 async function crawl() {
   let processed = 0;
 
-  while (queue.length > 0) {
-    const batch = [];
-    while (queue.length > 0 && batch.length < 10) {
-      const path = queue.shift();
-      if (visited.has(path)) continue;
-      visited.add(path);
-      batch.push(path);
-    }
+  while (pendingTargets.length > 0) {
+    const batch = pendingTargets.splice(0, 10);
+    const results = await Promise.all(batch.map((target) => fetchTarget(target)));
 
-    const results = await Promise.all(batch.map(async (path) => {
-      const { status, html } = await fetchPage(path);
+    for (const result of results) {
       processed++;
+
       if (processed % 20 === 0) {
-        process.stderr.write(`\r  Checked ${processed} pages, ${queue.length} queued, ${broken.length} broken...`);
+        process.stderr.write(
+          `\r  Checked ${processed} targets, ${crawledPages.size} HTML pages, ${pendingTargets.length} queued...`,
+        );
       }
-      if (status !== 200) return { path, status, links: [] };
-      pageAnchors.set(path, extractIds(html));
-      return { path, status, links: extractLinks(html) };
-    }));
 
-    for (const { path, status, links } of results) {
-      if (status !== 200) continue;
+      if (!result.isHtml || !result.resolvedPath) {
+        continue;
+      }
 
-      for (const href of links) {
-        if (!isInternal(href)) continue;
-        const { path: linkPath, anchor } = normalizePath(href);
+      if (crawledPages.has(result.resolvedPath)) {
+        continue;
+      }
 
-        if (!linkPath || linkPath === '') {
-          if (anchor) {
-            anchorsToCheck.push({ source: path, href, anchor, targetPath: path });
-          }
-          continue;
+      crawledPages.add(result.resolvedPath);
+      pageAnchors.set(result.resolvedPath, extractAnchors(result.html));
+
+      for (const href of extractLinks(result.html)) {
+        const normalized = normalizeHref(href, result.resolvedPath);
+        if (!normalized) continue;
+
+        addRef(linkTargets, normalized.targetPath, {
+          source: result.resolvedPath,
+          href,
+        });
+
+        if (normalized.anchor) {
+          addRef(anchorTargets, `${normalized.targetPath}#${normalized.anchor}`, {
+            source: result.resolvedPath,
+            href,
+            anchor: normalized.anchor,
+            targetPath: normalized.targetPath,
+          });
         }
 
-        if (!linkPath.startsWith('/docs')) continue;
-        if (/\.\w{2,4}$/.test(linkPath)) continue;
-
-        if (!visited.has(linkPath)) {
-          queue.push(linkPath);
-        }
-
-        if (anchor) {
-          anchorsToCheck.push({ source: path, href, anchor, targetPath: linkPath });
-        }
+        queueTarget(normalized.targetPath);
       }
     }
   }
 
-  process.stderr.write(`\r  Checked ${processed} pages total.                    \n`);
+  process.stderr.write(
+    `\r  Checked ${processed} targets total, ${crawledPages.size} HTML pages.                    \n`,
+  );
+}
+
+function formatBrokenStatus(result) {
+  if (!result) return 'missing';
+  if (result.redirectedOutsideOrigin) return 'redirected outside origin';
+  return String(result.status);
+}
+
+function formatAnchorFailure(result, anchor) {
+  if (!result) return `#${anchor} target could not be fetched`;
+  if (result.redirectedOutsideOrigin) return 'redirected outside origin';
+  if (result.status !== 200) return `[${result.status}] target page is broken`;
+  return `#${anchor} not found`;
+}
+
+function uniqueSources(refs) {
+  return [...new Set(refs.map((ref) => ref.source))];
 }
 
 async function main() {
   console.log(`\n  Link Checker for cadence-lang.org`);
-  console.log(`   Base: ${BASE}`);
+  console.log(`   Base: ${BASE_URL.origin}`);
+  console.log(`   Site Origin: ${SITE_URL.origin}`);
   console.log(`   Start: ${START}\n`);
 
   try {
-    const res = await fetch(BASE);
+    const res = await fetch(BASE_URL);
     if (!res.ok) throw new Error(`Status ${res.status}`);
   } catch {
-    console.error(`Cannot reach ${BASE}. Is the dev server running? (npm run dev)`);
+    console.error(
+      `Cannot reach ${BASE_URL.origin}. Is the dev server running? (npm run dev)`,
+    );
     process.exit(1);
   }
+
+  const startTarget = normalizeHref(START, '/');
+  if (!startTarget) {
+    console.error(`Invalid --start value: ${START}`);
+    process.exit(1);
+  }
+
+  addRef(linkTargets, startTarget.targetPath, {
+    source: '(start)',
+    href: START,
+  });
+  queueTarget(startTarget.targetPath);
 
   console.log('Crawling pages and collecting links...');
   await crawl();
 
   console.log(`\nResults:`);
-  console.log(`   Pages crawled: ${visited.size}`);
+  console.log(`   HTML pages crawled: ${crawledPages.size}`);
+  console.log(`   Internal link targets discovered: ${linkTargets.size}`);
 
-  // Verify all link targets
-  console.log('\nVerifying all internal link targets...');
-  const linkTargets = new Map();
+  console.log('\nVerifying internal link targets...');
+  const brokenPages = [];
 
-  for (const path of visited) {
-    const { status, html } = await fetchPage(path);
-    if (status !== 200) continue;
+  for (const [targetPath, refs] of linkTargets) {
+    const result = await fetchTarget(targetPath);
+    const isOk = result.status === 200 && !result.redirectedOutsideOrigin;
 
-    for (const href of extractLinks(html)) {
-      if (!isInternal(href)) continue;
-      const { path: linkPath } = normalizePath(href);
-      if (!linkPath || !linkPath.startsWith('/docs')) continue;
-      if (/\.\w{2,4}$/.test(linkPath)) continue;
+    if (isOk) continue;
 
-      if (!linkTargets.has(linkPath)) linkTargets.set(linkPath, []);
-      linkTargets.get(linkPath).push({ source: path, href });
-    }
+    brokenPages.push({
+      targetPath,
+      refs: [...refs.values()],
+      status: formatBrokenStatus(result),
+    });
   }
 
-  const targetPaths = [...linkTargets.keys()];
-  for (let i = 0; i < targetPaths.length; i += 10) {
-    const batch = targetPaths.slice(i, i + 10);
-    const results = await Promise.all(batch.map(async (target) => {
-      if (visited.has(target) && pageAnchors.has(target)) {
-        return { target, status: 200 };
-      }
-      const { status } = await fetchPage(target);
-      return { target, status };
-    }));
-
-    for (const { target, status } of results) {
-      if (status !== 200) {
-        for (const { source } of linkTargets.get(target)) {
-          broken.push({ source, href: target, status });
-        }
-      }
-    }
-  }
-
-  // Check anchors
   console.log('Verifying anchor links...');
   const brokenAnchors = [];
 
-  for (const { source, anchor, targetPath } of anchorsToCheck) {
-    if (!targetPath.startsWith('/docs')) continue;
+  for (const [, refs] of anchorTargets) {
+    const ref = refs.values().next().value;
+    const result = await fetchTarget(ref.targetPath);
+    const anchorPagePath = result?.resolvedPath || ref.targetPath;
 
-    let ids = pageAnchors.get(targetPath);
-    if (!ids) {
-      const { status, html } = await fetchPage(targetPath);
-      if (status === 200) {
-        ids = extractIds(html);
-        pageAnchors.set(targetPath, ids);
-      } else {
-        continue;
-      }
+    if (result.status !== 200 || result.redirectedOutsideOrigin || !result.isHtml) {
+      brokenAnchors.push({
+        href: `${ref.targetPath}#${ref.anchor}`,
+        refs: [...refs.values()],
+        reason: formatAnchorFailure(result, ref.anchor),
+      });
+      continue;
     }
 
-    if (!ids.has(anchor)) {
-      brokenAnchors.push({ source, href: `${targetPath}#${anchor}`, anchor });
+    const ids = pageAnchors.get(anchorPagePath) || extractAnchors(result.html);
+    pageAnchors.set(anchorPagePath, ids);
+
+    if (!ids.has(ref.anchor)) {
+      brokenAnchors.push({
+        href: `${ref.targetPath}#${ref.anchor}`,
+        refs: [...refs.values()],
+        reason: `#${ref.anchor} not found`,
+      });
     }
   }
 
-  // Report
   console.log('\n' + '='.repeat(70));
 
-  if (broken.length === 0 && brokenAnchors.length === 0) {
+  if (brokenPages.length === 0 && brokenAnchors.length === 0) {
     console.log('All links OK! No broken links found.');
   } else {
-    if (broken.length > 0) {
-      console.log(`\nBroken page links (${broken.length}):\n`);
-      const seen = new Set();
-      for (const { source, href, status } of broken) {
-        const key = `${source} -> ${href}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        console.log(`  [${status}] ${href}`);
-        console.log(`        <- linked from: ${source}`);
+    if (brokenPages.length > 0) {
+      console.log(`\nBroken page links (${brokenPages.length}):\n`);
+
+      for (const { targetPath, refs, status } of brokenPages) {
+        console.log(`  [${status}] ${targetPath}`);
+        for (const source of uniqueSources(refs)) {
+          console.log(`        <- linked from: ${source}`);
+        }
       }
     }
 
     if (brokenAnchors.length > 0) {
       console.log(`\nBroken anchor links (${brokenAnchors.length}):\n`);
-      const seen = new Set();
-      for (const { source, href, anchor } of brokenAnchors) {
-        const key = `${source} -> ${href}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        console.log(`  #${anchor} not found in ${href}`);
-        console.log(`        <- linked from: ${source}`);
+
+      for (const { href, refs, reason } of brokenAnchors) {
+        console.log(`  ${reason} in ${href}`);
+        for (const source of uniqueSources(refs)) {
+          console.log(`        <- linked from: ${source}`);
+        }
       }
     }
   }
 
   console.log('\n' + '='.repeat(70));
-  const totalBroken = broken.length + brokenAnchors.length;
-  console.log(`Summary: ${visited.size} pages, ${totalBroken} broken links\n`);
+  const totalBroken = brokenPages.length + brokenAnchors.length;
+  console.log(
+    `Summary: ${crawledPages.size} HTML pages, ${linkTargets.size} internal targets, ${totalBroken} broken links\n`,
+  );
 
   process.exit(totalBroken > 0 ? 1 : 0);
 }

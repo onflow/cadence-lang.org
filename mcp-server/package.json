@@ -1,6 +1,6 @@
 {
   "name": "@outblock/cadence-mcp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "MCP server for Cadence smart contract development — documentation search, code checking, type inspection via Flow CLI LSP",
   "license": "Apache-2.0",
   "repository": {

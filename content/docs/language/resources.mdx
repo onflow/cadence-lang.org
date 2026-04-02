@@ -1,0 +1,610 @@
+---
+title: Resources
+description: Enables resource-oriented programming on Flow
+---
+
+Resources are types that can only exist in **one** location at a time and **must** be used **exactly once**.
+
+Resources **must** be created (instantiated) by using the `create` keyword.
+
+Before the closing bracket of a function that has resources created or moved into scope, those resources **must** explicitly be either **moved** to a valid storage location or **destroyed**.
+
+They are **moved** when used as an initial value for a constant or variable, when assigned to a different variable, when passed as an argument to a function, and when returned from a function.
+
+Resources can be explicitly **destroyed** using the `destroy` keyword.
+
+Accessing a field or calling a function of a resource does not move or destroy it.
+
+When the resource is moved, the constant or variable that referred to the resource before the move becomes **invalid**. An **invalid** resource cannot be used again.
+
+To make the usage and behavior of resource types explicit, the prefix `@` must be used in type annotations of variable or constant declarations, parameters, and return types.
+
+## The move operator (`<-`)
+
+To make moves of resources explicit, the move operator `<-` must be used when the resource is the initial value of a constant or variable, when it is moved to a different variable, when it is moved to a function as an argument, and when it is returned from a function.
+
+Declare a resource named `SomeResource`, with a variable-integer field:
+
+
+```cadence
+access(all)
+resource SomeResource {
+    
+    access(all)
+    var value: Int
+
+    init(value: Int) {
+        self.value = value
+    }
+}
+```
+
+Declare a constant with a value of resource type `SomeResource`:
+
+```cadence
+let a: @SomeResource <- create SomeResource(value: 5)
+```
+
+_Move_ the resource value to a new constant:
+
+```cadence
+let b <- a
+
+
+// Invalid Line Below: Cannot use constant `a` anymore as the resource that it
+// referred to was moved to constant `b`.
+
+a.value
+
+// Constant `b` owns the resource.
+
+b.value // equals 5
+```
+
+Declare a function that accepts a resource. The parameter has a resource type, so the type annotation must be prefixed with `@`:
+
+```cadence
+access(all)
+fun use(resource: @SomeResource) {
+    // ...
+}
+```
+
+Call function `use`, and move the resource into it:
+
+```cadence
+use(resource: <-b)
+
+// Invalid Line Below: Cannot use constant `b` anymore as the resource it
+// referred to was moved into function `use`.
+
+b.value
+```
+
+A resource object cannot go out of scope and be dynamically lost. The program must either explicitly destroy it or move it to another context.
+
+Declare another, unrelated value of resource type `SomeResource`:
+
+```cadence
+{
+    let c <- create SomeResource(value: 10)
+
+    // Invalid: `c` is not moved or destroyed before the end of the scope, but must be.
+    // It cannot be lost.
+}
+```
+
+Declare another, unrelated value of resource type `SomeResource`:
+
+```cadence
+
+let d <- create SomeResource(value: 20)
+```
+
+Destroy the resource referred to by constant `d`:
+
+```cadence
+destroy d
+
+// Invalid: Cannot use constant `d` anymore as the resource
+// it referred to was destroyed.
+//
+d.value
+```
+
+To make it explicit that the type is a resource type and must follow the rules associated with resources, it must be prefixed with `@` in all type annotations (e.g., for variable declarations, parameters, or return types).
+
+Declare a constant with an explicit type annotation. The constant has a resource type, so the type annotation must be prefixed with `@`:
+
+```cadence
+let someResource: @SomeResource <- create SomeResource(value: 5)
+```
+
+Declare a function that consumes a resource and destroys it. The parameter has a resource type, so the type annotation must be prefixed with `@`:
+
+```cadence
+access(all)
+fun use(resource: @SomeResource) {
+    destroy resource
+}
+```
+
+Declare a function that returns a resource:
+
+- The return type is a resource type, so the type annotation must be prefixed with `@`.
+- The return statement must also use the `<-` operator to make it explicit the resource is moved.
+
+```cadence
+access(all)
+fun get(): @SomeResource {
+    let newResource <- create SomeResource()
+    return <-newResource
+}
+```
+
+Resources **must** be used exactly once.
+
+Declare a function that consumes a resource but does not use it:
+
+```cadence
+// This function is invalid, because it would cause a loss of the resource.
+access(all)
+fun forgetToUse(resource: @SomeResource) {
+    // Invalid: The resource parameter `resource` is not used, but must be.
+}
+```
+
+Declare a constant named `res` that has the resource type `SomeResource`:
+
+```cadence
+let res <- create SomeResource()
+```
+
+Call the function `use` and move the resource `res` into it:
+
+```cadence
+use(resource: <-res)
+
+// Invalid: The resource constant `res` cannot be used again,
+// as it was moved in the previous function call.
+//
+use(resource: <-res)
+
+// Invalid: The resource constant `res` cannot be used again,
+// as it was moved in the previous function call.
+//
+res.value
+```
+
+Declare a function that has a resource parameter:
+
+```cadence
+// This function is invalid, because it does not always use the resource parameter,
+// which would cause a loss of the resource:
+access(all)
+fun sometimesDestroy(resource: @SomeResource, destroyResource: Bool) {
+    if destroyResource {
+        destroy resource
+    }
+    // Invalid: The resource parameter `resource` is not always used, but must be.
+    // The destroy statement is not always executed, so at the end of this function
+    // it might have been destroyed or not.
+}
+```
+
+Declare a function which has a resource parameter:
+
+```cadence
+// This function is valid, as it always uses the resource parameter,
+// and does not cause a loss of the resource.
+//
+access(all)
+fun alwaysUse(resource: @SomeResource, destroyResource: Bool) {
+    if destroyResource {
+        destroy resource
+    } else {
+        use(resource: <-resource)
+    }
+}
+```
+
+At the end of the function, the resource parameter was definitely used. It was either destroyed or moved in the call of function `use`.
+
+Declare a function that has a resource parameter:
+
+```cadence
+// This function is invalid, because it does not always use the resource parameter,
+// which would cause a loss of the resource.
+//
+access(all)
+fun returnBeforeDestroy(move: Bool) {
+    let res <- create SomeResource(value: 1)
+    if move {
+        use(resource: <-res)
+        return
+    } else {
+        // Invalid: When this function returns here, the resource variable
+        // `res` was not used, but must be.
+        return
+    }
+    // Invalid: the resource variable `res` was potentially moved in the
+    // previous if-statement, and both branches definitely return,
+    // so this statement is unreachable.
+    destroy res
+}
+```
+
+## Resource variables
+
+Resource variables cannot be assigned to, as that would lead to the loss of the variable's current resource value.
+
+Instead, use a swap statement (`<->`) or shift statement (`<- target <-`) to replace the resource variable with another resource:
+
+```cadence
+access(all)
+resource R {}
+
+var x <- create R()
+var y <- create R()
+
+// Invalid: Cannot assign to resource variable `x`,
+// as its current resource would be lost
+//
+x <- y
+```
+
+Instead, use a swap statement:
+
+```cadence
+var replacement <- create R()
+x <-> replacement
+// `x` is the new resource.
+// `replacement` is the old resource.
+```
+
+Or, use the shift statement (`<- target <-`):
+
+```cadence
+// This statement moves the resource out of `x` and into `oldX`,
+// and at the same time assigns `x` with the new value on the right-hand side.
+let oldX <- x <- create R()
+// oldX still needs to be explicitly handled after this statement
+destroy oldX
+```
+
+## Nested resources
+
+Fields in composite types behave differently when they have a resource type.
+
+Accessing a field or calling a function on a resource field is valid, however, moving a resource out of a variable resource field is **not** allowed. Instead, use a swap statement to replace the resource with another resource. For example:
+
+```cadence
+let child <- create Child(name: "Child 1")
+child.name  // is "Child 1"
+
+let parent <- create Parent(name: "Parent", child: <-child)
+parent.child.name  // is "Child 1"
+
+// Invalid: Cannot move resource out of variable resource field.
+let childAgain <- parent.child
+```
+
+Instead, use a swap statement:
+
+```cadence
+var otherChild <- create Child(name: "Child 2")
+parent.child <-> otherChild
+// `parent.child` is the second child, Child 2.
+// `otherChild` is the first child, Child 1.
+```
+
+When a resource containing nested resources in fields is destroyed with a `destroy` statement, all the nested resources are also destroyed:
+
+```cadence
+// Declare a resource with resource fields
+//
+access(all)
+resource Parent {
+    var child1: @Child
+    var child2: @Child
+    init(child1: @Child, child2: @Child) {
+        self.child1 <- child1
+        self.child2 <- child2
+    }
+}
+```
+
+The order in which the nested resources are destroyed is deterministic but unspecified, and cannot be influenced by the developer. In this example, when `Parent` is destroyed, the `child1` and `child2` fields are also both destroyed in some unspecified order. 
+
+In previous versions of Cadence, it was possible to define a special `destroy` function that would execute arbitrary code when a resource was destroyed, but this is no longer the case.
+
+## Destroy events
+
+While it is not possible to specify arbitrary code to execute upon the destruction of a resource, it is possible to specify a special [event] to be automatically emitted when a resource is destroyed. The event has a reserved name — `ResourceDestroyed` — and it uses a special syntax:
+
+```cadence
+resource R {
+    event ResourceDestroyed(id: UInt64 = self.id) 
+
+    let id: UInt64
+
+    init(_ id: UInt64) {
+        self.id = id
+    }
+}
+```
+
+Whenever a value of type `R` defined this way is destroyed, a special `R.ResourceDestroyed` event is emitted. The special syntax used in the definition of the `ResourceDestroyed` specifies what the values associated with each event parameter will be; in this case, the `id` field of the `R.ResourceDestroyed` event will be the value that the `id` field held immediately before the resource was destroyed. In general, for a `ResourceDestroyed` event defined as:
+
+```cadence
+event ResourceDestroyed(field1: T1 = e1, field2: T2 = e2, ...)
+```
+
+- The value of `field1` on the event will be the result of evaluating `e1` before destroying the resource.
+- The value of `field2` on the event will be the result of evaluating `e2` before destroying the resource, and so on.
+
+As one might expect, `e1` and `e2` must also be expressions of type `T1` and `T2`, respectively.
+
+In order to guarantee that these events can be emitted with no chance of failure at runtime, there are restrictions placed on which kinds of types and expressions can be used in their definitions. In general, an expression defining the value of a field (the `e` in the general definition above) can only be a member or indexed access on `self` (or, `base` in the case of an [attachment]), or a literal. The types of event fields are restricted to number types, `String`s, `Boolean`s, `Address`es, and `Path`s. 
+
+## Resources in closures
+
+Resources cannot be captured in closures, as that could potentially result in duplications:
+
+```cadence
+resource R {}
+
+// Invalid: Declare a function which returns a closure which refers to
+// the resource parameter `resource`. Each call to the returned function
+// would return the resource, which should not be possible.
+//
+fun makeCloner(resource: @R): fun(): @R {
+    return fun (): @R {
+        return <-resource
+    }
+}
+
+let test = makeCloner(resource: <-create R())
+```
+
+## Resources in arrays and dictionaries
+
+Arrays and dictionaries behave differently when they contain resources: it is **not** allowed to index into an array to read an element at a certain index or assign to it, or index into a dictionary to read a value for a certain key or set a value for the key.
+
+Instead, use a swap statement (`<->`) or shift statement (`<- target <-`) to replace the accessed resource with another resource.
+
+Declare a constant for an array of resources. Then, create two resources and move them into the array (`resources` has type `@[R]`):
+
+```cadence
+resource R {}
+
+let resources <- [
+    <-create R(),
+    <-create R()
+]
+
+// Invalid: Reading an element from a resource array is not allowed.
+//
+let firstResource <- resources[0]
+
+// Invalid: Setting an element in a resource array is not allowed,
+// as it would result in the loss of the current value.
+//
+resources[0] <- create R()
+```
+
+Instead, when attempting to either read an element or update an element in a resource array, use a swap statement with a variable to replace the accessed element:
+
+```cadence
+var res <- create R()
+resources[0] <-> res
+// `resources[0]` now contains the new resource.
+// `res` now contains the old resource.
+```
+
+Use the shift statement to move the new resource into the array at the same time that the old resource is being moved out:
+
+```cadence
+let oldRes <- resources[0] <- create R()
+// The old object still needs to be handled
+destroy oldRes
+```
+
+The same applies to dictionaries.
+
+Declare a constant for a dictionary of resources. Then, create two resources and move them into the dictionary (`resources` has type `@{String: R}`):
+
+```cadence
+let resources <- {
+    "r1": <-create R(),
+    "r2": <-create R()
+}
+
+// Invalid: Reading an element from a resource dictionary is not allowed.
+// It's not obvious that an access like this would have to remove
+// the key from the dictionary.
+//
+let firstResource <- resources["r1"]
+```
+
+Instead, make the removal explicit by using the `remove` function:
+
+```cadence
+let firstResource <- resources.remove(key: "r1")
+
+// Invalid: Setting an element in a resource dictionary is not allowed,
+// as it would result in the loss of the current value.
+//
+resources["r1"] <- create R()
+```
+
+When attempting to either read an element or update an element in a resource dictionary, use a swap statement with a variable to replace the accessed element.
+
+The result of a dictionary read is optional, as the given key might not exist in the dictionary. The types on both sides of the swap operator must be the same, so also declare the variable as an optional:
+
+```cadence
+var res: @R? <- create R()
+resources["r1"] <-> res
+// `resources["r1"]` now contains the new resource.
+// `res` now contains the old resource.
+```
+
+Use the shift statement to move the new resource into the dictionary at the same time that the old resource is being moved out:
+
+```cadence
+let oldRes <- resources["r2"] <- create R()
+// The old object still needs to be handled
+destroy oldRes
+```
+
+Resources cannot be moved into arrays and dictionaries multiple times, as that would cause a duplication:
+
+```cadence
+let resource <- create R()
+
+// Invalid: The resource variable `resource` can only be moved into the array once.
+//
+let resources <- [
+    <-resource,
+    <-resource
+]
+```
+
+```cadence
+let resource <- create R()
+
+// Invalid: The resource variable `resource` can only be moved into the dictionary once.
+let resources <- {
+    "res1": <-resource,
+    "res2": <-resource
+}
+```
+
+Resource arrays and dictionaries can be destroyed:
+
+```cadence
+let resources <- [
+    <-create R(),
+    <-create R()
+]
+destroy resources
+```
+
+```cadence
+let resources <- {
+    "r1": <-create R(),
+    "r2": <-create R()
+}
+destroy resources
+```
+
+The variable array functions, like `append`, `insert`, and `remove`, behave like non-resource arrays. Please note, however, that the result of the `remove` functions must be used:
+
+```cadence
+let resources <- [<-create R()]
+// `resources.length` is `1`
+
+resources.append(<-create R())
+// `resources.length` is `2`
+
+let first <- resource.remove(at: 0)
+// `resources.length` is `1`
+destroy first
+
+resources.insert(at: 0, <-create R())
+// `resources.length` is `2`
+
+// Invalid: The statement ignores the result of the call to `remove`,
+// which would result in a loss.
+resource.remove(at: 0)
+
+destroy resources
+```
+
+- The variable array function `contains` is not available, as it is impossible: if the resource can be passed to the `contains` function, it is by definition not in the array.
+- The variable array function `concat` is not available, as it would result in the duplication of resources.
+- The dictionary functions like `insert` and `remove` behave like non-resource dictionaries. Please note, however, that the result of these functions must be used:
+
+```cadence
+let resources <- {"r1": <-create R()}
+// `resources.length` is `1`
+
+let first <- resource.remove(key: "r1")
+// `resources.length` is `0`
+destroy first
+
+let old <- resources.insert(key: "r1", <-create R())
+// `old` is nil, as there was no value for the key "r1"
+// `resources.length` is `1`
+
+let old2 <- resources.insert(key: "r1", <-create R())
+// `old2` is the old value for the key "r1"
+// `resources.length` is `1`
+
+destroy old
+destroy old2
+destroy resources
+```
+
+## Resource identifier
+
+Resources have an implicit unique identifier associated with them, implemented by a predeclared public field `let uuid: UInt64` on each resource.
+
+This identifier is automatically set when the resource is created, before the resource's initializer is called (i.e., the identifier can be used in the initializer), and will be unique even after the resource is destroyed (i.e., no two resources will ever have the same identifier).
+
+1. Declare a resource without any fields:
+
+   ```cadence
+   resource R {}
+   ```
+
+1. Create two resources:
+
+   ```cadence
+   let r1 <- create R()
+   let r2 <- create R()
+   ```
+
+1. Get each resource's unique identifier:
+
+   ```cadence
+   let id1 = r1.uuid
+   let id2 = r2.uuid
+   ```
+
+1. Destroy the first resource:
+
+   ```cadence
+   destroy r1
+   ```
+
+1. Create a third resource:
+
+   ```cadence
+   let r3 <- create R()
+
+   let id3 = r3.uuid
+
+   id1 != id2  // true
+   id2 != id3  // true
+   id3 != id1  // true
+   ```
+
+:::warning
+The details of how the identifiers are generated is an implementation detail.
+
+Do not rely on or assume any particular behavior in Cadence programs.
+:::
+## Resource owner
+
+Resources have the implicit field `let owner: &Account?`. If the resource is currently [stored in an account], then the field contains the publicly accessible portion of the account. Otherwise the field is `nil`.
+
+The field's value changes when the resource is moved from outside account storage into account storage, when it is moved from the storage of one account to the storage of another account, and when it is moved out of account storage.
+
+{/* Relative links. Will not render on the page */}
+
+[event]: ./events
+[attachment]: ./attachments
+[stored in an account]: ./accounts/storage
+
+

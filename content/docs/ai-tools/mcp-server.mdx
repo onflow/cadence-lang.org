@@ -1,0 +1,90 @@
+---
+title: MCP Server
+---
+
+The Cadence MCP server gives AI agents access to Cadence documentation search, code checking, type inspection, and symbol lookup — all over HTTP. No local setup required.
+
+**Endpoint**: `https://cadence-mcp.up.railway.app/mcp`
+
+## Quick start
+
+### One-click install
+
+<a href="cursor://anysphere.cursor-deeplink/mcp/install?name=cadence&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIm1jcC1yZW1vdGUiLCJodHRwczovL2NhZGVuY2UtbWNwLnVwLnJhaWx3YXkuYXBwL21jcCJdfQ=="><img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Install in Cursor" /></a>
+<a href="vscode:mcp/install?%7B%22name%22%3A%20%22cadence%22%2C%20%22config%22%3A%20%7B%22type%22%3A%20%22http%22%2C%20%22url%22%3A%20%22https%3A%2F%2Fcadence-mcp.up.railway.app%2Fmcp%22%7D%7D"><img src="https://img.shields.io/badge/VS_Code-Install_MCP-000000?logo=visualstudiocode" alt="Install in VS Code" /></a>
+
+### Claude Code
+
+```bash
+claude mcp add cadence-mcp -- npx -y mcp-remote https://cadence-mcp.up.railway.app/mcp
+```
+
+### Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "cadence": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://cadence-mcp.up.railway.app/mcp"]
+    }
+  }
+}
+```
+
+## Available tools
+
+| Tool | Description |
+|---|---|
+| `search_docs` | Search Cadence and Flow documentation by keyword |
+| `get_doc` | Get full content of a documentation page |
+| `browse_docs` | Browse the documentation tree structure |
+| `cadence_check` | Check Cadence code for syntax and type errors |
+| `cadence_hover` | Get type information for a symbol at a position |
+| `cadence_definition` | Find where a symbol is defined |
+| `cadence_symbols` | List all symbols in a piece of Cadence code |
+
+All LSP tools (`cadence_check`, `cadence_hover`, `cadence_definition`, `cadence_symbols`) support mainnet and testnet address imports (e.g. `import FungibleToken from 0xf233dcee88fe0abe`). Dependencies are resolved automatically.
+
+## Use directly via HTTP
+
+The MCP endpoint uses [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http). You can call tools directly:
+
+```bash
+# List available tools
+curl -X POST https://cadence-mcp.up.railway.app/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+
+# Check Cadence code for errors
+curl -X POST https://cadence-mcp.up.railway.app/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{
+    "jsonrpc":"2.0","id":1,
+    "method":"tools/call",
+    "params":{
+      "name":"cadence_check",
+      "arguments":{"code":"access(all) fun greet(): String { return \"Hi\" }"}
+    }
+  }'
+```
+
+## Run locally
+
+For offline use or development, you can run the MCP server locally via stdio:
+
+```bash
+npx @outblock/cadence-mcp
+```
+
+This requires the [Flow CLI](https://developers.flow.com/tools/flow-cli) installed locally for LSP tools.
+
+To configure a local stdio server in Claude Code:
+
+```bash
+claude mcp add cadence-mcp -- npx -y @outblock/cadence-mcp
+```

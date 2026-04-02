@@ -1,0 +1,634 @@
+{
+  "Int/zero": {
+    "input": {
+      "type": "Int",
+      "value": "0"
+    },
+    "expected": {
+      "type": "Int",
+      "value": "0"
+    }
+  },
+  "Int/positive": {
+    "input": {
+      "type": "Int",
+      "value": "42"
+    },
+    "expected": {
+      "type": "Int",
+      "value": "42"
+    }
+  },
+  "Int/negative": {
+    "input": {
+      "type": "Int",
+      "value": "-42"
+    },
+    "expected": {
+      "type": "Int",
+      "value": "-42"
+    }
+  },
+  "Int/large": {
+    "input": {
+      "type": "Int",
+      "value": "999999999999999999999"
+    },
+    "expected": {
+      "type": "Int",
+      "value": "999999999999999999999"
+    }
+  },
+  "UInt/zero": {
+    "input": {
+      "type": "UInt",
+      "value": "0"
+    },
+    "expected": {
+      "type": "UInt",
+      "value": "0"
+    }
+  },
+  "UInt/positive": {
+    "input": {
+      "type": "UInt",
+      "value": "42"
+    },
+    "expected": {
+      "type": "UInt",
+      "value": "42"
+    }
+  },
+  "UInt/large": {
+    "input": {
+      "type": "UInt",
+      "value": "999999999999999999999"
+    },
+    "expected": {
+      "type": "UInt",
+      "value": "999999999999999999999"
+    }
+  },
+  "Int8/zero": {
+    "input": {
+      "type": "Int8",
+      "value": "0"
+    },
+    "expected": {
+      "type": "Int8",
+      "value": "0"
+    }
+  },
+  "Int8/min": {
+    "input": {
+      "type": "Int8",
+      "value": "-128"
+    },
+    "expected": {
+      "type": "Int8",
+      "value": "-128"
+    }
+  },
+  "Int8/max": {
+    "input": {
+      "type": "Int8",
+      "value": "127"
+    },
+    "expected": {
+      "type": "Int8",
+      "value": "127"
+    }
+  },
+  "UInt8/zero": {
+    "input": {
+      "type": "UInt8",
+      "value": "0"
+    },
+    "expected": {
+      "type": "UInt8",
+      "value": "0"
+    }
+  },
+  "UInt8/max": {
+    "input": {
+      "type": "UInt8",
+      "value": "255"
+    },
+    "expected": {
+      "type": "UInt8",
+      "value": "255"
+    }
+  },
+  "UInt8/mid": {
+    "input": {
+      "type": "UInt8",
+      "value": "123"
+    },
+    "expected": {
+      "type": "UInt8",
+      "value": "123"
+    }
+  },
+  "Int16/min": {
+    "input": {
+      "type": "Int16",
+      "value": "-32768"
+    },
+    "expected": {
+      "type": "Int16",
+      "value": "-32768"
+    }
+  },
+  "Int16/max": {
+    "input": {
+      "type": "Int16",
+      "value": "32767"
+    },
+    "expected": {
+      "type": "Int16",
+      "value": "32767"
+    }
+  },
+  "UInt16/zero": {
+    "input": {
+      "type": "UInt16",
+      "value": "0"
+    },
+    "expected": {
+      "type": "UInt16",
+      "value": "0"
+    }
+  },
+  "UInt16/max": {
+    "input": {
+      "type": "UInt16",
+      "value": "65535"
+    },
+    "expected": {
+      "type": "UInt16",
+      "value": "65535"
+    }
+  },
+  "Int32/min": {
+    "input": {
+      "type": "Int32",
+      "value": "-2147483648"
+    },
+    "expected": {
+      "type": "Int32",
+      "value": "-2147483648"
+    }
+  },
+  "Int32/max": {
+    "input": {
+      "type": "Int32",
+      "value": "2147483647"
+    },
+    "expected": {
+      "type": "Int32",
+      "value": "2147483647"
+    }
+  },
+  "UInt32/max": {
+    "input": {
+      "type": "UInt32",
+      "value": "4294967295"
+    },
+    "expected": {
+      "type": "UInt32",
+      "value": "4294967295"
+    }
+  },
+  "Int64/min": {
+    "input": {
+      "type": "Int64",
+      "value": "-9223372036854775808"
+    },
+    "expected": {
+      "type": "Int64",
+      "value": "-9223372036854775808"
+    }
+  },
+  "Int64/max": {
+    "input": {
+      "type": "Int64",
+      "value": "9223372036854775807"
+    },
+    "expected": {
+      "type": "Int64",
+      "value": "9223372036854775807"
+    }
+  },
+  "UInt64/max": {
+    "input": {
+      "type": "UInt64",
+      "value": "18446744073709551615"
+    },
+    "expected": {
+      "type": "UInt64",
+      "value": "18446744073709551615"
+    }
+  },
+  "Int128/zero": {
+    "input": {
+      "type": "Int128",
+      "value": "0"
+    },
+    "expected": {
+      "type": "Int128",
+      "value": "0"
+    }
+  },
+  "Int128/positive": {
+    "input": {
+      "type": "Int128",
+      "value": "170141183460469231731687303715884105727"
+    },
+    "expected": {
+      "type": "Int128",
+      "value": "170141183460469231731687303715884105727"
+    }
+  },
+  "UInt128/max": {
+    "input": {
+      "type": "UInt128",
+      "value": "340282366920938463463374607431768211455"
+    },
+    "expected": {
+      "type": "UInt128",
+      "value": "340282366920938463463374607431768211455"
+    }
+  },
+  "Int256/zero": {
+    "input": {
+      "type": "Int256",
+      "value": "0"
+    },
+    "expected": {
+      "type": "Int256",
+      "value": "0"
+    }
+  },
+  "UInt256/zero": {
+    "input": {
+      "type": "UInt256",
+      "value": "0"
+    },
+    "expected": {
+      "type": "UInt256",
+      "value": "0"
+    }
+  },
+  "Word8/zero": {
+    "input": {
+      "type": "Word8",
+      "value": "0"
+    },
+    "expected": {
+      "type": "Word8",
+      "value": "0"
+    }
+  },
+  "Word8/max": {
+    "input": {
+      "type": "Word8",
+      "value": "255"
+    },
+    "expected": {
+      "type": "Word8",
+      "value": "255"
+    }
+  },
+  "Word16/max": {
+    "input": {
+      "type": "Word16",
+      "value": "65535"
+    },
+    "expected": {
+      "type": "Word16",
+      "value": "65535"
+    }
+  },
+  "Word32/max": {
+    "input": {
+      "type": "Word32",
+      "value": "4294967295"
+    },
+    "expected": {
+      "type": "Word32",
+      "value": "4294967295"
+    }
+  },
+  "Word64/max": {
+    "input": {
+      "type": "Word64",
+      "value": "18446744073709551615"
+    },
+    "expected": {
+      "type": "Word64",
+      "value": "18446744073709551615"
+    }
+  },
+  "UFix64/zero": {
+    "input": {
+      "type": "UFix64",
+      "value": "0.0"
+    },
+    "expected": {
+      "type": "UFix64",
+      "value": "0.00000000"
+    }
+  },
+  "UFix64/integer": {
+    "input": {
+      "type": "UFix64",
+      "value": "10.0"
+    },
+    "expected": {
+      "type": "UFix64",
+      "value": "10.00000000"
+    }
+  },
+  "UFix64/decimal": {
+    "input": {
+      "type": "UFix64",
+      "value": "10.5"
+    },
+    "expected": {
+      "type": "UFix64",
+      "value": "10.50000000"
+    }
+  },
+  "UFix64/precision": {
+    "input": {
+      "type": "UFix64",
+      "value": "10.12345678"
+    },
+    "expected": {
+      "type": "UFix64",
+      "value": "10.12345678"
+    }
+  },
+  "Fix64/zero": {
+    "input": {
+      "type": "Fix64",
+      "value": "0.0"
+    },
+    "expected": {
+      "type": "Fix64",
+      "value": "0.00000000"
+    }
+  },
+  "Fix64/positive": {
+    "input": {
+      "type": "Fix64",
+      "value": "12.3"
+    },
+    "expected": {
+      "type": "Fix64",
+      "value": "12.30000000"
+    }
+  },
+  "Fix64/negative": {
+    "input": {
+      "type": "Fix64",
+      "value": "-12.3"
+    },
+    "expected": {
+      "type": "Fix64",
+      "value": "-12.30000000"
+    }
+  },
+  "Bool/true": {
+    "input": {
+      "type": "Bool",
+      "value": true
+    },
+    "expected": {
+      "type": "Bool",
+      "value": true
+    }
+  },
+  "Bool/false": {
+    "input": {
+      "type": "Bool",
+      "value": false
+    },
+    "expected": {
+      "type": "Bool",
+      "value": false
+    }
+  },
+  "String/empty": {
+    "input": {
+      "type": "String",
+      "value": ""
+    },
+    "expected": {
+      "type": "String",
+      "value": ""
+    }
+  },
+  "String/hello": {
+    "input": {
+      "type": "String",
+      "value": "Hello, world!"
+    },
+    "expected": {
+      "type": "String",
+      "value": "Hello, world!"
+    }
+  },
+  "String/unicode": {
+    "input": {
+      "type": "String",
+      "value": "你好🌍"
+    },
+    "expected": {
+      "type": "String",
+      "value": "你好🌍"
+    }
+  },
+  "Character/single": {
+    "input": {
+      "type": "Character",
+      "value": "a"
+    },
+    "expected": {
+      "type": "Character",
+      "value": "a"
+    }
+  },
+  "Character/unicode": {
+    "input": {
+      "type": "Character",
+      "value": "🌍"
+    },
+    "expected": {
+      "type": "Character",
+      "value": "🌍"
+    }
+  },
+  "Address/standard": {
+    "input": {
+      "type": "Address",
+      "value": "0x1654653399040a61"
+    },
+    "expected": {
+      "type": "Address",
+      "value": "0x1654653399040a61"
+    }
+  },
+  "Address/short": {
+    "input": {
+      "type": "Address",
+      "value": "0x1"
+    },
+    "expected": {
+      "type": "Address",
+      "value": "0x1"
+    }
+  },
+  "Optional/null": {
+    "input": {
+      "type": "Optional",
+      "value": null
+    },
+    "expected": {
+      "type": "Optional",
+      "value": null
+    }
+  },
+  "Optional/some_uint8": {
+    "input": {
+      "type": "Optional",
+      "value": {
+        "type": "UInt8",
+        "value": "123"
+      }
+    },
+    "expected": {
+      "type": "Optional",
+      "value": {
+        "type": "UInt8",
+        "value": "123"
+      }
+    }
+  },
+  "Array/empty": {
+    "input": {
+      "type": "Array",
+      "value": []
+    },
+    "expected": {
+      "type": "Array",
+      "value": []
+    }
+  },
+  "Array/strings": {
+    "input": {
+      "type": "Array",
+      "value": [
+        {
+          "type": "String",
+          "value": "hello"
+        },
+        {
+          "type": "String",
+          "value": "world"
+        }
+      ]
+    },
+    "expected": {
+      "type": "Array",
+      "value": [
+        {
+          "type": "String",
+          "value": "hello"
+        },
+        {
+          "type": "String",
+          "value": "world"
+        }
+      ]
+    }
+  },
+  "Array/uint8s": {
+    "input": {
+      "type": "Array",
+      "value": [
+        {
+          "type": "UInt8",
+          "value": "1"
+        },
+        {
+          "type": "UInt8",
+          "value": "2"
+        },
+        {
+          "type": "UInt8",
+          "value": "3"
+        }
+      ]
+    },
+    "expected": {
+      "type": "Array",
+      "value": [
+        {
+          "type": "UInt8",
+          "value": "1"
+        },
+        {
+          "type": "UInt8",
+          "value": "2"
+        },
+        {
+          "type": "UInt8",
+          "value": "3"
+        }
+      ]
+    }
+  },
+  "Dictionary/empty": {
+    "input": {
+      "type": "Dictionary",
+      "value": []
+    },
+    "expected": {
+      "type": "Dictionary",
+      "value": []
+    }
+  },
+  "Dictionary/string_uint8": {
+    "input": {
+      "type": "Dictionary",
+      "value": [
+        {
+          "key": {
+            "type": "String",
+            "value": "a"
+          },
+          "value": {
+            "type": "UInt8",
+            "value": "1"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "type": "Dictionary",
+      "value": [
+        {
+          "key": {
+            "type": "String",
+            "value": "a"
+          },
+          "value": {
+            "type": "UInt8",
+            "value": "1"
+          }
+        }
+      ]
+    }
+  }
+}

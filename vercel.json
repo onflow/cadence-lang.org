@@ -1,6 +1,7 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
+  "buildCommand": "bun run build",
+  "installCommand": "bun install",
+  "framework": null,
   "redirects": [
     {
       "source": "/docs/cadence_migration_guide/:path*",

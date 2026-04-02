@@ -1,0 +1,32 @@
+---
+title: Skills
+---
+
+[Skills](https://skills.sh) let you add domain knowledge to your AI coding agent with one command. The Cadence skill bundles the complete language reference, design patterns, security best practices, and code examples.
+
+## Install
+
+```bash
+npx skills add outblock/cadence-lang.org
+```
+
+This adds a `SKILL.md` file to your project that your AI agent reads automatically. No configuration needed.
+
+## What the skill includes
+
+- Language fundamentals (types, resources, capabilities, access control)
+- Contract patterns (FT, NFT, marketplace, governance)
+- Security best practices and anti-patterns
+- Testing framework reference
+- Links to documentation and LLM-optimized endpoints
+
+## Supported agents
+
+Any agent that reads project-level context files works out of the box:
+
+| Agent | Support |
+|---|---|
+| Claude Code | Reads `SKILL.md` automatically |
+| Cursor | Reads via project rules |
+| Windsurf | Reads via project context |
+| GitHub Copilot | Reads via `.github/copilot-instructions.md` |

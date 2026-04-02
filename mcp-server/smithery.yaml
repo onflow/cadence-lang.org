@@ -1,0 +1,13 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      flowCmd:
+        type: string
+        description: Path to Flow CLI binary (default: flow)
+    required: []
+  commandFunction:
+    - npx
+    - -y
+    - "@outblock/cadence-mcp"

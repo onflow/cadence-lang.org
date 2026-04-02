@@ -1,12 +1,21 @@
 # Dependencies
-/node_modules
+node_modules
 
-# Production
+# Build output
+/.output
+/.vercel/output
+dist
 /build
 
 # Generated files
-.docusaurus
-.cache-loader
+.source
+.vinxi
+.tanstack
+src/routeTree.gen.ts
+
+# IDE
+.idea
+.vscode
 
 # Misc
 .DS_Store
@@ -14,8 +23,8 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.env
 
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-.env
+bun-debug.log*

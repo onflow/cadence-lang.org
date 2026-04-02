@@ -1,0 +1,30 @@
+{
+  "pages": [
+    "syntax",
+    "constants-and-variables",
+    "values-and-types",
+    "types-and-type-system",
+    "operators",
+    "accounts",
+    "functions",
+    "pre-and-post-conditions",
+    "built-in-functions",
+    "control-flow",
+    "scope",
+    "resources",
+    "access-control",
+    "capabilities",
+    "interfaces",
+    "enumerations",
+    "references",
+    "imports",
+    "attachments",
+    "contracts",
+    "contract-updatability",
+    "transactions",
+    "events",
+    "core-events",
+    "environment-information",
+    "crypto"
+  ]
+}

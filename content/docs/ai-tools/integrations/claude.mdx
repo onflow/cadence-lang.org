@@ -1,0 +1,53 @@
+---
+title: Claude
+---
+
+Configure Claude to work with Cadence via skills, MCP, or context injection.
+
+## Claude Code
+
+### Install the Cadence skill
+
+```bash
+npx skills add outblock/cadence-lang.org
+```
+
+### Add MCP server
+
+```bash
+claude mcp add cadence-mcp -- npx -y mcp-remote https://cadence-mcp.up.railway.app/mcp
+```
+
+Or use `install-mcp` for auto-configuration:
+
+```bash
+npx install-mcp @outblock/cadence-mcp --client claude-desktop
+```
+
+This gives Claude Code access to all [MCP tools](../mcp-server) — documentation search, code checking, type inspection, and more.
+
+## Claude Desktop
+
+Add the Cadence MCP server to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "cadence": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://cadence-mcp.up.railway.app/mcp"]
+    }
+  }
+}
+```
+
+## Claude API
+
+When building with the Claude API, inject Cadence context into the system prompt:
+
+```bash
+# Fetch the full documentation
+curl -s https://cadence-lang.org/llms-full.txt
+```
+
+Or use the [MCP endpoint](../mcp-server) for programmatic access to documentation and language tools.

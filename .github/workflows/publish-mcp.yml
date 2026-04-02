@@ -1,0 +1,40 @@
+name: Publish MCP Server to npm
+
+on:
+  push:
+    tags:
+      - 'mcp-v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mcp-server
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: bun install
+
+      - run: bun run build
+
+      - run: bun test:unit
+
+      - name: Set version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#mcp-v}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "first-steps",
+    "hello-world",
+    "resources",
+    "capabilities",
+    "non-fungible-tokens-1",
+    "non-fungible-tokens-2",
+    "fungible-tokens",
+    "marketplace-setup",
+    "marketplace-compose",
+    "voting"
+  ],
+  "title": "Tutorial"
+}

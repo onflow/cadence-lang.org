@@ -1,0 +1,32 @@
+---
+title: LLM Endpoints
+---
+
+The site exposes plain-text endpoints optimized for LLM context windows. These are useful for RAG pipelines or injecting Cadence documentation directly into prompts.
+
+## Endpoints
+
+| Endpoint | Description |
+|---|---|
+| [`/llms.txt`](/llms.txt) | Index of all documentation pages with links |
+| [`/llms-full.txt`](/llms-full.txt) | Complete documentation as plain text |
+
+## llms.txt
+
+A lightweight index listing every documentation page with its title and URL. Use this when you need to find the right page before fetching its full content.
+
+```bash
+curl https://cadence-lang.org/llms.txt
+```
+
+## llms-full.txt
+
+The complete processed markdown for all documentation pages, concatenated into a single file. Use this when you want to inject the entire Cadence knowledge base into an LLM context window.
+
+```bash
+curl https://cadence-lang.org/llms-full.txt
+```
+
+:::tip
+You can also append `.mdx` to any documentation URL to get raw markdown for a single page. For example: `https://cadence-lang.org/docs/language/resources.mdx`
+:::

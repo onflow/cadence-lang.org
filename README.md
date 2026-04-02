@@ -1,24 +1,41 @@
 # cadence-lang.org
 
-If you're looking for the live site, you can find it at [cadence-lang.org](https://cadence-lang.org).
+The official documentation site for [Cadence](https://github.com/onflow/cadence), the resource-oriented programming language for the [Flow blockchain](https://flow.com).
 
-## Technical
+Live at [cadence-lang.org](https://cadence-lang.org).
 
-cadence-lang.org uses [Docusaurus2](https://docusaurus.io).
+## AI Integration
 
-### Running locally
+### Skills
 
-Requirements:
-
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/en)
-
-To run the site locally, enter the following commands into a terminal window:
+Install the Cadence skill for your AI coding agent:
 
 ```sh
-git clone https://github.com/onflow/cadence-lang.org.git
-cd cadence-lang.org
-npm i
-npm run start
-open "http://localhost:3000"
+npx skills add outblock/cadence-lang.org
 ```
+
+### MCP Server
+
+Install the [Cadence MCP server](https://www.npmjs.com/package/@outblock/cadence-mcp) for AI-powered Cadence development — code checking, type info, and doc search:
+
+```sh
+npx install-mcp @outblock/cadence-mcp --client claude
+```
+
+Supported clients: `claude`, `cursor`, `windsurf`, `copilot`, `vscode`
+
+### LLM Context
+
+| Endpoint | Description |
+|----------|-------------|
+| [cadence-lang.org/llms.txt](https://cadence-lang.org/llms.txt) | Cadence doc index for LLMs |
+| [cadence-lang.org/llms-full.txt](https://cadence-lang.org/llms-full.txt) | Full Cadence documentation as plain text |
+
+## Tech Stack
+
+- [TanStack Start](https://tanstack.com/start) — SSR framework with file-based routing
+- [Fumadocs](https://fumadocs.vercel.app/) — MDX documentation engine
+- [Tailwind CSS v4](https://tailwindcss.com/) — styling
+- [Shiki](https://shiki.style/) — syntax highlighting with custom Cadence TextMate grammar
+- [@vercel/og](https://vercel.com/docs/functions/og-image-generation) — dynamic OG image generation
+- Deployed on [Vercel](https://vercel.com)

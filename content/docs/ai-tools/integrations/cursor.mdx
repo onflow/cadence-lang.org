@@ -1,0 +1,35 @@
+---
+title: Cursor
+---
+
+Configure Cursor to understand Cadence smart contracts.
+
+## Install the Cadence skill
+
+```bash
+npx skills add outblock/cadence-lang.org
+```
+
+This adds a `SKILL.md` file to your project. Cursor reads it automatically as project context.
+
+## Add project rules
+
+You can also create a `.cursor/rules` file to reinforce Cadence-specific behavior:
+
+```
+When working with .cdc files, follow the Cadence language conventions.
+Refer to SKILL.md for the complete Cadence reference.
+Use resource-oriented patterns. Never copy resources — always move them with <-.
+```
+
+## Add MCP server
+
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=cadence&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIm1jcC1yZW1vdGUiLCJodHRwczovL2NhZGVuY2UtbWNwLnVwLnJhaWx3YXkuYXBwL21jcCJdfQ==)
+
+Or manually add in Cursor settings:
+
+- **Name**: `cadence`
+- **Type**: `command`
+- **Command**: `npx -y mcp-remote https://cadence-mcp.up.railway.app/mcp`
+
+This gives Cursor access to the Cadence [MCP tools](../mcp-server) for documentation search and code checking.

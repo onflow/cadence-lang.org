@@ -1,0 +1,30 @@
+---
+title: Antigravity
+---
+
+Configure [Antigravity](https://antigravity.dev) to work with Cadence.
+
+## Install the Cadence skill
+
+```bash
+npx skills add outblock/cadence-lang.org
+```
+
+Antigravity reads project-level context files automatically, so `SKILL.md` is picked up on startup.
+
+## Add MCP server
+
+Add the Cadence MCP server to your Antigravity configuration:
+
+```json
+{
+  "mcpServers": {
+    "cadence": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://cadence-mcp.up.railway.app/mcp"]
+    }
+  }
+}
+```
+
+This gives Antigravity access to all [MCP tools](../mcp-server) — documentation search, code checking, type inspection, and more.

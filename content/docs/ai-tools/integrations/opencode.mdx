@@ -1,0 +1,30 @@
+---
+title: OpenCode
+---
+
+Configure [OpenCode](https://opencode.ai) to work with Cadence.
+
+## Install the Cadence skill
+
+```bash
+npx skills add outblock/cadence-lang.org
+```
+
+OpenCode reads project-level context files automatically.
+
+## Add MCP server
+
+Add the Cadence MCP server to your OpenCode configuration:
+
+```json
+{
+  "mcp": {
+    "cadence": {
+      "type": "remote",
+      "url": "https://cadence-mcp.up.railway.app/mcp"
+    }
+  }
+}
+```
+
+This gives OpenCode access to all [MCP tools](../mcp-server) — documentation search, code checking, type inspection, and more.

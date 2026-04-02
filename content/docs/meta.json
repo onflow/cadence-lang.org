@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "...",
+    "why",
+    "solidity-to-cadence",
+    "json-cadence-spec",
+    "design-patterns",
+    "anti-patterns",
+    "project-development-tips",
+    "measuring-time",
+    "testing-framework",
+    "contract-upgrades",
+    "security-best-practices",
+    "ai-tools"
+  ]
+}

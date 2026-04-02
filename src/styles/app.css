@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* ════════ FONTS ════════ */
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --bg: #f5f5f5;
+  --foreground: #09090b;
+  --muted: #71717a;
+  --accent: #008556;
+  --border: rgba(0, 0, 0, 0.1);
+  --grid: rgba(0, 0, 0, 0.03);
+
+  /* Fumadocs Theme Overrides — light mode */
+  --color-fd-primary: #008556;
+  --color-fd-primary-foreground: #ffffff;
+}
+
+.dark {
+  --bg: #0a0a0a;
+  --foreground: #ffffff;
+  --muted: #888888;
+  --accent: #00FF94;
+  --border: rgba(255, 255, 255, 0.1);
+  --grid: rgba(255, 255, 255, 0.03);
+
+  /* Fumadocs Theme Overrides — dark mode */
+  --color-fd-primary: #00FF94;
+  --color-fd-primary-foreground: #000000;
+}
+
+body {
+  font-family: 'Geist', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--bg);
+}
+
+/* ════════ GLOBAL ACCENT & HIGHLIGHT ════════ */
+::selection {
+  background-color: var(--accent);
+  color: #000;
+}
+
+::-moz-selection {
+  background-color: var(--accent);
+  color: #000;
+}
+
+/* ════════ GRID SYSTEM ════════ */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black, transparent);
+}
+
+.hairline-border {
+  border: 1px solid var(--border);
+}
+
+/* ════════ TYPOGRAPHY ════════ */
+.heading-xl {
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.85;
+}
+
+.mono-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+}
+
+/* ════════ COMPONENTS ════════ */
+.btn-primary {
+  background: var(--foreground);
+  color: var(--bg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  border: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ════════ HOMEPAGE CODE — Shiki dual theme ════════ */
+/* Light mode: Shiki sets color via inline styles, no CSS needed. */
+/* Dark mode: override inline color with the --shiki-dark variable. */
+.dark .homepage-code .shiki span {
+  color: var(--shiki-dark) !important;
+}
+
+.feature-line {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.feature-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+
+/* ════════ ANIMATIONS ════════ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

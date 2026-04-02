@@ -1,0 +1,732 @@
+[
+  {
+    "name": "UInt8/0",
+    "typeName": "UInt8",
+    "value": "0",
+    "accepted": true,
+    "result": {
+      "type": "UInt8",
+      "value": "0"
+    }
+  },
+  {
+    "name": "UInt8/255",
+    "typeName": "UInt8",
+    "value": "255",
+    "accepted": true,
+    "result": {
+      "type": "UInt8",
+      "value": "255"
+    }
+  },
+  {
+    "name": "UInt8/256",
+    "typeName": "UInt8",
+    "value": "256",
+    "accepted": true,
+    "result": {
+      "type": "UInt8",
+      "value": "256"
+    }
+  },
+  {
+    "name": "UInt8/-1",
+    "typeName": "UInt8",
+    "value": "-1",
+    "accepted": true,
+    "result": {
+      "type": "UInt8",
+      "value": "-1"
+    }
+  },
+  {
+    "name": "UInt8/abc",
+    "typeName": "UInt8",
+    "value": "abc",
+    "accepted": true,
+    "result": {
+      "type": "UInt8",
+      "value": "abc"
+    }
+  },
+  {
+    "name": "UInt8/empty",
+    "typeName": "UInt8",
+    "value": "",
+    "accepted": true,
+    "result": {
+      "type": "UInt8",
+      "value": ""
+    }
+  },
+  {
+    "name": "UInt8/number",
+    "typeName": "UInt8",
+    "value": 123,
+    "accepted": true,
+    "result": {
+      "type": "UInt8",
+      "value": "123"
+    }
+  },
+  {
+    "name": "Int8/-128",
+    "typeName": "Int8",
+    "value": "-128",
+    "accepted": true,
+    "result": {
+      "type": "Int8",
+      "value": "-128"
+    }
+  },
+  {
+    "name": "Int8/127",
+    "typeName": "Int8",
+    "value": "127",
+    "accepted": true,
+    "result": {
+      "type": "Int8",
+      "value": "127"
+    }
+  },
+  {
+    "name": "Int8/128",
+    "typeName": "Int8",
+    "value": "128",
+    "accepted": true,
+    "result": {
+      "type": "Int8",
+      "value": "128"
+    }
+  },
+  {
+    "name": "Int8/-129",
+    "typeName": "Int8",
+    "value": "-129",
+    "accepted": true,
+    "result": {
+      "type": "Int8",
+      "value": "-129"
+    }
+  },
+  {
+    "name": "UInt16/65535",
+    "typeName": "UInt16",
+    "value": "65535",
+    "accepted": true,
+    "result": {
+      "type": "UInt16",
+      "value": "65535"
+    }
+  },
+  {
+    "name": "UInt16/65536",
+    "typeName": "UInt16",
+    "value": "65536",
+    "accepted": true,
+    "result": {
+      "type": "UInt16",
+      "value": "65536"
+    }
+  },
+  {
+    "name": "UInt32/4294967295",
+    "typeName": "UInt32",
+    "value": "4294967295",
+    "accepted": true,
+    "result": {
+      "type": "UInt32",
+      "value": "4294967295"
+    }
+  },
+  {
+    "name": "UInt32/4294967296",
+    "typeName": "UInt32",
+    "value": "4294967296",
+    "accepted": true,
+    "result": {
+      "type": "UInt32",
+      "value": "4294967296"
+    }
+  },
+  {
+    "name": "UInt64/max",
+    "typeName": "UInt64",
+    "value": "18446744073709551615",
+    "accepted": true,
+    "result": {
+      "type": "UInt64",
+      "value": "18446744073709551615"
+    }
+  },
+  {
+    "name": "UInt64/overflow",
+    "typeName": "UInt64",
+    "value": "18446744073709551616",
+    "accepted": true,
+    "result": {
+      "type": "UInt64",
+      "value": "18446744073709551616"
+    }
+  },
+  {
+    "name": "Int16/-32768",
+    "typeName": "Int16",
+    "value": "-32768",
+    "accepted": true,
+    "result": {
+      "type": "Int16",
+      "value": "-32768"
+    }
+  },
+  {
+    "name": "Int16/32767",
+    "typeName": "Int16",
+    "value": "32767",
+    "accepted": true,
+    "result": {
+      "type": "Int16",
+      "value": "32767"
+    }
+  },
+  {
+    "name": "Int16/-32769",
+    "typeName": "Int16",
+    "value": "-32769",
+    "accepted": true,
+    "result": {
+      "type": "Int16",
+      "value": "-32769"
+    }
+  },
+  {
+    "name": "Int16/32768",
+    "typeName": "Int16",
+    "value": "32768",
+    "accepted": true,
+    "result": {
+      "type": "Int16",
+      "value": "32768"
+    }
+  },
+  {
+    "name": "Int32/min",
+    "typeName": "Int32",
+    "value": "-2147483648",
+    "accepted": true,
+    "result": {
+      "type": "Int32",
+      "value": "-2147483648"
+    }
+  },
+  {
+    "name": "Int32/max",
+    "typeName": "Int32",
+    "value": "2147483647",
+    "accepted": true,
+    "result": {
+      "type": "Int32",
+      "value": "2147483647"
+    }
+  },
+  {
+    "name": "Int32/underflow",
+    "typeName": "Int32",
+    "value": "-2147483649",
+    "accepted": true,
+    "result": {
+      "type": "Int32",
+      "value": "-2147483649"
+    }
+  },
+  {
+    "name": "Int32/overflow",
+    "typeName": "Int32",
+    "value": "2147483648",
+    "accepted": true,
+    "result": {
+      "type": "Int32",
+      "value": "2147483648"
+    }
+  },
+  {
+    "name": "Int64/min",
+    "typeName": "Int64",
+    "value": "-9223372036854775808",
+    "accepted": true,
+    "result": {
+      "type": "Int64",
+      "value": "-9223372036854775808"
+    }
+  },
+  {
+    "name": "Int64/max",
+    "typeName": "Int64",
+    "value": "9223372036854775807",
+    "accepted": true,
+    "result": {
+      "type": "Int64",
+      "value": "9223372036854775807"
+    }
+  },
+  {
+    "name": "Int64/underflow",
+    "typeName": "Int64",
+    "value": "-9223372036854775809",
+    "accepted": true,
+    "result": {
+      "type": "Int64",
+      "value": "-9223372036854775809"
+    }
+  },
+  {
+    "name": "Int64/overflow",
+    "typeName": "Int64",
+    "value": "9223372036854775808",
+    "accepted": true,
+    "result": {
+      "type": "Int64",
+      "value": "9223372036854775808"
+    }
+  },
+  {
+    "name": "Int/huge_positive",
+    "typeName": "Int",
+    "value": "99999999999999999999999999999",
+    "accepted": true,
+    "result": {
+      "type": "Int",
+      "value": "99999999999999999999999999999"
+    }
+  },
+  {
+    "name": "Int/huge_negative",
+    "typeName": "Int",
+    "value": "-99999999999999999999999999999",
+    "accepted": true,
+    "result": {
+      "type": "Int",
+      "value": "-99999999999999999999999999999"
+    }
+  },
+  {
+    "name": "UInt/huge",
+    "typeName": "UInt",
+    "value": "99999999999999999999999999999",
+    "accepted": true,
+    "result": {
+      "type": "UInt",
+      "value": "99999999999999999999999999999"
+    }
+  },
+  {
+    "name": "UInt/-1",
+    "typeName": "UInt",
+    "value": "-1",
+    "accepted": true,
+    "result": {
+      "type": "UInt",
+      "value": "-1"
+    }
+  },
+  {
+    "name": "Word8/255",
+    "typeName": "Word8",
+    "value": "255",
+    "accepted": true,
+    "result": {
+      "type": "Word8",
+      "value": "255"
+    }
+  },
+  {
+    "name": "Word8/256",
+    "typeName": "Word8",
+    "value": "256",
+    "accepted": true,
+    "result": {
+      "type": "Word8",
+      "value": "256"
+    }
+  },
+  {
+    "name": "Word16/65535",
+    "typeName": "Word16",
+    "value": "65535",
+    "accepted": true,
+    "result": {
+      "type": "Word16",
+      "value": "65535"
+    }
+  },
+  {
+    "name": "Word16/65536",
+    "typeName": "Word16",
+    "value": "65536",
+    "accepted": true,
+    "result": {
+      "type": "Word16",
+      "value": "65536"
+    }
+  },
+  {
+    "name": "Word32/max",
+    "typeName": "Word32",
+    "value": "4294967295",
+    "accepted": true,
+    "result": {
+      "type": "Word32",
+      "value": "4294967295"
+    }
+  },
+  {
+    "name": "Word32/overflow",
+    "typeName": "Word32",
+    "value": "4294967296",
+    "accepted": true,
+    "result": {
+      "type": "Word32",
+      "value": "4294967296"
+    }
+  },
+  {
+    "name": "Word64/max",
+    "typeName": "Word64",
+    "value": "18446744073709551615",
+    "accepted": true,
+    "result": {
+      "type": "Word64",
+      "value": "18446744073709551615"
+    }
+  },
+  {
+    "name": "Word64/overflow",
+    "typeName": "Word64",
+    "value": "18446744073709551616",
+    "accepted": true,
+    "result": {
+      "type": "Word64",
+      "value": "18446744073709551616"
+    }
+  },
+  {
+    "name": "UFix64/0.0",
+    "typeName": "UFix64",
+    "value": "0.0",
+    "accepted": true,
+    "result": {
+      "type": "UFix64",
+      "value": "0.00000000"
+    }
+  },
+  {
+    "name": "UFix64/10.5",
+    "typeName": "UFix64",
+    "value": "10.5",
+    "accepted": true,
+    "result": {
+      "type": "UFix64",
+      "value": "10.50000000"
+    }
+  },
+  {
+    "name": "UFix64/10.12345678",
+    "typeName": "UFix64",
+    "value": "10.12345678",
+    "accepted": true,
+    "result": {
+      "type": "UFix64",
+      "value": "10.12345678"
+    }
+  },
+  {
+    "name": "UFix64/-1.0",
+    "typeName": "UFix64",
+    "value": "-1.0",
+    "accepted": true,
+    "result": {
+      "type": "UFix64",
+      "value": "-1.00000000"
+    }
+  },
+  {
+    "name": "UFix64/no_decimal",
+    "typeName": "UFix64",
+    "value": "10",
+    "accepted": false,
+    "error": "Type Error: Expected one decimal but found 1 in the [U]Fix64 value. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers"
+  },
+  {
+    "name": "UFix64/too_many_decimals",
+    "typeName": "UFix64",
+    "value": "1.123456789",
+    "accepted": false,
+    "error": "Type Error: Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found 9 digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers"
+  },
+  {
+    "name": "Fix64/0.0",
+    "typeName": "Fix64",
+    "value": "0.0",
+    "accepted": true,
+    "result": {
+      "type": "Fix64",
+      "value": "0.00000000"
+    }
+  },
+  {
+    "name": "Fix64/12.3",
+    "typeName": "Fix64",
+    "value": "12.3",
+    "accepted": true,
+    "result": {
+      "type": "Fix64",
+      "value": "12.30000000"
+    }
+  },
+  {
+    "name": "Fix64/-12.3",
+    "typeName": "Fix64",
+    "value": "-12.3",
+    "accepted": true,
+    "result": {
+      "type": "Fix64",
+      "value": "-12.30000000"
+    }
+  },
+  {
+    "name": "Fix64/too_many_decimals",
+    "typeName": "Fix64",
+    "value": "1.123456789",
+    "accepted": false,
+    "error": "Type Error: Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found 9 digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers"
+  },
+  {
+    "name": "Bool/true",
+    "typeName": "Bool",
+    "value": true,
+    "accepted": true,
+    "result": {
+      "type": "Bool",
+      "value": true
+    }
+  },
+  {
+    "name": "Bool/false",
+    "typeName": "Bool",
+    "value": false,
+    "accepted": true,
+    "result": {
+      "type": "Bool",
+      "value": false
+    }
+  },
+  {
+    "name": "Bool/string_true",
+    "typeName": "Bool",
+    "value": "true",
+    "accepted": false,
+    "error": "Type Error: Expected Boolean for type Bool"
+  },
+  {
+    "name": "Bool/number",
+    "typeName": "Bool",
+    "value": 1,
+    "accepted": false,
+    "error": "Type Error: Expected Boolean for type Bool"
+  },
+  {
+    "name": "String/hello",
+    "typeName": "String",
+    "value": "Hello",
+    "accepted": true,
+    "result": {
+      "type": "String",
+      "value": "Hello"
+    }
+  },
+  {
+    "name": "String/empty",
+    "typeName": "String",
+    "value": "",
+    "accepted": true,
+    "result": {
+      "type": "String",
+      "value": ""
+    }
+  },
+  {
+    "name": "String/unicode",
+    "typeName": "String",
+    "value": "你好🌍",
+    "accepted": true,
+    "result": {
+      "type": "String",
+      "value": "你好🌍"
+    }
+  },
+  {
+    "name": "String/number",
+    "typeName": "String",
+    "value": 123,
+    "accepted": false,
+    "error": "Type Error: Expected String for type String"
+  },
+  {
+    "name": "Address/valid",
+    "typeName": "Address",
+    "value": "0x1654653399040a61",
+    "accepted": true,
+    "result": {
+      "type": "Address",
+      "value": "0x1654653399040a61"
+    }
+  },
+  {
+    "name": "Address/short",
+    "typeName": "Address",
+    "value": "0x1",
+    "accepted": true,
+    "result": {
+      "type": "Address",
+      "value": "0x1"
+    }
+  },
+  {
+    "name": "Address/no_prefix",
+    "typeName": "Address",
+    "value": "1654653399040a61",
+    "accepted": true,
+    "result": {
+      "type": "Address",
+      "value": "1654653399040a61"
+    }
+  },
+  {
+    "name": "Address/invalid_hex",
+    "typeName": "Address",
+    "value": "0xGGGG",
+    "accepted": true,
+    "result": {
+      "type": "Address",
+      "value": "0xGGGG"
+    }
+  },
+  {
+    "name": "Optional/null",
+    "typeName": "Optional",
+    "value": null,
+    "accepted": true,
+    "result": {
+      "type": "Optional",
+      "value": null
+    }
+  },
+  {
+    "name": "Optional/some",
+    "typeName": "Optional",
+    "value": "42",
+    "accepted": true,
+    "result": {
+      "type": "Optional",
+      "value": {
+        "type": "UInt8",
+        "value": "42"
+      }
+    }
+  },
+  {
+    "name": "Array/empty",
+    "typeName": "Array",
+    "value": [],
+    "accepted": true,
+    "result": {
+      "type": "Array",
+      "value": []
+    }
+  },
+  {
+    "name": "Array/strings",
+    "typeName": "Array",
+    "value": [
+      "a",
+      "b"
+    ],
+    "accepted": true,
+    "result": {
+      "type": "Array",
+      "value": [
+        {
+          "type": "String",
+          "value": "a"
+        },
+        {
+          "type": "String",
+          "value": "b"
+        }
+      ]
+    }
+  },
+  {
+    "name": "Array/uint8s",
+    "typeName": "Array",
+    "value": [
+      "1",
+      "2",
+      "3"
+    ],
+    "accepted": true,
+    "result": {
+      "type": "Array",
+      "value": [
+        {
+          "type": "UInt8",
+          "value": "1"
+        },
+        {
+          "type": "UInt8",
+          "value": "2"
+        },
+        {
+          "type": "UInt8",
+          "value": "3"
+        }
+      ]
+    }
+  },
+  {
+    "name": "Dict/empty",
+    "typeName": "Dictionary",
+    "value": [],
+    "accepted": true,
+    "result": {
+      "type": "Dictionary",
+      "value": []
+    }
+  },
+  {
+    "name": "Dict/basic",
+    "typeName": "Dictionary",
+    "value": [
+      {
+        "key": "a",
+        "value": "1"
+      }
+    ],
+    "accepted": true,
+    "result": {
+      "type": "Dictionary",
+      "value": [
+        {
+          "key": {
+            "type": "String",
+            "value": "a"
+          },
+          "value": {
+            "type": "UInt8",
+            "value": "1"
+          }
+        }
+      ]
+    }
+  }
+]

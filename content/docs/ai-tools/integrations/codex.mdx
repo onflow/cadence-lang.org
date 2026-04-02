@@ -1,0 +1,38 @@
+---
+title: OpenAI Codex
+---
+
+Configure OpenAI Codex (the CLI agent) to work with Cadence.
+
+## Install the Cadence skill
+
+```bash
+npx skills add outblock/cadence-lang.org
+```
+
+Codex reads project-level context files, so `SKILL.md` is picked up automatically.
+
+## Add instructions
+
+Create or update your `AGENTS.md` file in the project root:
+
+```markdown
+## Cadence Development
+
+This project uses Cadence, the smart contract language for the Flow blockchain.
+Refer to SKILL.md for the complete language reference.
+
+Key conventions:
+- Use `access(all)` for public access, not `pub`
+- Resources use `@` prefix and must be moved with `<-`
+- Always handle resources — they cannot be lost or copied
+- Use capability-based access control with entitlements
+```
+
+## Context injection
+
+For direct API usage, inject the Cadence documentation into the system prompt:
+
+```bash
+curl -s https://cadence-lang.org/llms-full.txt
+```

@@ -1,0 +1,45 @@
+{
+  "name": "@outblock/cadence-mcp",
+  "version": "1.2.1",
+  "description": "MCP server for Cadence smart contract development — documentation search, code checking, type inspection via Flow CLI LSP",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/onflow/cadence-lang.org",
+    "directory": "mcp-server"
+  },
+  "keywords": [
+    "mcp",
+    "cadence",
+    "flow",
+    "smart-contracts",
+    "lsp"
+  ],
+  "bin": {
+    "cadence-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@orama/orama": "^3.1.5",
+    "hono": "^4.12.1",
+    "zod": "^3.25.36"
+  },
+  "scripts": {
+    "start": "bun src/index.ts",
+    "start:http": "bun src/http.ts",
+    "build": "bun build src/index.ts --outdir=dist --target=node",
+    "build:http": "bun build src/http.ts --outdir=dist --target=node",
+    "prepublishOnly": "bun run build",
+    "test": "bun test",
+    "test:unit": "bun test src/lsp/client.test.ts src/server.test.ts src/search.test.ts src/audit.test.ts src/codec/validate.test.ts",
+    "test:integration": "bun test src/lsp/integration.test.ts"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@onflow/types": "^1.5.0"
+  }
+}

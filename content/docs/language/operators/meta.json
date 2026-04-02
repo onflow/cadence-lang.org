@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "...",
+    "arithmetic-logical-operators",
+    "assign-move-force-swap",
+    "bitwise-ternary-operators",
+    "casting-operators",
+    "comparison-operators",
+    "optional-operators",
+    "prescedence-associativity"
+  ]
+}

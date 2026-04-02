@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { searchDocs, getDoc, docsAvailable, browseDoc } from './search.js';
 import { CadenceLSPClient, LSPManager, VALID_NETWORKS, type FlowNetwork } from './lsp/client.js';
 import { fetchContractSource, toManifest, fetchSingleContractCode, securityScan, formatScanResult, executeScript } from './audit.js';
+import { validateArgs, validateArgsWithCode } from './codec/validate.js';
 
 const networkSchema = z
   .enum(VALID_NETWORKS)
@@ -365,6 +366,45 @@ export async function createServer(lspOrManager?: CadenceLSPClient | LSPManager)
           {
             type: 'text' as const,
             text: result.value,
+          },
+        ],
+      };
+    },
+  );
+
+  // --- Argument validation tool ---
+
+  server.tool(
+    'cadence_validate_args',
+    'Validate JSON-CDC encoded arguments for Cadence scripts and transactions. ' +
+    'Without code: checks JSON-CDC format, type names, and value correctness (ranges, formats). ' +
+    'With code: additionally verifies argument count and types match the entry function signature.',
+    {
+      args: z
+        .array(z.string())
+        .describe(
+          'JSON-CDC encoded arguments, each a JSON string. ' +
+          'Example: [\'{"type":"Address","value":"0x1654653399040a61"}\', \'{"type":"UFix64","value":"10.50000000"}\']',
+        ),
+      code: z
+        .string()
+        .optional()
+        .describe(
+          'Cadence script or transaction source code. ' +
+          'If provided, validates args match the entry function signature (fun main or transaction).',
+        ),
+      network: networkSchema,
+    },
+    async ({ args, code, network }) => {
+      const result = code
+        ? await validateArgsWithCode(args, code, lspManager, network)
+        : validateArgs(args);
+
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: JSON.stringify(result, null, 2),
           },
         ],
       };

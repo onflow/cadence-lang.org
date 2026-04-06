@@ -219,9 +219,14 @@ The following sections describe looping statements.
 
 While-statements allow a certain piece of code to be executed repeatedly, as long as a condition remains true.
 
-The while-statement starts with the `while` keyword, followed by the condition, and the code that should be repeatedly executed if the condition is true inside opening and closing braces. The condition must be boolean, and the braces are required.
+The while-statement starts with the `while` keyword, followed by the condition, and the code that should be repeatedly
+executed if the condition is true inside opening and closing braces.
+The condition must be boolean, and the braces are required.
 
-The while-statement will first evaluate the condition. If it is true, the piece of code is executed, and the evaluation of the condition is repeated. If the condition is false, the piece of code is not executed, and the execution of the whole while-statement is finished. Thus, the piece of code is executed zero or more times:
+The while-statement will first evaluate the condition.
+If it is true, the piece of code is executed, and the evaluation of the condition is repeated.
+If the condition is false, the piece of code is not executed, and the execution of the whole while-statement is finished.
+Thus, the piece of code is executed zero or more times:
 
 ```cadence
 var a = 0
@@ -234,13 +239,16 @@ while a < 5 {
 
 ### For-in statement
 
-For-in statements allow a certain piece of code to be executed repeatedly for each element in an array.
+For-in statements allow a certain piece of code to be executed repeatedly for each item in a collection,
+such as arrays, dictionaries, and strings.
 
-The for-in statement starts with the `for` keyword, followed by the name of the element that is used in each iteration of the loop, followed by the `in` keyword, and then followed by the array that is being iterated through in the loop.
+The for-in statement starts with the `for` keyword, followed by the name of the element that is used in each iteration
+of the loop, followed by the `in` keyword, and then followed by the collection that is being iterated through in the loop.
 
 Then, the code that should be repeatedly executed in each iteration of the loop is enclosed in curly braces.
 
-If there are no elements in the data structure, the code in the loop will not be executed at all. Otherwise, the code will execute as many times as there are elements in the array:
+If there are no elements in the data structure, the code in the loop will not be executed at all.
+Otherwise, the code will execute as many times as there are elements in the array:
 
 ```cadence
 let array = ["Hello", "World", "Foo", "Bar"]
@@ -256,7 +264,8 @@ for element in array {
 // "Bar"
 ```
 
-Optionally, developers may include an additional variable preceding the element name, separated by a comma. When present, this variable contains the current index of the array being iterated through during each repeated execution (starting from 0):
+Optionally, developers may include an additional variable preceding the element name, separated by a comma.
+When present, this variable contains the current index of the array being iterated through during each repeated execution (starting from 0):
 
 ```cadence
 let array = ["Hello", "World", "Foo", "Bar"]
@@ -300,6 +309,23 @@ dictionary.forEachKey(fun (key: String): Bool {
 
     return key != "two" // stop iteration if this returns false
 })
+```
+
+Iterating over a string yields individual `Character` values for the loop variable.
+
+```cadence
+let str = "hello"
+
+for char in str {
+    log(char)
+}
+
+// The loop would log:
+// "h"
+// "e"
+// "l"
+// "l"
+// "o"
 ```
 
 ### Ranges in loops

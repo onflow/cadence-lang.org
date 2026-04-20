@@ -168,7 +168,7 @@ To define and initialize:
 1. In it, add a variable to store a capability for the owner's collection with the ability to withdraw from the collection:
 
    ```cadence
-   access(self) let ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>
+   access(self) let ownerCollection: Capability<auth(IntermediateNFT.Withdraw) &IntermediateNFT.Collection>
    ```
 
    :::info[Reminder]
@@ -204,7 +204,7 @@ With the marketplace contract, we are utilizing a new feature of capabilities â€
 We stored two different capabilities in the marketplace sale collection:
 
 ```cadence
-access(self) var ownerCollection: Capability<auth(ExampleNFT.Withdraw) &ExampleNFT.Collection>
+access(self) var ownerCollection: Capability<auth(IntermediateNFT.Withdraw) &IntermediateNFT.Collection>
 access(account) let ownerVault: Capability<&{ExampleToken.Receiver}>
 ```
 
@@ -509,7 +509,7 @@ That's it! You've completed the contract needed to allow anyone who owns the NFT
 
 This marketplace contract has methods to add and remove NFTs, but instead of storing the NFT resource object in the sale collection, the user provides a capability to their main collection that allows the listed NFT to be withdrawn and transferred when it is purchased. When a user wants to put their NFT up for sale, they do so by providing the ID and the price to the `listForSale()` function.
 
-Then, another user can call the `purchase()` function, sending an `ExampleToken.Vault` that contains the currency they are using to make the purchase. The buyer also includes a capability to their NFT `ExampleNFT.Collection` so that the purchased token can be immediately deposited into their collection when the purchase is made.
+Then, another user can call the `purchase()` function, sending an `ExampleToken.Vault` that contains the currency they are using to make the purchase. The buyer also includes a capability to their NFT `IntermediateNFT.Collection` so that the purchased token can be immediately deposited into their collection when the purchase is made.
 
 The owner of the sale saves a capability to their Fungible Token `Receiver` within the sale. This allows the sale resource to be able to immediately deposit the currency that was used to buy the NFT into the owners `Vault` when a purchase is made.
 

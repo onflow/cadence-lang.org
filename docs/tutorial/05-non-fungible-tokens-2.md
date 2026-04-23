@@ -1,4 +1,5 @@
 ---
+slug: non-fungible-tokens-2
 archived: false
 draft: false
 title: Intermediate NFTs

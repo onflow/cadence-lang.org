@@ -1,4 +1,5 @@
 ---
+slug: voting
 title: Voting Contract
 ---
 

@@ -1,4 +1,5 @@
 ---
+slug: capabilities
 title: Capabilities and Entitlements
 description: An introduction to capabilities, entitlements, and how they interact with resources in Cadence
 meta:

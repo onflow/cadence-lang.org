@@ -1,4 +1,5 @@
 ---
+slug: first-steps
 archived: false
 draft: false
 title: First Steps

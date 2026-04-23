@@ -1,4 +1,5 @@
 ---
+slug: non-fungible-tokens-1
 archived: false
 draft: false
 title: Basic NFT

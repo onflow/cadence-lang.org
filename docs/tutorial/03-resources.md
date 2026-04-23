@@ -1,4 +1,5 @@
 ---
+slug: resources
 archived: false
 draft: false
 title: Resources and the Move (<-) Operator

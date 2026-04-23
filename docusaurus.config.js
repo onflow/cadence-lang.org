@@ -91,6 +91,50 @@ const config = {
 
   themes: [hasTypesense && "docusaurus-theme-search-typesense"].filter(Boolean),
 
+  plugins: [
+    [
+      "docusaurus-plugin-llms",
+      {
+        title: "Cadence",
+        description:
+          "Cadence is a resource-oriented programming language for smart contracts on the Flow blockchain. " +
+          "Cadence 1.0 introduces capability-based access control, strict resource ownership, and entitlements — " +
+          "making smart contracts safer to audit and harder to misuse than account-based languages. " +
+          "Resources can only exist in one place at a time and must be explicitly moved, preventing common bugs like double-spending. " +
+          "Cadence transactions are written in the language itself, allowing multiple calls to multiple functions across multiple contracts in a single atomic, user-signed operation.",
+        version: "1.0",
+        generateLLMsTxt: true,
+        generateLLMsFullTxt: true,
+        generateMarkdownFiles: true,
+        excludeImports: true,
+        removeDuplicateHeadings: true,
+        includeBlog: false,
+        includeOrder: [
+          "language/**",
+          "tutorial/**",
+          "design-patterns*",
+          "anti-patterns*",
+          "contract-upgrades*",
+          "security-best-practices*",
+          "solidity-to-cadence*",
+          "testing-framework*",
+          "measuring-time*",
+          "project-development-tips*",
+          "json-cadence-spec*",
+          "cadence-migration-guide/**",
+          "why*",
+        ],
+        includeUnmatchedLast: true,
+        rootContent:
+          "This file is an llms.txt index for cadence-lang.org following the " +
+          "llmstxt.org standard. Supplementary resources:\n\n" +
+          "- Cadence source repository: https://github.com/onflow/cadence\n" +
+          "- Flow Playground (browser-based Cadence IDE): https://play.flow.com/\n" +
+          "- Flow developer documentation (companion llms.txt): https://developers.flow.com/llms.txt\n",
+      },
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({

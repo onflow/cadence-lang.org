@@ -1,4 +1,5 @@
 ---
+slug: marketplace-setup
 title: Marketplace Setup
 ---
 

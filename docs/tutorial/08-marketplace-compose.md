@@ -1,4 +1,5 @@
 ---
+slug: marketplace-compose
 title: Marketplace
 archived: false
 draft: false

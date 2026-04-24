@@ -1,4 +1,5 @@
 ---
+slug: fungible-tokens
 archived: false
 draft: false
 title: Fungible Tokens

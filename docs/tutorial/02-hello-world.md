@@ -1,4 +1,5 @@
 ---
+slug: hello-world
 archived: false
 draft: false
 title: Hello World

@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && bun scripts/generate-sitemap.ts",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build && bun scripts/generate-sitemap.ts",
     "start": "bun .output/server/index.mjs",
     "preview": "vite preview",
     "types:check": "fumadocs-mdx && tsc --noEmit"

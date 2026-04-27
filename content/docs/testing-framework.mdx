@@ -5,8 +5,11 @@ title: Cadence Testing Framework
 The Cadence testing framework provides a convenient way to write tests for Cadence programs in Cadence. This functionality is provided by the built-in `Test` contract.
 
 :::tip
+
 The testing framework can only be used offchain (e.g., by using the [Flow CLI]).
+
 :::
+
 Tests must be written in the form of a Cadence script. A test script may contain testing functions that starts with the `test` prefix, a `setup` function that always runs before the tests, a `tearDown` function that always runs at the end of all test cases, a `beforeEach` function that runs before each test case, and an `afterEach` function that runs after each test case. All of the above four functions are optional.
 
 ```cadence
@@ -462,8 +465,7 @@ import Test
 
 access(all)
 fun testExample() {
-    let blockchain = Test.newEmulatorBlockchain()
-    let result = blockchain.executeScript(
+    let result = Test.executeScript(
         "access(all) fun main(): Int {  return 2 + 3 }",
         []
     )
@@ -486,8 +488,7 @@ import Test
 
 access(all)
 fun testExample() {
-    let blockchain = Test.newEmulatorBlockchain()
-    let account = blockchain.createAccount()
+    let account = Test.createAccount()
 
     let tx = Test.Transaction(
         code: "transaction { execute{ panic(\"some error\") } }",
@@ -496,7 +497,7 @@ fun testExample() {
         arguments: [],
     )
 
-    let result = blockchain.executeTransaction(tx)
+    let result = Test.executeTransaction(tx)
 
     Test.expect(result, Test.beFailed())
 }
@@ -586,234 +587,94 @@ fun testExample() {
 }
 ```
 
-## Blockchain
+## Blockchain operations
 
-A blockchain is an environment to which transactions can be submitted to, and against which scripts can be run. It imitates the behavior of a real network for testing.
+The `Test` contract provides functions for submitting transactions, running scripts, and otherwise driving a blockchain environment that imitates the behavior of a real network. It is backed by a [Flow Emulator] instance, and no explicit setup is required — just import `Test` and call its functions directly.
 
-```cadence
-/// Blockchain emulates a real network.
-///
-access(all)
-struct Blockchain {
-
-    access(all)
-    let backend: AnyStruct{BlockchainBackend}
-
-    init(backend: AnyStruct{BlockchainBackend}) {
-        self.backend = backend
-    }
-
-    /// Executes a script and returns the script return value and the status.
-    /// `returnValue` field of the result will be `nil` if the script failed.
-    ///
-    access(all)
-    fun executeScript(_ script: String, _ arguments: [AnyStruct]): ScriptResult {
-        return self.backend.executeScript(script, arguments)
-    }
-
-    /// Creates a signer account by submitting an account creation transaction.
-    /// The transaction is paid by the service account.
-    /// The returned account can be used to sign and authorize transactions.
-    ///
-    access(all)
-    fun createAccount(): Account {
-        return self.backend.createAccount()
-    }
-
-    /// Add a transaction to the current block.
-    ///
-    access(all)
-    fun addTransaction(_ tx: Transaction) {
-        self.backend.addTransaction(tx)
-    }
-
-    /// Executes the next transaction in the block, if any.
-    /// Returns the result of the transaction, or nil if no transaction was scheduled.
-    ///
-    access(all)
-    fun executeNextTransaction(): TransactionResult? {
-        return self.backend.executeNextTransaction()
-    }
-
-    /// Commit the current block.
-    /// Committing will fail if there are un-executed transactions in the block.
-    ///
-    access(all)
-    fun commitBlock() {
-        self.backend.commitBlock()
-    }
-
-    /// Executes a given transaction and commits the current block.
-    ///
-    access(all)
-    fun executeTransaction(_ tx: Transaction): TransactionResult {
-        self.addTransaction(tx)
-        let txResult = self.executeNextTransaction()!
-        self.commitBlock()
-        return txResult
-    }
-
-    /// Executes a given set of transactions and commits the current block.
-    ///
-    access(all)
-    fun executeTransactions(_ transactions: [Transaction]): [TransactionResult] {
-        for tx in transactions {
-            self.addTransaction(tx)
-        }
-
-        var results: [TransactionResult] = []
-        for tx in transactions {
-            let txResult = self.executeNextTransaction()!
-            results.append(txResult)
-        }
-
-        self.commitBlock()
-        return results
-    }
-
-    /// Deploys a given contract, and initializes it with the arguments.
-    ///
-    access(all)
-    fun deployContract(
-        name: String,
-        path: String,
-        arguments: [AnyStruct]
-    ): Error? {
-        return self.backend.deployContract(
-            name: name,
-            path: path,
-            arguments: arguments
-        )
-    }
-
-    /// Set the configuration to be used by the blockchain.
-    /// Overrides any existing configuration.
-    ///
-    access(all)
-    fun useConfiguration(_ configuration: Configuration) {
-        self.backend.useConfiguration(configuration)
-    }
-
-    /// Returns all the logs from the blockchain, up to the calling point.
-    ///
-    access(all)
-    fun logs(): [String] {
-        return self.backend.logs()
-    }
-
-    /// Returns the service account of the blockchain. Can be used to sign
-    /// transactions with this account.
-    ///
-    access(all)
-    fun serviceAccount(): Account {
-        return self.backend.serviceAccount()
-    }
-
-    /// Returns all events emitted from the blockchain.
-    ///
-    access(all)
-    fun events(): [AnyStruct] {
-        return self.backend.events(nil)
-    }
-
-    /// Returns all events emitted from the blockchain,
-    /// filtered by type.
-    ///
-    access(all)
-    fun eventsOfType(_ type: Type): [AnyStruct] {
-        return self.backend.events(type)
-    }
-
-    /// Resets the state of the blockchain to the given height.
-    ///
-    access(all)
-    fun reset(to height: UInt64) {
-        self.backend.reset(to: height)
-    }
-
-    /// Moves the time of the blockchain by the given delta,
-    /// which should be passed in the form of seconds.
-    ///
-    access(all)
-    fun moveTime(by delta: Fix64) {
-        self.backend.moveTime(by: delta)
-    }
-}
-```
-
-The `BlockchainBackend` provides the actual functionality of the blockchain.
+The available functions include:
 
 ```cadence
-/// BlockchainBackend is the interface to be implemented by the backend providers.
-///
+/// Executes a script and returns the script return value and the status.
+/// `returnValue` field of the result will be `nil` if the script failed.
 access(all)
-struct interface BlockchainBackend {
+fun executeScript(_ script: String, _ arguments: [AnyStruct]): ScriptResult
 
-    access(all)
-    fun executeScript(_ script: String, _ arguments: [AnyStruct]): ScriptResult
-
-    access(all)
-    fun createAccount(): Account
-
-    access(all)
-    fun addTransaction(_ tx: Transaction)
-
-    access(all)
-    fun executeNextTransaction(): TransactionResult?
-
-    access(all)
-    fun commitBlock()
-
-    access(all)
-    fun deployContract(
-        name: String,
-        path: String,
-        arguments: [AnyStruct]
-    ): Error?
-
-    access(all)
-    fun useConfiguration(_ configuration: Configuration)
-
-    access(all)
-    fun logs(): [String]
-
-    access(all)
-    fun serviceAccount(): Account
-
-    access(all)
-    fun events(_ type: Type?): [AnyStruct]
-
-    access(all)
-    fun reset(to height: UInt64)
-
-    access(all)
-    fun moveTime(by delta: Fix64)
-}
-```
-
-### Creating a blockchain
-
-A new blockchain instance can be created using the `Test.newEmulatorBlockchain` method. It returns a `Blockchain`, which is backed by a new [Flow Emulator] instance.
-
-```cadence
-import Test
-
+/// Creates a signer account by submitting an account creation transaction.
+/// The transaction is paid by the service account.
+/// The returned account can be used to sign and authorize transactions.
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
+fun createAccount(): TestAccount
+
+/// Returns the account for the given address.
+access(all)
+fun getAccount(_ address: Address): TestAccount
+
+/// Add a transaction to the current block.
+access(all)
+fun addTransaction(_ tx: Transaction)
+
+/// Executes the next transaction in the block, if any.
+/// Returns the result of the transaction, or nil if no transaction was scheduled.
+access(all)
+fun executeNextTransaction(): TransactionResult?
+
+/// Commit the current block.
+/// Committing will fail if there are un-executed transactions in the block.
+access(all)
+fun commitBlock()
+
+/// Executes a given transaction and commits the current block.
+access(all)
+fun executeTransaction(_ tx: Transaction): TransactionResult
+
+/// Executes a given set of transactions and commits the current block.
+access(all)
+fun executeTransactions(_ transactions: [Transaction]): [TransactionResult]
+
+/// Deploys a given contract, and initializes it with the arguments.
+access(all)
+fun deployContract(
+    name: String,
+    path: String,
+    arguments: [AnyStruct]
+): Error?
+
+/// Returns all the logs from the blockchain, up to the calling point.
+access(all)
+fun logs(): [String]
+
+/// Returns the service account of the blockchain. Can be used to sign
+/// transactions with this account.
+access(all)
+fun serviceAccount(): TestAccount
+
+/// Returns all events emitted from the blockchain.
+access(all)
+fun events(): [AnyStruct]
+
+/// Returns all events emitted from the blockchain, filtered by type.
+access(all)
+fun eventsOfType(_ type: Type): [AnyStruct]
+
+/// Resets the state of the blockchain to the given height.
+access(all)
+fun reset(to height: UInt64)
+
+/// Moves the time of the blockchain by the given delta,
+/// which should be passed in the form of seconds.
+access(all)
+fun moveTime(by delta: Fix64)
 ```
 
 ### Creating accounts
 
-It may be necessary to create accounts during tests for various reasons, such as for deploying contracts, signing transactions, and so on. An account can be created using the `createAccount` function.
+It may be necessary to create accounts during tests for various reasons, such as for deploying contracts, signing transactions, and so on. An account can be created using the `Test.createAccount` function.
 
 ```cadence
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
+let account = Test.createAccount()
 
 access(all)
 fun testExample() {
@@ -834,10 +695,10 @@ Test results: "tests/test_sample_usage.cdc"
 The returned account consists of the `address` of the account and a `publicKey` associated with it.
 
 ```cadence
-/// Account represents info about the account created on the blockchain.
+/// TestAccount represents info about the account created on the blockchain.
 ///
 access(all)
-struct Account {
+struct TestAccount {
 
     access(all)
     let address: Address
@@ -854,20 +715,17 @@ struct Account {
 
 ### Executing scripts
 
-Scripts can be run with the `executeScript` function, which returns a `ScriptResult`. The function takes script code as the first argument, and the script arguments as an array as the second argument.
+Scripts can be run with the `Test.executeScript` function, which returns a `ScriptResult`. The function takes script code as the first argument, and the script arguments as an array as the second argument.
 
 ```cadence
 import Test
-
-access(all)
-let blockchain = Test.newEmulatorBlockchain()
 
 access(all)
 fun testExample() {
     let code = "access(all) fun main(name: String): String { return \"Hello, \".concat(name) }"
     let args = ["Peter"]
 
-    let scriptResult = blockchain.executeScript(code, args)
+    let scriptResult = Test.executeScript(code, args)
 
     // Assert that the script was successfully executed.
     Test.expect(scriptResult, Test.beSucceeded())
@@ -922,12 +780,12 @@ struct Transaction {
     let authorizers: [Address]
 
     access(all)
-    let signers: [Account]
+    let signers: [TestAccount]
 
     access(all)
     let arguments: [AnyStruct]
 
-    init(code: String, authorizers: [Address], signers: [Account], arguments: [AnyStruct]) {
+    init(code: String, authorizers: [Address], signers: [TestAccount], arguments: [AnyStruct]) {
         self.code = code
         self.authorizers = authorizers
         self.signers = signers
@@ -942,10 +800,7 @@ The number of authorizers must match the number of `&Account` parameters in the 
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
+let account = Test.createAccount()
 
 // There are two ways to execute the created transaction.
 
@@ -961,7 +816,7 @@ fun testExample() {
     // Executing the transaction immediately
     // This may fail if the current block contains
     // transactions that have not being executed yet.
-    let txResult = blockchain.executeTransaction(tx)
+    let txResult = Test.executeTransaction(tx)
 
     Test.expect(txResult, Test.beSucceeded())
 }
@@ -976,10 +831,10 @@ fun testExampleTwo() {
     )
 
     // Add to the current block
-    blockchain.addTransaction(tx)
+    Test.addTransaction(tx)
 
     // Execute the next transaction in the block
-    let txResult = blockchain.executeNextTransaction()!
+    let txResult = Test.executeNextTransaction()!
 
     Test.expect(txResult, Test.beSucceeded())
 }
@@ -1014,10 +869,7 @@ struct TransactionResult {
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
+let account = Test.createAccount()
 
 access(all)
 fun testExample() {
@@ -1028,18 +880,18 @@ fun testExample() {
         arguments: [],
     )
 
-    blockchain.commitBlock()
+    Test.commitBlock()
 
-    blockchain.addTransaction(tx)
+    Test.addTransaction(tx)
 
     // This will fail with `error: internal error: pending block with ID 1f9...c0b7740d2 cannot be committed before execution`
-    blockchain.commitBlock()
+    Test.commitBlock()
 }
 ```
 
 ### Deploying contracts
 
-A contract can be deployed using the `deployContract` function of the `Blockchain`.
+A contract can be deployed using the `Test.deployContract` function.
 
 Suppose we have this contract (`Foo.cdc`):
 
@@ -1065,14 +917,8 @@ contract Foo {
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
-
-access(all)
 fun testExample() {
-    let err = blockchain.deployContract(
+    let err = Test.deployContract(
         name: "Foo",
         path: "./Foo.cdc",
         arguments: ["hello from args"],
@@ -1086,34 +932,7 @@ An `Error` is returned if the contract deployment fails. Otherwise, a `nil` is r
 
 ### Configuring import addresses
 
-A common pattern in Cadence projects is to define the imports as file locations and specify the addresses corresponding to each network in the [Flow CLI configuration file]. When writing tests for such a project, it may also require to specify the addresses to be used during the tests as well. However, during tests, since accounts are created dynamically and the addresses are also generated dynamically, specifying the addresses statically in a configuration file is not an option.
-
-Hence, the test framework provides a way to specify the addresses using the `useConfiguration(_ configuration: Test.Configuration)` function in `Blockchain`.
-
-The `Configuration` struct consists of a mapping of import locations to their addresses.
-
-```cadence
-/// Configuration to be used by the blockchain.
-/// Can be used to set the address mapping.
-///
-access(all)
-struct Configuration {
-
-    access(all)
-    let addresses: {String: Address}
-
-    init(addresses: {String: Address}) {
-        self.addresses = addresses
-    }
-}
-```
-
-:::tip
-The `Blockchain.useConfiguration` is a run-time alternative for [statically defining contract addresses] in the flow.json config file.
-:::
-The configurations can be specified during the test setup as a best practice.
-
-For example, assume running a script that imports the above `Foo.cdc` contract. The import location for the contract can be specified using the placeholder `"Foo"`. This placeholder can be any unique string.
+A common pattern in Cadence projects is to define imports as file locations (e.g. `import "Foo"`) and specify the addresses corresponding to each network in the [Flow CLI configuration file]. When writing tests for such a project, the same mechanism is used — import locations are resolved against the `contracts` section of `flow.json`, so no additional setup is required in the test script itself.
 
 Suppose this script is saved in `say_hello.cdc`:
 
@@ -1126,24 +945,14 @@ fun main(): String {
 }
 ```
 
-Then, before executing the script, the address mapping can be specified as follows:
+Once `Foo` is declared in `flow.json` and deployed with `Test.deployContract`, the import is resolved automatically:
 
 ```cadence
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
-
-access(all)
 fun setup() {
-    blockchain.useConfiguration(Test.Configuration({
-        "Foo": account.address
-    }))
-
-    let err = blockchain.deployContract(
+    let err = Test.deployContract(
         name: "Foo",
         path: "./Foo.cdc",
         arguments: ["hello from args"],
@@ -1155,7 +964,7 @@ fun setup() {
 access(all)
 fun testExample() {
     let script = Test.readFile("say_hello.cdc")
-    let scriptResult = blockchain.executeScript(script, [])
+    let scriptResult = Test.executeScript(script, [])
 
     Test.expect(scriptResult, Test.beSucceeded())
 
@@ -1164,9 +973,6 @@ fun testExample() {
     Test.assertEqual("hello from args", returnValue)
 }
 ```
-
-The subsequent operations on the blockchain (e.g., contract deployment and script/transaction execution) will resolve the
-import locations to the provided addresses.
 
 ### Errors
 
@@ -1193,15 +999,12 @@ An `Error` can be asserted against its presence or absence.
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
+let account = Test.createAccount()
 
 access(all)
 fun testExample() {
     let script = Test.readFile("say_hello.cdc")
-    let scriptResult = blockchain.executeScript(script, [])
+    let scriptResult = Test.executeScript(script, [])
 
     // If we expect a script to fail, we can use Test.beFailed() instead
     Test.expect(scriptResult, Test.beSucceeded())
@@ -1212,7 +1015,7 @@ fun testExample() {
         signers: [account],
         arguments: [],
     )
-    let txResult = blockchain.executeTransaction(tx)
+    let txResult = Test.executeTransaction(tx)
 
     // If we expect a transaction to fail, we can use Test.beFailed() instead
     Test.expect(txResult, Test.beSucceeded())
@@ -1257,18 +1060,8 @@ contract Foo {
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
-
-access(all)
 fun setup() {
-    blockchain.useConfiguration(Test.Configuration({
-        "Foo": account.address
-    }))
-
-    let err = blockchain.deployContract(
+    let err = Test.deployContract(
         name: "Foo",
         path: "./Foo.cdc",
         arguments: ["hello from args"],
@@ -1281,11 +1074,11 @@ fun setup() {
     // contract types, e.g.:
     // let typ = Type<FooContract.ContractInitialized>()
     let typ = CompositeType("A.01cf0e2f2f715450.Foo.ContractInitialized")!
-    let events = blockchain.eventsOfType(typ)
+    let events = Test.eventsOfType(typ)
     Test.assertEqual(1, events.length)
 
     // We can also fetch all events emitted from the blockchain
-    log(blockchain.events())
+    log(Test.events())
 }
 ```
 
@@ -1319,12 +1112,9 @@ fun main(): [String] {
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
 fun testExample() {
     let script = Test.readFile("get_type_ids.cdc")
-    let scriptResult = blockchain.executeScript(script, [])
+    let scriptResult = Test.executeScript(script, [])
 
     Test.expect(scriptResult, Test.beSucceeded())
 
@@ -1354,16 +1144,13 @@ let contractCode = Test.readFile("./sample/contracts/FooContract.cdc")
 
 The `log` function is available for usage both in test scripts, as well as contracts/scripts/transactions.
 
-The `Blockchain.logs()` method aggregates all logs from contracts/scripts/transactions.
+The `Test.logs()` method aggregates all logs from contracts/scripts/transactions.
 
 ```cadence
 import Test
 
 access(all)
-let blockchain = Test.newEmulatorBlockchain()
-
-access(all)
-let account = blockchain.createAccount()
+let account = Test.createAccount()
 
 access(all)
 fun testExample() {
@@ -1374,10 +1161,10 @@ fun testExample() {
         arguments: [],
     )
 
-    let txResult = blockchain.executeTransaction(tx)
+    let txResult = Test.executeTransaction(tx)
 
     Test.expect(txResult, Test.beSucceeded())
-    Test.assertEqual(["in a transaction"], blockchain.logs())
+    Test.assertEqual(["in a transaction"], Test.logs())
 }
 ```
 
@@ -1391,6 +1178,5 @@ This [repository] contains some functional examples that demonstrate most of the
 [matchers]: #matchers
 [Flow Emulator]: https://developers.flow.com/tools/emulator
 [errors]: #errors
-[Flow CLI configuration file]: https://developers.flow.com/tools/flow-cli/flow.json/configuration#contracts
-[statically defining contract addresses]: https://developers.flow.com/tools/flow-cli/flow.json/configuration#advanced-format
+[Flow CLI configuration file]: https://developers.flow.com/tools/flow-cli/flow.json/configuration.md#contracts
 [repository]: https://github.com/m-Peter/flow-code-coverage

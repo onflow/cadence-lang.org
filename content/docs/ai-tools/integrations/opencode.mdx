@@ -4,13 +4,21 @@ title: OpenCode
 
 Configure [OpenCode](https://opencode.ai) to work with Cadence.
 
-## Install the Cadence skill
+## Add Cadence as project context
 
-```bash
-npx skills add outblock/cadence-lang.org
+OpenCode reads project-level context files automatically. Add a section to your `AGENTS.md` pointing at the [`/llms-full.txt`](../llm-endpoints) endpoint:
+
+```markdown
+## Cadence Development
+
+This project uses Cadence, the smart contract language for the Flow blockchain.
+Full reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
+
+Resources use `@` prefix and must be moved with `<-`. Use `access(all)` for public access (not `pub`). Capability-based access control with entitlements.
 ```
 
-OpenCode reads project-level context files automatically.
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships 11 Cadence + Flow skills (see [Skills](../skills)).
 
 ## Add MCP server
 

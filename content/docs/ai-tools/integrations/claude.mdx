@@ -6,11 +6,16 @@ Configure Claude to work with Cadence via skills, MCP, or context injection.
 
 ## Claude Code
 
-### Install the Cadence skill
+### Install Flow's skill library
+
+The official [onflow/flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace ships 11 Cadence + Flow skills under one plugin:
 
 ```bash
-npx skills add outblock/cadence-lang.org
+/plugin marketplace add onflow/flow-ai-tools
+/plugin install flow-dev@flow-ai-tools
 ```
+
+See [Skills](../skills) for the full skill list.
 
 ### Add MCP server
 

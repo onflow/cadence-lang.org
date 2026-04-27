@@ -4,13 +4,21 @@ title: Antigravity
 
 Configure [Antigravity](https://antigravity.dev) to work with Cadence.
 
-## Install the Cadence skill
+## Add Cadence as project context
 
-```bash
-npx skills add outblock/cadence-lang.org
+Antigravity reads project-level context files automatically. Add a `CADENCE.md` (or merge into your existing `AGENTS.md`) pointing at the [`/llms-full.txt`](../llm-endpoints) endpoint so the model has the full reference loaded on startup:
+
+```markdown
+## Cadence Development
+
+This project uses Cadence, the smart contract language for the Flow blockchain.
+Full reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
+
+Resources use `@` prefix and must be moved with `<-`. Use `access(all)` for public access (not `pub`). Capability-based access control with entitlements.
 ```
 
-Antigravity reads project-level context files automatically, so `SKILL.md` is picked up on startup.
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships 11 Cadence + Flow skills (see [Skills](../skills)).
 
 ## Add MCP server
 

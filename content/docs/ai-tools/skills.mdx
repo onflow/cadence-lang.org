@@ -1,32 +1,46 @@
 ---
-title: Skills
+title: Claude Code Skills
+description: Install Flow's official Claude Code plugin for expert-level Cadence and Flow knowledge — 11 skills in one install.
 ---
 
-[Skills](https://skills.sh) let you add domain knowledge to your AI coding agent with one command. The Cadence skill bundles the complete language reference, design patterns, security best practices, and code examples.
+Flow ships an official Claude Code plugin marketplace at [onflow/flow-ai-tools](https://github.com/onflow/flow-ai-tools). It bundles 11 skills under one `flow-dev` plugin — covering Cadence language fundamentals, NFT/FT development, smart-contract auditing, code scaffolding, testing, the Flow React SDK, project setup, the Flow CLI, the dev environment, DeFi architecture, and tokenomics.
 
 ## Install
 
+In Claude Code:
+
 ```bash
-npx skills add outblock/cadence-lang.org
+/plugin marketplace add onflow/flow-ai-tools
+/plugin install flow-dev@flow-ai-tools
 ```
 
-This adds a `SKILL.md` file to your project that your AI agent reads automatically. No configuration needed.
+Or use the one-line installer that also installs the Flow CLI and configures the Cadence MCP server:
 
-## What the skill includes
+```bash
+sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-ai-tools/main/scripts/install.sh)"
+```
 
-- Language fundamentals (types, resources, capabilities, access control)
-- Contract patterns (FT, NFT, marketplace, governance)
-- Security best practices and anti-patterns
-- Testing framework reference
-- Links to documentation and LLM-optimized endpoints
+## What's included
 
-## Supported agents
-
-Any agent that reads project-level context files works out of the box:
-
-| Agent | Support |
+| Skill | What it does |
 |---|---|
-| Claude Code | Reads `SKILL.md` automatically |
-| Cursor | Reads via project rules |
-| Windsurf | Reads via project context |
-| GitHub Copilot | Reads via `.github/copilot-instructions.md` |
+| `cadence-lang` | Cadence language fundamentals: access control, entitlements, resources, contracts, transactions, interfaces, accounts, references, capabilities, pre/post conditions, security best practices, anti-patterns, design patterns. |
+| `cadence-tokens` | NFT and FT token development: NonFungibleToken / FungibleToken interface conformance, MetadataViews, collection patterns, modular NFT architectures. |
+| `cadence-audit` | Smart-contract audit and review: severity-rated findings, structured review format, project-wide audit workflow. |
+| `cadence-scaffold` | Interactive code generation: scaffold contracts, transactions, and DeFi transactions with proper security patterns. |
+| `cadence-testing` | Cadence unit testing: Test contract API, assertions and matchers, blockchain emulation, events, coverage, `flow test`, testing patterns. |
+| `flow-react-sdk` | React frontend development: `FlowProvider`, Cadence hooks, Cross-VM hooks (EVM bridging, batch transactions), UI components (Connect, TransactionButton, NftCard). |
+| `flow-project-setup` | Flow project configuration: `flow.json`, FCL frontend integration, CLI workflow, deployment, gas optimization, testnet validation. |
+| `flow-cli` | Flow CLI reference: full command list, account management, blockchain queries, Cadence script recipes, MCP server setup. |
+| `flow-dev-setup` | Development environment setup: Flow CLI install, emulator, VS Code extension, testing framework, dev wallet, frontend SDKs (FCL/React), EVM tooling (Hardhat / Foundry / Remix). |
+| `flow-defi` | Flow DeFi architecture: COAs, MEV-free EVM, cross-VM atomicity, lending health-factor / kink models, AMM type selection, liquidity bootstrapping, veFLOW, Merkl, ecosystem map. |
+| `flow-tokenomics` | Token economics: Fisher Equation, Nash equilibrium, proven patterns (Real Yield / Buyback / veToken) with failure case studies, TGE 12-week playbook, DAO governance attack vectors, Howey Test, MiCA compliance. |
+
+## Other agents
+
+For agents outside Claude Code (Cursor, Codex, Gemini, Antigravity, OpenCode), see the [integrations](./integrations) section — each has its own setup pattern for loading project-level skill files.
+
+## Next steps
+
+- Pair the skills with the [Cadence MCP server](./mcp-server) for code checking, on-chain queries, and security scanning.
+- Read [LLM endpoints](./llm-endpoints) to learn how `/llms.txt` and `/llms-full.txt` keep your agent in sync with the latest docs.

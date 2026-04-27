@@ -1,0 +1,103 @@
+# AGENTS.md
+
+Guidance for AI coding agents working in this repository. Loaded into agent context — keep concise.
+
+## Overview
+
+`cadence-lang.org` is the documentation and marketing site for the Cadence smart contract programming language (Flow network). Built with TanStack Start (file-based routing + Nitro SSR) + Fumadocs (MDX docs engine) + Tailwind CSS v4 + Bun. Deployed on Vercel. Includes a standalone MCP server (`mcp-server/`, published to npm as `@outblock/cadence-mcp`), AI chat (`/api/chat`), Orama-powered search, and `/llms.txt` + `/llms-full.txt` LLM-optimized endpoints.
+
+## Build and Test Commands
+
+Bun ≥ 1.0 required. Node ≥ 22 (Vercel uses 24.x).
+
+- `bun install` — install dependencies (run after pulling submodule changes too)
+- `bun run dev` — local dev server at http://localhost:3000
+- `bun run build` — production build into `.vercel/output/` + sitemap generation. Pre-set `NODE_OPTIONS=--max-old-space-size=8192` is baked in (the SSR `source-*.mjs` chunk is ~13 MB and OOMs on default heap).
+- `bun run start` — serve the built server (`bun .output/server/index.mjs`)
+- `bun run types:check` — `fumadocs-mdx && tsc --noEmit`. May report errors against the `external/onflow-docs` submodule's own files; those are out-of-scope for this repo.
+- `git submodule update --init --recursive` — populate `external/onflow-docs` (required before search index can include onflow-docs content)
+
+MCP server (separate workspace at `mcp-server/`):
+
+- `cd mcp-server && bun install`
+- `bun test:unit` — unit tests only (no Flow CLI required)
+- `bun test:integration` — integration tests (requires Flow CLI installed)
+- `bun run build` — bundle for npm publish
+- `bun run start` — stdio MCP transport
+- `bun run start:http` — HTTP transport (Hono) on configurable port
+
+CI: `.github/workflows/publish-mcp.yml` publishes `@outblock/cadence-mcp` to npm on tagged releases. No site-build CI in this repo — Vercel builds previews on every PR push.
+
+## Architecture
+
+### Framework stack
+
+- **TanStack Start** — file-based routing under `src/routes/`. Nitro adapter for SSR (Vercel preset).
+- **Fumadocs** — `fumadocs-core`, `fumadocs-ui`, `fumadocs-mdx`. Source loader at `src/lib/source.ts`. MDX config in `source.config.ts`.
+- **Tailwind CSS v4** — via `@tailwindcss/vite` plugin (no separate config file). Theme colors as CSS variables in `src/styles/app.css`.
+- **`@vercel/og`** — server-side OG image generation (Satori + resvg-wasm).
+
+### Key directories
+
+- `src/routes/` — TanStack Start file-based routes
+  - `src/routes/api/` — server-only endpoints (chat, search)
+  - `src/routes/og.*.tsx` — OG image generation
+  - `src/routes/llms.txt.ts` / `llms-full.txt.ts` — LLM-optimized doc endpoints
+- `src/components/` — React components; `ui/` has shadcn-style primitives
+- `src/lib/` — utilities, Fumadocs source config, Cadence TextMate grammar (`cadence.tmLanguage.json`)
+- `src/styles/` — Tailwind CSS imports + theme tokens
+- `content/docs/` — all MDX documentation:
+  - `language/` — Cadence language reference; subdirs `accounts/`, `operators/`, `types-and-type-system/`, `values-and-types/`
+  - `tutorial/` — tutorials (`first-steps.mdx` through `voting.mdx` — note: no numeric prefixes; URLs come from filenames)
+  - `cadence-migration-guide/` — Cadence 1.0 migration content
+  - `ai-tools/` — MCP server, skills, LLM endpoints, integration guides (claude/cursor/codex/gemini/antigravity/opencode)
+  - top-level pages: anti-patterns, design-patterns, security-best-practices, solidity-to-cadence, testing-framework, contract-upgrades, json-cadence-spec, project-development-tips, measuring-time, why, index
+- `content/docs/**/meta.json` — fumadocs section / page ordering; replaces Docusaurus `_category_.json`
+- `mcp-server/` — standalone Bun workspace, published to npm
+- `external/onflow-docs` — git submodule of `onflow/docs`, indexed for cross-site search; **not** rendered in the docs nav
+- `public/` — static assets served at root: `robots.txt`, `assets/`, `fonts/`, etc.
+- `vercel.json` — URL redirects (legacy paths, type-page moves). Update here when restructuring URLs.
+- `vercel.json` plus the build script's `NODE_OPTIONS` are the only build-time config knobs.
+- `vite.config.ts` — vite plugins (`mdx`, `tailwindcss`, `tsConfigPaths`, `tanstackStart`, `react`, `nitro` with `vercel` preset)
+- `source.config.ts` — fumadocs MDX schema, admonition types (note, tip, info, warn, warning, danger, important, success), shiki theme config
+
+### Routing patterns
+
+- `docs/$.tsx` — catch-all route for doc pages via Fumadocs source loader
+- `og.docs.$.tsx` — per-doc OG image (Satori — cannot render SVG `<path>`; use PNG base64 data URIs via `src/lib/og-icon.ts`)
+- Server-only handlers: `createFileRoute().server.handlers.GET/POST` (e.g., `api/chat.ts`, `api/search.ts`)
+- `src/routeTree.gen.ts` is auto-generated by TanStack at dev/build time — never edit manually
+
+### Docs content conventions
+
+- MDX files in `content/docs/` with YAML frontmatter: `title`, `description`, optional `icon`, optional `slug` (override URL)
+- Cadence syntax highlighting via custom TextMate grammar (`src/lib/cadence.tmLanguage.json`)
+- Shiki dual themes: `github-light` (light) + `github-dark` (dark), CSS-variable controlled in `src/styles/app.css`
+- Section / page ordering controlled by per-folder `meta.json` (fumadocs convention)
+
+### AI surfaces
+
+- **`/api/chat`** — Anthropic streaming via `@ai-sdk/anthropic`. `ANTHROPIC_API_KEY` is server-only and never reaches the browser bundle.
+- **Search** — Orama index built from `content/docs/` + `external/onflow-docs/` content. Search panel at `src/components/search.tsx`, Cmd+/ hotkey, localStorage persistence.
+- **`/llms.txt`** / **`/llms-full.txt`** — TanStack server routes that emit LLM-optimized markdown summaries / corpus.
+- **MCP server** at `mcp-server/` — exposes `cadence_check`, `cadence_search`, `cadence_execute_script`, `cadence_validate_args`, `cadence_security_scan`, `get_contract_source`. Both stdio and HTTP transports.
+
+## Conventions and Gotchas
+
+- **Bun is the toolchain.** Don't introduce npm/yarn lock files — `bun.lock` is the source of truth. Top-level `package.json` and `mcp-server/package.json` are independent workspaces.
+- **`NODE_OPTIONS=--max-old-space-size=8192`** is required for the build (baked into `package.json` script). The SSR `source-*.mjs` chunk grew past the 4GB default heap when the `external/onflow-docs` submodule was added.
+- **Submodule pinning matters.** `external/onflow-docs` is pinned to a specific commit (not branch-tracking). Bumping the pin is a semi-supply-chain action; review the diff before updating.
+- **Tailwind v4 has no config file.** Theme tokens are CSS variables in `src/styles/app.css`. Use `cn()` from `src/lib/cn.ts` for class merging (clsx + tailwind-merge).
+- **Dark mode uses the `dark` class on `<html>`** (Fumadocs convention).
+- **URL redirects belong in `vercel.json`**, not page frontmatter. When moving / renaming pages, add the redirect there.
+- **Don't edit `routeTree.gen.ts`, `.source/`, or `.vercel/output/`.** All auto-generated.
+- **Cadence MCP HTTP endpoint is currently hosted on Outblock's Railway** (`https://cadence-mcp.up.railway.app/mcp`). The integration guides reference this URL — coordinate with @onflow before changing.
+- **Licensing is split:** source under Apache 2.0 (`LICENSE.txt`), content under CC-BY-4.0 (`CC-BY-4.0.txt`); see `LICENSE.md`.
+
+## Files Not to Modify
+
+- `bun.lock`, `mcp-server/bun.lock`, `mcp-server/package-lock.json` — regenerated by `bun install`
+- `.source/`, `.vercel/output/`, `node_modules/`, `build/` — build artifacts
+- `src/routeTree.gen.ts` — auto-generated by TanStack
+- `external/onflow-docs/` — submodule pointer; modify by bumping the pin in a deliberate commit
+- `public/sitemap.xml` — regenerated by `scripts/generate-sitemap.ts` on every build (currently tracked but should ideally be gitignored)

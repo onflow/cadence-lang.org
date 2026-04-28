@@ -132,7 +132,7 @@ divide(10, by: 0)   // returns 0
 fun processAge(_ age: Int): String {
     if age >= 0 {
         if age <= 150 {
-            return "Valid age: ".concat(age.toString())
+            return "Valid age: \(age)"
         } else {
             return "Too old"
         }
@@ -149,7 +149,7 @@ fun processAge(_ age: Int): String {
     guard age <= 150 else {
         return "Too old"
     }
-    return "Valid age: ".concat(age.toString())
+    return "Valid age: \(age)"
 }
 ```
 
@@ -163,7 +163,7 @@ fun greet(_ name: String?): String {
         return "Hello, stranger"
     }
     // `unwrappedName` is available here, already unwrapped to `String`
-    return "Hello, ".concat(unwrappedName)
+    return "Hello, \(unwrappedName)"
 }
 
 greet("Alice")  // returns "Hello, Alice"
@@ -176,7 +176,7 @@ Contrast with `if let`:
 fun greet(_ name: String?): String {
     if let unwrappedName = name {
         // `unwrappedName` only exists inside this block
-        return "Hello, ".concat(unwrappedName)
+        return "Hello, \(unwrappedName)"
     }
     return "Hello, stranger"
     // `unwrappedName` is NOT available here

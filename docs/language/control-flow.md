@@ -107,7 +107,7 @@ if let number = noNumber {
 
 The guard statement is an early-exit mechanism. It asserts that a condition must be true (or an optional must be non-nil) to continue execution. If the condition is false, the mandatory `else` block runs — and that block **must** exit the current scope via `return`, `break`, `continue`, or a function that never returns (e.g., `panic`).
 
-The compiler enforces this: a guard whose `else` block can fall through is a type error.
+The Cadence type checker enforces this: a guard whose `else` block can fall through is a type error.
 
 ### Basic boolean guard
 

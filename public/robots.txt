@@ -1,8 +1,23 @@
+# cadence-lang.org robots.txt
 # algolia: 98E1096D4FD67E70
+#
+# Content Signals Policy (contentsignals.org, 2025) — explicitly permit
+# search indexing, live AI retrieval (ChatGPT / Claude / Perplexity / etc.
+# citation), and AI training on all content. Cadence docs are open source
+# and intended to be maximally discoverable by humans and AI agents.
+#
+# Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
-# Allow all bots by default
 User-agent: *
-Disallow:
+# Don't waste crawl budget on JSON/binary endpoints (/api/* returns
+# JSON, /og/* renders OG images already linked from each page's meta).
+Disallow: /api/
+Disallow: /og/
+Allow: /
 
-# Sitemap
 Sitemap: https://cadence-lang.org/sitemap.xml
+
+# Machine-readable AI indexes (complementary, non-standard):
+#   Curated:   https://cadence-lang.org/llms.txt
+#   Corpus:    https://cadence-lang.org/llms-full.txt
+#   Companion: https://developers.flow.com/llms.txt

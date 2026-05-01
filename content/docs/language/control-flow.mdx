@@ -102,6 +102,170 @@ if let number = noNumber {
 }
 ```
 
+## Guard statement
+
+The guard statement is an early-exit mechanism. It asserts that a condition must be true (or an optional must be non-nil) to continue execution. If the condition is false, the mandatory `else` block runs — and that block **must** exit the current scope via `return`, `break`, `continue`, or a function that never returns (e.g., `panic`).
+
+The Cadence type checker enforces this: a guard whose `else` block can fall through is a type error.
+
+### Basic boolean guard
+
+```cadence
+fun divide(_ a: Int, by b: Int): Int {
+    guard b != 0 else {
+        return 0
+    }
+    return a / b
+}
+
+divide(10, by: 2)   // returns 5
+divide(10, by: 0)   // returns 0
+```
+
+### Comparison with if-statement
+
+`guard` reads as "ensure this is true, otherwise bail out." The normal path stays at the outermost indentation level — there is no rightward drift for validation logic:
+
+```cadence
+// Using if — validation logic nests deeper
+fun processAge(_ age: Int): String {
+    if age >= 0 {
+        if age <= 150 {
+            return "Valid age: \(age)"
+        } else {
+            return "Too old"
+        }
+    } else {
+        return "Negative age"
+    }
+}
+
+// Using guard — happy path stays flat
+fun processAge(_ age: Int): String {
+    guard age >= 0 else {
+        return "Negative age"
+    }
+    guard age <= 150 else {
+        return "Too old"
+    }
+    return "Valid age: \(age)"
+}
+```
+
+### Optional binding with guard
+
+`guard let` and `guard var` unwrap an optional and — crucially — make the bound variable available **in the enclosing scope**, after the guard. This is the key difference from `if let`, where the bound variable only exists inside the `if` block.
+
+```cadence
+fun greet(_ name: String?): String {
+    guard let unwrappedName = name else {
+        return "Hello, stranger"
+    }
+    // `unwrappedName` is available here, already unwrapped to `String`
+    return "Hello, \(unwrappedName)"
+}
+
+greet("Alice")  // returns "Hello, Alice"
+greet(nil)      // returns "Hello, stranger"
+```
+
+Contrast with `if let`:
+
+```cadence
+fun greet(_ name: String?): String {
+    if let unwrappedName = name {
+        // `unwrappedName` only exists inside this block
+        return "Hello, \(unwrappedName)"
+    }
+    return "Hello, stranger"
+    // `unwrappedName` is NOT available here
+}
+```
+
+Use `guard var` when the unwrapped value needs to be mutated after the guard:
+
+```cadence
+fun normalize(_ value: Int?): Int {
+    guard var n = value else {
+        return 0
+    }
+    if n < 0 {
+        n = 0
+    }
+    return n
+}
+```
+
+### Chaining guards
+
+Multiple guards at the top of a function express preconditions clearly, without nesting:
+
+```cadence
+struct User {
+    let name: String
+    let age: Int
+
+    init(name: String, age: Int) {
+        self.name = name
+        self.age = age
+    }
+}
+
+fun createUser(name: String?, age: Int?): User? {
+    guard let validName = name else { return nil }
+    guard let validAge  = age  else { return nil }
+    guard validName.length > 0 else { return nil }
+    guard validAge >= 0        else { return nil }
+
+    // All checks passed; both `validName` and `validAge` are in scope
+    return User(name: validName, age: validAge)
+}
+```
+
+### Guard in loops
+
+Inside a loop, `guard` can use `continue` or `break` instead of `return`:
+
+```cadence
+fun sumPositives(_ values: [Int?]): Int {
+    var total = 0
+    for item in values {
+        guard let value = item else {
+            continue   // skip nil entries
+        }
+        guard value > 0 else {
+            continue   // skip non-positive entries
+        }
+        total = total + value
+    }
+    return total
+}
+
+sumPositives([1, nil, -3, 4, nil, 2])  // returns 7
+```
+
+### Guard with resources
+
+`guard let` works with optional resources using the `<-` move operator. The `else` block must consume or destroy the original resource before exiting:
+
+```cadence
+resource Vault {
+    let balance: UFix64
+    init(balance: UFix64) {
+        self.balance = balance
+    }
+}
+
+fun withdraw(_ vault: @Vault?): UFix64 {
+    guard let v <- vault else {
+        return 0.0
+    }
+    let balance = v.balance
+    destroy v
+    return balance
+}
+```
+
 ## Switch
 
 Switch-statements compare a value against several possible values of the same type, in order. When an equal value is found, the associated block of code is executed.

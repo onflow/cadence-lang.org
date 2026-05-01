@@ -1,6 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "mcp-server", "dist"],
+  "exclude": ["node_modules", "mcp-server", "dist", "external", ".vercel", ".source"],
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,

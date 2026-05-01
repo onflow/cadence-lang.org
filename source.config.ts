@@ -34,6 +34,10 @@ export default defineConfig({
     ],
     rehypeCodeOptions: {
       langs: [cadenceGrammar as never],
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
     },
   },
 });

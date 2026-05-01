@@ -4,6 +4,11 @@
   "framework": null,
   "redirects": [
     {
+      "source": "/docs/tags/:rest*",
+      "destination": "/docs/",
+      "permanent": true
+    },
+    {
       "source": "/docs/cadence_migration_guide/:path*",
       "destination": "/docs/cadence-migration-guide/:path*",
       "permanent": true

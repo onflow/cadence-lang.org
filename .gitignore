@@ -12,6 +12,7 @@ dist
 .vinxi
 .tanstack
 src/routeTree.gen.ts
+public/sitemap.xml
 
 # IDE
 .idea

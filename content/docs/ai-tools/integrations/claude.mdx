@@ -6,25 +6,24 @@ Configure Claude to work with Cadence via skills, MCP, or context injection.
 
 ## Claude Code
 
-### Install the Cadence skill
+### Install Flow's skill library
+
+The official [onflow/flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace ships the full Cadence + Flow skill suite under one plugin:
 
 ```bash
-npx skills add outblock/cadence-lang.org
+/plugin marketplace add onflow/flow-ai-tools
+/plugin install flow-dev@flow-ai-tools
 ```
+
+See [Skills](../skills) for the full skill list.
 
 ### Add MCP server
 
 ```bash
-claude mcp add cadence-mcp -- npx -y mcp-remote https://cadence-mcp.up.railway.app/mcp
+claude mcp add --scope user cadence-mcp -- flow mcp
 ```
 
-Or use `install-mcp` for auto-configuration:
-
-```bash
-npx install-mcp @outblock/cadence-mcp --client claude-desktop
-```
-
-This gives Claude Code access to all [MCP tools](../mcp-server) — documentation search, code checking, type inspection, and more.
+This registers the [Cadence MCP server](../mcp-server) — built into the Flow CLI as the `flow mcp` subcommand. Gives Claude Code access to Cadence code checking, type inspection, symbol lookup, contract source fetching, and read-only on-chain script execution. Requires [Flow CLI](https://developers.flow.com/tools/flow-cli) ≥ v2.16.0.
 
 ## Claude Desktop
 
@@ -33,9 +32,9 @@ Add the Cadence MCP server to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "cadence": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://cadence-mcp.up.railway.app/mcp"]
+    "cadence-mcp": {
+      "command": "flow",
+      "args": ["mcp"]
     }
   }
 }

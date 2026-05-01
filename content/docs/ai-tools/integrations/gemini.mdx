@@ -6,30 +6,25 @@ Configure Google Gemini to work with Cadence.
 
 ## Gemini CLI
 
-### Install the Cadence skill
+### Add Cadence to GEMINI.md
 
-```bash
-npx skills add outblock/cadence-lang.org
-```
-
-Gemini CLI reads project context files, so `SKILL.md` is picked up automatically.
-
-### Add instructions
-
-Create a `GEMINI.md` file in your project root:
+Gemini CLI reads `GEMINI.md` from the project root automatically. Create or update it with a Cadence section that points at the [`/llms-full.txt`](../llm-endpoints) endpoint:
 
 ```markdown
 ## Cadence Development
 
 This project uses Cadence, the smart contract language for the Flow blockchain.
-Refer to SKILL.md for the complete language reference.
+Full reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
 
 Key conventions:
-- Use `access(all)` for public access, not `pub`
-- Resources use `@` prefix and must be moved with `<-`
+- Use `access(all)` for public access, not the deprecated `pub`
+- Resources use `@` prefix and must be moved with `<-` (never copied)
 - Always handle resources — they cannot be lost or copied
 - Use capability-based access control with entitlements
 ```
+
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships the full Cadence + Flow skill suite (see [Skills](../skills)).
 
 ## Gemini API
 

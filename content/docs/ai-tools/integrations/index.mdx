@@ -1,0 +1,28 @@
+---
+title: Integrations
+description: Editor-specific setup for using Cadence with Claude Code, Cursor, OpenAI Codex, Gemini, Antigravity, and OpenCode.
+---
+
+Configure your AI coding agent to understand Cadence smart contracts. Each integration uses the same two building blocks:
+
+1. **Project context** — point your agent at [`/llms-full.txt`](../llm-endpoints) (or [`/llms.txt`](../llm-endpoints) for a leaner index) so it has the full Cadence reference loaded.
+2. **MCP server** — register the [Cadence MCP server](../mcp-server) (built into the [Flow CLI](https://developers.flow.com/tools/flow-cli) as `flow mcp`) for code checking, type inspection, symbol lookup, contract source fetching, and read-only on-chain script execution.
+
+For Claude Code specifically, the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace bundles the full Cadence + Flow [skill suite](../skills) under one plugin install.
+
+## Editors
+
+| Editor | Project context | Skills | MCP |
+|---|---|---|---|
+| [Claude Code](./claude) | via flow-ai-tools skills | ✓ full suite | ✓ stdio |
+| [Cursor](./cursor) | `.cursor/rules/cadence.mdc` | — | ✓ stdio (deeplink) |
+| [OpenAI Codex](./codex) | `AGENTS.md` | — | — |
+| [Gemini](./gemini) | `GEMINI.md` | — | — |
+| [Antigravity](./antigravity) | `CADENCE.md` / `AGENTS.md` | — | ✓ stdio |
+| [OpenCode](./opencode) | `AGENTS.md` | — | ✓ stdio |
+
+For Claude Desktop and Claude API setup, see the [Claude](./claude) page.
+
+## Don't see your editor?
+
+Any MCP-aware editor can use the Cadence MCP server — point it at `flow mcp` as a stdio command (Flow CLI ≥ v2.16.0). Any agent that reads project-level context files (`AGENTS.md`, etc.) can use the [LLM endpoints](../llm-endpoints) for the full Cadence reference. [Open an issue](https://github.com/onflow/cadence-lang.org/issues) if you'd like first-class instructions for a specific editor.

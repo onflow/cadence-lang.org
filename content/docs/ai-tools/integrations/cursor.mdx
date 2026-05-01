@@ -4,32 +4,34 @@ title: Cursor
 
 Configure Cursor to understand Cadence smart contracts.
 
-## Install the Cadence skill
+## Add Cadence as project context
 
-```bash
-npx skills add outblock/cadence-lang.org
+Cursor reads `.cursor/rules/*.mdc` files automatically. Create `.cursor/rules/cadence.mdc` and point it at the [`/llms-full.txt`](../llm-endpoints) endpoint so the model has the full reference:
+
+```mdc
+---
+description: Cadence smart contract development on Flow
+globs: *.cdc
+---
+
+When working with `.cdc` files, follow Cadence language conventions:
+- Use `access(all)` for public access (not the deprecated `pub`)
+- Resources use `@` prefix and must be moved with `<-` (never copied)
+- Always handle resources — they cannot be lost or copied
+- Use capability-based access control with entitlements
+
+Full Cadence reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
 ```
 
-This adds a `SKILL.md` file to your project. Cursor reads it automatically as project context.
-
-## Add project rules
-
-You can also create a `.cursor/rules` file to reinforce Cadence-specific behavior:
-
-```
-When working with .cdc files, follow the Cadence language conventions.
-Refer to SKILL.md for the complete Cadence reference.
-Use resource-oriented patterns. Never copy resources — always move them with <-.
-```
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships the full Cadence + Flow skill suite (see [Skills](../skills)).
 
 ## Add MCP server
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=cadence&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIm1jcC1yZW1vdGUiLCJodHRwczovL2NhZGVuY2UtbWNwLnVwLnJhaWx3YXkuYXBwL21jcCJdfQ==)
+In Cursor settings → MCP → Add new server:
 
-Or manually add in Cursor settings:
-
-- **Name**: `cadence`
+- **Name**: `cadence-mcp`
 - **Type**: `command`
-- **Command**: `npx -y mcp-remote https://cadence-mcp.up.railway.app/mcp`
+- **Command**: `flow mcp`
 
-This gives Cursor access to the Cadence [MCP tools](../mcp-server) for documentation search and code checking.
+This registers the [Cadence MCP server](../mcp-server) — built into the Flow CLI as the `flow mcp` subcommand. Gives Cursor access to Cadence code checking, type inspection, symbol lookup, contract source fetching, and read-only on-chain script execution. Requires [Flow CLI](https://developers.flow.com/tools/flow-cli) ≥ v2.16.0.

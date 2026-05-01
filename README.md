@@ -8,21 +8,21 @@ Live at [cadence-lang.org](https://cadence-lang.org).
 
 ### Skills
 
-Install the Cadence skill for your AI coding agent:
+Install Flow's Claude Code skill suite from the [`onflow/flow-ai-tools`](https://github.com/onflow/flow-ai-tools) marketplace. In Claude Code:
 
-```sh
-npx skills add outblock/cadence-lang.org
+```bash
+/plugin marketplace add onflow/flow-ai-tools
+/plugin install flow-dev@flow-ai-tools
+/reload-plugins
 ```
 
 ### MCP Server
 
-Install the [Cadence MCP server](https://www.npmjs.com/package/@outblock/cadence-mcp) for AI-powered Cadence development — code checking, type info, and doc search:
+The Cadence MCP server is built into the [Flow CLI](https://developers.flow.com/tools/flow-cli) (≥ v2.16.0) as `flow mcp`. Source: [onflow/flow-cli/internal/mcp](https://github.com/onflow/flow-cli/tree/master/internal/mcp).
 
 ```sh
-npx install-mcp @outblock/cadence-mcp --client claude
+claude mcp add --scope user cadence-mcp -- flow mcp
 ```
-
-Supported clients: `claude`, `cursor`, `windsurf`, `copilot`, `vscode`
 
 ### LLM Context
 

@@ -4,27 +4,35 @@ title: OpenCode
 
 Configure [OpenCode](https://opencode.ai) to work with Cadence.
 
-## Install the Cadence skill
+## Add Cadence as project context
 
-```bash
-npx skills add outblock/cadence-lang.org
+OpenCode reads project-level context files automatically. Add a section to your `AGENTS.md` pointing at the [`/llms-full.txt`](../llm-endpoints) endpoint:
+
+```markdown
+## Cadence Development
+
+This project uses Cadence, the smart contract language for the Flow blockchain.
+Full reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
+
+Resources use `@` prefix and must be moved with `<-`. Use `access(all)` for public access (not `pub`). Capability-based access control with entitlements.
 ```
 
-OpenCode reads project-level context files automatically.
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships the full Cadence + Flow skill suite (see [Skills](../skills)).
 
 ## Add MCP server
 
-Add the Cadence MCP server to your OpenCode configuration:
+Add the Cadence MCP server to your OpenCode configuration — calls the Flow CLI's built-in `flow mcp` subcommand:
 
 ```json
 {
   "mcp": {
-    "cadence": {
-      "type": "remote",
-      "url": "https://cadence-mcp.up.railway.app/mcp"
+    "cadence-mcp": {
+      "type": "local",
+      "command": ["flow", "mcp"]
     }
   }
 }
 ```
 
-This gives OpenCode access to all [MCP tools](../mcp-server) — documentation search, code checking, type inspection, and more.
+This gives OpenCode access to all [MCP tools](../mcp-server) — Cadence code checking, type inspection, symbol lookup, contract source fetching, and read-only on-chain script execution. Requires [Flow CLI](https://developers.flow.com/tools/flow-cli) ≥ v2.16.0.

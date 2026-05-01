@@ -158,7 +158,7 @@ export const Route = createFileRoute("/")({
         content:
           'A safe, resource-oriented programming language built for the Flow blockchain. Designed for digital ownership and optimized for AI-driven development.',
       },
-      { property: 'og:url', content: SITE_URL },
+      { property: 'og:url', content: `${SITE_URL}/` },
       { property: 'og:type', content: 'website' },
       { property: 'og:image', content: `${SITE_URL}/og/home` },
       { property: 'og:site_name', content: 'Cadence' },
@@ -171,6 +171,9 @@ export const Route = createFileRoute("/")({
           'A safe, resource-oriented programming language built for the Flow blockchain. Designed for digital ownership and optimized for AI-driven development.',
       },
       { name: 'twitter:image', content: `${SITE_URL}/og/home` },
+    ],
+    links: [
+      { rel: 'canonical', href: `${SITE_URL}/` },
     ],
   }),
 });
@@ -263,46 +266,35 @@ const heroCommands: HeroCommand[] = [
   {
     key: "skills",
     label: "skills",
-    copyText: "npx skills add outblock/cadence-lang.org",
+    copyText: "/plugin marketplace add onflow/flow-ai-tools",
     render: () => (
       <>
-        <span className={S.cmd}>npx</span>{" "}
-        <span className={S.dim}>skills add</span>{" "}
-        <span className={S.pkg}>outblock/cadence-lang.org</span>
+        <span className={S.cmd}>/plugin</span>{" "}
+        <span className={S.dim}>marketplace add</span>{" "}
+        <span className={S.pkg}>onflow/flow-ai-tools</span>
       </>
     ),
-    hint: "Install the Cadence skill for your AI coding agent",
+    hint: "Install Flow's Claude Code skill suite",
     href: "/docs/ai-tools/skills",
   },
   {
     key: "mcp",
     label: "mcp",
-    copyText: (client: string, mode: McpMode) =>
-      mode === "remote"
-        ? `npx install-mcp https://cadence-mcp.up.railway.app/mcp --client ${client} --oauth no`
-        : `npx install-mcp @outblock/cadence-mcp --client ${client}`,
-    render: (_client: string, mode: McpMode) =>
-      mode === "remote" ? (
-        <>
-          <span className={S.cmd}>npx</span>{" "}
-          <span className={S.dim}>install-mcp</span>{" "}
-          <span className={S.url}>cadence-mcp…/mcp</span>{" "}
-          <span className={S.flag}>--client</span>{" "}
-          <span className={S.pkg}>{_client}</span>
-        </>
-      ) : (
-        <>
-          <span className={S.cmd}>npx</span>{" "}
-          <span className={S.dim}>install-mcp</span>{" "}
-          <span className={S.pkg}>@outblock/cadence-mcp</span>{" "}
-          <span className={S.flag}>--client</span>{" "}
-          <span className={S.pkg}>{_client}</span>
-        </>
-      ),
-    hint: "Install the Cadence MCP server",
+    copyText: (_client: string, _mode: McpMode) =>
+      `claude mcp add --scope user cadence-mcp -- flow mcp`,
+    render: (_client: string, _mode: McpMode) => (
+      <>
+        <span className={S.cmd}>claude</span>{" "}
+        <span className={S.dim}>mcp add --scope user</span>{" "}
+        <span className={S.pkg}>cadence-mcp</span>{" "}
+        <span className={S.flag}>--</span>{" "}
+        <span className={S.pkg}>flow mcp</span>
+      </>
+    ),
+    hint: "Install the Cadence MCP server (built into Flow CLI)",
     href: "/docs/ai-tools/mcp-server",
-    hasClientSelect: true,
-    hasModeSelect: true,
+    hasClientSelect: false,
+    hasModeSelect: false,
   },
 ];
 
@@ -311,7 +303,7 @@ function Home() {
   const [copied, setCopied] = useState(false);
   const [activeCmd, setActiveCmd] = useState(0);
   const [mcpClient, setMcpClient] = useState<string>(mcpClients[0].value);
-  const [mcpMode, setMcpMode] = useState<McpMode>("remote");
+  const [mcpMode, setMcpMode] = useState<McpMode>("local");
   const [typingKey, setTypingKey] = useState(0);
   const [activeCodeTab, setActiveCodeTab] = useState<"nft" | "defi">("nft");
   const codeContainerRef = useRef<HTMLDivElement>(null);
@@ -346,7 +338,7 @@ function Home() {
         Ask Cadence AI
       </AISearchTrigger>
       <HomeLayout {...baseOptions()}>
-        <div className="relative min-h-screen overflow-x-hidden bg-[#FAFAFA] dark:bg-black text-neutral-900 dark:text-white selection:bg-[var(--accent)] selection:text-black font-sans transition-colors duration-300">
+        <main className="relative min-h-screen overflow-x-hidden bg-[#FAFAFA] dark:bg-black text-neutral-900 dark:text-white selection:bg-[var(--accent)] selection:text-black font-sans transition-colors duration-300" aria-label="Cadence homepage">
           {/* Subtle Grid Background */}
           <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
@@ -398,12 +390,13 @@ function Home() {
                     />
                     <button
                       onClick={copyCommand}
+                      aria-label={copied ? "Command copied" : "Copy command to clipboard"}
                       className="p-3 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors text-neutral-500 dark:text-[#888] hover:text-black dark:hover:text-white shrink-0"
                     >
                       {copied ? (
-                        <Check className="w-5 h-5 text-[var(--accent)]" />
+                        <Check className="w-5 h-5 text-[var(--accent)]" aria-hidden="true" />
                       ) : (
-                        <Copy className="w-5 h-5" />
+                        <Copy className="w-5 h-5" aria-hidden="true" />
                       )}
                     </button>
                   </div>
@@ -481,16 +474,16 @@ function Home() {
             <div className="max-w-7xl mx-auto">
               <div className="grid lg:grid-cols-12 gap-16">
                 <div className="lg:col-span-4 min-w-0">
-                  <h3 className="text-2xl font-bold border-b border-black/10 dark:border-white/10 pb-4 mb-12">
+                  <h2 className="text-2xl font-bold border-b border-black/10 dark:border-white/10 pb-4 mb-12">
                     Architectural Pillars
-                  </h3>
+                  </h2>
                   <div className="space-y-10">
                     {(activeCodeTab === "nft" ? nftPillars : defiPillars).map((p, i) => (
                       <div key={`${activeCodeTab}-${i}`} className="group animate-[fadeIn_300ms_ease-in-out]">
                         <div className="text-[10px] font-mono text-green-600 dark:text-[var(--accent)] mb-2 opacity-80 dark:opacity-50 group-hover:opacity-100 transition-opacity">
                           {p.label}
                         </div>
-                        <h4 className="text-xl font-bold mb-3">{p.title}</h4>
+                        <h3 className="text-xl font-bold mb-3">{p.title}</h3>
                         <p className="text-sm text-neutral-600 dark:text-[#888] leading-relaxed">
                           {p.desc}
                         </p>
@@ -559,9 +552,9 @@ function Home() {
                       The Old Way (Ledger)
                     </span>
                   </div>
-                  <h4 className="text-2xl font-bold mb-4">
+                  <h3 className="text-2xl font-bold mb-4">
                     Centralized Accounting
-                  </h4>
+                  </h3>
                   <p className="text-neutral-600 dark:text-[#666] leading-relaxed mb-8">
                     Assets are just entries in a contract's private dictionary. To
                     move value, you update two numbers. This "ledger" model is
@@ -589,9 +582,9 @@ function Home() {
                       The Cadence Way
                     </span>
                   </div>
-                  <h4 className="text-2xl font-bold mb-4 text-neutral-900 dark:text-white">
+                  <h3 className="text-2xl font-bold mb-4 text-neutral-900 dark:text-white">
                     Direct Ownership
-                  </h4>
+                  </h3>
                   <p className="text-neutral-600 dark:text-[#888] leading-relaxed mb-8">
                     Assets are objects stored directly in the user's account. To
                     move value, you physically move the object. Impossible to
@@ -711,10 +704,20 @@ function Home() {
                             >
                               Discord
                             </Link>
-                            <a href="#" className="hover:text-black dark:hover:text-white transition-colors">
+                            <a
+                              href="https://forum.flow.com/"
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="hover:text-black dark:hover:text-white transition-colors"
+                            >
                               Forum
                             </a>
-                            <a href="#" className="hover:text-black dark:hover:text-white transition-colors">
+                            <a
+                              href="https://twitter.com/flow_blockchain"
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="hover:text-black dark:hover:text-white transition-colors"
+                            >
                               Twitter
                             </a>
                           </div>
@@ -730,7 +733,7 @@ function Home() {
                       </span>
                     </div>
                   </footer>
-                </div >
+                </main>
               </HomeLayout >
             </AISearch >
             );

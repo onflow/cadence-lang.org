@@ -28,6 +28,7 @@ export function baseOptions(): BaseLayoutProps {
       {
         type: 'icon',
         text: 'GitHub',
+        label: 'GitHub',
         url: 'https://github.com/onflow/cadence',
         icon: (
           <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
@@ -39,6 +40,7 @@ export function baseOptions(): BaseLayoutProps {
       {
         type: 'icon',
         text: 'Discord',
+        label: 'Discord',
         url: 'https://discord.com/invite/J6fFnh2xx6',
         icon: (
           <svg viewBox="0 0 16 16" fill="currentColor" width="20" height="20">

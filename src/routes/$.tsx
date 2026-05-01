@@ -65,7 +65,8 @@ function NotFound() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-2 w-full">
           <Link
-            to="/docs"
+            to="/docs/$"
+            params={{ _splat: '' }}
             className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border transition-colors"
             style={{
               background: 'var(--accent)',

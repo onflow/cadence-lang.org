@@ -3,15 +3,9 @@
 import * as React from 'react';
 import { flushSync } from 'react-dom';
 
-// View Transitions API type augmentation
-declare global {
-  interface Document {
-    startViewTransition?: (callback: () => void) => {
-      ready: Promise<void>;
-      finished: Promise<void>;
-    };
-  }
-}
+// View Transitions API is now in lib.dom.d.ts (TS 5.6+); no manual
+// augmentation needed. document.startViewTransition() returns a ViewTransition
+// with .ready and .finished promises — both used below.
 
 type ThemeSelection = 'light' | 'dark' | 'system';
 type Resolved = 'light' | 'dark';

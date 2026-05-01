@@ -63,7 +63,7 @@ contract NamedFields {
     init() {
         // assign and access the field here and in transactions
         self.testStoragePath = /storage/testStorage
-        self.account.storage.save(<-create Test(), to: self.TestStoragePath)
+        self.account.storage.save(<-create Test(), to: self.testStoragePath)
     }
 }
 
@@ -373,15 +373,15 @@ transaction {
     prepare(acct: auth(LoadValue, SaveValue) &Account) {
 
         // Removes the vault from storage, a costly operation
-        let vault <- acct.storage.load<@ExampleToken.Vault>(from: /storage/exampleToken)
+        let vault <- acct.storage.load<@ExampleToken.Vault>(from: /storage/exampleToken)!
 
         // Withdraws tokens
-        let burnVault <- vault.withdraw(amount: 10)
+        let burnVault <- vault.withdraw(amount: 10.0)
 
         destroy burnVault
 
         // Saves the used vault back to storage, another costly operation
-        acct.storage.save(to: /storage/exampleToken)
+        acct.storage.save(<-vault, to: /storage/exampleToken)
 
     }
 }
@@ -393,9 +393,13 @@ transaction {
     prepare(acct: auth(BorrowValue) &Account) {
 
         // Borrows a reference to the stored vault, much less costly operation
-        let vault <- acct.storage.borrow<&ExampleToken.Vault>(from: /storage/exampleToken)
+        // Borrow returns an optional reference; force-unwrap (or null-check) before use.
+        // The reference must be authorized to call entitled methods like `withdraw`.
+        let vaultRef = acct.storage.borrow<auth(FungibleToken.Withdraw) &ExampleToken.Vault>(
+            from: /storage/exampleToken
+        )!
 
-        let burnVault <- vault.withdraw(amount: 10)
+        let burnVault <- vaultRef.withdraw(amount: 10.0)
 
         destroy burnVault
 
@@ -517,9 +521,9 @@ transaction {
         var capability: Capability<&ExampleToken.Vault>? = nil
 
         // get the capability to the vault at the given storage path if it exists
-        let vaultCaps = account.capabilities.storage.getControllers(forPath: /storage/exampleTokenVault)
+        let vaultCaps = signer.capabilities.storage.getControllers(forPath: /storage/exampleTokenVault)
         for cap in vaultCaps {
-            if let cap = cap as? Capability<&ExampleToken.Vault> {
+            if let cap = cap.capability as? Capability<&ExampleToken.Vault> {
                 capability = cap
                 break
             }
@@ -527,15 +531,15 @@ transaction {
 
         if capability == nil {
             // issue a new capability to the vault since it wasn't found
-            capability = account.capabilities.storage.issue<&ExampleToken.Vault>(/storage/exampleTokenVault)
+            capability = signer.capabilities.storage.issue<&ExampleToken.Vault>(/storage/exampleTokenVault)
         }
 
         let publicPath = /public/exampleTokenReceiver
 
-        if signer.capabilities.exits(publicPath) {
+        if signer.capabilities.exists(publicPath) {
             signer.capabilities.unpublish(publicPath)
         }
-        signer.capabilities.publish(capability, at: publicPath)
+        signer.capabilities.publish(capability!, at: publicPath)
     }
 }
 ```

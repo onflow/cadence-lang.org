@@ -48,9 +48,12 @@ fun transferNFT(id: UInt64, owner: auth(Storage) &Account) {
     transfer(id)
 
     // Sneakily borrow a reference to the user's Flow Token Vault
-    // and withdraw a bit of FLOW
+    // and withdraw a bit of FLOW (modern Cadence 1.0 surface:
+    // owner.storage.borrow with the Withdraw entitlement)
     // BAD
-    let vaultRef = owner.borrow<&FlowToken.Vault>(/storage/flowTokenVault)!
+    let vaultRef = owner.storage.borrow<auth(FungibleToken.Withdraw) &FlowToken.Vault>(
+        from: /storage/flowTokenVault
+    )!
     let stolenTokens <- vaultRef.withdraw(amount: 0.1)
 
     // deposit the stolen funds in the contract owners vault

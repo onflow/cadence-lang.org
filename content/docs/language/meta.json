@@ -1,6 +1,5 @@
 {
   "title": "Language Reference",
-  "root": true,
   "pages": [
     "syntax",
     "constants-and-variables",

@@ -452,6 +452,21 @@ export function AISearchPanelList({ className, style, ...props }: ComponentProps
       }}
       {...props}
     >
+      {chat.error && (
+        <div className="mx-3 mb-3 flex items-start gap-2 rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40 px-3 py-2 text-xs text-red-700 dark:text-red-400">
+          <span className="shrink-0 mt-0.5">⚠</span>
+          <span className="flex-1">
+            {chat.error.message || 'Something went wrong. Please try again.'}
+          </span>
+          <button
+            type="button"
+            className="shrink-0 underline underline-offset-2 hover:no-underline"
+            onClick={() => chat.clearError()}
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
       {messages.length === 0 ? (
         <div className="text-sm size-full flex flex-col items-center justify-center text-center gap-3 px-3">
           <MessageCircleIcon className="text-fd-muted-foreground/80" fill="currentColor" stroke="none" />

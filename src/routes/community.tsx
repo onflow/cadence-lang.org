@@ -64,8 +64,8 @@ function Community() {
       title: 'Join Dev Office Hours',
       description: 'Follow the Flow developers on X for announcements about upcoming office hours and community sessions.',
       icon: <Users className="w-5 h-5 text-blue-400" />,
-      link: 'https://x.com/flow_developers',
-      linkText: 'Follow on X',
+      link: 'https://calendar.google.com/calendar/u/0/r?cid=c_47978f5cd9da636cadc6b8473102b5092c1a865dd010558393ecb7f9fd0c9ad0@group.calendar.google.com',
+      linkText: 'Add to Calendar',
     },
   ];
 

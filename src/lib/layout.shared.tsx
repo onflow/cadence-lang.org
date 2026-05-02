@@ -24,7 +24,7 @@ export function baseOptions(): BaseLayoutProps {
         external: true,
       },
       { text: 'Language Reference', url: '/docs/language' },
-      { text: 'AI Tools', url: '/docs/ai-tools' },
+      { text: 'Agents', url: '/docs/ai-tools' },
       {
         type: 'icon',
         text: 'GitHub',

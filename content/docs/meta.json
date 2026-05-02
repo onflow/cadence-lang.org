@@ -1,16 +1,19 @@
 {
   "pages": [
-    "...",
+    "index",
     "why",
+    "ai-tools",
     "solidity-to-cadence",
-    "json-cadence-spec",
+    "tutorial",
+    "language",
     "design-patterns",
     "anti-patterns",
     "project-development-tips",
+    "security-best-practices",
+    "json-cadence-spec",
+    "contract-upgrades",
     "measuring-time",
     "testing-framework",
-    "contract-upgrades",
-    "security-best-practices",
-    "ai-tools"
+    "cadence-migration-guide"
   ]
 }

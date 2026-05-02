@@ -1,5 +1,6 @@
 {
-  "title": "AI Tools",
+  "title": "Agents",
+  "root": true,
   "pages": [
     "skills",
     "mcp-server",

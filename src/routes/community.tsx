@@ -61,11 +61,11 @@ function Community() {
       linkText: 'Read FLIPs',
     },
     {
-      title: 'Join Design Meetings',
-      description: 'Join the core contributors and community to investigate, design, and decide on language features.',
+      title: 'Join Dev Office Hours',
+      description: 'Follow the Flow developers on X for announcements about upcoming office hours and community sessions.',
       icon: <Users className="w-5 h-5 text-blue-400" />,
-      link: 'https://docs.google.com/document/d/1KMGdiZ7qX9aoyH2WEVGHjsvBTNPTN6my8LcNmSVivLQ/edit',
-      linkText: 'Meeting Notes',
+      link: 'https://x.com/flow_developers',
+      linkText: 'Follow on X',
     },
   ];
 

@@ -1,6 +1,5 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { getLayoutTabs } from 'fumadocs-ui/layouts/shared';
 import { createServerFn } from '@tanstack/react-start';
 import { source, getPageImage } from '@/lib/source';
 import { SITE_URL } from '@/lib/site';
@@ -249,18 +248,13 @@ function Page() {
       <DocsLayout
         {...baseOptions()}
         tree={data.pageTree}
-        tabs={(() => {
-          const folderTabs = getLayoutTabs(data.pageTree);
-          const langTab = folderTabs.find(t => t.url?.startsWith('/docs/language'));
-          const agentsTab = folderTabs.find(t => t.url?.startsWith('/docs/ai-tools'));
-          return [
-            { title: 'Documentation', url: '/docs' },
-            ...(langTab ? [langTab] : [{ title: 'Language Reference', url: '/docs/language' }]),
-            ...(agentsTab ? [agentsTab] : [{ title: 'Agents', url: '/docs/ai-tools' }]),
-            { title: 'Community & Support', url: '/community' },
-          ];
-        })()}
-        tabMode="auto"
+        links={[
+          { text: 'Documentation', url: '/docs' },
+          { text: 'Language Reference', url: '/docs/language' },
+          { text: 'Agents', url: '/docs/ai-tools' },
+          { text: 'Community & Support', url: '/community' },
+          ...(baseOptions().links ?? []).filter((l: { type?: string }) => l.type === 'icon'),
+        ]}
       >
         {/* `display: contents` keeps the <main> landmark for a11y/Lighthouse
          * (landmark-one-main, button-name etc.) without disrupting fumadocs'

@@ -174,7 +174,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
   ) {
     const markdownUrl = `${props.pageUrl}.mdx`;
     const githubDocPath = props.docPath
-      ? `${props.docPath}.mdx`
+      ? `${props.docPath.replace(/\.\w+$/, '')}.mdx`
       : `${props.pageUrl?.replace('/docs', '') || ''}.mdx`;
     const githubUrl = `https://github.com/onflow/cadence-lang.org/blob/main/content/docs/${githubDocPath.replace(/^\/+/, '')}`;
 

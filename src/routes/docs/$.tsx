@@ -3,6 +3,7 @@ import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { createServerFn } from '@tanstack/react-start';
 import { source, getPageImage } from '@/lib/source';
 import { SITE_URL } from '@/lib/site';
+import { deriveDescription } from '@/lib/derive-description';
 import browserCollections from 'fumadocs-mdx:collections/browser';
 import {
   DocsBody,
@@ -64,53 +65,6 @@ export const Route = createFileRoute('/docs/$')({
     };
   },
 });
-
-/**
- * Derive a meta description from the page's first non-heading paragraph
- * when frontmatter `description` is absent. Strips common MDX/markdown
- * syntax (links, bold/italic, inline code, JSX components, headings) and
- * truncates at 160 chars on a word boundary.
- */
-function deriveDescription(processedMarkdown: string): string {
-  const blocks = processedMarkdown.split(/\n{2,}/);
-  for (const block of blocks) {
-    const trimmed = block.trim();
-    if (!trimmed) continue;
-    // Skip headings, frontmatter fences, code blocks, JSX components, lists, blockquotes
-    if (
-      trimmed.startsWith('#') ||
-      trimmed.startsWith('---') ||
-      trimmed.startsWith('```') ||
-      trimmed.startsWith('<') ||
-      trimmed.startsWith('-') ||
-      trimmed.startsWith('*') ||
-      trimmed.startsWith('>') ||
-      /^\s*\d+\.\s/.test(trimmed) ||
-      trimmed.startsWith(':::')
-    ) {
-      continue;
-    }
-    // Skip lines that are processed-MDX heading text + anchor like "Introduction [#introduction]"
-    // (the heading-id syntax some MDX pipelines emit instead of '## ...')
-    if (/^\S[^\n]{0,80}\[#[\w-]+\]\s*$/.test(trimmed)) continue;
-    // Strip markdown syntax: [text](url) → text, **x**/*x*/`x` → x, <Component/> → '',
-    // and inline anchor markers like [#some-id]
-    const plain = trimmed
-      .replace(/\[#[\w-]+\]/g, '')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-      .replace(/<[^>]+>/g, '')
-      .replace(/[*_`]/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    if (plain.length < 20) continue;
-    if (plain.length <= 160) return plain;
-    // Truncate on word boundary, append ellipsis
-    const cut = plain.slice(0, 157);
-    const lastSpace = cut.lastIndexOf(' ');
-    return (lastSpace > 100 ? cut.slice(0, lastSpace) : cut) + '…';
-  }
-  return '';
-}
 
 const serverLoader = createServerFn({
   method: 'GET',
@@ -174,7 +128,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
   ) {
     const markdownUrl = `${props.pageUrl}.mdx`;
     const githubDocPath = props.docPath
-      ? `${props.docPath}.mdx`
+      ? `${props.docPath.replace(/\.\w+$/, '')}.mdx`
       : `${props.pageUrl?.replace('/docs', '') || ''}.mdx`;
     const githubUrl = `https://github.com/onflow/cadence-lang.org/blob/main/content/docs/${githubDocPath.replace(/^\/+/, '')}`;
 
@@ -248,6 +202,13 @@ function Page() {
       <DocsLayout
         {...baseOptions()}
         tree={data.pageTree}
+        links={[
+          { text: 'Documentation', url: '/docs' },
+          { text: 'Language Reference', url: '/docs/language' },
+          { text: 'Agents', url: '/docs/ai-tools' },
+          { text: 'Community & Support', url: '/community' },
+          ...(baseOptions().links ?? []).filter((l: { type?: string }) => l.type === 'icon'),
+        ]}
       >
         {/* `display: contents` keeps the <main> landmark for a11y/Lighthouse
          * (landmark-one-main, button-name etc.) without disrupting fumadocs'

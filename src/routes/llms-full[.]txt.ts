@@ -1,42 +1,27 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { readdir, readFile } from 'node:fs/promises';
-import { join, extname, basename, relative } from 'node:path';
-import matter from 'gray-matter';
-
-const DOCS_DIR = join(process.cwd(), 'content', 'docs');
-
-async function walk(dir: string): Promise<string[]> {
-  const out: string[] = [];
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...(await walk(full)));
-    else if (/\.mdx?$/.test(entry.name)) out.push(full);
-  }
-  return out;
-}
+import { source } from '@/lib/source';
 
 export const Route = createFileRoute('/llms-full.txt')({
   server: {
     handlers: {
       GET: async () => {
-        const files = (await walk(DOCS_DIR)).sort();
-        const sections: string[] = [];
+        const pages = source.getPages().sort((a, b) => a.url.localeCompare(b.url, 'en'));
 
-        for (const file of files) {
-          const rel = relative(DOCS_DIR, file).replace(/\\/g, '/');
-          const name = basename(rel, extname(rel));
-          const dir = rel.replace(/\/?[^/]+$/, '');
-          const slug = name === 'index' ? dir : dir ? `${dir}/${name}` : name;
-          const url = slug ? `/docs/${slug}` : '/docs';
+        const rendered = await Promise.all(
+          pages.map(async (page) => {
+            const title = (page.data.title as string | undefined) ?? page.url;
+            const desc = page.data.description as string | undefined;
+            const processed = await page.data.getText('processed').catch(() => '');
+            if (!processed.trim()) return null;
+            const header = desc
+              ? `# ${title} (${page.url})\n\n> ${desc}`
+              : `# ${title} (${page.url})`;
+            return `${header}\n\n${processed.trim()}`;
+          }),
+        );
 
-          const raw = await readFile(file, 'utf8');
-          const fm = matter(raw);
-          const title = (fm.data.title as string | undefined) ?? slug ?? 'Cadence Documentation';
-
-          sections.push(`# ${title} (${url})\n\n${fm.content.trim()}`);
-        }
-
-        return new Response(sections.join('\n\n---\n\n'), {
+        const body = rendered.filter((x): x is string => x !== null).join('\n\n---\n\n');
+        return new Response(body, {
           headers: { 'content-type': 'text/plain; charset=utf-8' },
         });
       },

@@ -67,6 +67,26 @@ These are the things a competent dev would otherwise get wrong.
 - **`external/onflow-docs` is indexed for search but not rendered in the docs nav.** Cross-site search hits link out to `developers.flow.com`.
 - **Licensing is split:** source under Apache 2.0 (`LICENSE.txt`), content under CC-BY-4.0 (`CC-BY-4.0.txt`). See `LICENSE.md`.
 
+## Tools for Coding Agents
+
+If you are writing Cadence code in this repo, install these before starting:
+
+```bash
+# Claude Code plugin — 11 Cadence-specific skills (language, audit, scaffold, test, DeFi, etc.)
+/plugin marketplace add onflow/flow-ai-tools
+/plugin install flow-dev@flow-ai-tools
+/reload-plugins
+
+# Cadence MCP server — type checking, symbol lookup, on-chain queries (requires Flow CLI ≥ v2.16.0)
+claude mcp add --scope user cadence-mcp -- flow mcp
+```
+
+Or install both in one command:
+
+```bash
+sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-ai-tools/main/scripts/install.sh)"
+```
+
 ## AI Surfaces
 
 - **`/api/chat`** — Anthropic streaming via `@ai-sdk/anthropic`. Server-only key.

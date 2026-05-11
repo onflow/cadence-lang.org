@@ -1,0 +1,10 @@
+{
+  "title": "Cadence 1.0 Migration Guide",
+  "pages": [
+    "...",
+    "core-contracts-guide",
+    "ft-guide",
+    "improvements",
+    "nft-guide"
+  ]
+}

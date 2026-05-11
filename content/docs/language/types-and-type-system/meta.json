@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "...",
+    "composite-types",
+    "intersection-types",
+    "run-time-types",
+    "type-annotations",
+    "type-hierarchy",
+    "type-inference",
+    "type-safety"
+  ]
+}

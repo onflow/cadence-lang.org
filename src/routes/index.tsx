@@ -305,7 +305,7 @@ function Home() {
   const [mcpClient, setMcpClient] = useState<string>(mcpClients[0].value);
   const [mcpMode, setMcpMode] = useState<McpMode>("local");
   const [typingKey, setTypingKey] = useState(0);
-  const [activeCodeTab, setActiveCodeTab] = useState<"nft" | "defi">("nft");
+  const [activeCodeTab, setActiveCodeTab] = useState<"nft" | "defi">("defi");
   const codeContainerRef = useRef<HTMLDivElement>(null);
   const codeInnerRef = useRef<HTMLDivElement>(null);
   const [codeHeight, setCodeHeight] = useState<string>("auto");
@@ -502,16 +502,16 @@ function Home() {
                       </div>
                       <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-lg self-start sm:self-auto">
                         <button
-                          onClick={() => setActiveCodeTab("nft")}
-                          className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${activeCodeTab === "nft" ? "bg-white dark:bg-white/10 text-neutral-900 dark:text-white shadow-sm" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"}`}
-                        >
-                          NFT
-                        </button>
-                        <button
                           onClick={() => setActiveCodeTab("defi")}
                           className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${activeCodeTab === "defi" ? "bg-white dark:bg-white/10 text-neutral-900 dark:text-white shadow-sm" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"}`}
                         >
                           DeFi
+                        </button>
+                        <button
+                          onClick={() => setActiveCodeTab("nft")}
+                          className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${activeCodeTab === "nft" ? "bg-white dark:bg-white/10 text-neutral-900 dark:text-white shadow-sm" : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"}`}
+                        >
+                          NFT
                         </button>
                       </div>
                     </div>
@@ -586,17 +586,24 @@ function Home() {
                     Direct Ownership
                   </h3>
                   <p className="text-neutral-600 dark:text-[#888] leading-relaxed mb-8">
-                    Assets are objects stored directly in the user's account. To
-                    move value, you physically move the object. Impossible to
-                    duplicate.
+                    Tokens live in the user's account as vault resources. Withdrawing
+                    creates a new resource the compiler tracks: it must be deposited
+                    or explicitly destroyed, it cannot be silently lost or duplicated.
                   </p>
                   <div className="p-6 bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-lg font-mono text-sm text-[var(--accent)]/80 leading-relaxed">
-                    let vault {"<-"} account.withdraw(amount: 10.0)
+                    let vault = signer.storage.borrow{"<"}
                     <br />
-                    receiver.deposit(vault: {"<-"} vault)
+                    {"  "}auth(FungibleToken.Withdraw) {"&"}FlowToken.Vault{">"}
                     <br />
-                    <span className="text-white/40 mt-2 block">
-                      // vault is now empty, reentrancy impossible
+                    {"  "}(from: /storage/flowTokenVault)!
+                    <br />
+                    <br />
+                    let payment {"<-"} vault.withdraw(amount: 10.0)
+                    <br />
+                    receiver.deposit(from: {"<-"} payment)
+                    <br />
+                    <span className="text-[var(--accent)]/40 mt-2 block">
+                      {"// payment: must be deposited, cannot be duplicated"}
                     </span>
                   </div>
                 </div>
@@ -629,33 +636,6 @@ function Home() {
                     </div>
                   </section>
 
-                  {/* ════════ SCALE & TRUST ════════ */}
-                  <section className="relative py-24 px-6 border-t border-black/5 dark:border-white/5">
-                    <div className="max-w-7xl mx-auto">
-                      <div className="flex items-center gap-6 mb-16">
-                        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-black/10 dark:to-white/10" />
-                        <span className="font-mono text-xs text-neutral-500 dark:text-[#666] uppercase tracking-widest">
-                          Built For Scale
-                        </span>
-                        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-black/10 dark:to-white/10" />
-                      </div>
-
-                      <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
-                        <span className="text-2xl font-black tracking-tighter">
-                          NBA TOP SHOT
-                        </span>
-                        <span className="text-2xl font-black tracking-tighter">
-                          NFL ALL DAY
-                        </span>
-                        <span className="text-2xl font-black tracking-tighter">
-                          TICKETMASTER
-                        </span>
-                        <span className="text-2xl font-black tracking-tighter">
-                          DISNEY
-                        </span>
-                      </div>
-                    </div>
-                  </section>
 
                   {/* ════════ FOOTER ════════ */}
                   <footer className="relative py-16 px-6 border-t border-black/5 dark:border-white/5 bg-neutral-100 dark:bg-[#050505]">

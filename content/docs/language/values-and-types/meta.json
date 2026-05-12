@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "...",
+    "addresses-functions",
+    "anystruct-anyresource-opts-never",
+    "arrays",
+    "booleans-numlits-ints",
+    "dictionaries",
+    "fixed-point-nums-ints",
+    "inclusive-range",
+    "min-max-saturation-floating-pt-nums",
+    "strings-and-characters"
+  ]
+}

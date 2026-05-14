@@ -33,12 +33,13 @@ access(all) resource BankAccount {
 If there are any functions that modify privileged state that also need to be callable from external code, use [entitlements] for the access modifiers for those functions:
 
 ```cadence
-/// Simplified Vault implementation
+/// Declare Entitlements at the contract level — entitlements are
+/// namespaced to their contract and referenced by access modifiers
+/// on the contract's resources, structs, and functions.
+access(all) entitlement Owner
+
 /// Simplified Bank Account implementation
 access(all) resource BankAccount {
-
-    /// Declare Entitlements for state-modifying functions
-    access(all) entitlement Owner
 
     /// Fields should default to access(self) just to be safe
     access(self) var balance: UFix64
@@ -91,7 +92,7 @@ When issuing a capability, a capability of the same type might already be presen
     var flowTokenVaultCap: Capability<auth(FungibleToken.Withdraw) &FlowToken.Vault>? = nil
 
     // Get all the capabilities that have already been issued for the desired storage path
-    let flowTokenVaultCaps = account.capabilities.storage.getControllers(forPath: /storage/flowTokenVault)
+    let flowTokenVaultCaps = signer.capabilities.storage.getControllers(forPath: /storage/flowTokenVault)
 
     // Iterate through them to see if there is already one of the needed type
     for cap in flowTokenVaultCaps {
@@ -105,7 +106,7 @@ When issuing a capability, a capability of the same type might already be presen
     // issue a new one
     if flowTokenVaultCap == nil {
         // issue a new entitled capability to the flow token vault
-        flowTokenVaultCap = account.capabilities.storage.issue<auth(FungibleToken.Withdraw) &FlowToken.Vault>(/storage/flowTokenVault)
+        flowTokenVaultCap = signer.capabilities.storage.issue<auth(FungibleToken.Withdraw) &FlowToken.Vault>(/storage/flowTokenVault)
     }
 ```
 
@@ -115,7 +116,7 @@ When publishing a capability, a published capability might already be present. I
 
 ```cadence
 // Check if the published capability already exists
-if account.capabilities.borrow<&FlowToken.Vault>(/public/flowTokenReceiver) == nil {
+if signer.capabilities.borrow<&FlowToken.Vault>(/public/flowTokenReceiver) == nil {
     // since it doesn't exist yet, we should publish a new one that we created earlier
     signer.capabilities.publish(
         receiverCapability,
@@ -183,7 +184,7 @@ If given a less-specific type, cast to the more specific type that is expected. 
 
 <!-- Relative links. Will not render on the page -->
 
-[Cadence Anti-Patterns]: ./design-patterns.md
+[Cadence Anti-Patterns]: ./anti-patterns.md
 [References]: ./language/references.mdx
 [account storage]: ./language/accounts/storage.mdx
 [borrow]: ./language/capabilities.md#capabilities-in-accounts

@@ -199,7 +199,7 @@ Adding `self.account.save` or `self.account.publish` to `mintNFT` allows anyone 
 
 Passing a [fully authorized account reference] as a function parameter is a dangerous anti-pattern.
 
-::::
+:::
 
 ### Deploying and testing
 

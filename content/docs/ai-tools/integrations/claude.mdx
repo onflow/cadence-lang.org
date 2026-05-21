@@ -1,0 +1,52 @@
+---
+title: Claude
+---
+
+Configure Claude to work with Cadence via skills, MCP, or context injection.
+
+## Claude Code
+
+### Install Flow's skill library
+
+The official [onflow/flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace ships the full Cadence + Flow skill suite under one plugin:
+
+```bash
+/plugin marketplace add onflow/flow-ai-tools
+/plugin install flow-dev@flow-ai-tools
+```
+
+See [Skills](../skills) for the full skill list.
+
+### Add MCP server
+
+```bash
+claude mcp add --scope user cadence-mcp -- flow mcp
+```
+
+This registers the [Cadence MCP server](../mcp-server) — built into the Flow CLI as the `flow mcp` subcommand. Gives Claude Code access to Cadence code checking, type inspection, symbol lookup, contract source fetching, and read-only on-chain script execution. Requires [Flow CLI](https://developers.flow.com/tools/flow-cli) ≥ v2.16.0.
+
+## Claude Desktop
+
+Add the Cadence MCP server to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "cadence-mcp": {
+      "command": "flow",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+## Claude API
+
+When building with the Claude API, inject Cadence context into the system prompt:
+
+```bash
+# Fetch the full documentation
+curl -s https://cadence-lang.org/llms-full.txt
+```
+
+Or use the [MCP endpoint](../mcp-server) for programmatic access to documentation and language tools.

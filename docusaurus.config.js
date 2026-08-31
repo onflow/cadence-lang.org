@@ -143,10 +143,21 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      // The redesign is dark-first; the Fumadocs build this was ported from
+      // defaults to dark. Docusaurus defaults to light, which was the single
+      // largest visual difference against the reference.
+      colorMode: {
+        defaultMode: "dark",
+        respectPrefersColorScheme: false,
+      },
+
       navbar: {
         logo: {
           alt: 'Cadence',
           src: 'img/logo.svg',
+          // The wordmark in logo.svg is dark; with dark as the default theme
+          // it rendered invisible against the navbar.
+          srcDark: 'img/logo-dark.svg',
         },
         items: [
           {
@@ -173,6 +184,13 @@ const config = {
             label: "Language Reference",
             position: "right",
             to: "/docs/language",
+          },
+          {
+            // Matches the reference build, which surfaces the AI-tools
+            // section from the navbar.
+            label: "Agents",
+            position: "right",
+            to: "/docs/ai-tools",
           },
           {
             href: "https://github.com/onflow/cadence",

@@ -48,6 +48,16 @@
   border: 0;
 }
 
+/* Docusaurus wraps page content in .main-wrapper, which custom.css clamps to
+   max-width: 82rem with 1.5rem side padding for docs pages. The homepage is
+   full-bleed - every section applies its own max-w-7xl / px-6 - so it has to
+   escape that container, or it renders boxed-in and double-padded. */
+.main-wrapper.cadence-home {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .cadence-home {
   display: flex;
   flex-direction: column;
@@ -135,4 +145,28 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ════════ 3D ASCII HERO ════════
+ * drei's AsciiRenderer draws the art as a real HTML <table>. Infima styles
+ * bare table/tr/td for docs content, so it painted a 1px grey border around
+ * the whole hero visual - a hard rectangle down the middle of the page that
+ * the Fumadocs build never had. Strip all table chrome inside the wrapper.
+ */
+.cadence-home .ascii-wrapper table,
+.cadence-home .ascii-wrapper thead,
+.cadence-home .ascii-wrapper tbody,
+.cadence-home .ascii-wrapper tr,
+.cadence-home .ascii-wrapper td,
+.cadence-home .ascii-wrapper th {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: revert;
+}
+
+.cadence-home .ascii-wrapper table {
+  border-collapse: collapse !important;
+  box-shadow: none !important;
 }

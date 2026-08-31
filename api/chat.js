@@ -107,19 +107,31 @@ function normalizeMessages(raw) {
     .map((m) => ({ role: m.role, content: m.content.slice(0, 8000) }));
 }
 
+/**
+ * Vercel decorates the response with Express-style `res.status().json()`
+ * helpers, but a plain Node server does not. Using the raw API keeps this
+ * handler portable and locally testable.
+ */
+function sendJson(res, status, payload) {
+  res.statusCode = status;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify(payload));
+}
+
 module.exports = async function handler(req, res) {
   applyCors(req, res);
 
   if (req.method === "OPTIONS") {
-    res.status(204).end();
+    res.statusCode = 204;
+    res.end();
     return;
   }
   if (req.method !== "POST") {
-    res.status(405).json({ error: "Method not allowed" });
+    sendJson(res, 405, { error: "Method not allowed" });
     return;
   }
   if (!process.env.BASETEN_API_KEY) {
-    res.status(503).json({ error: "Chat is not configured" });
+    sendJson(res, 503, { error: "Chat is not configured" });
     return;
   }
 
@@ -127,7 +139,7 @@ module.exports = async function handler(req, res) {
   const { ok, retryAfter } = checkRateLimit(clientId(req));
   if (!ok) {
     res.setHeader("Retry-After", String(retryAfter));
-    res.status(429).json({ error: "Rate limit exceeded", retryAfter });
+    sendJson(res, 429, { error: "Rate limit exceeded", retryAfter });
     return;
   }
 
@@ -135,7 +147,7 @@ module.exports = async function handler(req, res) {
     typeof req.body === "string" ? safeParse(req.body) : req.body || {};
   const messages = normalizeMessages(body.messages);
   if (messages.length === 0) {
-    res.status(400).json({ error: "No messages provided" });
+    sendJson(res, 400, { error: "No messages provided" });
     return;
   }
 
@@ -155,13 +167,13 @@ module.exports = async function handler(req, res) {
       }),
     });
   } catch (e) {
-    res.status(502).json({ error: "Upstream request failed" });
+    sendJson(res, 502, { error: "Upstream request failed" });
     return;
   }
 
   if (!upstream.ok || !upstream.body) {
     // Deliberately opaque: upstream errors can echo request details.
-    res.status(502).json({ error: "Upstream error", status: upstream.status });
+    sendJson(res, 502, { error: "Upstream error", status: upstream.status });
     return;
   }
 

@@ -3,7 +3,6 @@ import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import Head from "@docusaurus/Head";
 import BrowserOnly from "@docusaurus/BrowserOnly";
-import AskCadenceAI from "@site/src/components/AskCadenceAI";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { usePluginData } from "@docusaurus/useGlobalData";
 import {
@@ -248,7 +247,6 @@ function Home() {
   return (
     <Layout title={TITLE} description={DESCRIPTION} noFooter wrapperClassName="cadence-home">
       <SeoTags />
-      <AskCadenceAI />
         <main className="relative min-h-screen overflow-x-hidden bg-[#FAFAFA] dark:bg-black text-neutral-900 dark:text-white selection:bg-accent selection:text-black font-sans transition-colors duration-300" aria-label="Cadence homepage">
           {/* Subtle Grid Background */}
           <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />

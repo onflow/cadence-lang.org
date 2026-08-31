@@ -8,10 +8,20 @@ access(all) resource NFT {
     init() { self.id = self.uuid }
 }
 
+// A receiver owns the slot the resource moves into
+access(all) resource Collection {
+    access(all) var stored: @NFT?
+    init() { self.stored <- nil }
+
+    access(all) fun deposit(token: @NFT) {
+        self.stored <-! token
+    }
+}
+
 // Moves are explicit and safe
-access(all) fun transfer(token: @NFT) {
+access(all) fun transfer(token: @NFT, receiver: &Collection) {
     // '@' denotes a resource that MUST be handled
-    Receiver.deposit(token: <- token)
+    receiver.deposit(token: <- token)
 }`;
 
 const defiSnippet = `import "DeFiActions"

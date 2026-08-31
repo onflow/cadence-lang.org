@@ -53,6 +53,11 @@
   --ifm-link-hover-color: #00c271;
 
   --ifm-spacing-horizontal: 2rem;
+
+  /* Homepage accent (ported from the redesign). Raw channels so Tailwind
+     can apply opacity modifiers via rgb(var(--accent-rgb) / <alpha>). */
+  --accent: #008556;
+  --accent-rgb: 0 133 86;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -66,6 +71,9 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
   --ifm-link-hover-color: #00c271;
+
+  --accent: #00ff94;
+  --accent-rgb: 0 255 148;
 }
 
 /*

@@ -92,6 +92,11 @@ const config = {
   themes: [hasTypesense && "docusaurus-theme-search-typesense"].filter(Boolean),
 
   plugins: [
+    require("./plugins/tailwind"),
+    [
+      require("./plugins/cadence-highlight"),
+      { snippets: require("./src/lib/homepage-snippets") },
+    ],
     [
       "docusaurus-plugin-llms",
       {

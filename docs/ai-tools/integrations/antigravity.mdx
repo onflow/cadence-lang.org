@@ -1,0 +1,39 @@
+---
+title: Antigravity
+sidebar_position: 1
+---
+
+Configure [Antigravity](https://antigravity.dev) to work with Cadence.
+
+## Add Cadence as project context
+
+Antigravity reads project-level context files automatically. Add a `CADENCE.md` (or merge into your existing `AGENTS.md`) pointing at the [`/llms-full.txt`](../llm-endpoints) endpoint so the model has the full reference loaded on startup:
+
+```markdown
+## Cadence Development
+
+This project uses Cadence, the smart contract language for the Flow blockchain.
+Full reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
+
+Resources use `@` prefix and must be moved with `<-`. Use `access(all)` for public access (not `pub`). Capability-based access control with entitlements.
+```
+
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships the full Cadence + Flow skill suite (see [Skills](../skills)).
+
+## Add MCP server
+
+Add the Cadence MCP server to your Antigravity configuration — calls the Flow CLI's built-in `flow mcp` subcommand:
+
+```json
+{
+  "mcpServers": {
+    "cadence-mcp": {
+      "command": "flow",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+This gives Antigravity access to all [MCP tools](../mcp-server) — Cadence code checking, type inspection, symbol lookup, contract source fetching, and read-only on-chain script execution. Requires [Flow CLI](https://developers.flow.com/tools/flow-cli) ≥ v2.16.0.

@@ -1,0 +1,70 @@
+---
+title: MCP Server
+description: The Cadence MCP server gives AI agents access to documentation search, code checking, type inspection, and on-chain queries. Bundled with the Flow CLI.
+sidebar_position: 2
+---
+
+The Cadence MCP server gives AI agents access to Cadence tooling — type checking, symbol lookup, hover info, contract source fetching, and read-only on-chain script execution. It is **bundled with the [Flow CLI](https://developers.flow.com/tools/flow-cli)** as the `flow mcp` subcommand (Flow CLI ≥ v2.16.0). No separate install needed.
+
+## Prerequisites
+
+- [Flow CLI](https://developers.flow.com/tools/flow-cli) ≥ v2.16.0
+
+If you use the [`onflow/flow-ai-tools`](https://github.com/onflow/flow-ai-tools) one-line installer, the Flow CLI **and** the MCP server are configured for you in a single command — see [Skills](./skills).
+
+## Quick start
+
+### Claude Code
+
+```bash
+claude mcp add --scope user cadence-mcp -- flow mcp
+```
+
+### Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "cadence-mcp": {
+      "command": "flow",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Cursor
+
+Settings → MCP → Add new server:
+- **Name**: `cadence-mcp`
+- **Type**: `command`
+- **Command**: `flow mcp`
+
+### Other editors
+
+Any MCP-aware editor (Codex, Gemini CLI, Antigravity, OpenCode, etc.) — point them at `flow mcp` as a stdio command. See the [integrations](./integrations) section for editor-specific configuration files.
+
+## Available tools
+
+| Tool | Description |
+|---|---|
+| `cadence_check` | Check Cadence code for syntax and type errors |
+| `cadence_hover` | Get type information for a symbol at a position |
+| `cadence_definition` | Find where a symbol is defined |
+| `cadence_symbols` | List all symbols in Cadence code |
+| `cadence_completion` | Get completion suggestions at a position |
+| `get_contract_source` | Fetch on-chain contract manifest from a Flow address |
+| `get_contract_code` | Fetch contract source code from a Flow address |
+| `cadence_execute_script` | Execute a read-only Cadence script on-chain |
+
+All LSP tools support mainnet, testnet, and emulator address imports (e.g. `import FungibleToken from 0xf233dcee88fe0abe`). Dependencies are resolved automatically via Flow CLI.
+
+## Source code
+
+The server lives in the Flow CLI source tree at [onflow/flow-cli/internal/mcp](https://github.com/onflow/flow-cli/tree/master/internal/mcp). Maintained by Flow Foundation; ships with each Flow CLI release.
+
+## Pair with Claude Code skills
+
+For richer agent guidance — security audits, contract scaffolding, testing patterns, DeFi architecture — install the [`flow-dev`](./skills) plugin from the [`onflow/flow-ai-tools`](https://github.com/onflow/flow-ai-tools) marketplace alongside the MCP server. The skills add agent-prompt-level expertise that complements the MCP's runtime tools.

@@ -1,0 +1,38 @@
+---
+title: Cursor
+sidebar_position: 3
+---
+
+Configure Cursor to understand Cadence smart contracts.
+
+## Add Cadence as project context
+
+Cursor reads `.cursor/rules/*.mdc` files automatically. Create `.cursor/rules/cadence.mdc` and point it at the [`/llms-full.txt`](../llm-endpoints) endpoint so the model has the full reference:
+
+```mdc
+---
+description: Cadence smart contract development on Flow
+globs: *.cdc
+---
+
+When working with `.cdc` files, follow Cadence language conventions:
+- Use `access(all)` for public access (not the deprecated `pub`)
+- Resources use `@` prefix and must be moved with `<-` (never copied)
+- Always handle resources — they cannot be lost or copied
+- Use capability-based access control with entitlements
+
+Full Cadence reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
+```
+
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships the full Cadence + Flow skill suite (see [Skills](../skills)).
+
+## Add MCP server
+
+In Cursor settings → MCP → Add new server:
+
+- **Name**: `cadence-mcp`
+- **Type**: `command`
+- **Command**: `flow mcp`
+
+This registers the [Cadence MCP server](../mcp-server) — built into the Flow CLI as the `flow mcp` subcommand. Gives Cursor access to Cadence code checking, type inspection, symbol lookup, contract source fetching, and read-only on-chain script execution. Requires [Flow CLI](https://developers.flow.com/tools/flow-cli) ≥ v2.16.0.

@@ -1,0 +1,34 @@
+---
+title: OpenAI Codex
+sidebar_position: 4
+---
+
+Configure OpenAI Codex (the CLI agent) to work with Cadence.
+
+## Add Cadence to AGENTS.md
+
+Codex reads `AGENTS.md` from the project root automatically. Add a Cadence section that points it at the [`/llms-full.txt`](../llm-endpoints) endpoint:
+
+```markdown
+## Cadence Development
+
+This project uses Cadence, the smart contract language for the Flow blockchain.
+Full reference: https://cadence-lang.org/llms-full.txt
+Quick index: https://cadence-lang.org/llms.txt
+
+Key conventions:
+- Use `access(all)` for public access, not the deprecated `pub`
+- Resources use `@` prefix and must be moved with `<-` (never copied)
+- Always handle resources — they cannot be lost or copied
+- Use capability-based access control with entitlements
+```
+
+If you also use Claude Code, install the [flow-ai-tools](https://github.com/onflow/flow-ai-tools) marketplace there for richer skill coverage — it ships the full Cadence + Flow skill suite (see [Skills](../skills)).
+
+## Context injection
+
+For direct API usage, inject the Cadence documentation into the system prompt:
+
+```bash
+curl -s https://cadence-lang.org/llms-full.txt
+```
